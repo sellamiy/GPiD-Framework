@@ -32,8 +32,9 @@ file(GLOB LIBGPID_SOURCES "framework/gpid/src/*.cpp")
 add_library(gpid STATIC ${LIBGPID_SOURCES})
 
 # ========== Example Programs Targets ==========
-#add_executable(example "examples/example.cpp")
-#target_link_libraries(example gpid)
+add_executable(gpid-prop "example/gpid-prop.cpp")
+target_link_libraries(gpid-prop gpid)
+target_link_libraries(gpid-prop minisat-lib-shared)
 
 # ========== Tests ==========
 
