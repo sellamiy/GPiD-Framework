@@ -17,6 +17,9 @@ find_package(Doxygen)
 
 # ========== Files Configuration ==========
 
+# ========== Solvers ==========
+add_subdirectory(minisat)
+
 # ========== Header Files ==========
 include_directories("framework/gpid/include")
 
