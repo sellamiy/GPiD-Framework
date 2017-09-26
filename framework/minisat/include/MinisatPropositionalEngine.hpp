@@ -6,7 +6,12 @@
 
 namespace gpid_prop {
 
-    typedef Minisat::Lit MinisatHypothesis;
+    typedef Minisat::Lit MinisatInternal;
+    struct MinisatHypothesis {
+        const MinisatInternal lit;
+        MinisatHypothesis(MinisatInternal d) : lit(d) {}
+        MinisatHypothesis(MinisatHypothesis& d) : lit(d.lit) {}
+    };
     typedef gpid::HypothesesSet<MinisatHypothesis> MinisatHypothesesSet;
 
     class MinisatProblem;
