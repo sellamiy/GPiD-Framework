@@ -1,11 +1,10 @@
-#define GPID_GENERATE_CPP
+#ifndef GPID_GENERATION_ALGORITHMS_HPP
+#define GPID_GENERATION_ALGORITHMS_HPP
 
 #include <DecompEngine.hpp>
 
-using namespace gpid;
-
 template<class HypothesisT, class ProblemT, class SolverT>
-extern void DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateImplicates() {
+extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateImplicates() {
     resetEngine();
 
     while (level > 0) {
@@ -44,3 +43,5 @@ extern void DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateImplica
     }
 
 }
+
+#endif

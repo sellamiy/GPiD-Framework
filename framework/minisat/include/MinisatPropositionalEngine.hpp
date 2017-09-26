@@ -19,7 +19,9 @@ namespace gpid_prop {
     };
 
     class MinisatSolver {
-
+    public:
+        void addHypothesis(MinisatHypothesis hypothesis, uint32_t level);
+        gpid::SolverTestStatus testHypotheses(uint32_t level);
     };
 
 };

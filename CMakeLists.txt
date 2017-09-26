@@ -28,13 +28,17 @@ include_directories("framework/minisat/include")
 
 # ========== Source Files ==========
 file(GLOB LIBGPID_SOURCES "framework/gpid/src/*.cpp")
+file(GLOB PROPMINISAT_SOURCES "framework/minisat/src/*.cpp")
 
 # ========== Libraries Targets ==========
-add_library(gpid STATIC ${LIBGPID_SOURCES})
+add_library(gpid SHARED ${LIBGPID_SOURCES})
+
+add_library(gpidprop SHARED ${PROPMINISAT_SOURCES})
+target_link_libraries(gpidprop gpid)
 
 # ========== Example Programs Targets ==========
 add_executable(gpid-prop "example/gpid-prop.cpp")
-target_link_libraries(gpid-prop gpid)
+target_link_libraries(gpid-prop gpidprop)
 target_link_libraries(gpid-prop minisat-lib-shared)
 
 # ========== Tests ==========
