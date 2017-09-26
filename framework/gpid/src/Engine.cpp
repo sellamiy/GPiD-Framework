@@ -24,7 +24,7 @@ extern void DecompositionEngine<HypothesisT, ProblemT, SolverT>::pushStackLevel(
 
 template<class HypothesisT, class ProblemT, class SolverT>
 extern void DecompositionEngine<HypothesisT, ProblemT, SolverT>::popStackLevel() {
-    active_h.removeHypotheses(level);
+    solver.removeHypotheses(level);
     level--;
     sdir = IStackDirection::STACK_POP;
 }

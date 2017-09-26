@@ -15,7 +15,7 @@ extern void DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateImplica
             if (!available_h.isEmpty(level)) {
                 // Trying next hypothesis
                 HypothesisT& sel = available_h.nextHypothesis(level);
-                active_h.addHypothesis(sel, level);
+                solver.addHypothesis(sel, level);
                 pushStackLevel();
             } else {
                 // No more hypotheses here
@@ -24,11 +24,11 @@ extern void DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateImplica
 
         } else {
 
-            SolverTestStatus status = solver.testHypotheses(active_h, level);
+            SolverTestStatus status = solver.testHypotheses(level);
             if (status == SolverTestStatus::SOLVER_SAT) {
                 // Adding an hypothesis
                 HypothesisT& sel = available_h.nextHypothesis(level);
-                active_h.addHypothesis(sel, level);
+                solver.addHypothesis(sel, level);
                 pushStackLevel();
             } else if (status == SolverTestStatus::SOLVER_UNSAT) {
                 // We have found an implicate

@@ -20,7 +20,6 @@ namespace gpid {
 
         SolverT& solver;
         ProblemT& problem;
-        HypothesesSet<HypothesisT> active_h;
         HypothesesSet<HypothesisT> available_h;
 
         void resetEngine();
