@@ -7,6 +7,7 @@ set(EXTENDED_PROJECT_NAME "GPiD Framework - Prime Implicates by Decomposition")
 # ========== Cmake Project Global Configuration ==========
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 # ========== Project Options ==========
 option(BUILD_DOC "Build documentation" ON)
