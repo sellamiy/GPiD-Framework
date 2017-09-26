@@ -18,10 +18,12 @@ find_package(Doxygen)
 # ========== Files Configuration ==========
 
 # ========== Solvers ==========
-add_subdirectory(minisat)
+add_subdirectory(minisat EXCLUDE_FROM_ALL)
+include_directories("minisat")
 
 # ========== Header Files ==========
 include_directories("framework/gpid/include")
+include_directories("framework/minisat/include")
 
 # ========== Source Files ==========
 file(GLOB LIBGPID_SOURCES "framework/gpid/src/*.cpp")
