@@ -3,10 +3,14 @@
 
 #include <Hypotheses.hpp>
 
-enum SolverTestStatus {
-    SOLVER_SAT,
-    SOLVER_UNSAT,
-    SOLVER_UNKNOWN
+namespace gpid {
+
+    enum SolverTestStatus {
+        SOLVER_SAT,
+        SOLVER_UNSAT,
+        SOLVER_UNKNOWN
+    };
+
 };
 
 #endif

@@ -2,6 +2,8 @@
 
 #include <DecompEngine.hpp>
 
+using namespace gpid;
+
 template<class HypothesisT, class ProblemT, class SolverT>
 extern void DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateImplicates() {
     resetEngine();

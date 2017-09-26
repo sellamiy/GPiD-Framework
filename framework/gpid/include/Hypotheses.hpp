@@ -1,8 +1,12 @@
 #ifndef GPID_HYPOTHESES_HPP
 #define GPID_HYPOTHESES_HPP
 
-template<class HypothesisT>
-class HypothesesSet {
+namespace gpid {
+
+    template<class HypothesisT>
+    class HypothesesSet {
+
+    };
 
 };
 
