@@ -8,7 +8,7 @@ namespace gpid {
 
     template<class HypothesisT>
     class HypothesesSet {
-        std::map<uint32_t, HypothesisT&> hp_mapping;
+        std::map<uint32_t, HypothesisT*> hp_mapping;
         uint32_t valid_access_level;
         memory::lv_tab<uint32_t> access_table;
     public:
@@ -31,7 +31,7 @@ namespace gpid {
             access_table.skip_current(level);
         }
         access_table.set_current(level);
-        return hp_mapping[access_table.get_current(level)];
+        return *hp_mapping[access_table.get_current(level)];
     }
 
 };
