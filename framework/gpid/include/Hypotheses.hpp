@@ -10,7 +10,7 @@ namespace gpid {
     class HypothesesSet {
         std::map<uint32_t, HypothesisT*> hp_mapping;
         uint32_t valid_access_level;
-        memory::lv_tab<uint32_t> access_table;
+        // memory::lv_tab<uint32_t> access_table;
     public:
         bool isEmpty(uint32_t level);
         HypothesisT& nextHypothesis(uint32_t level);
@@ -18,11 +18,12 @@ namespace gpid {
 
     template<class HypothesisT>
     inline bool HypothesesSet<HypothesisT>::isEmpty(uint32_t level) {
-        return access_table.has_next(level);
+        // return access_table.has_next(level);
     }
 
     template<class HypothesisT>
     inline HypothesisT& HypothesesSet<HypothesisT>::nextHypothesis(uint32_t level) {
+        /*
         if (level > valid_access_level) {
             access_table.extend(level);
         } else {
@@ -32,6 +33,7 @@ namespace gpid {
         }
         access_table.set_current(level);
         return *hp_mapping[access_table.get_current(level)];
+        */
     }
 
 };

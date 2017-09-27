@@ -6,5 +6,5 @@
 using namespace gpid_prop;
 
 namespace gpid {
-    template class DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver>;
+    // template class DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver>;
 };

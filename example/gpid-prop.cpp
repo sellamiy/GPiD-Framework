@@ -19,6 +19,6 @@ int main(int argc, char** argv) {
 
     MinisatDecompEngine E(S, P, A);
 
-    E.generateImplicates();
+    // E.generateImplicates();
 
 }
