@@ -33,8 +33,16 @@ ExternalProject_Add(minisat-solver
   )
 add_library(minisat-lib-shared SHARED IMPORTED)
 add_dependencies(minisat-lib-shared minisat-solver)
-set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
-  ${CMAKE_BINARY_DIR}/minisat-build/libminisat.2.1.0.dylib)
+if(WIN32)
+  set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
+    ${CMAKE_BINARY_DIR}/minisat-build/minisat.dll)
+elseif(APPLE)
+  set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
+    ${CMAKE_BINARY_DIR}/minisat-build/libminisat.dylib)
+else()
+  set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
+    ${CMAKE_BINARY_DIR}/minisat-build/libminisat.so)
+endif()
 include_directories("${CMAKE_BINARY_DIR}/minisat-src")
 
 # ========== Header Files ==========
