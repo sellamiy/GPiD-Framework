@@ -46,14 +46,20 @@ endif()
 include_directories("${CMAKE_BINARY_DIR}/minisat-src")
 
 # ========== Header Files ==========
+include_directories("lib/atable")
+
 include_directories("framework/gpid/include")
 include_directories("framework/minisat/include")
 
 # ========== Source Files ==========
+file(GLOB LIBATABLE_SOURCES "lib/atable/src/*.cpp")
+
 file(GLOB LIBGPID_SOURCES "framework/gpid/src/*.cpp")
 file(GLOB PROPMINISAT_SOURCES "framework/minisat/src/*.cpp")
 
 # ========== Libraries Targets ==========
+add_library(atable SHARED ${LIBATABLE_SOURCES})
+
 add_library(gpid SHARED ${LIBGPID_SOURCES})
 
 add_library(gpidprop SHARED ${PROPMINISAT_SOURCES})
@@ -106,15 +112,15 @@ if(BUILD_TESTS)
 
   # ===== Generating Test Targets =====
 
-  #file(GLOB _TEST_FILES "test/*.cpp")
-  #foreach(filename ${_TEST_FILES})
-  #  message(STATUS "Configuring testfile: ${filename}")
-  #  get_filename_component(execname "${filename}" NAME_WE)
-  #  add_executable(${execname} "${filename}")
-  #  target_link_libraries(${execname} gpid)
-  #  target_link_libraries(${execname} gtest gtest_main)
-  #  add_test(${execname} ${execname})
-  #endforeach()
+  file(GLOB LIB_TEST_FILES "test/lib/atable/*.cpp")
+  foreach(filename ${LIB_TEST_FILES})
+    # message(STATUS "Configuring testfile: ${filename}")
+    get_filename_component(execname "${filename}" NAME_WE)
+    add_executable(${execname} "${filename}")
+    target_link_libraries(${execname} atable)
+    target_link_libraries(${execname} gtest gtest_main)
+    add_test(${execname} ${execname})
+  endforeach()
 
 endif()
 
