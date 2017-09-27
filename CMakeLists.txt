@@ -14,13 +14,28 @@ option(BUILD_DOC "Build documentation" ON)
 option(BUILD_TESTS "Build tests" ON)
 
 # ========== Finding Packages ==========
+include(ExternalProject)
 find_package(Doxygen)
 
 # ========== Files Configuration ==========
 
-# ========== Solvers ==========
-add_subdirectory(minisat EXCLUDE_FROM_ALL)
-include_directories("minisat")
+# ========== Minisat ==========
+file(GLOB MINISAT_PATCHES "cmake/minisat/*.patch")
+ExternalProject_Add(minisat-solver
+  GIT_REPOSITORY    https://github.com/niklasso/minisat.git
+  GIT_TAG           37dc6c67e2af26379d88ce349eb9c4c6160e8543
+  SOURCE_DIR        "${CMAKE_BINARY_DIR}/minisat-src"
+  BINARY_DIR        "${CMAKE_BINARY_DIR}/minisat-build"
+  CMAKE_ARGS        -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} -Wno-dev
+  PATCH_COMMAND     git apply ${MINISAT_PATCHES}
+  INSTALL_COMMAND   ""
+  TEST_COMMAND      ""
+  )
+add_library(minisat-lib-shared SHARED IMPORTED)
+add_dependencies(minisat-lib-shared minisat-solver)
+set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
+  ${CMAKE_BINARY_DIR}/minisat-build/libminisat.2.1.0.dylib)
+include_directories("${CMAKE_BINARY_DIR}/minisat-src")
 
 # ========== Header Files ==========
 include_directories("framework/gpid/include")
@@ -35,6 +50,7 @@ add_library(gpid SHARED ${LIBGPID_SOURCES})
 
 add_library(gpidprop SHARED ${PROPMINISAT_SOURCES})
 target_link_libraries(gpidprop gpid)
+target_link_libraries(gpidprop minisat-lib-shared)
 
 # ========== Example Programs Targets ==========
 add_executable(gpid-prop "example/gpid-prop.cpp")
