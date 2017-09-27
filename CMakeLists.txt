@@ -61,6 +61,7 @@ file(GLOB PROPMINISAT_SOURCES "framework/minisat/src/*.cpp")
 add_library(atable SHARED ${LIBATABLE_SOURCES})
 
 add_library(gpid SHARED ${LIBGPID_SOURCES})
+target_link_libraries(gpid atable)
 
 add_library(gpidprop SHARED ${PROPMINISAT_SOURCES})
 target_link_libraries(gpidprop gpid)

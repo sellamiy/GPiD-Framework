@@ -101,6 +101,11 @@ namespace atable {
             list_curr = &(tab[list_curr->next]);
             return list_curr->index;
         }
+        // TODO: Add tests for these two methods!
+        /** @warning Untested. */
+        inline uint32_t get_first() { return tab[list_first.next].index; }
+        /** @warning Untested. */
+        inline uint32_t get_last() { return tab[list_last.prev].index; }
         /**
          * @brief Reset the ActivableArray iterator.
          *
@@ -110,6 +115,11 @@ namespace atable {
          */
         inline void reset_iterator()
         { list_curr = &list_first; }
+
+        inline void set_it_pos(uint32_t index) {
+            // assert(is_active(index));
+            list_curr = &(tab[index]);
+        }
     private:
         /** @brief Element representation for an ActivableArray box. */
         struct aa_elt {

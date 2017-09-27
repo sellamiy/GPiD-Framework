@@ -2,38 +2,82 @@
 #define GPID_HYPOTHESES_HPP
 
 #include <map>
+#include <list>
+#include <atable/activable_tab.hpp>
 #include <Memory.hpp>
 
 namespace gpid {
 
     template<class HypothesisT>
     class HypothesesSet {
-        std::map<uint32_t, HypothesisT*> hp_mapping;
-        uint32_t valid_access_level;
-        // memory::lv_tab<uint32_t> access_table;
+        typedef uint32_t hyp_index_t ;
+        typedef uint32_t level_t ;
+        std::map<hyp_index_t, HypothesisT*> hp_mapping;
+        std::map<level_t, hyp_index_t> index_table;
+        std::map<level_t, std::list<hyp_index_t> > deactivation_map;
+        std::map<level_t, std::list<hyp_index_t> > reactivation_map;
+        atable::StaticActivableArray hp_active;
+        level_t current_level;
+
+        inline hyp_index_t getIndex() { return index_table[current_level]; }
+        inline void setIndex(hyp_index_t id) { index_table[current_level] = id; }
+        void increaseLevel(level_t target);
+        void decreaseLevel(level_t target);
+        void accessLevel(level_t level);
     public:
+        HypothesesSet(uint32_t size) : hp_active(size), current_level(0) {}
         bool isEmpty(uint32_t level);
         HypothesisT& nextHypothesis(uint32_t level);
     };
 
     template<class HypothesisT>
+    inline void HypothesesSet<HypothesisT>::increaseLevel(uint32_t target) {
+        while (current_level < target) {
+            ++current_level;
+            setIndex(hp_active.get_first());
+            hp_active.reset_iterator();
+            deactivation_map[current_level].clear();
+            reactivation_map[current_level].clear();
+        }
+    }
+
+    template<class HypothesisT>
+    inline void HypothesesSet<HypothesisT>::decreaseLevel(uint32_t target) {
+        while (current_level > target) {
+            for (hyp_index_t i : reactivation_map[current_level])
+                hp_active.deactivate(i);
+            for (hyp_index_t i : deactivation_map[current_level])
+                hp_active.activate(i);
+            --current_level;
+            hp_active.set_it_pos(getIndex());
+        }
+    }
+
+    template<class HypothesisT>
+    inline void HypothesesSet<HypothesisT>::accessLevel(uint32_t level) {
+        if (level > current_level) increaseLevel(level);
+        else decreaseLevel(level);
+    }
+
+    template<class HypothesisT>
     inline bool HypothesesSet<HypothesisT>::isEmpty(uint32_t level) {
-        // return access_table.has_next(level);
+        if (level != current_level) {
+            accessLevel(level);
+        }
+        return hp_active.get_activated_size() == 0;
     }
 
     template<class HypothesisT>
     inline HypothesisT& HypothesesSet<HypothesisT>::nextHypothesis(uint32_t level) {
-        /*
-        if (level > valid_access_level) {
-            access_table.extend(level);
-        } else {
-            access_table.shrink(level);
-            access_table.unset_current(level);
-            access_table.skip_current(level);
+        bool need_skip = level <= current_level;
+        accessLevel(level);
+        if (need_skip) {
+            hyp_index_t todeac = getIndex();
+            setIndex(hp_active.get_next());
+            hp_active.deactivate(todeac);
+            deactivation_map[current_level].insert(todeac);
         }
-        access_table.set_current(level);
-        return *hp_mapping[access_table.get_current(level)];
-        */
+        return *hp_mapping[getIndex()];
     }
 
 };

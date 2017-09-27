@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     MinisatSolver S;
     MinisatProblem P;
 
-    MinisatHypothesesSet A;
+    MinisatHypothesesSet A(50);
 
     MinisatDecompEngine E(S, P, A);
 
