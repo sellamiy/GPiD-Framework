@@ -1,11 +1,11 @@
 #define GPID_PROPOSITIONAL_PI_GENERATOR
 
 #include <iostream>
-#include <MinisatPropositionalEngine.hpp>
+#include <gpid/gpid.hpp>
 
 using namespace std;
 using namespace Minisat;
-using namespace gpid_prop;
+using namespace gpid;
 
 int main(int argc, char** argv) {
     if (argc != 2) {

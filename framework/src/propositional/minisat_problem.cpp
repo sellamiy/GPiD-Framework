@@ -1,8 +1,8 @@
 #define GPID__MINISAT_PROBLEM_CPP
 
-#include <MinisatPropositionalEngine.hpp>
+#include <gpid/propositional/pengine_minisat.hpp>
 
-using namespace gpid_prop;
+using namespace gpid;
 
 void MinisatProblem::addConstraint(Minisat::vec<Minisat::Lit>& ps) {
     if (mode != IOMode::IO_WRITE) {

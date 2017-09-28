@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 set(LOCAL_LIB_HEADERS_DIR "${CMAKE_BINARY_DIR}/lib-include-local")
+set(FRAMEWORK_CONF_HEADERS_DIR "${CMAKE_BINARY_DIR}/framework-include")
 
 # ========== Project Options ==========
 option(BUILD_DOC "Build documentation" ON)
@@ -21,6 +22,8 @@ find_package(Doxygen)
 
 # ========== Files Configuration ==========
 configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
+
+configure_file(framework/gpid/include/gpid.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/gpid.hpp)
 
 # ========== Minisat ==========
 file(GLOB MINISAT_PATCHES "cmake/minisat/*.patch")
@@ -54,29 +57,24 @@ include_directories("${LOCAL_LIB_HEADERS_DIR}")
 # ========== Headers ==========
 include_directories("lib/starray")
 
-include_directories("framework/gpid/include")
-include_directories("framework/minisat/include")
+include_directories("${FRAMEWORK_CONF_HEADERS_DIR}")
+include_directories("framework")
 
 # ========== Source Files ==========
 file(GLOB LIBSTARRAY_SOURCES "lib/starray/src/*.cpp")
 
-file(GLOB LIBGPID_SOURCES "framework/gpid/src/*.cpp")
-file(GLOB PROPMINISAT_SOURCES "framework/minisat/src/*.cpp")
+file(GLOB LIBGPID_SOURCES "framework/src/*/*.cpp")
 
 # ========== Libraries Targets ==========
 add_library(starray SHARED ${LIBSTARRAY_SOURCES})
 
 add_library(gpid SHARED ${LIBGPID_SOURCES})
 target_link_libraries(gpid starray)
-
-add_library(gpidprop SHARED ${PROPMINISAT_SOURCES})
-target_link_libraries(gpidprop gpid)
-target_link_libraries(gpidprop minisat-lib-shared)
+target_link_libraries(gpid minisat-lib-shared)
 
 # ========== Example Programs Targets ==========
 add_executable(gpid-prop "example/gpid-prop.cpp")
-target_link_libraries(gpid-prop gpidprop)
-target_link_libraries(gpid-prop minisat-lib-shared)
+target_link_libraries(gpid-prop gpid)
 
 # ========== Tests ==========
 

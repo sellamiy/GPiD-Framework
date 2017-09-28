@@ -2,8 +2,8 @@
 #define GPID_DECOMP_ENGINE_HPP
 
 #include <stdint.h>
-#include <Hypotheses.hpp>
-#include <AbstractSolver.hpp>
+#include <gpid/core/hypotheses.hpp>
+#include <gpid/core/solvers.hpp>
 
 namespace gpid {
 

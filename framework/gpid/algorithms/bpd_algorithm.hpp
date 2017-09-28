@@ -1,7 +1,7 @@
 #ifndef GPID_GENERATION_ALGORITHMS_HPP
 #define GPID_GENERATION_ALGORITHMS_HPP
 
-#include <DecompEngine.hpp>
+#include <gpid/core/engine.hpp>
 
 /* ========== Helpers ========== */
 
@@ -30,7 +30,7 @@ extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::popStackL
     sdir = IStackDirection::STACK_POP;
 }
 
-/* ========== Naive Algorithm ========== */
+/* ========== BPD Algorithm ========== */
 
 template<class HypothesisT, class ProblemT, class SolverT>
 extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateImplicates() {

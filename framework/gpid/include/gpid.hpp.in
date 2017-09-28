@@ -1,0 +1,8 @@
+#ifndef _PI_DECOMP_FRAMEWORK_HEADER_
+#define _PI_DECOMP_FRAMEWORK_HEADER_
+
+#include <gpid/core/engine.hpp>
+
+#include <gpid/propositional/pengine_minisat.hpp>
+
+#endif

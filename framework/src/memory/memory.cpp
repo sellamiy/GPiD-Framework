@@ -1,5 +1,5 @@
 #define GPID_MEMORY_CPP
-#include <Memory.hpp>
+#include <gpid/memory/memory.hpp>
 
 using namespace gpid;
 

@@ -1,8 +1,8 @@
 #define GPID__MINISAT_SOLVER_CPP
 
-#include <MinisatPropositionalEngine.hpp>
+#include <gpid/propositional/pengine_minisat.hpp>
 
-using namespace gpid_prop;
+using namespace gpid;
 
 void MinisatSolver::start() {
     solver.eliminate(true);

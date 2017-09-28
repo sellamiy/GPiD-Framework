@@ -2,9 +2,9 @@
 #define GPID_PROPOSITIONAL_ENGINE__MINISAT_HPP
 
 #include <minisat/simp/SimpSolver.h>
-#include <DecompEngine.hpp>
+#include <gpid/core/engine.hpp>
 
-namespace gpid_prop {
+namespace gpid {
 
     typedef Minisat::Lit MinisatInternal;
     struct MinisatHypothesis {

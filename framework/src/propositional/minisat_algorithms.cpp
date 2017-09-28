@@ -1,9 +1,7 @@
 #define MINISAT_GENERATION_INSTANCES
 
-#include <MinisatPropositionalEngine.hpp>
-#include <GenerationAlgorithms.hpp>
-
-using namespace gpid_prop;
+#include <gpid/propositional/pengine_minisat.hpp>
+#include <gpid/algorithms/bpd_algorithm.hpp>
 
 namespace gpid {
     template class DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver>;

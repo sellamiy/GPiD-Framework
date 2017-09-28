@@ -4,7 +4,6 @@
 #include <map>
 #include <list>
 #include <starray/starray.hpp>
-#include <Memory.hpp>
 
 namespace gpid {
 
