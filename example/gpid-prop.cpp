@@ -17,6 +17,9 @@ int main(int argc, char** argv) {
 
     MinisatHypothesesSet A(50);
 
+    // TODO: Read problem from file and store clauses in P
+    // TODO: Read problem from file and store abducoble hypotheses in A
+
     MinisatDecompEngine E(S, P, A);
 
     E.generateImplicates();
