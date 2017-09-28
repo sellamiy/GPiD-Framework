@@ -48,27 +48,14 @@ namespace gpid {
 
         inline void increaseLevel(uint32_t target);
         inline void decreaseLevel(uint32_t target);
-        inline void accessLevel(uint32_t level) {
-            if (c_level < level) increaseLevel(level);
-            else decreaseLevel(level);
-        }
+        inline void accessLevel(uint32_t level);
+
     public:
         inline void removeHypotheses(uint32_t level) { accessLevel(level); }
-        inline void addHypothesis(MinisatHypothesis& hypothesis, uint32_t level) {
-            accessLevel(level);
-            assumps.push(hypothesis.lit);
-        }
-
-        inline gpid::SolverTestStatus testHypotheses(uint32_t level) {
-            accessLevel(level);
-            Minisat::lbool ret = solver.solveLimited(assumps);
-            if      (ret == Minisat::l_True)  return gpid::SolverTestStatus::SOLVER_SAT;
-            else if (ret == Minisat::l_False) return gpid::SolverTestStatus::SOLVER_UNSAT;
-            else                              return gpid::SolverTestStatus::SOLVER_UNKNOWN;
-        }
+        inline void addHypothesis(MinisatHypothesis& hypothesis, uint32_t level);
+        inline gpid::SolverTestStatus testHypotheses(uint32_t level);
 
         void setProblem(MinisatProblem& problem);
-
         void start();
     };
 
@@ -84,6 +71,24 @@ namespace gpid {
             while (assumps.size() > lvl_stack.last()) assumps.pop();
             lvl_stack.pop();
         }
+    }
+
+    inline void MinisatSolver::accessLevel(uint32_t level) {
+        if (c_level < level) increaseLevel(level);
+        else decreaseLevel(level);
+    }
+
+    inline void MinisatSolver::addHypothesis(MinisatHypothesis& hypothesis, uint32_t level) {
+        accessLevel(level);
+        assumps.push(hypothesis.lit);
+    }
+
+    inline gpid::SolverTestStatus MinisatSolver::testHypotheses(uint32_t level) {
+        accessLevel(level);
+        Minisat::lbool ret = solver.solveLimited(assumps);
+        if      (ret == Minisat::l_True)  return gpid::SolverTestStatus::SOLVER_SAT;
+        else if (ret == Minisat::l_False) return gpid::SolverTestStatus::SOLVER_UNSAT;
+        else                              return gpid::SolverTestStatus::SOLVER_UNKNOWN;
     }
 
 };
