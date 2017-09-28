@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
-#include <atable/activable_tab.hpp>
+#include <starray/starray.hpp>
 
 #define STATIC_ATABLE_TEST
 
 #define ARRAY_SIZE 16
 
-using namespace atable;
+using namespace starray;
 
 class StaticActivableArrayTest : public ::testing::Test {
 protected:

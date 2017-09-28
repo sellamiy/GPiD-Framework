@@ -9,6 +9,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
+set(LOCAL_LIB_HEADERS_DIR "${CMAKE_BINARY_DIR}/lib-include-local")
+
 # ========== Project Options ==========
 option(BUILD_DOC "Build documentation" ON)
 option(BUILD_TESTS "Build tests" ON)
@@ -18,6 +20,7 @@ include(ExternalProject)
 find_package(Doxygen)
 
 # ========== Files Configuration ==========
+configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
 
 # ========== Minisat ==========
 file(GLOB MINISAT_PATCHES "cmake/minisat/*.patch")
@@ -45,23 +48,26 @@ else()
 endif()
 include_directories("${CMAKE_BINARY_DIR}/minisat-src")
 
-# ========== Header Files ==========
-include_directories("lib/atable")
+# ========== Local Libraries Dependencies ==========
+include_directories("${LOCAL_LIB_HEADERS_DIR}")
+
+# ========== Headers ==========
+include_directories("lib/starray")
 
 include_directories("framework/gpid/include")
 include_directories("framework/minisat/include")
 
 # ========== Source Files ==========
-file(GLOB LIBATABLE_SOURCES "lib/atable/src/*.cpp")
+file(GLOB LIBSTARRAY_SOURCES "lib/starray/src/*.cpp")
 
 file(GLOB LIBGPID_SOURCES "framework/gpid/src/*.cpp")
 file(GLOB PROPMINISAT_SOURCES "framework/minisat/src/*.cpp")
 
 # ========== Libraries Targets ==========
-add_library(atable SHARED ${LIBATABLE_SOURCES})
+add_library(starray SHARED ${LIBSTARRAY_SOURCES})
 
 add_library(gpid SHARED ${LIBGPID_SOURCES})
-target_link_libraries(gpid atable)
+target_link_libraries(gpid starray)
 
 add_library(gpidprop SHARED ${PROPMINISAT_SOURCES})
 target_link_libraries(gpidprop gpid)
@@ -113,12 +119,12 @@ if(BUILD_TESTS)
 
   # ===== Generating Test Targets =====
 
-  file(GLOB LIB_TEST_FILES "test/lib/atable/*.cpp")
+  file(GLOB LIB_TEST_FILES "test/lib/starray/*.cpp")
   foreach(filename ${LIB_TEST_FILES})
     # message(STATUS "Configuring testfile: ${filename}")
     get_filename_component(execname "${filename}" NAME_WE)
     add_executable(${execname} "${filename}")
-    target_link_libraries(${execname} atable)
+    target_link_libraries(${execname} starray)
     target_link_libraries(${execname} gtest gtest_main)
     add_test(${execname} ${execname})
   endforeach()

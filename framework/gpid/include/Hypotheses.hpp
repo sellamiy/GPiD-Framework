@@ -3,7 +3,7 @@
 
 #include <map>
 #include <list>
-#include <atable/activable_tab.hpp>
+#include <starray/starray.hpp>
 #include <Memory.hpp>
 
 namespace gpid {
@@ -16,7 +16,7 @@ namespace gpid {
         std::map<level_t, hyp_index_t> index_table;
         std::map<level_t, std::list<hyp_index_t> > deactivation_map;
         std::map<level_t, std::list<hyp_index_t> > reactivation_map;
-        atable::StaticActivableArray hp_active;
+        starray::StaticActivableArray hp_active;
         level_t current_level;
 
         inline hyp_index_t getIndex() { return index_table[current_level]; }

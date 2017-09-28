@@ -1,9 +1,9 @@
-#ifndef _ACTIVABLE_TAB_HPP_
-#define _ACTIVABLE_TAB_HPP_
+#ifndef _STATIC_ACTIVABLE_ARRAY_HPP_
+#define _STATIC_ACTIVABLE_ARRAY_HPP_
 
 #include <inttypes.h>
 
-namespace atable {
+namespace starray {
 
     /**
      * @brief Array of activated elements.

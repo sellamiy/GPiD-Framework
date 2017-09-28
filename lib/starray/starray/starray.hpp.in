@@ -1,0 +1,6 @@
+#ifndef _STATIC_ARRAYS_LIBRARY_HEADER_
+#define _STATIC_ARRAYS_LIBRARY_HEADER_
+
+#include <starray/StaticActivableArray.hpp>
+
+#endif

@@ -1,10 +1,10 @@
-#define _ACTIVABLE_TAB_C_
+#define _STATIC_ACTIVABLE_ARRAY_CPP_
 
 #include <stdlib.h>
 #include <assert.h>
-#include <atable/activable_tab.hpp>
+#include <starray/StaticActivableArray.hpp>
 
-using namespace atable;
+using namespace starray;
 
 StaticActivableArray::StaticActivableArray(uint32_t size)
 {
