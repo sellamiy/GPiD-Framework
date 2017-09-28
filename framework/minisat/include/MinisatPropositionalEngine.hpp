@@ -1,7 +1,6 @@
 #ifndef GPID_PROPOSITIONAL_ENGINE__MINISAT_HPP
 #define GPID_PROPOSITIONAL_ENGINE__MINISAT_HPP
 
-#include <list>
 #include <minisat/simp/SimpSolver.h>
 #include <DecompEngine.hpp>
 
