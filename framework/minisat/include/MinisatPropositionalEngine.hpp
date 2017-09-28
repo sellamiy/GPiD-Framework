@@ -1,6 +1,7 @@
 #ifndef GPID_PROPOSITIONAL_ENGINE__MINISAT_HPP
 #define GPID_PROPOSITIONAL_ENGINE__MINISAT_HPP
 
+#include <list>
 #include <minisat/simp/SimpSolver.h>
 #include <DecompEngine.hpp>
 
@@ -20,7 +21,24 @@ namespace gpid_prop {
     typedef gpid::DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver> MinisatDecompEngine;
 
     class MinisatProblem {
+    public:
+        enum IOMode { IO_READ, IO_WRITE };
+    private:
+        IOMode mode = IOMode::IO_WRITE;
 
+        Minisat::vec<Minisat::Lit> cons_data;
+        Minisat::vec<int> cons_sep;
+
+        Minisat::vec<int> read_session_seps;
+        Minisat::vec<Minisat::Lit> read_session_data;
+        Minisat::vec<Minisat::Lit> read_local_data;
+
+        void initCurrentMode();
+    public:
+        inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
+        void addConstraint(Minisat::vec<Minisat::Lit>& ps);
+        bool hasMoreConstraints();
+        Minisat::vec<Minisat::Lit>& nextConstraint();
     };
 
     class MinisatSolver {
@@ -37,7 +55,7 @@ namespace gpid_prop {
         }
     public:
         inline void removeHypotheses(uint32_t level) { accessLevel(level); }
-        inline void addHypothesis(MinisatHypothesis hypothesis, uint32_t level) {
+        inline void addHypothesis(MinisatHypothesis& hypothesis, uint32_t level) {
             accessLevel(level);
             assumps.push(hypothesis.lit);
         }
