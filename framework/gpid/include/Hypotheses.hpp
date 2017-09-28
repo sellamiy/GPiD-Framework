@@ -75,7 +75,7 @@ namespace gpid {
             hyp_index_t todeac = getIndex();
             setIndex(hp_active.get_next());
             hp_active.deactivate(todeac);
-            deactivation_map[current_level].insert(todeac);
+            deactivation_map[current_level].push_back(todeac);
         }
         return *hp_mapping[getIndex()];
     }
