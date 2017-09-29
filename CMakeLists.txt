@@ -15,6 +15,10 @@ endif()
 
 # ========== Cmake Project Global Configuration ==========
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/coverage/")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(TESTS_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test-bin)
 
 # ========== Finding Packages ==========
 include(ExternalProject)
@@ -145,7 +149,8 @@ if(BUILD_TESTS)
     add_executable(${execname} "${filename}")
     target_link_libraries(${execname} starray)
     target_link_libraries(${execname} gtest gtest_main)
-    add_test(${execname} ${execname})
+    set_target_properties(${execname} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_RUNTIME_OUTPUT_DIRECTORY})
+    add_test(NAME ${execname} COMMAND ${execname})
   endforeach()
 
   # ===== Coverage =====
