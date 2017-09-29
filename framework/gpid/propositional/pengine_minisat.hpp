@@ -47,7 +47,7 @@ namespace gpid {
     class MinisatSolver {
         Minisat::SimpSolver solver;
         Minisat::vec<Minisat::Lit> assumps;
-        Minisat::vec<uint32_t> lvl_stack;
+        Minisat::vec<int> lvl_stack;
         uint32_t c_level;
 
         inline void increaseLevel(uint32_t target);
