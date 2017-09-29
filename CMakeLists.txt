@@ -4,25 +4,41 @@ project(gpid-framework
   VERSION "0.0.1")
 set(EXTENDED_PROJECT_NAME "GPiD Framework - Prime Implicates by Decomposition")
 
-# ========== Cmake Project Global Configuration ==========
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-
-set(LOCAL_LIB_HEADERS_DIR "${CMAKE_BINARY_DIR}/lib-include-local")
-set(FRAMEWORK_CONF_HEADERS_DIR "${CMAKE_BINARY_DIR}/framework-include")
-
 # ========== Project Options ==========
 option(BUILD_DOC "Build documentation" ON)
 option(BUILD_TESTS "Build tests" ON)
+option(COVERAGE_TOOLS "Configure and compile for code coverage reports" OFF)
+
+if (COVERAGE_TOOLS AND NOT BUILD_TESTS)
+  message(WARNING "Coverage targets cannot be configured if tests are not built alongside it!")
+endif()
+
+# ========== Cmake Project Global Configuration ==========
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/coverage/")
 
 # ========== Finding Packages ==========
 include(ExternalProject)
-
+if (COVERAGE_TOOLS)
+  include(CodeCoverage)
+endif()
 find_package(Doxygen)
 
 find_package(ZLIB)
 include_directories(${ZLIB_INCLUDE_DIR})
+
+# ========== Cmake Project Local Configuration ==========
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+if (COVERAGE_TOOLS)
+  set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "v1/*" "/usr/include/*" "/usr/include/c++/*")
+  if (APPLE)
+    set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/*/*")
+  endif()
+  append_coverage_compiler_flags("-Wno-inline")
+endif()
+
+set(LOCAL_LIB_HEADERS_DIR "${CMAKE_BINARY_DIR}/lib-include-local")
+set(FRAMEWORK_CONF_HEADERS_DIR "${CMAKE_BINARY_DIR}/framework-include")
 
 # ========== Files Configuration ==========
 configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
@@ -131,6 +147,16 @@ if(BUILD_TESTS)
     target_link_libraries(${execname} gtest gtest_main)
     add_test(${execname} ${execname})
   endforeach()
+
+  # ===== Coverage =====
+
+  if (COVERAGE_TOOLS)
+    set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/googletest-src/*/*/*")
+    set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/googletest-src/*/*/*/*")
+    set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/googletest-src/*/*/*/*/*")
+    set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_SOURCE_DIR}/test/lib/*/*")
+    setup_target_for_coverage(NAME coverage EXECUTABLE ctest)
+  endif()
 
 endif()
 
