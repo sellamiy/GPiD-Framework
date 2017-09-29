@@ -1,6 +1,7 @@
 #ifndef GPID_GENERATION_ALGORITHMS_HPP
 #define GPID_GENERATION_ALGORITHMS_HPP
 
+#include <iostream>
 #include <gpid/core/engine.hpp>
 
 /* ========== Helpers ========== */
@@ -17,6 +18,7 @@ template<class HypothesisT, class ProblemT, class SolverT>
 extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::activeIsImplicate() {
     // Means that active_h is unsat with the problem, thus that not(active_h) is an implicate
     // TODO
+    std::cerr << "WARNING: Active implicates storage not implemented!" << std::endl;
 }
 
 template<class HypothesisT, class ProblemT, class SolverT>
@@ -66,7 +68,7 @@ extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateI
                 popStackLevel();
             } else {
                 // Solver UNKNOWN :: ERROR
-                // TODO: Notify
+                std::cerr << "FATAL: Solver could not decide query!" << std::endl;
             }
 
         }
