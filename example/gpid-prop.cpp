@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     parse_DIMACS(in, P);
     gzclose(in);
 
-    MinisatHypothesesSet A(50);
+    MinisatHypothesesSet A(2*P.getVarCpt());
 
     // TODO: Read problem from file and store clauses in P
     // TODO: Read problem from file and store abducoble hypotheses in A
