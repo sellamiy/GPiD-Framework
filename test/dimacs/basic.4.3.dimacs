@@ -1,0 +1,7 @@
+c Example.Dimacs
+c Dimacs
+c
+p cnf 4 3
+1 3 -2 0
+2 -4 -3 0
+4 -2 -1 0
