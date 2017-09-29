@@ -18,7 +18,11 @@ option(BUILD_TESTS "Build tests" ON)
 
 # ========== Finding Packages ==========
 include(ExternalProject)
+
 find_package(Doxygen)
+
+find_package(ZLIB)
+include_directories(${ZLIB_INCLUDE_DIR})
 
 # ========== Files Configuration ==========
 configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
@@ -71,6 +75,7 @@ add_library(starray SHARED ${LIBSTARRAY_SOURCES})
 add_library(gpid SHARED ${LIBGPID_SOURCES})
 target_link_libraries(gpid starray)
 target_link_libraries(gpid minisat-lib-shared)
+target_link_libraries(gpid ${ZLIB_LIBRARY})
 
 # ========== Example Programs Targets ==========
 add_executable(gpid-prop "example/gpid-prop.cpp")

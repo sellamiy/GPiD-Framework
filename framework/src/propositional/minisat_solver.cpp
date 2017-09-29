@@ -11,10 +11,10 @@ void MinisatSolver::start() {
 
 void MinisatSolver::setProblem(MinisatProblem& problem) {
     problem.setMode(MinisatProblem::IOMode::IO_READ);
+    for (int i = 0; i < problem.getVarCpt(); i++)
+        solver.newVar();
     while (problem.hasMoreConstraints()) {
         Minisat::vec<Minisat::Lit>& ps = problem.nextConstraint();
-        for (int i = 0; i < ps.size(); i++)
-            while (var(ps[i]) >= solver.nVars()) solver.newVar();
         solver.addClause_(ps);
     }
 }

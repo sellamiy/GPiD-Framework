@@ -23,6 +23,7 @@ namespace gpid {
     public:
         enum IOMode { IO_READ, IO_WRITE };
     private:
+        int var_cpt = 0;
         IOMode mode = IOMode::IO_WRITE;
 
         Minisat::vec<Minisat::Lit> cons_data;
@@ -34,7 +35,10 @@ namespace gpid {
 
         void initCurrentMode();
     public:
+        inline int getVarCpt() { return var_cpt; }
+        inline void newVar() { ++var_cpt; }
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
+
         void addConstraint(Minisat::vec<Minisat::Lit>& ps);
         bool hasMoreConstraints();
         Minisat::vec<Minisat::Lit>& nextConstraint();

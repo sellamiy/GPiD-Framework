@@ -15,6 +15,8 @@ int main(int argc, char** argv) {
     MinisatSolver S;
     MinisatProblem P;
 
+    // parse_DIMACS(input, P);
+
     MinisatHypothesesSet A(50);
 
     // TODO: Read problem from file and store clauses in P
