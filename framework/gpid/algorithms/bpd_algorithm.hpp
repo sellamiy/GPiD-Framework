@@ -10,6 +10,7 @@ extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::resetEngi
     solver.setProblem(problem);
     solver.start();
     level = 1;
+    sdir = IStackDirection::STACK_PUSH;
 }
 
 template<class HypothesisT, class ProblemT, class SolverT>
