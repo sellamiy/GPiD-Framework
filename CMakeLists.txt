@@ -75,6 +75,10 @@ else()
 endif()
 include_directories("${CMAKE_BINARY_DIR}/minisat-src")
 
+if (COVERAGE_TOOLS)
+  set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/minisat-src/minisat/*/*")
+endif()
+
 # ========== Local Libraries Dependencies ==========
 include_directories("${LOCAL_LIB_HEADERS_DIR}")
 
