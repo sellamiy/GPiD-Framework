@@ -7,6 +7,8 @@ using namespace gpid;
 void MinisatSolver::start() {
     solver.eliminate(true);
     solver.verbosity = 0;
+
+    c_level = 0;
 }
 
 void MinisatSolver::setProblem(MinisatProblem& problem) {
