@@ -15,7 +15,9 @@ int main(int argc, char** argv) {
     MinisatSolver S;
     MinisatProblem P;
 
-    // parse_DIMACS(input, P);
+    gzFile in = gzopen(argv[1], "rb"); // TODO: Handle input errors
+    parse_DIMACS(in, P);
+    gzclose(in);
 
     MinisatHypothesesSet A(50);
 
