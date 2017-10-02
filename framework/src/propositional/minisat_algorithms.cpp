@@ -5,8 +5,7 @@
 #include <gpid/algorithms/bpd_algorithm.hpp>
 
 namespace gpid {
-    template<>
-    extern void DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver>
+    template<> void DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver>
     ::printAsImplicate(std::vector<MinisatHypothesis>& impl, bool negate) {
         p_implicate(std::cout, impl, negate);
     }
