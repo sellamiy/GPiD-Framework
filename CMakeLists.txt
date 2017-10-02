@@ -155,6 +155,7 @@ if(BUILD_TESTS)
 
   # ===== Generating Test Targets =====
 
+  # == Unit Targets ==
   file(GLOB LIB_TEST_FILES "test/lib/*/*.cpp" "test/framework/*/*.cpp")
   foreach(filename ${LIB_TEST_FILES})
     # message(STATUS "Configuring testfile: ${filename}")
@@ -165,6 +166,13 @@ if(BUILD_TESTS)
     target_link_libraries(${execname} gtest gtest_main)
     set_target_properties(${execname} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_RUNTIME_OUTPUT_DIRECTORY})
     add_test(NAME ${execname} COMMAND ${execname})
+  endforeach()
+
+  # == Dimacs Targets ==
+  file(GLOB DIMACS_TEST_FILES "test/dimacs/*.dimacs")
+  foreach(filename ${DIMACS_TEST_FILES})
+    get_filename_component(mfilename "${filename}" NAME)
+    add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-prop "${filename}")
   endforeach()
 
   # ===== Coverage =====
