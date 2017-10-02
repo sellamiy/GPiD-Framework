@@ -37,28 +37,38 @@ namespace gpid {
 #define s_nbg_wit "\033[0;47m"
 
 #define s_reset   "\033[0m"
-
-    inline void l_message(std::string msg)
+    template<typename printable>
+    inline void l_message(printable msg)
     { std::cerr << "-- "                                  << msg << s_reset << std::endl; }
-    inline void l_info(std::string msg)
+    template<typename printable>
+    inline void l_info(printable msg)
     { std::cerr << s_bfg_blu << "INFO: "     << s_nfg_blu << msg << s_reset << std::endl; }
-    inline void l_warn(std::string msg)
+    template<typename printable>
+    inline void l_warn(printable msg)
     { std::cerr << s_bfg_ylw << "WARNING: "  << s_nfg_ylw << msg << s_reset << std::endl; }
-    inline void l_error(std::string msg)
+    template<typename printable>
+    inline void l_error(printable msg)
     { std::cerr << s_bfg_red << "ERROR: "    << s_nfg_red << msg << s_reset << std::endl; }
-    inline void l_internal(std::string msg)
+    template<typename printable>
+    inline void l_internal(printable msg)
     { std::cerr << s_bfg_red << "INTERNAL: " << s_nfg_mag << msg << s_reset << std::endl; }
-    inline void l_fatal(std::string msg)
+    template<typename printable>
+    inline void l_fatal(printable msg)
     { std::cerr << s_bfg_red << "FATAL: "    << s_bfg_red << msg << s_reset << std::endl; }
 
 #else
-
-    inline void l_message(std::string msg)  { std::cerr << "-- "        << msg << std::endl; }
-    inline void l_info(std::string msg)     { std::cerr << "INFO: "     << msg << std::endl; }
-    inline void l_warn(std::string msg)     { std::cerr << "WARNING: "  << msg << std::endl; }
-    inline void l_error(std::string msg)    { std::cerr << "ERROR: "    << msg << std::endl; }
-    inline void l_internal(std::string msg) { std::cerr << "INTERNAL: " << msg << std::endl; }
-    inline void l_fatal(std::string msg)    { std::cerr << "FATAL: "    << msg << std::endl; }
+    template<typename printable>
+    inline void l_message(printable msg)  { std::cerr << "-- "        << msg << std::endl; }
+    template<typename printable>
+    inline void l_info(printable msg)     { std::cerr << "INFO: "     << msg << std::endl; }
+    template<typename printable>
+    inline void l_warn(printable msg)     { std::cerr << "WARNING: "  << msg << std::endl; }
+    template<typename printable>
+    inline void l_error(printable msg)    { std::cerr << "ERROR: "    << msg << std::endl; }
+    template<typename printable>
+    inline void l_internal(printable msg) { std::cerr << "INTERNAL: " << msg << std::endl; }
+    template<typename printable>
+    inline void l_fatal(printable msg)    { std::cerr << "FATAL: "    << msg << std::endl; }
 
 #endif
 
