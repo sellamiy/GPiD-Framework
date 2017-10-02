@@ -1,6 +1,7 @@
 #ifndef _PI_DECOMP_CONFIGURATION_HEADER_
 #define _PI_DECOMP_CONFIGURATION_HEADER_
 
+/* Minisat additional components options */
 #cmakedefine MERGE_MINISAT_OUTPUT_WRAPPERS
 
 #endif

@@ -14,6 +14,7 @@ option(MERGE_MINISAT_OUTPUT_WRAPPERS "Merge Minisat printers into its original n
 
 # ========== Cmake Project Global Configuration ==========
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/coverage/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/git/")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -22,6 +23,16 @@ set(TESTS_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test-bin)
 if(USE_COLORS AND NOT WIN32)
   set(USE_ANSI_COLORS "ON")
 endif()
+
+include(GetGitRevisionDescription)
+git_describe(VERSION --tags --dirty=-dirty)
+git_local_changes(VERSION_STATE)
+
+string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
+set(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 # ========== Logging Global Configuration Infos ==========
 if(BUILD_DOC)
@@ -75,6 +86,7 @@ endif()
 
 set(LOCAL_LIB_HEADERS_DIR "${CMAKE_BINARY_DIR}/lib-include-local")
 set(FRAMEWORK_CONF_HEADERS_DIR "${CMAKE_BINARY_DIR}/framework-include")
+set(FRAMEWORK_CONF_SOURCE_DIR "${CMAKE_BINARY_DIR}/framework-configured")
 
 # ========== Files Configuration ==========
 configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
@@ -82,6 +94,9 @@ configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starr
 configure_file(framework/gpid/include/config.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/config.hpp)
 configure_file(framework/gpid/include/errors.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/errors.hpp)
 configure_file(framework/gpid/include/gpid.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/gpid.hpp)
+file(COPY framework/gpid/include/version.hpp DESTINATION ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/)
+
+configure_file(framework/src/config/version.cpp.in ${FRAMEWORK_CONF_SOURCE_DIR}/config/version.cpp)
 
 # ========== Minisat ==========
 file(GLOB MINISAT_PATCHES "cmake/minisat/*.patch")
@@ -127,7 +142,7 @@ include_directories("framework")
 # ========== Source Files ==========
 file(GLOB LIBSTARRAY_SOURCES "lib/starray/src/*.cpp")
 
-file(GLOB LIBGPID_SOURCES "framework/src/*/*.cpp")
+file(GLOB LIBGPID_SOURCES "framework/src/*/*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/*.cpp")
 
 # ========== Libraries Targets ==========
 add_library(starray STATIC ${LIBSTARRAY_SOURCES})

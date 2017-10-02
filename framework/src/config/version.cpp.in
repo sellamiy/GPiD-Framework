@@ -1,0 +1,11 @@
+#define _PI_DECOMP_VERSION_DEFINITIONS_
+#include <gpid/version.hpp>
+
+extern const std::string gpid::project_name = "@PROJECT_NAME@";
+extern const std::string gpid::project_full_name = "@EXTENDED_PROJECT_NAME@";
+
+extern const std::string gpid::project_version = "@VERSION@";
+extern const std::string gpid::project_version_short = "@VERSION_SHORT@";
+extern const std::string gpid::project_version_state = "@VERSION_STATE@";
+
+extern const std::string gpid::project_mode = "@CMAKE_BUILD_TYPE@";
