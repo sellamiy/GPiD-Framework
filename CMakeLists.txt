@@ -12,10 +12,6 @@ option(USE_COLORS "Configure color print outputs" ON)
 
 option(MERGE_MINISAT_OUTPUT_WRAPPERS "Merge Minisat printers into its original namespace" ON)
 
-if (COVERAGE_TOOLS AND NOT BUILD_TESTS)
-  message(WARNING "Coverage targets cannot be configured if tests are not built alongside it!")
-endif()
-
 # ========== Cmake Project Global Configuration ==========
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/coverage/")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -27,6 +23,33 @@ if(USE_COLORS AND NOT WIN32)
   set(USE_ANSI_COLORS "ON")
 endif()
 
+# ========== Logging Global Configuration Infos ==========
+if(BUILD_DOC)
+  message(STATUS "Documentation generation enabled")
+endif()
+if(BUILD_TESTS)
+  message(STATUS "Tests enabled")
+endif()
+if(COVERAGE_TOOLS)
+  message(STATUS "Test code coverage support enabled")
+endif()
+if(COVERAGE_TOOLS AND NOT BUILD_TESTS)
+  message(WARNING "Coverage targets cannot be configured if tests are not built alongside it!")
+endif()
+if(USE_COLORS AND NOT WIN32)
+  message(STATUS "Target colored output enabled")
+endif()
+if(MERGE_MINISAT_OUTPUT_WRAPPERS)
+  message(STATUS "Minisat strict printers location: parent namespace")
+else()
+  message(STATUS "Minisat strict printers location: separate namespace")
+endif()
+message(STATUS "Libraries target directory: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+message(STATUS "Executables target directory: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+if(BUILD_TESTS)
+  message(STATUS "Tests target directory: ${TESTS_RUNTIME_OUTPUT_DIRECTORY}")
+endif()
+
 # ========== Finding Packages ==========
 include(ExternalProject)
 if (COVERAGE_TOOLS)
@@ -34,7 +57,7 @@ if (COVERAGE_TOOLS)
 endif()
 find_package(Doxygen)
 
-find_package(ZLIB)
+find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIR})
 
 # ========== Cmake Project Local Configuration ==========
@@ -85,6 +108,8 @@ else()
     ${CMAKE_BINARY_DIR}/minisat-build/libminisat.so)
 endif()
 include_directories("${CMAKE_BINARY_DIR}/minisat-src")
+message(STATUS "Minisat patched source directory: ${CMAKE_BINARY_DIR}/minisat-src")
+message(STATUS "Minisat linkables directory: ${CMAKE_BINARY_DIR}/minisat-build")
 
 if (COVERAGE_TOOLS)
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/minisat-src/minisat/*/*")
@@ -121,7 +146,7 @@ target_link_libraries(gpid-prop gpid)
 if(BUILD_TESTS)
 
   # ===== Configuring Test Framework =====
-
+  message(STATUS "+ Configuring test framework...")
   enable_testing()
 
   # Download and unpack googletest at configure time
@@ -160,7 +185,7 @@ if(BUILD_TESTS)
   # == Unit Targets ==
   file(GLOB LIB_TEST_FILES "test/lib/*/*.cpp" "test/framework/*/*.cpp")
   foreach(filename ${LIB_TEST_FILES})
-    # message(STATUS "Configuring testfile: ${filename}")
+    message(STATUS "Found test file: ${filename}")
     get_filename_component(execname "${filename}" NAME_WE)
     add_executable(${execname} "${filename}")
     target_link_libraries(${execname} starray)
@@ -173,6 +198,7 @@ if(BUILD_TESTS)
   # == Dimacs Targets ==
   file(GLOB DIMACS_TEST_FILES "test/dimacs/*.dimacs")
   foreach(filename ${DIMACS_TEST_FILES})
+    message(STATUS "Found dimacs test file: ${filename}")
     get_filename_component(mfilename "${filename}" NAME)
     add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-prop "${filename}")
   endforeach()
@@ -188,6 +214,7 @@ if(BUILD_TESTS)
     setup_target_for_coverage(NAME coverage EXECUTABLE ctest)
   endif()
 
+  message(STATUS "+ Test framework configuration done")
 endif()
 
 # ========== Documentation ==========
