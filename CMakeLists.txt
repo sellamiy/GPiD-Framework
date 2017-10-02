@@ -155,7 +155,7 @@ if(BUILD_TESTS)
 
   # ===== Generating Test Targets =====
 
-  file(GLOB LIB_TEST_FILES "test/lib/*/*.cpp")
+  file(GLOB LIB_TEST_FILES "test/lib/*/*.cpp" "test/framework/*/*.cpp")
   foreach(filename ${LIB_TEST_FILES})
     # message(STATUS "Configuring testfile: ${filename}")
     get_filename_component(execname "${filename}" NAME_WE)
@@ -174,6 +174,7 @@ if(BUILD_TESTS)
     set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/googletest-src/*/*/*/*")
     set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/googletest-src/*/*/*/*/*")
     set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_SOURCE_DIR}/test/lib/*/*")
+    set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_SOURCE_DIR}/test/framework/*/*")
     setup_target_for_coverage(NAME coverage EXECUTABLE ctest)
   endif()
 
