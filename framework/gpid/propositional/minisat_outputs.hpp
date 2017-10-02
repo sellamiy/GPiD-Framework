@@ -17,17 +17,23 @@ namespace gpid {
         return out << (p == Minisat::lit_Undef ? "?" : (p.x % 2 == 0 ? "" : "-")) << p.x/2 + 1;
     }
 
+    extern inline
+    void p_implicate(std::ostream& out, Minisat::vec<Minisat::Lit>& impl, bool negate) {
+        out << "> ";
+        for (int i = 0; i < impl.size(); ++i) out << (negate ? ~impl[i] : impl[i]) << " ";
+        out << std::endl;
+    }
+
 };
 
 /* Gpid Minisat integr. output printers */
 namespace gpid {
 
-    extern inline void p_implicate(std::ostream& out, std::vector<MinisatHypothesis>& impl, bool negate) {
-        if (negate) {
-            out << "> ";
-            for (MinisatHypothesis hyp : impl) out << ~(hyp.lit) << " ";
-            out << std::endl;
-        } else { l_warn("Minisat Implicate Non-negated Printers are not implemeted yet!"); }
+    extern inline
+    void p_implicate(std::ostream& out, std::vector<MinisatHypothesis>& impl, bool negate) {
+        out << "> ";
+        for (MinisatHypothesis hyp : impl) out << (negate ? ~(hyp.lit) : hyp.lit) << " ";
+        out << std::endl;
     }
 
 };
