@@ -10,9 +10,9 @@ void MinisatProblem::addConstraint(Minisat::vec<Minisat::Lit>& ps) {
         // TODO: Raise Error
         l_warn("Writing problem on reading mode!");
     }
+    cons_sep.push(cons_data.size());
     for (int i = 0; i < ps.size(); i++)
         cons_data.push(ps[i]);
-    cons_sep.push(ps.size());
 }
 
 bool MinisatProblem::hasMoreConstraints() {
