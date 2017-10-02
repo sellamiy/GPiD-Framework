@@ -155,12 +155,13 @@ if(BUILD_TESTS)
 
   # ===== Generating Test Targets =====
 
-  file(GLOB LIB_TEST_FILES "test/lib/starray/*.cpp")
+  file(GLOB LIB_TEST_FILES "test/lib/*/*.cpp")
   foreach(filename ${LIB_TEST_FILES})
     # message(STATUS "Configuring testfile: ${filename}")
     get_filename_component(execname "${filename}" NAME_WE)
     add_executable(${execname} "${filename}")
     target_link_libraries(${execname} starray)
+    target_link_libraries(${execname} gpid)
     target_link_libraries(${execname} gtest gtest_main)
     set_target_properties(${execname} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_RUNTIME_OUTPUT_DIRECTORY})
     add_test(NAME ${execname} COMMAND ${execname})
