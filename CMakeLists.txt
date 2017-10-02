@@ -10,6 +10,8 @@ option(BUILD_TESTS "Build tests" ON)
 option(COVERAGE_TOOLS "Configure and compile for code coverage reports" OFF)
 option(USE_COLORS "Configure color print outputs" ON)
 
+option(MERGE_MINISAT_OUTPUT_WRAPPERS "Merge Minisat printers into its original namespace" ON)
+
 if (COVERAGE_TOOLS AND NOT BUILD_TESTS)
   message(WARNING "Coverage targets cannot be configured if tests are not built alongside it!")
 endif()
@@ -52,8 +54,9 @@ set(FRAMEWORK_CONF_HEADERS_DIR "${CMAKE_BINARY_DIR}/framework-include")
 # ========== Files Configuration ==========
 configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
 
-configure_file(framework/gpid/include/gpid.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/gpid.hpp)
+configure_file(framework/gpid/include/config.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/config.hpp)
 configure_file(framework/gpid/include/errors.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/errors.hpp)
+configure_file(framework/gpid/include/gpid.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/gpid.hpp)
 
 # ========== Minisat ==========
 file(GLOB MINISAT_PATCHES "cmake/minisat/*.patch")
