@@ -103,9 +103,9 @@ file(GLOB LIBSTARRAY_SOURCES "lib/starray/src/*.cpp")
 file(GLOB LIBGPID_SOURCES "framework/src/*/*.cpp")
 
 # ========== Libraries Targets ==========
-add_library(starray SHARED ${LIBSTARRAY_SOURCES})
+add_library(starray STATIC ${LIBSTARRAY_SOURCES})
 
-add_library(gpid SHARED ${LIBGPID_SOURCES})
+add_library(gpid STATIC ${LIBGPID_SOURCES})
 target_link_libraries(gpid starray)
 target_link_libraries(gpid minisat-lib-shared)
 target_link_libraries(gpid ${ZLIB_LIBRARY})
