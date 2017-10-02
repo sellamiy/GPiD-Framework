@@ -16,9 +16,9 @@ extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::resetEngi
 
 template<class HypothesisT, class ProblemT, class SolverT>
 extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::activeIsImplicate() {
-    // Means that active_h is unsat with the problem, thus that not(active_h) is an implicate
-    // TODO
-    l_warn("Active implicates storage not implemented!");
+    // TODO: Handle More
+    l_warn("Active implicates basics and storage not implemented!");
+    printAsImplicate(solver.extractActive());
 }
 
 template<class HypothesisT, class ProblemT, class SolverT>

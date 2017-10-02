@@ -1,7 +1,7 @@
 #define GPID__MINISAT_PROBLEM_CPP
 
 #include <gpid/errors.hpp>
-#include <gpid/propositional/pengine_minisat.hpp>
+#include <gpid/propositional/minisat_pengine.hpp>
 
 using namespace gpid;
 

@@ -1,7 +1,7 @@
 #ifndef GPID_MINISAT_INPUT_HANDLING_HPP
 #define GPID_MINISAT_INPUT_HANDLING_HPP
 
-#include <gpid/propositional/pengine_minisat.hpp>
+#include <gpid/propositional/minisat_pengine.hpp>
 
 namespace gpid {
 

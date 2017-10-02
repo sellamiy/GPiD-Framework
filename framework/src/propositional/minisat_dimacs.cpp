@@ -1,6 +1,6 @@
 #define MINISAT_DIMACS_PARSING
 
-#include <gpid/propositional/inputs_minisat.hpp>
+#include <gpid/propositional/minisat_inputs.hpp>
 #include <minisat/core/Dimacs.h>
 
 namespace gpid {

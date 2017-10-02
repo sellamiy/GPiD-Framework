@@ -1,6 +1,7 @@
 #ifndef GPID_PROPOSITIONAL_ENGINE__MINISAT_HPP
 #define GPID_PROPOSITIONAL_ENGINE__MINISAT_HPP
 
+#include <vector>
 #include <minisat/simp/SimpSolver.h>
 #include <gpid/core/engine.hpp>
 
@@ -10,7 +11,7 @@ namespace gpid {
     struct MinisatHypothesis {
         const MinisatInternal lit;
         MinisatHypothesis(MinisatInternal d) : lit(d) {}
-        MinisatHypothesis(MinisatHypothesis& d) : lit(d.lit) {}
+        MinisatHypothesis(const MinisatHypothesis& d) : lit(d.lit) {}
     };
     typedef gpid::HypothesesSet<MinisatHypothesis> MinisatHypothesesSet;
 
@@ -47,6 +48,7 @@ namespace gpid {
     class MinisatSolver {
         Minisat::SimpSolver solver;
         Minisat::vec<Minisat::Lit> assumps;
+        std::vector<MinisatHypothesis> loc_ass;
         Minisat::vec<int> lvl_stack;
         uint32_t c_level;
 
@@ -58,6 +60,8 @@ namespace gpid {
         inline void removeHypotheses(uint32_t level) { accessLevel(level); }
         inline void addHypothesis(MinisatHypothesis& hypothesis, uint32_t level);
         inline gpid::SolverTestStatus testHypotheses(uint32_t level);
+
+        inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }
 
         void setProblem(MinisatProblem& problem);
         void start();
@@ -72,7 +76,10 @@ namespace gpid {
     inline void MinisatSolver::decreaseLevel(uint32_t target) {
         while (c_level > target) {
             --c_level;
-            while (assumps.size() > lvl_stack.last()) assumps.pop();
+            while (assumps.size() > lvl_stack.last()) {
+                assumps.pop();
+                loc_ass.pop_back();
+            }
             lvl_stack.pop();
         }
     }
@@ -84,6 +91,7 @@ namespace gpid {
 
     inline void MinisatSolver::addHypothesis(MinisatHypothesis& hypothesis, uint32_t level) {
         accessLevel(level);
+        loc_ass.push_back(hypothesis);
         assumps.push(hypothesis.lit);
     }
 
