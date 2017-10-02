@@ -1,6 +1,6 @@
 #define GPID__MINISAT_PROBLEM_CPP
 
-#include <iostream>
+#include <gpid/errors.hpp>
 #include <gpid/propositional/pengine_minisat.hpp>
 
 using namespace gpid;
@@ -8,7 +8,7 @@ using namespace gpid;
 void MinisatProblem::addConstraint(Minisat::vec<Minisat::Lit>& ps) {
     if (mode != IOMode::IO_WRITE) {
         // TODO: Raise Error
-        std::cerr << "WARNING: Writing problem on reading mode!" << std::endl;
+        l_warn("Writing problem on reading mode!");
     }
     for (int i = 0; i < ps.size(); i++)
         cons_data.push(ps[i]);
@@ -18,7 +18,7 @@ void MinisatProblem::addConstraint(Minisat::vec<Minisat::Lit>& ps) {
 bool MinisatProblem::hasMoreConstraints() {
     if (mode != IOMode::IO_READ) {
         // TODO: Raise Error
-        std::cerr << "WARNING: Reading problem on writing mode!" << std::endl;
+        l_warn("Reading problem on writing mode!");
     }
     return read_session_seps.size() > 0;
 }
@@ -26,7 +26,7 @@ bool MinisatProblem::hasMoreConstraints() {
 Minisat::vec<Minisat::Lit>& MinisatProblem::nextConstraint() {
     if (mode != IOMode::IO_READ) {
         // TODO: Raise Error
-        std::cerr << "WARNING: Reading problem on writing mode!" << std::endl;
+        l_warn("Reading problem on writing mode!");
     }
     read_local_data.clear();
     while (read_session_data.size() > read_session_seps.last()) {
@@ -49,7 +49,7 @@ void MinisatProblem::initCurrentMode() {
         break;
     default:
         // TODO: Raise Error
-        std::cerr << "INTERNAL: Minisat problem ended in an Unknown state!" << std::endl;
+        l_internal("Minisat problem ended in an Unknown state!");
         break;
     }
 }

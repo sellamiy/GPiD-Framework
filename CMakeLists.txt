@@ -8,6 +8,7 @@ set(EXTENDED_PROJECT_NAME "GPiD Framework - Prime Implicates by Decomposition")
 option(BUILD_DOC "Build documentation" ON)
 option(BUILD_TESTS "Build tests" ON)
 option(COVERAGE_TOOLS "Configure and compile for code coverage reports" OFF)
+option(USE_COLORS "Configure color print outputs" ON)
 
 if (COVERAGE_TOOLS AND NOT BUILD_TESTS)
   message(WARNING "Coverage targets cannot be configured if tests are not built alongside it!")
@@ -19,6 +20,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(TESTS_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test-bin)
+
+if(USE_COLORS AND NOT WIN32)
+  set(USE_ANSI_COLORS "ON")
+endif()
 
 # ========== Finding Packages ==========
 include(ExternalProject)
@@ -48,6 +53,7 @@ set(FRAMEWORK_CONF_HEADERS_DIR "${CMAKE_BINARY_DIR}/framework-include")
 configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
 
 configure_file(framework/gpid/include/gpid.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/gpid.hpp)
+configure_file(framework/gpid/include/errors.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/errors.hpp)
 
 # ========== Minisat ==========
 file(GLOB MINISAT_PATCHES "cmake/minisat/*.patch")

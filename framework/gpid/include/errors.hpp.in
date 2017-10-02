@@ -1,0 +1,67 @@
+#ifndef _PI_DECOMP_ERRORS_HEADER_
+#define _PI_DECOMP_ERRORS_HEADER_
+
+#include <iostream>
+
+#cmakedefine USE_ANSI_COLORS
+
+namespace gpid {
+
+#ifdef USE_ANSI_COLORS
+
+#define s_nfg_blk "\033[0;30m"
+#define s_nfg_red "\033[0;31m"
+#define s_nfg_gre "\033[0;32m"
+#define s_nfg_ylw "\033[0;33m"
+#define s_nfg_blu "\033[0;34m"
+#define s_nfg_mag "\033[0;35m"
+#define s_nfg_cya "\033[0;36m"
+#define s_nfg_wit "\033[0;37m"
+
+#define s_bfg_blk "\033[1;30m"
+#define s_bfg_red "\033[1;31m"
+#define s_bfg_gre "\033[1;32m"
+#define s_bfg_ylw "\033[1;33m"
+#define s_bfg_blu "\033[1;34m"
+#define s_bfg_mag "\033[1;35m"
+#define s_bfg_cya "\033[1;36m"
+#define s_bfg_wit "\033[1;37m"
+
+#define s_nbg_blk "\033[0;40m"
+#define s_nbg_red "\033[0;41m"
+#define s_nbg_gre "\033[0;42m"
+#define s_nbg_ylw "\033[0;43m"
+#define s_nbg_blu "\033[0;44m"
+#define s_nbg_mag "\033[0;45m"
+#define s_nbg_cya "\033[0;46m"
+#define s_nbg_wit "\033[0;47m"
+
+#define s_reset   "\033[0m"
+
+    inline void l_message(std::string msg)
+    { std::cerr << "-- "                                  << msg << s_reset << std::endl; }
+    inline void l_info(std::string msg)
+    { std::cerr << s_bfg_blu << "INFO: "     << s_nfg_blu << msg << s_reset << std::endl; }
+    inline void l_warn(std::string msg)
+    { std::cerr << s_bfg_ylw << "WARNING: "  << s_nfg_ylw << msg << s_reset << std::endl; }
+    inline void l_error(std::string msg)
+    { std::cerr << s_bfg_red << "ERROR: "    << s_nfg_red << msg << s_reset << std::endl; }
+    inline void l_internal(std::string msg)
+    { std::cerr << s_bfg_red << "INTERNAL: " << s_nfg_mag << msg << s_reset << std::endl; }
+    inline void l_fatal(std::string msg)
+    { std::cerr << s_bfg_red << "FATAL: "    << s_bfg_red << msg << s_reset << std::endl; }
+
+#else
+
+    inline void l_message(std::string msg)  { std::cerr << "-- "        << msg << std::endl; }
+    inline void l_info(std::string msg)     { std::cerr << "INFO: "     << msg << std::endl; }
+    inline void l_warn(std::string msg)     { std::cerr << "WARNING: "  << msg << std::endl; }
+    inline void l_error(std::string msg)    { std::cerr << "ERROR: "    << msg << std::endl; }
+    inline void l_internal(std::string msg) { std::cerr << "INTERNAL: " << msg << std::endl; }
+    inline void l_fatal(std::string msg)    { std::cerr << "FATAL: "    << msg << std::endl; }
+
+#endif
+
+};
+
+#endif
