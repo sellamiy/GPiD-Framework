@@ -9,7 +9,8 @@ namespace gpid {
     extern const std::string project_full_name;
 
     extern const std::string project_version;
-    extern const std::string project_version_short;
+    extern const std::string project_version_refspec;
+    extern const std::string project_version_commit;
     extern const std::string project_version_state;
 
     extern const std::string project_mode;
