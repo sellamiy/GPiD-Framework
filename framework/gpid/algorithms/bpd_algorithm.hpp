@@ -17,7 +17,6 @@ extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::resetEngi
 template<class HypothesisT, class ProblemT, class SolverT>
 extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::activeIsImplicate() {
     // TODO: Handle More
-    l_warn("Active implicates basics and storage not implemented!");
     printAsImplicate(solver.extractActive());
 }
 
