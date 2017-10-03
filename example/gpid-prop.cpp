@@ -20,6 +20,7 @@ int main(int argc, char** argv) {
     gzclose(in);
 
     MinisatHypothesesSet A(2*P.getVarCpt());
+    initRawSet(A);
 
     MinisatDecompEngine E(S, P, A);
 

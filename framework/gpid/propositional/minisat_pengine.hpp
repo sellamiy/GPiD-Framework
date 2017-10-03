@@ -14,6 +14,7 @@ namespace gpid {
         MinisatHypothesis(const MinisatHypothesis& d) : lit(d.lit) {}
     };
     typedef gpid::HypothesesSet<MinisatHypothesis> MinisatHypothesesSet;
+    extern void initRawSet(MinisatHypothesesSet& set);
 
     class MinisatProblem;
     class MinisatSolver;

@@ -64,6 +64,10 @@ namespace starray {
             // assert(tab[i].value <= 1);
             return (int)tab[i].value;
         }
+        // TODO: Add tests for this method!
+        /** @warning Untested. */
+        inline uint32_t get_maximal_size()
+        { return total_size; }
         /**
          * @brief Get the active size of the ActivableArray.
          *

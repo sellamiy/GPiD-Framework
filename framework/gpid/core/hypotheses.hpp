@@ -20,13 +20,15 @@ namespace gpid {
 
         inline hyp_index_t getIndex() { return index_table[current_level]; }
         inline void setIndex(hyp_index_t id) { index_table[current_level] = id; }
-        void increaseLevel(level_t target);
-        void decreaseLevel(level_t target);
-        void accessLevel(level_t level);
+        inline void increaseLevel(level_t target);
+        inline void decreaseLevel(level_t target);
+        inline void accessLevel(level_t level);
     public:
         HypothesesSet(uint32_t size) : hp_active(size), current_level(0) {}
-        bool isEmpty(uint32_t level);
-        HypothesisT& nextHypothesis(uint32_t level);
+        inline void mapHypothesis(uint32_t idx, HypothesisT* hyp);
+        inline uint32_t getSourceSize();
+        inline bool isEmpty(uint32_t level);
+        inline HypothesisT& nextHypothesis(uint32_t level);
     };
 
     template<class HypothesisT>
@@ -56,6 +58,16 @@ namespace gpid {
     inline void HypothesesSet<HypothesisT>::accessLevel(uint32_t level) {
         if (level > current_level) increaseLevel(level);
         else decreaseLevel(level);
+    }
+
+    template<class HypothesisT>
+    inline uint32_t HypothesesSet<HypothesisT>::getSourceSize() {
+        return hp_active.get_maximal_size();
+    }
+
+    template<class HypothesisT>
+    inline void HypothesesSet<HypothesisT>::mapHypothesis(uint32_t idx, HypothesisT* hyp) {
+        hp_mapping[idx] = hyp;
     }
 
     template<class HypothesisT>
