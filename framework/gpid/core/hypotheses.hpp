@@ -15,10 +15,12 @@ namespace gpid {
         std::map<hyp_index_t, HypothesisT*> hp_mapping;
         std::map<hyp_index_t, std::list<hyp_index_t> > hp_links;
         std::map<level_t, std::list<hyp_index_t> > deactivation_map;
+        std::map<level_t, std::list<hyp_index_t> > consequences_map;
         std::map<level_t, std::list<hyp_index_t> > reactivation_map;
         starray::StaticActivableArray hp_active;
         level_t current_level;
 
+        inline void keepLevel();
         inline void increaseLevel(level_t target);
         inline void decreaseLevel(level_t target);
         inline void accessLevel(level_t level);
@@ -33,11 +35,19 @@ namespace gpid {
     };
 
     template<class HypothesisT>
+    inline void HypothesesSet<HypothesisT>::keepLevel() {
+        for (hyp_index_t i : consequences_map[current_level])
+            hp_active.activate(i);
+        consequences_map[current_level].clear();
+    }
+
+    template<class HypothesisT>
     inline void HypothesesSet<HypothesisT>::increaseLevel(uint32_t target) {
         while (current_level < target) {
             ++current_level;
             hp_active.reset_iterator();
             deactivation_map[current_level].clear();
+            consequences_map[current_level].clear();
             reactivation_map[current_level].clear();
         }
     }
@@ -49,13 +59,17 @@ namespace gpid {
                 hp_active.deactivate(i);
             for (hyp_index_t i : deactivation_map[current_level])
                 hp_active.activate(i);
+            for (hyp_index_t i : consequences_map[current_level])
+                hp_active.activate(i);
             --current_level;
         }
+        keepLevel();
     }
 
     template<class HypothesisT>
     inline void HypothesesSet<HypothesisT>::accessLevel(uint32_t level) {
-        if (level > current_level) increaseLevel(level);
+        if (level == current_level) keepLevel();
+        else if (level > current_level) increaseLevel(level);
         else decreaseLevel(level);
     }
 
@@ -93,8 +107,10 @@ namespace gpid {
         hp_active.deactivate(index);
         deactivation_map[current_level].push_back(index);
         for (int linked_index : hp_links[index]) {
-            hp_active.deactivate(linked_index);
-            deactivation_map[current_level].push_back(linked_index);
+            if (hp_active.is_active(linked_index)) {
+                hp_active.deactivate(linked_index);
+                consequences_map[current_level].push_back(linked_index);
+            }
         }
         return *hp_mapping[index];
     }
