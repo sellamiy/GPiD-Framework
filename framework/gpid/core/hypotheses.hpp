@@ -87,10 +87,9 @@ namespace gpid {
     template<class HypothesisT>
     inline HypothesisT& HypothesesSet<HypothesisT>::nextHypothesis(uint32_t level) {
         accessLevel(level);
-        hyp_index_t todeac = getIndex();
         setIndex(hp_active.get_next());
-        hp_active.deactivate(todeac);
-        deactivation_map[current_level].push_back(todeac);
+        hp_active.deactivate(getIndex());
+        deactivation_map[current_level].push_back(getIndex());
         return *hp_mapping[getIndex()];
     }
 
