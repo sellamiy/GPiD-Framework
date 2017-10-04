@@ -1,8 +1,9 @@
 #define GPID__MINISAT_PROBLEM_CPP
 
-#include <gpid/errors.hpp>
+#include <snlog/snlog.hpp>
 #include <gpid/propositional/minisat_pengine.hpp>
 
+using namespace snlog;
 using namespace gpid;
 
 void MinisatProblem::addConstraint(Minisat::vec<Minisat::Lit>& ps) {

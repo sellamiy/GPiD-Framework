@@ -1,8 +1,9 @@
 #define MINISAT_GENERATION_HELPERS
+#include <snlog/snlog.hpp>
 #include <starray/starray.hpp>
-#include <gpid/errors.hpp>
 #include <gpid/propositional/minisat_pengine.hpp>
 
+using namespace snlog;
 using namespace starray;
 using namespace Minisat;
 

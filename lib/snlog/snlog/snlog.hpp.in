@@ -1,11 +1,11 @@
-#ifndef _PI_DECOMP_ERRORS_HEADER_
-#define _PI_DECOMP_ERRORS_HEADER_
+#ifndef _LIB_SNLOG_HEADER_
+#define _LIB_SNLOG_HEADER_
 
 #include <iostream>
 
 #cmakedefine USE_ANSI_COLORS
 
-namespace gpid {
+namespace snlog {
 
 #ifdef USE_ANSI_COLORS
 

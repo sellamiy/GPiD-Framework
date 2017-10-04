@@ -4,7 +4,7 @@
 #include <map>
 #include <list>
 #include <starray/starray.hpp>
-#include <gpid/errors.hpp>
+#include <snlog/snlog.hpp>
 
 namespace gpid {
 

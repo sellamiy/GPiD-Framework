@@ -85,10 +85,10 @@ set(FRAMEWORK_CONF_HEADERS_DIR "${CMAKE_BINARY_DIR}/framework-include")
 set(FRAMEWORK_CONF_SOURCE_DIR "${CMAKE_BINARY_DIR}/framework-configured")
 
 # ========== Files Configuration ==========
+configure_file(lib/snlog/snlog/snlog.hpp.in ${LOCAL_LIB_HEADERS_DIR}/snlog/snlog.hpp)
 configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
 
 configure_file(framework/gpid/include/config.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/config.hpp)
-configure_file(framework/gpid/include/errors.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/errors.hpp)
 configure_file(framework/gpid/include/gpid.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/gpid.hpp)
 file(COPY framework/gpid/include/version.hpp DESTINATION ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/)
 

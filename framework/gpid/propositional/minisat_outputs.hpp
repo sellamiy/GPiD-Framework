@@ -2,8 +2,8 @@
 #define GPID_MINISAT_OUTPUT_HANDLING_HPP
 
 #include <iostream>
+#include <snlog/snlog.hpp>
 #include <gpid/config.hpp>
-#include <gpid/errors.hpp>
 #include <gpid/propositional/minisat_pengine.hpp>
 
 /* Strict Minisat output printers */

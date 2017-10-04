@@ -1,8 +1,10 @@
 #ifndef GPID_GENERATION_ALGORITHMS_HPP
 #define GPID_GENERATION_ALGORITHMS_HPP
 
-#include <gpid/errors.hpp>
+#include <snlog/snlog.hpp>
 #include <gpid/core/engine.hpp>
+
+using namespace snlog;
 
 /* ========== Helpers ========== */
 
