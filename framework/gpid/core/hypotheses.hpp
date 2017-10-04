@@ -27,6 +27,7 @@ namespace gpid {
     public:
         HypothesesSet(uint32_t size) : hp_active(size), current_level(0) {}
         inline void mapHypothesis(uint32_t idx, HypothesisT* hyp);
+        inline uint32_t getSize();
         inline uint32_t getSourceSize();
         inline bool isEmpty(uint32_t level);
         inline HypothesisT& nextHypothesis(uint32_t level);
@@ -61,6 +62,10 @@ namespace gpid {
         else decreaseLevel(level);
     }
 
+    template<class HypothesisT>
+    inline uint32_t HypothesesSet<HypothesisT>::getSize() {
+        return hp_active.get_activated_size();
+    }
     template<class HypothesisT>
     inline uint32_t HypothesesSet<HypothesisT>::getSourceSize() {
         return hp_active.get_maximal_size();
