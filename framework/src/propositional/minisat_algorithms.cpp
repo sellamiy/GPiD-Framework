@@ -1,6 +1,7 @@
 #define MINISAT_GENERATION_INSTANCES
 
 #include <gpid/propositional/minisat_pengine.hpp>
+#include <gpid/propositional/minisat_wrapper.hpp>
 #include <gpid/propositional/minisat_outputs.hpp>
 #include <gpid/algorithms/bpd_algorithm.hpp>
 
