@@ -78,6 +78,7 @@ if (COVERAGE_TOOLS)
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "/usr/include/*/*" "/usr/include/c++/*/*")
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "/usr/include/*/*/*" "/usr/include/c++/*/*/*")
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/*/*")
+  append_coverage_compiler_flags("-Wno-inline")
 endif()
 
 set(LOCAL_LIB_HEADERS_DIR "${CMAKE_BINARY_DIR}/lib-include-local")
