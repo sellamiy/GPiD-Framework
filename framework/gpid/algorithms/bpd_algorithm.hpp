@@ -57,10 +57,15 @@ extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateI
 
             SolverTestStatus status = solver.testHypotheses(level);
             if (status == SolverTestStatus::SOLVER_SAT) {
-                // Adding an hypothesis
-                HypothesisT& sel = available_h.nextHypothesis(level);
-                solver.addHypothesis(sel, level);
-                pushStackLevel();
+                if (!available_h.isEmpty(level)) {
+                    // Trying next hypothesis
+                    HypothesisT& sel = available_h.nextHypothesis(level);
+                    solver.addHypothesis(sel, level);
+                    pushStackLevel();
+                } else {
+                    // No more hypotheses here
+                    popStackLevel();
+                }
             } else if (status == SolverTestStatus::SOLVER_UNSAT) {
                 // We have found an implicate
                 activeIsImplicate();
