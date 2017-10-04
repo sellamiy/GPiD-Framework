@@ -60,6 +60,7 @@ TEST_F(HypothesesSetTest, RecoverFirstHypothesis) {
 
 TEST_F(HypothesesSetTest, RecoverAllHypotheses) {
     uint32_t ssz = HSET_SIZE;
+    int64_t inds = HSET_SIZE * (HSET_SIZE + 1) / 2;
     for (int i = 0; i < HSET_SIZE; i++) {
         ASSERT_FALSE(set->isEmpty(0)) << " @loop:" << i;
         HSTest_S& dat = set->nextHypothesis(0);
@@ -67,7 +68,8 @@ TEST_F(HypothesesSetTest, RecoverAllHypotheses) {
         ASSERT_EQ(set->getSourceSize(), ssz) << " @loop:" << i;
         ASSERT_EQ(set->getSize() + i + 1, ssz) << " @loop:" << i;
         /* Content status */
-        ASSERT_EQ(dat.data, i) << " @loop:" << i;
+        inds -= dat.data;
     }
     ASSERT_TRUE(set->isEmpty(0));
+    ASSERT_EQ(inds, 0);
 }
