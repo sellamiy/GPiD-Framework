@@ -81,7 +81,7 @@ template<class HypothesisT, class ProblemT, class SolverT>
 inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>
 ::generateImplicates(gpid::GenerationAlgorithm algorithm) {
     switch (algorithm) {
-    case BDP: generateBPD(); break;
+    case BPD: generateBPD(); break;
     default: snlog::l_internal("Trying to generate implicates using unknown algorithm!");
     }
 }
