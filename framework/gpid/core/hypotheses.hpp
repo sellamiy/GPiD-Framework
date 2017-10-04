@@ -13,14 +13,11 @@ namespace gpid {
         typedef uint32_t hyp_index_t ;
         typedef uint32_t level_t ;
         std::map<hyp_index_t, HypothesisT*> hp_mapping;
-        std::map<level_t, hyp_index_t> index_table;
         std::map<level_t, std::list<hyp_index_t> > deactivation_map;
         std::map<level_t, std::list<hyp_index_t> > reactivation_map;
         starray::StaticActivableArray hp_active;
         level_t current_level;
 
-        inline hyp_index_t getIndex() { return index_table[current_level]; }
-        inline void setIndex(hyp_index_t id) { index_table[current_level] = id; }
         inline void increaseLevel(level_t target);
         inline void decreaseLevel(level_t target);
         inline void accessLevel(level_t level);
@@ -37,7 +34,6 @@ namespace gpid {
     inline void HypothesesSet<HypothesisT>::increaseLevel(uint32_t target) {
         while (current_level < target) {
             ++current_level;
-            setIndex(hp_active.get_first());
             hp_active.reset_iterator();
             deactivation_map[current_level].clear();
             reactivation_map[current_level].clear();
@@ -52,7 +48,6 @@ namespace gpid {
             for (hyp_index_t i : deactivation_map[current_level])
                 hp_active.activate(i);
             --current_level;
-            hp_active.set_it_pos(getIndex());
         }
     }
 
@@ -87,10 +82,11 @@ namespace gpid {
     template<class HypothesisT>
     inline HypothesisT& HypothesesSet<HypothesisT>::nextHypothesis(uint32_t level) {
         accessLevel(level);
-        setIndex(hp_active.get_next());
-        hp_active.deactivate(getIndex());
-        deactivation_map[current_level].push_back(getIndex());
-        return *hp_mapping[getIndex()];
+        hp_active.reset_iterator();
+        int index = hp_active.get_next();
+        hp_active.deactivate(index);
+        deactivation_map[current_level].push_back(index);
+        return *hp_mapping[index];
     }
 
 };

@@ -60,7 +60,7 @@ TEST_F(HypothesesSetTest, RecoverFirstHypothesis) {
 
 TEST_F(HypothesesSetTest, RecoverAllHypotheses) {
     uint32_t ssz = HSET_SIZE;
-    int64_t inds = HSET_SIZE * (HSET_SIZE + 1) / 2;
+    int64_t inds = HSET_SIZE * (HSET_SIZE - 1) / 2;
     for (int i = 0; i < HSET_SIZE; i++) {
         ASSERT_FALSE(set->isEmpty(0)) << " @loop:" << i;
         HSTest_S& dat = set->nextHypothesis(0);
