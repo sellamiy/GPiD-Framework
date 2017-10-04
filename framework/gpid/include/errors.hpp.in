@@ -55,7 +55,6 @@ namespace gpid {
     template<typename printable>
     inline void l_fatal(printable msg)
     { std::cerr << s_bfg_red << "FATAL: "    << s_bfg_red << msg << s_reset << std::endl; }
-
 #else
     template<typename printable>
     inline void l_message(printable msg)  { std::cerr << "-- "        << msg << std::endl; }
@@ -69,9 +68,19 @@ namespace gpid {
     inline void l_internal(printable msg) { std::cerr << "INTERNAL: " << msg << std::endl; }
     template<typename printable>
     inline void l_fatal(printable msg)    { std::cerr << "FATAL: "    << msg << std::endl; }
-
 #endif
-
+    template<typename printable>
+    inline void t_message(bool test, printable msg)  { if(test) l_message(msg); }
+    template<typename printable>
+    inline void t_info(bool test, printable msg)     { if(test) l_info(msg); }
+    template<typename printable>
+    inline void t_warn(bool test, printable msg)     { if(test) l_warn(msg); }
+    template<typename printable>
+    inline void t_error(bool test, printable msg)    { if(test) l_error(msg); }
+    template<typename printable>
+    inline void t_internal(bool test, printable msg) { if(test) l_internal(msg); }
+    template<typename printable>
+    inline void t_fatal(bool test, printable msg)    { if(test) l_fatal(msg); }
 };
 
 #endif
