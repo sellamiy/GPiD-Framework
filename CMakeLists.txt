@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(gpid-framework
   VERSION "0.0.1")
 set(EXTENDED_PROJECT_NAME "GPiD Framework - Prime Implicates by Decomposition")
+string(TIMESTAMP PROJECT_CFG_TIMESTAMP "%Y-%m-%d+%H:%M:%S")
 
 # ========== Project Options ==========
 option(BUILD_DOC "Build documentation" ON)

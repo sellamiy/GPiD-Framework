@@ -10,3 +10,6 @@ extern const std::string gpid::project_version_commit  = "@VERSION_GIT_SHA1@";
 extern const std::string gpid::project_version_state   = "@VERSION_STATE@";
 
 extern const std::string gpid::project_mode = "@CMAKE_BUILD_TYPE@";
+
+extern const std::string gpid::project_timestamp_configure = "@PROJECT_CFG_TIMESTAMP@";
+extern const std::string gpid::project_timestamp_build     = __DATE__ "+" __TIME__;

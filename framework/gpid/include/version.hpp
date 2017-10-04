@@ -15,6 +15,9 @@ namespace gpid {
 
     extern const std::string project_mode;
 
+    extern const std::string project_timestamp_configure;
+    extern const std::string project_timestamp_build;
+
 };
 
 #endif
