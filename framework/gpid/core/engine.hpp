@@ -8,6 +8,10 @@
 
 namespace gpid {
 
+    enum GenerationAlgorithm {
+        BPD
+    };
+
     template <class HypothesisT, class ProblemT, class SolverT>
     class DecompositionEngine {
 
@@ -31,15 +35,55 @@ namespace gpid {
         void pushStackLevel();
         void popStackLevel();
 
+        void generateBPD();
+
     public:
         DecompositionEngine(SolverT& s, ProblemT& p, HypothesesSet<HypothesisT>& h)
             : solver(s), problem(p), available_h(h)
         { }
 
-        void generateImplicates();
+        void generateImplicates(GenerationAlgorithm algorithm = GenerationAlgorithm::BPD);
 
     };
 
 };
+
+/* ========== Helpers ========== */
+
+template<class HypothesisT, class ProblemT, class SolverT>
+inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::resetEngine() {
+    solver.setProblem(problem);
+    solver.start();
+    level = 1;
+    sdir = IStackDirection::STACK_PUSH;
+}
+
+template<class HypothesisT, class ProblemT, class SolverT>
+inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::activeIsImplicate() {
+    // TODO: Handle More
+    printAsImplicate(solver.extractActive());
+}
+
+template<class HypothesisT, class ProblemT, class SolverT>
+inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::pushStackLevel() {
+    level++;
+    sdir = IStackDirection::STACK_PUSH;
+}
+
+template<class HypothesisT, class ProblemT, class SolverT>
+inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::popStackLevel() {
+    solver.removeHypotheses(level);
+    level--;
+    sdir = IStackDirection::STACK_POP;
+}
+
+template<class HypothesisT, class ProblemT, class SolverT>
+inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>
+::generateImplicates(gpid::GenerationAlgorithm algorithm) {
+    switch (algorithm) {
+    case BDP: generateBPD(); break;
+    default: snlog::l_internal("Trying to generate implicates using unknown algorithm!");
+    }
+}
 
 #endif

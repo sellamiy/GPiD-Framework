@@ -6,39 +6,10 @@
 
 using namespace snlog;
 
-/* ========== Helpers ========== */
-
-template<class HypothesisT, class ProblemT, class SolverT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::resetEngine() {
-    solver.setProblem(problem);
-    solver.start();
-    level = 1;
-    sdir = IStackDirection::STACK_PUSH;
-}
-
-template<class HypothesisT, class ProblemT, class SolverT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::activeIsImplicate() {
-    // TODO: Handle More
-    printAsImplicate(solver.extractActive());
-}
-
-template<class HypothesisT, class ProblemT, class SolverT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::pushStackLevel() {
-    level++;
-    sdir = IStackDirection::STACK_PUSH;
-}
-
-template<class HypothesisT, class ProblemT, class SolverT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::popStackLevel() {
-    solver.removeHypotheses(level);
-    level--;
-    sdir = IStackDirection::STACK_POP;
-}
-
 /* ========== BPD Algorithm ========== */
 
 template<class HypothesisT, class ProblemT, class SolverT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateImplicates() {
+extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateBPD() {
     resetEngine();
 
     while (level > 0) {
