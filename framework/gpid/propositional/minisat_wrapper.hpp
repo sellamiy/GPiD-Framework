@@ -14,11 +14,11 @@ namespace gpid {
     inline void MinisatSolver::decreaseLevel(uint32_t target) {
         while (c_level > target) {
             --c_level;
+            lvl_stack.pop();
             while (assumps.size() > lvl_stack.last()) {
                 assumps.pop();
                 loc_ass.pop_back();
             }
-            lvl_stack.pop();
         }
     }
 
