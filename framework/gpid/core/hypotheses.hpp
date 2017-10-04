@@ -4,6 +4,7 @@
 #include <map>
 #include <list>
 #include <starray/starray.hpp>
+#include <gpid/errors.hpp>
 
 namespace gpid {
 
@@ -80,14 +81,11 @@ namespace gpid {
 
     template<class HypothesisT>
     inline HypothesisT& HypothesesSet<HypothesisT>::nextHypothesis(uint32_t level) {
-        bool need_skip = level <= current_level;
         accessLevel(level);
-        if (need_skip) {
-            hyp_index_t todeac = getIndex();
-            setIndex(hp_active.get_next());
-            hp_active.deactivate(todeac);
-            deactivation_map[current_level].push_back(todeac);
-        }
+        hyp_index_t todeac = getIndex();
+        setIndex(hp_active.get_next());
+        hp_active.deactivate(todeac);
+        deactivation_map[current_level-1].push_back(todeac);
         return *hp_mapping[getIndex()];
     }
 
