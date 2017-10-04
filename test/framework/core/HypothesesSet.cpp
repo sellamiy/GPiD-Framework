@@ -68,6 +68,7 @@ TEST_F(HypothesesSetTest, RecoverAllHypotheses) {
         ASSERT_EQ(set->getSourceSize(), ssz) << " @loop:" << i;
         ASSERT_EQ(set->getSize() + i + 1, ssz) << " @loop:" << i;
         /* Content status */
+        ASSERT_EQ(dat.data, i);
         inds -= dat.data;
     }
     ASSERT_TRUE(set->isEmpty(0));
