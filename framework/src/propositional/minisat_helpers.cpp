@@ -21,5 +21,6 @@ extern void gpid::initRawSet(gpid::MinisatHypothesesSet& set) {
         if (res != GAB_Status::SUCCESS) l_error("Memory access for minisat hypothesis wrapper failed!");
         new (mloc) MinisatHypothesis(cstl);
         set.mapHypothesis(i, mloc);
+        set.mapLink(i, i%2 == 0 ? i+1 : i-1);
     }
 }

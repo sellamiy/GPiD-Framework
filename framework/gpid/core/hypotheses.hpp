@@ -13,6 +13,7 @@ namespace gpid {
         typedef uint32_t hyp_index_t ;
         typedef uint32_t level_t ;
         std::map<hyp_index_t, HypothesisT*> hp_mapping;
+        std::map<hyp_index_t, std::list<hyp_index_t> > hp_links;
         std::map<level_t, std::list<hyp_index_t> > deactivation_map;
         std::map<level_t, std::list<hyp_index_t> > reactivation_map;
         starray::StaticActivableArray hp_active;
@@ -24,6 +25,7 @@ namespace gpid {
     public:
         HypothesesSet(uint32_t size) : hp_active(size), current_level(0) {}
         inline void mapHypothesis(uint32_t idx, HypothesisT* hyp);
+        inline void mapLink(uint32_t idx, uint32_t tgt_idx);
         inline uint32_t getSize();
         inline uint32_t getSourceSize();
         inline bool isEmpty(uint32_t level);
@@ -70,6 +72,10 @@ namespace gpid {
     inline void HypothesesSet<HypothesisT>::mapHypothesis(uint32_t idx, HypothesisT* hyp) {
         hp_mapping[idx] = hyp;
     }
+    template<class HypothesisT>
+    inline void HypothesesSet<HypothesisT>::mapLink(uint32_t idx, uint32_t tgt_idx) {
+        hp_links[idx].push_back(tgt_idx);
+    }
 
     template<class HypothesisT>
     inline bool HypothesesSet<HypothesisT>::isEmpty(uint32_t level) {
@@ -86,6 +92,10 @@ namespace gpid {
         int index = hp_active.get_next();
         hp_active.deactivate(index);
         deactivation_map[current_level].push_back(index);
+        for (int linked_index : hp_links[index]) {
+            hp_active.deactivate(linked_index);
+            deactivation_map[current_level].push_back(linked_index);
+        }
         return *hp_mapping[index];
     }
 
