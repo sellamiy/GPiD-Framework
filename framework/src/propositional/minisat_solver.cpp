@@ -5,10 +5,12 @@
 
 using namespace gpid;
 
-void MinisatSolver::start() {
+MinisatSolver::MinisatSolver() {
     solver.eliminate(true);
     solver.verbosity = 0;
+}
 
+void MinisatSolver::start() {
     c_level = 0;
 }
 

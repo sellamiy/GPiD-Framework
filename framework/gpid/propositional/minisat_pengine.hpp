@@ -64,6 +64,7 @@ namespace gpid {
 
         inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }
 
+        MinisatSolver();
         void setProblem(MinisatProblem& problem);
         void start();
     };
