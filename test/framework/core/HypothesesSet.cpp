@@ -55,20 +55,20 @@ TEST_F(HypothesesSetTest, RecoverFirstHypothesis) {
     ASSERT_EQ(set->getSize() + 1, ssz);
     ASSERT_FALSE(set->isEmpty(0));
     /* Content status */
-    ASSERT_EQ(dat.data, 0);
+    ASSERT_EQ(dat.data + 1, HSET_SIZE);
 }
 
 TEST_F(HypothesesSetTest, RecoverAllHypotheses) {
     uint32_t ssz = HSET_SIZE;
     int64_t inds = HSET_SIZE * (HSET_SIZE - 1) / 2;
-    for (int i = 0; i < HSET_SIZE; i++) {
+    for (int i = HSET_SIZE; i > 0; i--) {
         ASSERT_FALSE(set->isEmpty(0)) << " @loop:" << i;
         HSTest_S& dat = set->nextHypothesis(0);
         /* Set status */
         ASSERT_EQ(set->getSourceSize(), ssz) << " @loop:" << i;
-        ASSERT_EQ(set->getSize() + i + 1, ssz) << " @loop:" << i;
+        ASSERT_EQ(set->getSize() + 1, (unsigned int)i) << " @loop:" << i;
         /* Content status */
-        ASSERT_EQ(dat.data, i);
+        ASSERT_EQ(dat.data + 1, i);
         inds -= dat.data;
     }
     ASSERT_TRUE(set->isEmpty(0));
