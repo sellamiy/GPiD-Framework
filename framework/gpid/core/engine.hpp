@@ -35,6 +35,7 @@ namespace gpid {
         void pushStackLevel();
         void popStackLevel();
 
+        void selectNextBPD();
         void generateBPD();
 
     public:
