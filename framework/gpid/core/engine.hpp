@@ -9,7 +9,7 @@
 namespace gpid {
 
     enum GenerationAlgorithm {
-        BPD
+        BPD, PID
     };
 
     template <class HypothesisT, class ProblemT, class SolverT>
@@ -38,12 +38,15 @@ namespace gpid {
         void selectNextBPD();
         void generateBPD();
 
+        void selectNextPID();
+        void generatePID();
+
     public:
         DecompositionEngine(SolverT& s, ProblemT& p, HypothesesSet<HypothesisT>& h)
             : solver(s), problem(p), available_h(h)
         { }
 
-        void generateImplicates(GenerationAlgorithm algorithm = GenerationAlgorithm::BPD);
+        void generateImplicates(GenerationAlgorithm algorithm = GenerationAlgorithm::PID);
 
     };
 
@@ -83,6 +86,7 @@ inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>
 ::generateImplicates(gpid::GenerationAlgorithm algorithm) {
     switch (algorithm) {
     case BPD: generateBPD(); break;
+    case PID: generatePID(); break;
     default: snlog::l_internal("Trying to generate implicates using unknown algorithm!");
     }
 }

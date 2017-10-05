@@ -64,6 +64,8 @@ namespace gpid {
 
         inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }
 
+        bool isModelSkippable(MinisatHypothesis& hypothesis, uint32_t level);
+
         MinisatSolver();
         void setProblem(MinisatProblem& problem);
         void start();
