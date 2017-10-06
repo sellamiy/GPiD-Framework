@@ -79,6 +79,9 @@ namespace gpid {
 
     template<class SolverT>
     inline void HypothesesSet<SolverT>::skipModelSkippables(level_t level) {
+        // TODO : Not Correct.
+        // The correct way is: they are deactivated at first and reactivated after passed.
+        // We need Another memroy structure than ActivableArrays for that
         accessLevel(level);
         int index = hp_active.get_last();
         while(modelquences_map[current_level][index]) {
