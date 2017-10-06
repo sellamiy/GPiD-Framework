@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 #include <vector>
+#include <gpid/options/options_engine.hpp>
 #include <gpid/core/hypotheses.hpp>
 #include <gpid/core/solvers.hpp>
-#include <gpid/core/engine_options.hpp>
 
 namespace gpid {
 
