@@ -12,6 +12,7 @@ template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
 extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::selectNextPID() {
     if (!available_h.isEmpty(level)) {
         // Recovering next possible hypothesis
+        available_h.skipModelSkippables(level);
         HypothesisT& sel = available_h.nextHypothesis(level);
         // Actual possible hypothesis
         solver.addHypothesis(sel, level);

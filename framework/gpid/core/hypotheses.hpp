@@ -17,6 +17,7 @@ namespace gpid {
         std::map<level_t, std::list<hyp_index_t> > deactivation_map;
         std::map<level_t, std::list<hyp_index_t> > consequences_map;
         std::map<level_t, std::list<hyp_index_t> > reactivation_map;
+        std::map<level_t, std::map<hyp_index_t, bool> > modelquences_map;
         starray::StaticActivableArray hp_active;
         level_t current_level;
 
@@ -31,6 +32,7 @@ namespace gpid {
         inline uint32_t getSize();
         inline uint32_t getSourceSize();
         inline bool isEmpty(uint32_t level);
+        inline void skipModelSkippables(level_t level);
         inline HypothesisT& nextHypothesis(uint32_t level);
         inline void modelCleanUp(ModelT& model, uint32_t level);
     };
@@ -50,6 +52,7 @@ namespace gpid {
             deactivation_map[current_level].clear();
             consequences_map[current_level].clear();
             reactivation_map[current_level].clear();
+            modelquences_map[current_level].clear();
         }
     }
 
@@ -75,6 +78,17 @@ namespace gpid {
     }
 
     template<class HypothesisT, class ModelT>
+    inline void HypothesesSet<HypothesisT, ModelT>::skipModelSkippables(level_t level) {
+        accessLevel(level);
+        int index = hp_active.get_last();
+        while(modelquences_map[current_level][index]) {
+            hp_active.deactivate(index);
+            deactivation_map[current_level].push_back(index);
+            index = hp_active.get_last();
+        }
+    }
+
+    template<class HypothesisT, class ModelT>
     inline uint32_t HypothesesSet<HypothesisT, ModelT>::getSize() {
         return hp_active.get_activated_size();
     }
@@ -94,15 +108,13 @@ namespace gpid {
 
     template<class HypothesisT, class ModelT>
     inline bool HypothesesSet<HypothesisT, ModelT>::isEmpty(uint32_t level) {
-        if (level != current_level) {
-            accessLevel(level);
-        }
+        if (level != current_level) accessLevel(level);
         return hp_active.get_activated_size() == 0;
     }
 
     template<class HypothesisT, class ModelT>
     inline HypothesisT& HypothesesSet<HypothesisT, ModelT>::nextHypothesis(uint32_t level) {
-        accessLevel(level);
+        // accessLevel(level);
         int index = hp_active.get_last();
         hp_active.deactivate(index);
         deactivation_map[current_level].push_back(index);
@@ -117,20 +129,13 @@ namespace gpid {
 
     template<class HypothesisT, class ModelT>
     inline void HypothesesSet<HypothesisT, ModelT>::modelCleanUp(ModelT& model, uint32_t level) {
-        // TODO: Most Probably Error in there
         if (isEmpty(level)) return;
-        uint32_t l_idx, p_idx;
-        bool skip_p = false;
         hp_active.reset_iterator();
-        l_idx = hp_active.get_first();
         while (hp_active.has_next()) {
-            p_idx = l_idx;
-            l_idx = hp_active.get_next();
-            if (skip_p) {
-                hp_active.deactivate(p_idx);
-                deactivation_map[current_level].push_back(p_idx);
+            uint32_t l_idx = hp_active.get_next();
+            if (model.isSkippable(*hp_mapping[l_idx])) {
+                modelquences_map[current_level][l_idx] = true;
             }
-            skip_p = model.isSkippable(*hp_mapping[l_idx]);
         }
     }
 
