@@ -20,13 +20,13 @@ namespace gpid {
             return model[Minisat::var(hypothesis.lit)] == (sign(hypothesis.lit) ? Minisat::l_False : Minisat::l_True);
         }
     };
-    typedef gpid::HypothesesSet<MinisatHypothesis, MinisatModelWrapper> MinisatHypothesesSet;
+    typedef HypothesesSet<MinisatHypothesis, MinisatModelWrapper> MinisatHypothesesSet;
     extern void initRawSet(MinisatHypothesesSet& set);
 
     class MinisatProblem;
     class MinisatSolver;
 
-    typedef gpid::DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver, MinisatModelWrapper> MinisatDecompEngine;
+    typedef DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver, MinisatModelWrapper> MinisatDecompEngine;
 
     class MinisatProblem {
     public:
