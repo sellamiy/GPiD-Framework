@@ -14,6 +14,8 @@ struct HSTest_S {
     HSTest_S(HSTest_S& d) : data(d.data) {}
 };
 
+struct HSTest_MW {};
+
 static HSTest_S hmemory[HSET_SIZE];
 
 /* These tests assumes the hypothesis mapping works as expected. */
@@ -26,10 +28,10 @@ protected:
         for (int i = 0; i < HSET_SIZE; i++) new (&(hmemory[i])) HSTest_S(i);
     }
 
-    HypothesesSet<HSTest_S> *set;
+    HypothesesSet<HSTest_S, HSTest_MW> *set;
 
     virtual void SetUp() {
-        set = new HypothesesSet<HSTest_S>(HSET_SIZE);
+        set = new HypothesesSet<HSTest_S, HSTest_MW>(HSET_SIZE);
         for (int i = 0; i < HSET_SIZE; i++) set->mapHypothesis(i, &(hmemory[i]));
     }
 

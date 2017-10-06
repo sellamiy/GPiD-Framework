@@ -8,26 +8,24 @@ using namespace snlog;
 
 /* ========== PID Helpers =========== */
 
-template<class HypothesisT, class ProblemT, class SolverT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::selectNextPID() {
-    while (!available_h.isEmpty(level)) {
+template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
+extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::selectNextPID() {
+    if (!available_h.isEmpty(level)) {
         // Recovering next possible hypothesis
         HypothesisT& sel = available_h.nextHypothesis(level);
-        /* TODO: Maybe, skip these just once after the test to prevent model storage */
-        if (solver.isModelSkippable(sel, level)) continue;
         // Actual possible hypothesis
         solver.addHypothesis(sel, level);
         pushStackLevel();
-        return;
+    } else {
+        // Actually no more hypotheses
+        popStackLevel();
     }
-    // Actually no more hypotheses
-    popStackLevel();
 }
 
 /* ========== PID Algorithm ========== */
 
-template<class HypothesisT, class ProblemT, class SolverT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::generatePID() {
+template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
+extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::generatePID() {
     resetEngine();
 
     while (level > 0) {
@@ -41,6 +39,7 @@ extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateP
             SolverTestStatus status = solver.testHypotheses(level);
 
             if (status == SolverTestStatus::SOLVER_SAT) {
+                available_h.modelCleanUp(solver.recoverModel(), level);
                 selectNextPID();
             } else if (status == SolverTestStatus::SOLVER_UNSAT) {
                 // We have found an implicate

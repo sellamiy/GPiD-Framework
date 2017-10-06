@@ -5,7 +5,9 @@
 
 using namespace gpid;
 
-MinisatSolver::MinisatSolver() {
+MinisatSolver::MinisatSolver()
+    : iw_mdl(solver.model)
+{
     solver.eliminate(true);
     solver.verbosity = 0;
 }

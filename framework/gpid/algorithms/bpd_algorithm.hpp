@@ -8,8 +8,8 @@ using namespace snlog;
 
 /* ========== BPD Helpers =========== */
 
-template<class HypothesisT, class ProblemT, class SolverT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::selectNextBPD() {
+template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
+extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::selectNextBPD() {
     if (!available_h.isEmpty(level)) {
         // Trying next hypothesis
         HypothesisT& sel = available_h.nextHypothesis(level);
@@ -23,8 +23,8 @@ extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::selectNex
 
 /* ========== BPD Algorithm ========== */
 
-template<class HypothesisT, class ProblemT, class SolverT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT>::generateBPD() {
+template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
+extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::generateBPD() {
     resetEngine();
 
     while (level > 0) {

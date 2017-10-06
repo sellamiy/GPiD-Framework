@@ -7,10 +7,10 @@
 #include <gpid/algorithms/pid_algorithm.hpp>
 
 namespace gpid {
-    template<> void DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver>
+    template<> void DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver, MinisatModelWrapper>
     ::printAsImplicate(std::vector<MinisatHypothesis>& impl, bool negate) {
         p_implicate(std::cout, impl, negate);
     }
 
-    template class DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver>;
+    template class DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver, MinisatModelWrapper>;
 };

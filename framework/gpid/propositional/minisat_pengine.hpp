@@ -13,13 +13,20 @@ namespace gpid {
         MinisatHypothesis(MinisatInternal d) : lit(d) {}
         MinisatHypothesis(const MinisatHypothesis& d) : lit(d.lit) {}
     };
-    typedef gpid::HypothesesSet<MinisatHypothesis> MinisatHypothesesSet;
+    struct MinisatModelWrapper {
+        const Minisat::vec<Minisat::lbool>& model;
+        MinisatModelWrapper(Minisat::vec<Minisat::lbool>& m) : model(m) {}
+        inline bool isSkippable(MinisatHypothesis& hypothesis) {
+            return model[Minisat::var(hypothesis.lit)] == (sign(hypothesis.lit) ? Minisat::l_False : Minisat::l_True);
+        }
+    };
+    typedef gpid::HypothesesSet<MinisatHypothesis, MinisatModelWrapper> MinisatHypothesesSet;
     extern void initRawSet(MinisatHypothesesSet& set);
 
     class MinisatProblem;
     class MinisatSolver;
 
-    typedef gpid::DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver> MinisatDecompEngine;
+    typedef gpid::DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver, MinisatModelWrapper> MinisatDecompEngine;
 
     class MinisatProblem {
     public:
@@ -48,6 +55,7 @@ namespace gpid {
 
     class MinisatSolver {
         Minisat::SimpSolver solver;
+        MinisatModelWrapper iw_mdl;
         Minisat::vec<Minisat::Lit> assumps;
         std::vector<MinisatHypothesis> loc_ass;
         Minisat::vec<int> lvl_stack;
@@ -63,8 +71,7 @@ namespace gpid {
         gpid::SolverTestStatus testHypotheses(uint32_t level);
 
         inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }
-
-        bool isModelSkippable(MinisatHypothesis& hypothesis, uint32_t level);
+        inline MinisatModelWrapper& recoverModel() { return iw_mdl; }
 
         MinisatSolver();
         void setProblem(MinisatProblem& problem);

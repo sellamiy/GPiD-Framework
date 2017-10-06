@@ -43,12 +43,6 @@ namespace gpid {
         else                              return gpid::SolverTestStatus::SOLVER_UNKNOWN;
     }
 
-    inline bool MinisatSolver::isModelSkippable(MinisatHypothesis& hypothesis, uint32_t level) {
-        accessLevel(level);
-        l_warn("Model skipper not implemented yet!"); return false;
-        // return !model.contains(~hypothesis.lit);
-    }
-
 };
 
 #endif
