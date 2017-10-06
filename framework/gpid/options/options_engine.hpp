@@ -5,7 +5,7 @@ namespace gpid {
 
     struct EngineOptions {
 
-        bool print_implicates = false;
+        bool print_implicates = true;
 
     };
 
