@@ -114,7 +114,7 @@ namespace gpid {
 
     template<class SolverT>
     inline typename SolverT::HypothesisT& HypothesesSet<SolverT>::nextHypothesis(uint32_t level) {
-        // accessLevel(level);
+        accessLevel(level);
         int index = hp_active.get_last();
         hp_active.deactivate(index);
         deactivation_map[current_level].push_back(index);
