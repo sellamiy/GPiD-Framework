@@ -8,12 +8,12 @@ using namespace snlog;
 
 /* ========== PID Helpers =========== */
 
-template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::selectNextPID() {
+template<class SolverT>
+extern void gpid::DecompositionEngine<SolverT>::selectNextPID() {
     if (!available_h.isEmpty(level)) {
         // Recovering next possible hypothesis
         available_h.skipModelSkippables(level);
-        HypothesisT& sel = available_h.nextHypothesis(level);
+        typename SolverT::HypothesisT& sel = available_h.nextHypothesis(level);
         // Actual possible hypothesis
         solver.addHypothesis(sel, level);
         pushStackLevel();
@@ -25,8 +25,8 @@ extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::s
 
 /* ========== PID Algorithm ========== */
 
-template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
-extern void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::generatePID() {
+template<class SolverT>
+extern void gpid::DecompositionEngine<SolverT>::generatePID() {
     resetEngine();
 
     while (level > 0) {

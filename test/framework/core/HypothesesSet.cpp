@@ -16,6 +16,11 @@ struct HSTest_S {
 
 struct HSTest_MW {};
 
+struct HSTest_SWrapper {
+    typedef HSTest_S HypothesisT;
+    typedef HSTest_MW ModelT;
+};
+
 static HSTest_S hmemory[HSET_SIZE];
 
 /* These tests assumes the hypothesis mapping works as expected. */
@@ -28,10 +33,10 @@ protected:
         for (int i = 0; i < HSET_SIZE; i++) new (&(hmemory[i])) HSTest_S(i);
     }
 
-    HypothesesSet<HSTest_S, HSTest_MW> *set;
+    HypothesesSet<HSTest_SWrapper> *set;
 
     virtual void SetUp() {
-        set = new HypothesesSet<HSTest_S, HSTest_MW>(HSET_SIZE);
+        set = new HypothesesSet<HSTest_SWrapper>(HSET_SIZE);
         for (int i = 0; i < HSET_SIZE; i++) set->mapHypothesis(i, &(hmemory[i]));
     }
 

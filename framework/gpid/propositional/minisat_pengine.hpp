@@ -20,13 +20,6 @@ namespace gpid {
             return model[Minisat::var(hypothesis.lit)] == (sign(hypothesis.lit) ? Minisat::l_False : Minisat::l_True);
         }
     };
-    typedef HypothesesSet<MinisatHypothesis, MinisatModelWrapper> MinisatHypothesesSet;
-    extern void initRawSet(MinisatHypothesesSet& set);
-
-    class MinisatProblem;
-    class MinisatSolver;
-
-    typedef DecompositionEngine<MinisatHypothesis, MinisatProblem, MinisatSolver, MinisatModelWrapper> MinisatDecompEngine;
 
     class MinisatProblem {
     public:
@@ -66,6 +59,10 @@ namespace gpid {
         void accessLevel(uint32_t level);
 
     public:
+        typedef MinisatHypothesis HypothesisT;
+        typedef MinisatProblem ProblemT;
+        typedef MinisatModelWrapper ModelT;
+
         void removeHypotheses(uint32_t level) { accessLevel(level); }
         void addHypothesis(MinisatHypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
@@ -77,6 +74,10 @@ namespace gpid {
         void setProblem(MinisatProblem& problem);
         void start();
     };
+
+    typedef HypothesesSet<MinisatSolver> MinisatHypothesesSet;
+    typedef DecompositionEngine<MinisatSolver> MinisatDecompEngine;
+    extern void initRawSet(MinisatHypothesesSet& set);
 };
 
 #endif

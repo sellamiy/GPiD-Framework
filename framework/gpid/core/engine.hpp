@@ -12,7 +12,7 @@ namespace gpid {
         BPD, PID
     };
 
-    template <class HypothesisT, class ProblemT, class SolverT, class ModelT>
+    template <class SolverT>
     class DecompositionEngine {
 
         enum IStackDirection {
@@ -24,13 +24,13 @@ namespace gpid {
         IStackDirection sdir;
 
         SolverT& solver;
-        ProblemT& problem;
-        HypothesesSet<HypothesisT, ModelT>& available_h;
+        typename SolverT::ProblemT& problem;
+        HypothesesSet<SolverT>& available_h;
 
         void resetEngine();
 
         void activeIsImplicate();
-        void printAsImplicate(std::vector<HypothesisT>& impl, bool negate=true);
+        void printAsImplicate(std::vector<typename SolverT::HypothesisT>& impl, bool negate=true);
 
         void pushStackLevel();
         void popStackLevel();
@@ -42,7 +42,7 @@ namespace gpid {
         void generatePID();
 
     public:
-        DecompositionEngine(SolverT& s, ProblemT& p, HypothesesSet<HypothesisT, ModelT>& h)
+        DecompositionEngine(SolverT& s, typename SolverT::ProblemT& p, HypothesesSet<SolverT>& h)
             : solver(s), problem(p), available_h(h)
         { }
 
@@ -54,35 +54,35 @@ namespace gpid {
 
 /* ========== Helpers ========== */
 
-template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
-inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::resetEngine() {
+template<class SolverT>
+inline void gpid::DecompositionEngine<SolverT>::resetEngine() {
     solver.setProblem(problem);
     solver.start();
     level = 1;
     sdir = IStackDirection::STACK_PUSH;
 }
 
-template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
-inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::activeIsImplicate() {
+template<class SolverT>
+inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
     // TODO: Handle More
     printAsImplicate(solver.extractActive());
 }
 
-template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
-inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::pushStackLevel() {
+template<class SolverT>
+inline void gpid::DecompositionEngine<SolverT>::pushStackLevel() {
     level++;
     sdir = IStackDirection::STACK_PUSH;
 }
 
-template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
-inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>::popStackLevel() {
+template<class SolverT>
+inline void gpid::DecompositionEngine<SolverT>::popStackLevel() {
     solver.removeHypotheses(level);
     level--;
     sdir = IStackDirection::STACK_POP;
 }
 
-template<class HypothesisT, class ProblemT, class SolverT, class ModelT>
-inline void gpid::DecompositionEngine<HypothesisT, ProblemT, SolverT, ModelT>
+template<class SolverT>
+inline void gpid::DecompositionEngine<SolverT>
 ::generateImplicates(gpid::GenerationAlgorithm algorithm) {
     switch (algorithm) {
     case BPD: generateBPD(); break;
