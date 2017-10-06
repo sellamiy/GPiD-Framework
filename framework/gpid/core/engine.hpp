@@ -5,6 +5,7 @@
 #include <vector>
 #include <gpid/core/hypotheses.hpp>
 #include <gpid/core/solvers.hpp>
+#include <gpid/core/engine_options.hpp>
 
 namespace gpid {
 
@@ -14,6 +15,10 @@ namespace gpid {
 
     template <class SolverT>
     class DecompositionEngine {
+
+        EngineOptions& options;
+
+        uint64_t gi_counter;
 
         enum IStackDirection {
             STACK_PUSH,
@@ -42,9 +47,11 @@ namespace gpid {
         void generatePID();
 
     public:
-        DecompositionEngine(SolverT& s, typename SolverT::ProblemT& p, HypothesesSet<SolverT>& h)
-            : solver(s), problem(p), available_h(h)
+        DecompositionEngine(EngineOptions& o, SolverT& s, typename SolverT::ProblemT& p,
+                            HypothesesSet<SolverT>& h)
+            : options(o), solver(s), problem(p), available_h(h)
         { }
+        inline uint64_t getGeneratedImplicatesCount() { return gi_counter; }
 
         void generateImplicates(GenerationAlgorithm algorithm = GenerationAlgorithm::PID);
 
@@ -56,6 +63,7 @@ namespace gpid {
 
 template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::resetEngine() {
+    gi_counter = 0;
     solver.setProblem(problem);
     solver.start();
     level = 1;
@@ -64,8 +72,10 @@ inline void gpid::DecompositionEngine<SolverT>::resetEngine() {
 
 template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
-    // TODO: Handle More
-    printAsImplicate(solver.extractActive());
+    gi_counter++;
+    if (options.print_implicates) {
+        printAsImplicate(solver.extractActive());
+    }
 }
 
 template<class SolverT>

@@ -12,6 +12,8 @@ int main(int argc, char** argv) {
         cout << "usage: gpid-prop <input-file>" << endl;
     }
 
+    EngineOptions O;
+
     MinisatSolver S;
     MinisatProblem P;
 
@@ -22,7 +24,7 @@ int main(int argc, char** argv) {
     MinisatHypothesesSet A(2*P.getVarCpt());
     initRawSet(A);
 
-    MinisatDecompEngine E(S, P, A);
+    MinisatDecompEngine E(O, S, P, A);
 
     E.generateImplicates();
 
