@@ -11,6 +11,8 @@ namespace gpid {
 
     };
 
+    extern void parseOptions(CoreOptions& opts, char** data);
+
 };
 
 #endif

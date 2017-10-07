@@ -15,7 +15,9 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
+    l_message("parse options...");
     CoreOptions O;
+    parseOptions(O, argv);
 
     MinisatSolver S;
     MinisatProblem P;
