@@ -17,7 +17,11 @@ int main(int argc, char** argv) {
 
     l_message("parse options...");
     CoreOptions O;
-    parseOptions(O, argv);
+    OptionStatus status = parseOptions(O, argv);
+    if (status != OptionStatus::OK) {
+	l_fatal("illegal command!");
+	return EXIT_FAILURE;
+    }
 
     MinisatSolver S;
     MinisatProblem P;

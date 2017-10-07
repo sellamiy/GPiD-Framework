@@ -11,7 +11,11 @@ namespace gpid {
 
     };
 
-    extern void parseOptions(CoreOptions& opts, char** data);
+    enum OptionStatus {
+	OK
+    };
+
+    extern OptionStatus parseOptions(CoreOptions& opts, char** data);
 
 };
 
