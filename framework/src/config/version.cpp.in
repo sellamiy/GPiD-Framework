@@ -17,8 +17,8 @@ extern const std::string gpid::project_timestamp_build     = __DATE__ "+" __TIME
 extern const std::string gpid::generate_version_message()
 {
     return
-	"This is " + project_name + " "
-	+ "version " + project_version
+	project_name
+	+ " version " + project_version
 	+ "\n"
 	+ "configured @" + project_timestamp_configure
 	+ "+" + project_mode
