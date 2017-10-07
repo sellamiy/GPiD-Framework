@@ -7,15 +7,17 @@ namespace gpid {
 
     struct CoreOptions {
 
+	std::string input;
+
         EngineOptions engine;
 
     };
 
     enum OptionStatus {
-	OK
+	OK, ENDED, FAILURE
     };
 
-    extern OptionStatus parseOptions(CoreOptions& opts, char** data);
+    extern OptionStatus parseOptions(CoreOptions& opts, int argc, char** argv);
 
 };
 

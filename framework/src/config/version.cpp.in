@@ -13,3 +13,20 @@ extern const std::string gpid::project_mode = "@CMAKE_BUILD_TYPE@";
 
 extern const std::string gpid::project_timestamp_configure = "@PROJECT_CFG_TIMESTAMP@";
 extern const std::string gpid::project_timestamp_build     = __DATE__ "+" __TIME__;
+
+extern const std::string gpid::generate_version_message()
+{
+    return
+	"This is " + project_name + " "
+	+ "version " + project_version
+	+ "\n"
+	+ "@" + project_version_refspec
+	+ ":" + project_version_commit
+	+ ":" + project_version_state
+	+ "\n"
+	+ "configured @" + project_timestamp_configure
+	+ "+" + project_mode
+	+ "\n"
+	+ "built @" + project_timestamp_build
+	;
+}
