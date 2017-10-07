@@ -20,10 +20,6 @@ extern const std::string gpid::generate_version_message()
 	"This is " + project_name + " "
 	+ "version " + project_version
 	+ "\n"
-	+ "@" + project_version_refspec
-	+ ":" + project_version_commit
-	+ ":" + project_version_state
-	+ "\n"
 	+ "configured @" + project_timestamp_configure
 	+ "+" + project_mode
 	+ "\n"
