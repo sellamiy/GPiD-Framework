@@ -40,7 +40,10 @@ namespace gpid {
     template<class SolverT>
     inline void HypothesesSet<SolverT>::keepLevel() {
         for (hyp_index_t i : consequences_map[current_level])
-            hp_active.activate(i);
+            if (modelquences_map[current_level][i])
+                hp_active.pause(i);
+            else
+                hp_active.activate(i);
         consequences_map[current_level].clear();
     }
 
@@ -119,7 +122,7 @@ namespace gpid {
         hp_active.deactivate(index);
         deactivation_map[current_level].push_back(index);
         for (int linked_index : hp_links[index]) {
-            if (hp_active.is_active(linked_index)) {
+            if (!hp_active.is_inactive(linked_index)) {
                 hp_active.deactivate(linked_index);
                 consequences_map[current_level].push_back(linked_index);
             }

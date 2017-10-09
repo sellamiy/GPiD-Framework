@@ -49,6 +49,10 @@ namespace starray {
 
         inline bool is_active(uint32_t i)
         { return tab[i].status == aa_elt_st::ACTIVE; }
+        inline bool is_paused(uint32_t i)
+        { return tab[i].status == aa_elt_st::PAUSED; }
+        inline bool is_inactive(uint32_t i)
+        { return tab[i].status == aa_elt_st::INACTIVE; }
 
         inline uint32_t get_activated_size() { return active_size; }
         inline uint32_t get_maximal_size()   { return total_size ; }
