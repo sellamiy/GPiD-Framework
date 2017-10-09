@@ -61,7 +61,9 @@ include(ExternalProject)
 if (COVERAGE_TOOLS)
   include(CodeCoverage)
 endif()
-find_package(Doxygen)
+if (BUILD_DOC)
+  find_package(Doxygen)
+endif()
 
 find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIR})
@@ -233,7 +235,7 @@ endif()
 
 # ========== Documentation ==========
 
-if(DOXYGEN_FOUND)
+if(BUILD_DOC AND DOXYGEN_FOUND)
 
   set(DOXYGEN_INF ${CMAKE_CURRENT_SOURCE_DIR}/config/doxygen.cfg.in)
   set(DOXYGEN_OUTF ${CMAKE_CURRENT_BINARY_DIR}/doxygen.cfg)
