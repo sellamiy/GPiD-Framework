@@ -4,7 +4,8 @@ Generic implicate generator using decomposition algorithms.
 
 # Building
 
-```mkdir build
+```
+mkdir build
 cd build
 cmake ..
 make
