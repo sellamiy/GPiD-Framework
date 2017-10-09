@@ -210,7 +210,7 @@ if(BUILD_TESTS)
   endforeach()
 
   # == Dimacs Targets ==
-  file(GLOB DIMACS_TEST_FILES "test/dimacs/*.dimacs")
+  file(GLOB DIMACS_TEST_FILES "test/dimacs/basic/*.dimacs")
   foreach(filename ${DIMACS_TEST_FILES})
     message(STATUS "Found dimacs test file: ${filename}")
     get_filename_component(mfilename "${filename}" NAME)
