@@ -104,10 +104,12 @@ inline void gpid::DecompositionEngine<SolverT>
 /* ========== Example Engine ========== */
 #ifdef DEFINE_TRUE_SOLVER
 /** Implicate printer for engine */
+namespace gpid {
 template<> inline void gpid::DecompositionEngine<gpid::TrueSolver> ::printAsImplicate
 (std::vector<gpid::TrueSolver::HypothesisT>& impl __attribute__((unused)),
  bool negate __attribute__((unused))) { }
 template class gpid::DecompositionEngine<gpid::TrueSolver>;
+}
 #endif
 
 #endif
