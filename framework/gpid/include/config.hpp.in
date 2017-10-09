@@ -1,6 +1,9 @@
 #ifndef _PI_DECOMP_CONFIGURATION_HEADER_
 #define _PI_DECOMP_CONFIGURATION_HEADER_
 
+/* Define example true solver */
+#cmakedefine DEFINE_TRUE_SOLVER
+
 /* Minisat additional components options */
 #cmakedefine MERGE_MINISAT_OUTPUT_WRAPPERS
 

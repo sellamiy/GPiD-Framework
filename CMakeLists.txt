@@ -10,6 +10,8 @@ option(BUILD_TESTS "Build tests" ON)
 option(COVERAGE_TOOLS "Configure and compile for code coverage reports" OFF)
 option(USE_COLORS "Configure color print outputs" ON)
 
+option(DEFINE_TRUE_SOLVER "Define an example solver class" ON)
+
 option(MERGE_MINISAT_OUTPUT_WRAPPERS "Merge Minisat printers into its original namespace" ON)
 
 # ========== Cmake Project Global Configuration ==========
