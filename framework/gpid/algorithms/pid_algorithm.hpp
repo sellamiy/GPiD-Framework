@@ -30,7 +30,6 @@ extern void gpid::DecompositionEngine<SolverT>::generatePID() {
     resetEngine();
 
     while (level > 0) {
-
         if (sdir == IStackDirection::STACK_POP) {
 
             selectNextPID();

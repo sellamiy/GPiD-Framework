@@ -26,21 +26,22 @@ namespace starray {
         class SeqAAIterator {
             aa_elt_t* tptr;
             uint32_t pos;
+            bool ooa;
         public:
-            SeqAAIterator(aa_elt_t* tab, uint32_t pos) : tptr(tab), pos(pos) {}
+            SeqAAIterator(aa_elt_t* tab, uint32_t pos, bool ooa=false)
+                : tptr(tab), pos(pos), ooa(ooa) {}
             inline bool operator!=(const SeqAAIterator<Type>& rIt) const
-            { return tptr != rIt.tptr || pos != rIt.pos; }
-            inline SeqAAIterator& operator++()
-            { do --pos; while(tptr[pos].status == aa_elt_st::INACTIVE); return *this; }
+            { return ooa != rIt.ooa && (tptr != rIt.tptr || pos != rIt.pos); }
+            SeqAAIterator& operator++();
             inline       Type operator*()       { return tptr[pos].index; }
             inline const Type operator*() const { return tptr[pos].index; }
         };
         typedef SeqAAIterator<uint32_t> iterator;
         inline iterator begin() { return iterator(tab, get_last()); }
-        inline iterator end()   { return iterator(tab, get_first()); }
+        inline iterator end()   { return iterator(tab, 0, true); }
         typedef SeqAAIterator<const uint32_t> const_iterator;
         inline const_iterator cbegin() { return const_iterator(tab, get_last()); }
-        inline const_iterator cend()   { return const_iterator(tab, get_first()); }
+        inline const_iterator cend()   { return const_iterator(tab, 0, true); }
 
         void activate(uint32_t i);
         void pause(uint32_t i);
@@ -55,6 +56,19 @@ namespace starray {
         uint32_t get_last();
         uint32_t get_first();
     };
+
+    template<typename Type> inline SequentialActivableArray::SeqAAIterator<Type>&
+    SequentialActivableArray::SeqAAIterator<Type>::operator++() {
+        do {
+            if (pos == 0) {
+                ooa = true;
+                break;
+            }
+            --pos;
+        }
+        while(tptr[pos].status == aa_elt_st::INACTIVE);
+        return *this;
+    }
 
 };
 #endif

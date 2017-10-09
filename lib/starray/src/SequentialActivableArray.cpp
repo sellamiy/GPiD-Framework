@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <assert.h>
+#include <snlog/snlog.hpp>
 #include <starray/SequentialActivableArray.hpp>
 
 using namespace starray;
@@ -46,7 +47,7 @@ uint32_t SequentialActivableArray::get_last()
 {
     uint32_t pos = total_size;
     do {
-        total_size--;
+        pos--;
     } while(tab[pos].status == aa_elt_st::INACTIVE);
     return pos;
 }
@@ -55,7 +56,7 @@ uint32_t SequentialActivableArray::get_first()
 {
     uint32_t pos = 0;
     while (tab[pos].status == aa_elt_st::INACTIVE) {
-        total_size--;
+        pos++;
     }
     return pos;
 }
