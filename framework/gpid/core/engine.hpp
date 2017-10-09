@@ -1,7 +1,7 @@
 #ifndef GPID_DECOMP_ENGINE_HPP
 #define GPID_DECOMP_ENGINE_HPP
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include <gpid/options/options_engine.hpp>
 #include <gpid/core/hypotheses.hpp>

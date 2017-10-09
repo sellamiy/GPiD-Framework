@@ -1,7 +1,7 @@
 #define _STATIC_ACTIVABLE_ARRAY_CPP_
 
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cassert>
 #include <starray/StaticActivableArray.hpp>
 
 using namespace starray;

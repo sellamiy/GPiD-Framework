@@ -1,7 +1,7 @@
 #ifndef _GLOBAL_ARRAY_BLOC_HPP_
 #define _GLOBAL_ARRAY_BLOC_HPP_
 
-#include <inttypes.h>
+#include <cinttypes>
 #include <string>
 
 namespace starray {

@@ -1,7 +1,7 @@
 #ifndef _STATIC_ACTIVABLE_ARRAY_HPP_
 #define _STATIC_ACTIVABLE_ARRAY_HPP_
 
-#include <inttypes.h>
+#include <cinttypes>
 
 namespace starray {
 

@@ -1,7 +1,7 @@
 #define _SEQUENTIAL_ACTIVABLE_ARRAY_CPP_
 
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cassert>
 #include <snlog/snlog.hpp>
 #include <starray/SequentialActivableArray.hpp>
 
