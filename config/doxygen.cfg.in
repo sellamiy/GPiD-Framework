@@ -57,7 +57,7 @@ WARN_LOGFILE           =
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/framework
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/framework @CMAKE_CURRENT_SOURCE_DIR@/lib/starray
 INPUT_ENCODING         = UTF-8
 RECURSIVE              = YES
 
