@@ -8,6 +8,7 @@
 
 namespace gpid {
 
+    /** Class for handling abducible hypotheses. */
     template<class SolverT>
     class HypothesesSet {
         typedef uint32_t hyp_index_t ;
@@ -26,14 +27,25 @@ namespace gpid {
         inline void accessLevel(level_t level);
     public:
         HypothesesSet(uint32_t size) : hp_active(size), current_level(0) {}
+        /** Map an index of the set to a specific hypothesis. */
         inline void mapHypothesis(uint32_t idx, typename SolverT::HypothesisT* hyp);
+        /** Specify incompatible hypotheses. */
         inline void mapLink(uint32_t idx, uint32_t tgt_idx);
+
+        /** Current size of the set. */
         inline uint32_t getSize();
+        /** Original size of the set. */
         inline uint32_t getSourceSize();
         inline bool isEmpty(uint32_t level);
-        inline void skipModelSkippables(level_t level);
+
+        /** Recover for usage the next available hypothesis at a given level.
+         * @warning Works as an iterator on the hypotheses at the given level. */
         inline typename SolverT::HypothesisT& nextHypothesis(uint32_t level);
+
+        /** Internally selects hypotheses to skip according to a model. */
         inline void modelCleanUp(typename SolverT::ModelT& model, uint32_t level);
+        /** Skip available hypotheses if induced by the active model. */
+        inline void skipModelSkippables(level_t level);
     };
 
     template<class SolverT>
