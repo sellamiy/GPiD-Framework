@@ -18,7 +18,7 @@ namespace gpid {
         std::map<level_t, std::list<hyp_index_t> > consequences_map;
         std::map<level_t, std::list<hyp_index_t> > reactivation_map;
         std::map<level_t, std::map<hyp_index_t, bool> > modelquences_map;
-        starray::StaticActivableArray hp_active;
+        starray::SequentialActivableArray hp_active;
         level_t current_level;
 
         inline void keepLevel();
@@ -48,7 +48,6 @@ namespace gpid {
     inline void HypothesesSet<SolverT>::increaseLevel(uint32_t target) {
         while (current_level < target) {
             ++current_level;
-            hp_active.reset_iterator();
             deactivation_map[current_level].clear();
             consequences_map[current_level].clear();
             reactivation_map[current_level].clear();
@@ -79,15 +78,13 @@ namespace gpid {
 
     template<class SolverT>
     inline void HypothesesSet<SolverT>::skipModelSkippables(level_t level) {
-        // TODO : Not Correct.
-        // The correct way is: they are deactivated at first and reactivated after passed.
-        // We need Another memroy structure than ActivableArrays for that
         accessLevel(level);
-        int index = hp_active.get_last();
-        while(modelquences_map[current_level][index]) {
-            hp_active.deactivate(index);
-            deactivation_map[current_level].push_back(index);
-            index = hp_active.get_last();
+        for (int index : hp_active) {
+            if (hp_active.is_active(index)) break;
+            if (modelquences_map[current_level][index]) {
+                hp_active.activate(index);
+                modelquences_map[current_level][index] = false;
+            }
         }
     }
 
@@ -133,10 +130,10 @@ namespace gpid {
     template<class SolverT>
     inline void HypothesesSet<SolverT>::modelCleanUp(typename SolverT::ModelT& model, uint32_t level) {
         if (isEmpty(level)) return;
-        hp_active.reset_iterator();
-        while (hp_active.has_next()) {
-            uint32_t l_idx = hp_active.get_next();
-            if (model.isSkippable(*hp_mapping[l_idx])) {
+        for (uint32_t l_idx : hp_active) {
+            if (hp_active.is_active(l_idx) && model.isSkippable(*hp_mapping[l_idx])) {
+                hp_active.pause(l_idx);
+                deactivation_map[current_level].push_back(l_idx);
                 modelquences_map[current_level][l_idx] = true;
             }
         }

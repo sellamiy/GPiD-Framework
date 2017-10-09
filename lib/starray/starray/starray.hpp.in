@@ -2,6 +2,7 @@
 #define _STATIC_ARRAYS_LIBRARY_HEADER_
 
 #include <starray/StaticActivableArray.hpp>
+#include <starray/SequentialActivableArray.hpp>
 #include <starray/GlobalArrayBloc.hpp>
 
 #endif
