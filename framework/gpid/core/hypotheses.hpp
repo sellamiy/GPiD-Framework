@@ -16,7 +16,6 @@ namespace gpid {
         std::map<hyp_index_t, std::list<hyp_index_t> > hp_links;
         std::map<level_t, std::list<hyp_index_t> > deactivation_map;
         std::map<level_t, std::list<hyp_index_t> > consequences_map;
-        std::map<level_t, std::list<hyp_index_t> > reactivation_map;
         std::map<level_t, std::map<hyp_index_t, bool> > modelquences_map;
         starray::SequentialActivableArray hp_active;
         level_t current_level;
@@ -53,7 +52,6 @@ namespace gpid {
             ++current_level;
             deactivation_map[current_level].clear();
             consequences_map[current_level].clear();
-            reactivation_map[current_level].clear();
             modelquences_map[current_level].clear();
         }
     }
@@ -61,8 +59,6 @@ namespace gpid {
     template<class SolverT>
     inline void HypothesesSet<SolverT>::decreaseLevel(uint32_t target) {
         while (current_level > target) {
-            for (hyp_index_t i : reactivation_map[current_level])
-                hp_active.deactivate(i);
             for (hyp_index_t i : deactivation_map[current_level])
                 hp_active.activate(i);
             for (hyp_index_t i : consequences_map[current_level])
