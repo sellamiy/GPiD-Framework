@@ -46,9 +46,14 @@ namespace gpid {
         Minisat::vec<Minisat::Lit>& nextConstraint();
     };
 
+    class MinisatStorage {
+
+    };
+
     class MinisatSolver {
         Minisat::SimpSolver solver;
         MinisatModelWrapper iw_mdl;
+        MinisatStorage storage;
         Minisat::vec<Minisat::Lit> assumps;
         std::vector<MinisatHypothesis> loc_ass;
         Minisat::vec<int> lvl_stack;
@@ -62,13 +67,16 @@ namespace gpid {
         typedef MinisatHypothesis HypothesisT;
         typedef MinisatProblem ProblemT;
         typedef MinisatModelWrapper ModelT;
+        typedef MinisatStorage StorageT;
 
         void removeHypotheses(uint32_t level) { accessLevel(level); }
         void addHypothesis(MinisatHypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
+        bool currentlySubsumed(MinisatHypothesis& additional, uint32_t level);
 
         inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }
         inline MinisatModelWrapper& recoverModel() { return iw_mdl; }
+        inline MinisatStorage& getStorage() { return storage; }
 
         MinisatSolver();
         void setProblem(MinisatProblem& problem);

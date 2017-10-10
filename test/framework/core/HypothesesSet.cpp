@@ -16,9 +16,12 @@ struct HSTest_S {
 
 struct HSTest_MW {};
 
+struct HSTest_SW {};
+
 struct HSTest_SWrapper {
     typedef HSTest_S HypothesisT;
     typedef HSTest_MW ModelT;
+    typedef HSTest_MW StorageT;
 };
 
 static HSTest_S hmemory[HSET_SIZE];

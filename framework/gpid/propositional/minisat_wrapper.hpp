@@ -43,6 +43,11 @@ namespace gpid {
         else                              return gpid::SolverTestStatus::SOLVER_UNKNOWN;
     }
 
+    inline bool MinisatSolver::currentlySubsumed(MinisatHypothesis& additional, uint32_t level) {
+        l_warn("Subsumption not implemented");
+        return false;
+    }
+
 };
 
 #endif

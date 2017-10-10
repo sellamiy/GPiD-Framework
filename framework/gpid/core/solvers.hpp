@@ -18,6 +18,7 @@ namespace gpid {
     public:
         struct ProblemT    { };
         struct HypothesisT { };
+        struct StorageT    { };
         struct ModelT
         {
             inline bool isSkippable
@@ -26,6 +27,7 @@ namespace gpid {
         };
         std::vector<HypothesisT> sst_int;
         ModelT sst_mdl;
+        StorageT sst_str;
     public:
         inline void setProblem(ProblemT& problem __attribute__((unused))) { }
         inline void start() { }
@@ -36,6 +38,10 @@ namespace gpid {
         inline SolverTestStatus testHypotheses(uint32_t level __attribute__((unused)))
         { return SolverTestStatus::SOLVER_UNSAT; }
         inline ModelT& recoverModel() { return sst_mdl; }
+        inline StorageT& getStorage() { return sst_str; }
+        inline bool currentlySubsumed
+        (HypothesisT& additional __attribute__((unused)), uint32_t level __attribute__((unused)))
+        { return false; }
     };
 #endif
 

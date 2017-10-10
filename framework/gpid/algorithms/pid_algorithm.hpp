@@ -12,11 +12,15 @@ template<class SolverT>
 extern void gpid::DecompositionEngine<SolverT>::selectNextPID() {
     if (!available_h.isEmpty(level)) {
         // Recovering next possible hypothesis
-        available_h.skipModelSkippables(level);
-        typename SolverT::HypothesisT& sel = available_h.nextHypothesis(level);
-        // Actual possible hypothesis
-        solver.addHypothesis(sel, level);
-        pushStackLevel();
+        bool has_next = available_h.skipSkippables(solver, level);
+        if (has_next) {
+            typename SolverT::HypothesisT& sel = available_h.nextHypothesis(level);
+            // Actual possible hypothesis
+            solver.addHypothesis(sel, level);
+            pushStackLevel();
+        } else {
+            popStackLevel();
+        }
     } else {
         // Actually no more hypotheses
         popStackLevel();
