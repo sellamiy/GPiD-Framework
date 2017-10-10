@@ -31,7 +31,7 @@ namespace starray {
             SeqAAIterator(aa_elt_t* tab, uint32_t pos, bool ooa=false)
                 : tptr(tab), pos(pos), ooa(ooa) {}
             inline bool operator!=(const SeqAAIterator<Type>& rIt) const
-            { return ooa != rIt.ooa && (tptr != rIt.tptr || pos != rIt.pos); }
+            { return ooa != rIt.ooa || (tptr != rIt.tptr || pos != rIt.pos); }
             SeqAAIterator& operator++();
             inline       Type operator*()       { return tptr[pos].index; }
             inline const Type operator*() const { return tptr[pos].index; }
