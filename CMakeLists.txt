@@ -12,7 +12,7 @@ option(USE_COLORS "Configure color print outputs" ON)
 
 option(DEFINE_TRUE_SOLVER "Define an example solver class" ON)
 
-option(MERGE_MINISAT_OUTPUT_WRAPPERS "Merge Minisat printers into its original namespace" ON)
+option(MERGE_MINISAT_WRAPPERS "Merge Minisat wrappers into its original namespace" ON)
 
 # ========== Cmake Project Global Configuration ==========
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/coverage/")
@@ -47,10 +47,10 @@ endif()
 if(USE_COLORS AND NOT WIN32)
   message(STATUS "Target colored output enabled")
 endif()
-if(MERGE_MINISAT_OUTPUT_WRAPPERS)
-  message(STATUS "Minisat strict printers location: parent namespace")
+if(MERGE_MINISAT_WRAPPERS)
+  message(STATUS "Minisat strict wrappers location: parent namespace")
 else()
-  message(STATUS "Minisat strict printers location: separate namespace")
+  message(STATUS "Minisat strict wrappers location: separate namespace")
 endif()
 message(STATUS "Libraries target directory: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 message(STATUS "Executables target directory: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
@@ -138,6 +138,7 @@ include_directories("${LOCAL_LIB_HEADERS_DIR}")
 
 # ========== Headers ==========
 include_directories("lib/starray")
+include_directories("lib/ugly")
 
 include_directories("${FRAMEWORK_CONF_HEADERS_DIR}")
 include_directories("framework")

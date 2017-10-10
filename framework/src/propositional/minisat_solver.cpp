@@ -1,7 +1,7 @@
 #define GPID__MINISAT_SOLVER_CPP
 
 #include <gpid/propositional/minisat_pengine.hpp>
-#include <gpid/propositional/minisat_wrapper.hpp>
+#include <gpid/propositional/minisat_solver.hpp>
 
 using namespace gpid;
 

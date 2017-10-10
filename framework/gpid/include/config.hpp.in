@@ -5,6 +5,6 @@
 #cmakedefine DEFINE_TRUE_SOLVER
 
 /* Minisat additional components options */
-#cmakedefine MERGE_MINISAT_OUTPUT_WRAPPERS
+#cmakedefine MERGE_MINISAT_WRAPPERS
 
 #endif

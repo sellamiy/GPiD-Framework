@@ -35,7 +35,6 @@ namespace gpid {
         void resetEngine();
 
         void activeIsImplicate();
-        void printAsImplicate(std::vector<typename SolverT::HypothesisT>& impl, bool negate=true);
 
         void pushStackLevel();
         void popStackLevel();
@@ -74,8 +73,9 @@ template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
     gi_counter++;
     if (options.print_implicates) {
-        printAsImplicate(solver.extractActive());
+        solver.printActiveNegation();
     }
+    solver.storeActive();
 }
 
 template<class SolverT>
@@ -100,16 +100,5 @@ inline void gpid::DecompositionEngine<SolverT>
     default: snlog::l_internal("Trying to generate implicates using unknown algorithm!");
     }
 }
-
-/* ========== Example Engine ========== */
-#ifdef DEFINE_TRUE_SOLVER
-/** Implicate printer for engine */
-namespace gpid {
-template<> inline void gpid::DecompositionEngine<gpid::TrueSolver> ::printAsImplicate
-(std::vector<gpid::TrueSolver::HypothesisT>& impl __attribute__((unused)),
- bool negate __attribute__((unused))) { }
-template class gpid::DecompositionEngine<gpid::TrueSolver>;
-}
-#endif
 
 #endif

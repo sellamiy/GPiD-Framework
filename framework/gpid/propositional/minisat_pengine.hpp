@@ -2,8 +2,11 @@
 #define GPID_PROPOSITIONAL_ENGINE__MINISAT_HPP
 
 #include <vector>
+#include <ugly/ugly.hpp>
 #include <minisat/simp/SimpSolver.h>
+#include <gpid/config.hpp>
 #include <gpid/core/engine.hpp>
+#include <gpid/propositional/minisat_wrappers.hpp>
 
 namespace gpid {
 
@@ -46,9 +49,7 @@ namespace gpid {
         Minisat::vec<Minisat::Lit>& nextConstraint();
     };
 
-    class MinisatStorage {
-
-    };
+    typedef ugly::SetOfSets<Minisat::Lit, MinisatVecWrapper<Minisat::Lit> > MinisatStorage;
 
     class MinisatSolver {
         Minisat::SimpSolver solver;
@@ -77,6 +78,9 @@ namespace gpid {
         inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }
         inline MinisatModelWrapper& recoverModel() { return iw_mdl; }
         inline MinisatStorage& getStorage() { return storage; }
+
+        void printActiveNegation();
+        void storeActive();
 
         MinisatSolver();
         void setProblem(MinisatProblem& problem);

@@ -6,7 +6,7 @@
 #include <gpid/core/engine.hpp>
 
 #include <gpid/propositional/minisat_pengine.hpp>
-#include <gpid/propositional/minisat_wrapper.hpp>
+#include <gpid/propositional/minisat_solver.hpp>
 #include <gpid/propositional/minisat_inputs.hpp>
 #include <gpid/propositional/minisat_outputs.hpp>
 

@@ -7,7 +7,7 @@
 #include <gpid/propositional/minisat_pengine.hpp>
 
 /* Strict Minisat output printers */
-#ifdef MERGE_MINISAT_OUTPUT_WRAPPERS
+#ifdef MERGE_MINISAT_WRAPPERS
 namespace Minisat {
 #else
 namespace gpid {
