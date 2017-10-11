@@ -19,6 +19,7 @@ namespace gpid {
         EngineOptions& options;
 
         uint64_t gi_counter;
+        uint64_t node_counter;
 
         enum IStackDirection {
             STACK_PUSH,
@@ -54,15 +55,25 @@ namespace gpid {
 
         void generateImplicates(GenerationAlgorithm algorithm = GenerationAlgorithm::PID);
 
+        void printStatistics();
     };
 
 };
+
+/* ========== Printers ========== */
+
+template<class SolverT>
+inline void gpid::DecompositionEngine<SolverT>::printStatistics() {
+    snlog::l_notif("implicates generated", gi_counter);
+    snlog::l_notif("nodes explored", node_counter);
+}
 
 /* ========== Helpers ========== */
 
 template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::resetEngine() {
     gi_counter = 0;
+    node_counter = 0;
     solver.setProblem(problem);
     solver.start();
     level = 1;

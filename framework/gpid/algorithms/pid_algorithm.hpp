@@ -39,7 +39,7 @@ extern void gpid::DecompositionEngine<SolverT>::generatePID() {
             selectNextPID();
 
         } else {
-
+            node_counter++;
             SolverTestStatus status = solver.testHypotheses(level);
 
             if (status == SolverTestStatus::SOLVER_SAT) {

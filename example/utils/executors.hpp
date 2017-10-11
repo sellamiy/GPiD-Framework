@@ -36,6 +36,9 @@ static inline void generate_minisat(OptionStorage& opts) {
 
     l_message("generate implicates...");
     E.generateImplicates();
+
+    l_message("print generation statistics...");
+    E.printStatistics();
 }
 #else
 static inline void generate_minisat(OptionStorage& opts __attribute__((unused))) {

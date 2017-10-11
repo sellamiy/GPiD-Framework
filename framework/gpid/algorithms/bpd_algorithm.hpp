@@ -33,7 +33,7 @@ extern void gpid::DecompositionEngine<SolverT>::generateBPD() {
             selectNextBPD();
 
         } else {
-
+            node_counter++;
             SolverTestStatus status = solver.testHypotheses(level);
 
             if (status == SolverTestStatus::SOLVER_SAT) {
