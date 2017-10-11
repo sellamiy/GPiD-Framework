@@ -1,6 +1,7 @@
 #ifndef GPID_SMT_ENGINE__CVC4_HPP
 #define GPID_SMT_ENGINE__CVC4_HPP
 
+#include <vector>
 #include <cvc4/cvc4.h>
 #include <gpid/config.hpp>
 #include <gpid/core/engine.hpp>
@@ -22,6 +23,18 @@ namespace gpid {
 
     class CVC4Problem {
     public:
+        enum IOMode { IO_READ, IO_WRITE };
+    private:
+        IOMode mode = IOMode::IO_WRITE;
+        std::vector<CVC4::Expr> cons_data;
+        uint32_t reading_pos = -1;
+
+        void initCurrentMode();
+    public:
+        inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
+        void addConstraint(CVC4::Expr& cons);
+        bool hasMoreConstraints();
+        CVC4::Expr& nextConstraint();
     };
 
     class CVC4Solver {
@@ -43,6 +56,7 @@ namespace gpid {
         bool currentlySubsumed(CVC4Hypothesis& additional, uint32_t level);
 
         inline CVC4ModelWrapper& recoverModel() { return iw_mdl; }
+        inline CVC4::ExprManager& getExprManager() { return em; }
 
         void printActiveNegation();
         void storeActive();

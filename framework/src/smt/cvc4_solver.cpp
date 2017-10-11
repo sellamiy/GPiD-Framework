@@ -18,5 +18,8 @@ void CVC4Solver::start() {
 }
 
 void CVC4Solver::setProblem(CVC4Problem& problem) {
-    snlog::l_warn("Not implemented yet");
+    problem.setMode(CVC4Problem::IOMode::IO_READ);
+    while (problem.hasMoreConstraints()) {
+        solver.assertFormula(problem.nextConstraint());
+    }
 }
