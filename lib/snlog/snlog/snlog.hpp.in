@@ -39,22 +39,25 @@ namespace snlog {
 #define s_reset   "\033[0m"
     template<typename printable>
     inline void l_message(const printable& msg)
-    { std::cerr << "-- "                                  << msg << s_reset << std::endl; }
+    { std::cerr << "-- "                                << msg << std::endl; }
     template<typename printable>
     inline void l_info(const printable& msg)
-    { std::cerr << s_bfg_blu << "INFO: "     << s_nfg_blu << msg << s_reset << std::endl; }
+    { std::cerr << s_bfg_blu << "INFO: "     << s_reset << msg << std::endl; }
     template<typename printable>
     inline void l_warn(const printable& msg)
-    { std::cerr << s_bfg_ylw << "WARNING: "  << s_nfg_ylw << msg << s_reset << std::endl; }
+    { std::cerr << s_bfg_ylw << "WARNING: "  << s_reset << msg << std::endl; }
     template<typename printable>
     inline void l_error(const printable& msg)
-    { std::cerr << s_bfg_red << "ERROR: "    << s_nfg_red << msg << s_reset << std::endl; }
+    { std::cerr << s_bfg_red << "ERROR: "    << s_reset << msg << std::endl; }
     template<typename printable>
     inline void l_internal(const printable& msg)
-    { std::cerr << s_bfg_red << "INTERNAL: " << s_nfg_mag << msg << s_reset << std::endl; }
+    { std::cerr << s_bfg_mag << "INTERNAL: " << s_reset << msg << std::endl; }
     template<typename printable>
     inline void l_fatal(const printable& msg)
-    { std::cerr << s_bfg_red << "FATAL: "    << s_bfg_red << msg << s_reset << std::endl; }
+    { std::cerr << s_bfg_red << "FATAL: "    << s_nfg_red << msg << s_reset << std::endl; }
+    template<typename printable_a, typename printable_b>
+    inline void l_notif(const printable_a& nmg, const printable_b&msg)
+    { std::cerr << s_bfg_gre << "-- " << nmg << ": "  << s_reset << msg << std::endl; }
 #else
     template<typename printable>
     inline void l_message(const printable& msg)  { std::cerr << "-- "        << msg << std::endl; }
@@ -68,6 +71,9 @@ namespace snlog {
     inline void l_internal(const printable& msg) { std::cerr << "INTERNAL: " << msg << std::endl; }
     template<typename printable>
     inline void l_fatal(const printable& msg)    { std::cerr << "FATAL: "    << msg << std::endl; }
+    template<typename printable_a, typename printable_b>
+    inline void l_notif(const printable_a& nmg, const printable_b&msg)
+    { std::cerr << "-- " << nmg << ": " << msg << std::endl; }
 #endif
     template<typename printable>
     inline void t_message(bool test, const printable& msg)  { if(test) l_message(msg); }
