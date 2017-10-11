@@ -98,7 +98,7 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
     try {
 
 	if (parser.count("help")) {
-	    snlog::l_message(parser.help({"", "Input", "Output"}));
+	    snlog::l_message(parser.help({"", "Generator", "Input", "Output"}));
 	    return OptionStatus::ENDED;
 	}
 	if (parser.count("version")) {
