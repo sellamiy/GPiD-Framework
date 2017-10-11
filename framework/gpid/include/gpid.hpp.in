@@ -14,4 +14,8 @@
 #include <gpid/propositional/minisat_outputs.hpp>
 #endif
 
+#ifdef CVC4_SOLVER_INTERFACE
+#include <gpid/smt/cvc4_engine.hpp>
+#endif
+
 #endif

@@ -23,6 +23,9 @@ extern const std::string gpid::list_configured_generators(const std::string sepa
 #ifdef MINISAT_SOLVER_INTERFACE
     listm += separator + "minisat";
 #endif
+#ifdef CVC4_SOLVER_INTERFACE
+    listm += separator + "cvc4";
+#endif
     return listm;
 }
 
