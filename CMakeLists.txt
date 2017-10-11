@@ -173,6 +173,13 @@ file(GLOB LIBSTARRAY_SOURCES "lib/starray/src/*.cpp")
 
 file(GLOB LIBGPID_SOURCES "framework/src/*/*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/*.cpp")
 
+if(NOT TRUE_SOLVER_INTERFACE)
+  file(GLOB TRUESOLVER_SOURCES "framework/src/*/truesolver*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/truesolver*.cpp")
+  foreach(filename ${TRUESOLVER_SOURCES})
+    list(REMOVE_ITEM LIBGPID_SOURCES ${filename})
+  endforeach()
+endif()
+
 if(NOT MINISAT_SOLVER_INTERFACE)
   file(GLOB MINISAT_SOURCES "framework/src/*/minisat*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/minisat*.cpp")
   foreach(filename ${MINISAT_SOURCES})
