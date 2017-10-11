@@ -12,12 +12,14 @@ option(USE_COLORS "Configure color print outputs" ON)
 
 option(TRUE_SOLVER_INTERFACE "Define an example solver class" ON)
 option(MINISAT_SOLVER_INTERFACE "Define a propositional solver class based on minisat" ON)
+option(CVC4_SOLVER_INTERFACE "Define a smt solver class based on cvc4" ON)
 
 option(MERGE_MINISAT_WRAPPERS "Merge Minisat wrappers into its original namespace" ON)
 
 # ========== Cmake Project Global Configuration ==========
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/coverage/")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/git/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/cvc4/")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -31,6 +33,24 @@ include(GetGitRevisionDescription)
 get_git_head_revision(VERSION_GIT_REFSPEC VERSION_GIT_SHA1)
 git_local_changes(VERSION_STATE)
 git_describe(VERSION)
+
+# ========== Finding Packages ==========
+include(ExternalProject)
+if (COVERAGE_TOOLS)
+  include(CodeCoverage)
+endif()
+if (BUILD_DOC)
+  find_package(Doxygen)
+endif()
+
+find_package(ZLIB REQUIRED)
+include_directories(${ZLIB_INCLUDE_DIR})
+
+find_package(CVC4)
+if (NOT CVC4_FOUND)
+  message(WARNING "Forcefully deactivates CVC4 interface as the Solver was not found")
+  set(CVC4_SOLVER_INTERFACE OFF CACHE BOOL "Define a smt solver class based on cvc4" FORCE)
+endif()
 
 # ========== Logging Global Configuration Infos ==========
 if(BUILD_DOC)
@@ -59,23 +79,14 @@ if(MINISAT_SOLVER_INTERFACE)
     message(STATUS "Minisat strict wrappers location: separate namespace")
   endif()
 endif()
+if(CVC4_SOLVER_INTERFACE)
+  message(STATUS "Add solver interface: CVC4")
+endif()
 message(STATUS "Libraries target directory: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 message(STATUS "Executables target directory: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 if(BUILD_TESTS)
   message(STATUS "Tests target directory: ${TESTS_RUNTIME_OUTPUT_DIRECTORY}")
 endif()
-
-# ========== Finding Packages ==========
-include(ExternalProject)
-if (COVERAGE_TOOLS)
-  include(CodeCoverage)
-endif()
-if (BUILD_DOC)
-  find_package(Doxygen)
-endif()
-
-find_package(ZLIB REQUIRED)
-include_directories(${ZLIB_INCLUDE_DIR})
 
 # ========== Cmake Project Local Configuration ==========
 set(CMAKE_CXX_STANDARD 11)
@@ -139,6 +150,11 @@ if(MINISAT_SOLVER_INTERFACE)
   endif()
 endif()
 
+# ========== CVC4 ==========
+if(CVC4_SOLVER_INTERFACE)
+  include_directories(${CVC4_INCLUDE_DIR})
+endif()
+
 # ========== External Inserted Libraires ==========
 include_directories("lib/cxxopts")
 
@@ -156,9 +172,17 @@ include_directories("framework")
 file(GLOB LIBSTARRAY_SOURCES "lib/starray/src/*.cpp")
 
 file(GLOB LIBGPID_SOURCES "framework/src/*/*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/*.cpp")
+
 if(NOT MINISAT_SOLVER_INTERFACE)
   file(GLOB MINISAT_SOURCES "framework/src/*/minisat*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/minisat*.cpp")
   foreach(filename ${MINISAT_SOURCES})
+    list(REMOVE_ITEM LIBGPID_SOURCES ${filename})
+  endforeach()
+endif()
+
+if(NOT CVC4_SOLVER_INTERFACE)
+  file(GLOB CVC4_SOURCES "framework/src/*/cvc4*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/cvc4*.cpp")
+  foreach(filename ${CVC4_SOURCES})
     list(REMOVE_ITEM LIBGPID_SOURCES ${filename})
   endforeach()
 endif()
@@ -171,6 +195,9 @@ target_link_libraries(gpid starray)
 target_link_libraries(gpid ${ZLIB_LIBRARY})
 if(MINISAT_SOLVER_INTERFACE)
   target_link_libraries(gpid minisat-lib-shared)
+endif()
+if(CVC4_SOLVER_INTERFACE)
+  target_link_libraries(gpid cvc4)
 endif()
 
 # ========== Example Programs Targets ==========
