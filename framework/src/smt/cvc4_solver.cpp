@@ -6,12 +6,15 @@
 using namespace gpid;
 
 CVC4Solver::CVC4Solver()
+    : solver(&em)
 {
-    snlog::l_warn("Not implemented yet");
+    solver.setOption("incremental", true);
+    solver.setOption("produce-models", true);
+    solver.setLogic("QF_ALL_SUPPORTED");
 }
 
 void CVC4Solver::start() {
-    snlog::l_warn("Not implemented yet");
+    c_level = 0;
 }
 
 void CVC4Solver::setProblem(CVC4Problem& problem) {
