@@ -37,6 +37,8 @@ namespace gpid {
         inline void removeHypotheses(uint32_t level __attribute__((unused))) { }
         inline SolverTestStatus testHypotheses(uint32_t level __attribute__((unused)))
         { return SolverTestStatus::SOLVER_UNSAT; }
+        inline void printActiveNegation() { }
+        inline void storeActive() { }
         inline ModelT& recoverModel() { return sst_mdl; }
         inline StorageT& getStorage() { return sst_str; }
         inline bool currentlySubsumed

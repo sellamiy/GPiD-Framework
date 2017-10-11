@@ -8,8 +8,17 @@ using namespace snlog;
 using namespace gpid;
 
 #ifdef TRUE_SOLVER_INTERFACE
-static inline void generate_true_solver(OptionStorage& opts __attribute__((unused))) {
-    l_message("True Solver -- The Only True Solver.");
+static inline void generate_true_solver(OptionStorage& opts) {
+    l_info("True Solver -- The Only True Solver.");
+    TrueSolver S;
+    TrueSolver::ProblemT P;
+    l_message("generate decompostition structures...");
+    HypothesesSet<TrueSolver> A(1);
+    DecompositionEngine<TrueSolver> E(opts.engine, S, P, A);
+    l_message("generate implicates...");
+    E.generateImplicates();
+    l_message("print generation statistics...");
+    E.printStatistics();
 }
 #else
 static inline void generate_true_solver(OptionStorage& opts __attribute__((unused))) {
