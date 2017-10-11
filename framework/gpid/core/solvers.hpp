@@ -12,7 +12,7 @@ namespace gpid {
         SOLVER_UNKNOWN
     };
 
-#ifdef DEFINE_TRUE_SOLVER
+#ifdef TRUE_SOLVER_INTERFACE
     /** The True Solver : Example Solver interface class. */
     class TrueSolver {
     public:

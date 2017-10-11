@@ -18,6 +18,8 @@ namespace gpid {
     extern const std::string project_timestamp_configure;
     extern const std::string project_timestamp_build;
 
+    extern const std::string list_configured_generators(const std::string separator=" ");
+
     extern const std::string generate_version_message();
 
 };

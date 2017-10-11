@@ -10,7 +10,8 @@ option(BUILD_TESTS "Build tests" ON)
 option(COVERAGE_TOOLS "Configure and compile for code coverage reports" OFF)
 option(USE_COLORS "Configure color print outputs" ON)
 
-option(DEFINE_TRUE_SOLVER "Define an example solver class" ON)
+option(TRUE_SOLVER_INTERFACE "Define an example solver class" ON)
+option(MINISAT_SOLVER_INTERFACE "Define a propositional solver class based on minisat" ON)
 
 option(MERGE_MINISAT_WRAPPERS "Merge Minisat wrappers into its original namespace" ON)
 
@@ -47,10 +48,16 @@ endif()
 if(USE_COLORS AND NOT WIN32)
   message(STATUS "Target colored output enabled")
 endif()
-if(MERGE_MINISAT_WRAPPERS)
-  message(STATUS "Minisat strict wrappers location: parent namespace")
-else()
-  message(STATUS "Minisat strict wrappers location: separate namespace")
+if(TRUE_SOLVER_INTERFACE)
+  message(STATUS "Add solver interface: True Solver")
+endif()
+if(MINISAT_SOLVER_INTERFACE)
+  message(STATUS "Add solver interface: Minisat")
+  if(MERGE_MINISAT_WRAPPERS)
+    message(STATUS "Minisat strict wrappers location: parent namespace")
+  else()
+    message(STATUS "Minisat strict wrappers location: separate namespace")
+  endif()
 endif()
 message(STATUS "Libraries target directory: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 message(STATUS "Executables target directory: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
@@ -99,35 +106,37 @@ file(COPY framework/gpid/include/version.hpp DESTINATION ${FRAMEWORK_CONF_HEADER
 configure_file(framework/src/config/version.cpp.in ${FRAMEWORK_CONF_SOURCE_DIR}/config/version.cpp)
 
 # ========== Minisat ==========
-file(GLOB MINISAT_PATCHES "cmake/minisat/*.patch")
-ExternalProject_Add(minisat-solver
-  GIT_REPOSITORY    https://github.com/niklasso/minisat.git
-  GIT_TAG           37dc6c67e2af26379d88ce349eb9c4c6160e8543
-  SOURCE_DIR        "${CMAKE_BINARY_DIR}/minisat-src"
-  BINARY_DIR        "${CMAKE_BINARY_DIR}/minisat-build"
-  CMAKE_ARGS        -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} -Wno-dev
-  PATCH_COMMAND     git apply ${MINISAT_PATCHES}
-  INSTALL_COMMAND   ""
-  TEST_COMMAND      ""
-  )
-add_library(minisat-lib-shared SHARED IMPORTED)
-add_dependencies(minisat-lib-shared minisat-solver)
-if(WIN32)
-  set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
-    ${CMAKE_BINARY_DIR}/minisat-build/minisat.dll)
-elseif(APPLE)
-  set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
-    ${CMAKE_BINARY_DIR}/minisat-build/libminisat.dylib)
-else()
-  set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
-    ${CMAKE_BINARY_DIR}/minisat-build/libminisat.so)
-endif()
-include_directories("${CMAKE_BINARY_DIR}/minisat-src")
-message(STATUS "Minisat patched source directory: ${CMAKE_BINARY_DIR}/minisat-src")
-message(STATUS "Minisat linkables directory: ${CMAKE_BINARY_DIR}/minisat-build")
+if(MINISAT_SOLVER_INTERFACE)
+  file(GLOB MINISAT_PATCHES "cmake/minisat/*.patch")
+  ExternalProject_Add(minisat-solver
+    GIT_REPOSITORY    https://github.com/niklasso/minisat.git
+    GIT_TAG           37dc6c67e2af26379d88ce349eb9c4c6160e8543
+    SOURCE_DIR        "${CMAKE_BINARY_DIR}/minisat-src"
+    BINARY_DIR        "${CMAKE_BINARY_DIR}/minisat-build"
+    CMAKE_ARGS        -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} -Wno-dev
+    PATCH_COMMAND     git apply ${MINISAT_PATCHES}
+    INSTALL_COMMAND   ""
+    TEST_COMMAND      ""
+    )
+  add_library(minisat-lib-shared SHARED IMPORTED)
+  add_dependencies(minisat-lib-shared minisat-solver)
+  if(WIN32)
+    set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
+      ${CMAKE_BINARY_DIR}/minisat-build/minisat.dll)
+  elseif(APPLE)
+    set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
+      ${CMAKE_BINARY_DIR}/minisat-build/libminisat.dylib)
+  else()
+    set_property(TARGET minisat-lib-shared PROPERTY IMPORTED_LOCATION
+      ${CMAKE_BINARY_DIR}/minisat-build/libminisat.so)
+  endif()
+  include_directories("${CMAKE_BINARY_DIR}/minisat-src")
+  message(STATUS "Minisat patched source directory: ${CMAKE_BINARY_DIR}/minisat-src")
+  message(STATUS "Minisat linkables directory: ${CMAKE_BINARY_DIR}/minisat-build")
 
-if (COVERAGE_TOOLS)
-  set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/minisat-src/minisat/*/*")
+  if (COVERAGE_TOOLS)
+    set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/minisat-src/minisat/*/*")
+  endif()
 endif()
 
 # ========== External Inserted Libraires ==========
@@ -147,18 +156,26 @@ include_directories("framework")
 file(GLOB LIBSTARRAY_SOURCES "lib/starray/src/*.cpp")
 
 file(GLOB LIBGPID_SOURCES "framework/src/*/*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/*.cpp")
+if(NOT MINISAT_SOLVER_INTERFACE)
+  file(GLOB MINISAT_SOURCES "framework/src/*/minisat*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/minisat*.cpp")
+  foreach(filename ${MINISAT_SOURCES})
+    list(REMOVE_ITEM LIBGPID_SOURCES ${filename})
+  endforeach()
+endif()
 
 # ========== Libraries Targets ==========
 add_library(starray STATIC ${LIBSTARRAY_SOURCES})
 
 add_library(gpid STATIC ${LIBGPID_SOURCES})
 target_link_libraries(gpid starray)
-target_link_libraries(gpid minisat-lib-shared)
 target_link_libraries(gpid ${ZLIB_LIBRARY})
+if(MINISAT_SOLVER_INTERFACE)
+  target_link_libraries(gpid minisat-lib-shared)
+endif()
 
 # ========== Example Programs Targets ==========
-add_executable(gpid-prop "example/gpid-prop.cpp")
-target_link_libraries(gpid-prop gpid)
+add_executable(gpid-gts "example/gpid-gts.cpp")
+target_link_libraries(gpid-gts gpid)
 
 # ========== Tests ==========
 
@@ -215,12 +232,14 @@ if(BUILD_TESTS)
   endforeach()
 
   # == Dimacs Targets ==
-  file(GLOB DIMACS_TEST_FILES "test/dimacs/basic/*.dimacs")
-  foreach(filename ${DIMACS_TEST_FILES})
-    message(STATUS "Found dimacs test file: ${filename}")
-    get_filename_component(mfilename "${filename}" NAME)
-    add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-prop -i "${filename}")
-  endforeach()
+  if(MINISAT_SOLVER_INTERFACE)
+    file(GLOB DIMACS_TEST_FILES "test/dimacs/basic/*.dimacs")
+    foreach(filename ${DIMACS_TEST_FILES})
+      message(STATUS "Found dimacs test file: ${filename}")
+      get_filename_component(mfilename "${filename}" NAME)
+      add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-gts -g minisat -i "${filename}")
+    endforeach()
+  endif()
 
   # ===== Coverage =====
 
