@@ -3,5 +3,5 @@
 #include <gpid/smt/cvc4_engine.hpp>
 
 extern void gpid::initRawSet(gpid::CVC4HypothesesSet& set) {
-    snlog::l_warn("Not implemented yet");
+    snlog::l_warn("Not implemented yet - CVC4 Hypotheses initializer");
 }

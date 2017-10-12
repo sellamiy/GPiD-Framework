@@ -16,7 +16,7 @@ namespace gpid {
     };
     struct CVC4ModelWrapper {
         inline bool isSkippable(CVC4Hypothesis& hypothesis) {
-            snlog::l_warn("Not implemented yet");
+            snlog::l_warn("Not implemented yet - CVC4 model wrapper skipper");
             return false;
         }
     };

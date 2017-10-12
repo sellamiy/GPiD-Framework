@@ -25,11 +25,11 @@ namespace gpid {
     }
 
     inline void CVC4Solver::printActiveNegation() {
-        snlog::l_warn("Not implemented yet");
+        snlog::l_warn("Not implemented yet - CVC4 active negation printer");
     }
 
     inline void CVC4Solver::storeActive() {
-        snlog::l_warn("Not implemented yet");
+        snlog::l_warn("Not implemented yet - CVC4 active storage");
     }
 
     inline gpid::SolverTestStatus CVC4Solver::testHypotheses(uint32_t level) {
@@ -42,7 +42,7 @@ namespace gpid {
 
     inline bool CVC4Solver::currentlySubsumed(CVC4Hypothesis& additional, uint32_t level) {
         accessLevel(level);
-        snlog::l_warn("Not implemented yet");
+        snlog::l_warn("Not implemented yet - CVC4 storage subsumption");
         return false;
     }
 

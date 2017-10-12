@@ -57,8 +57,6 @@ static inline void generate_minisat(OptionStorage& opts __attribute__((unused)))
 
 #ifdef CVC4_SOLVER_INTERFACE
 static inline void generate_cvc4(OptionStorage& opts) {
-    l_warn("CVC4 generator not really implemented yet");
-
     l_message("init cvc4 engine...");
     CVC4Solver S;
     CVC4Problem P;
