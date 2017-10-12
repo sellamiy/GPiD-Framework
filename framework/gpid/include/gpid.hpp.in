@@ -16,6 +16,7 @@
 
 #ifdef CVC4_SOLVER_INTERFACE
 #include <gpid/smt/cvc4_engine.hpp>
+#include <gpid/smt/cvc4_inputs.hpp>
 #endif
 
 #endif

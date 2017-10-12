@@ -64,7 +64,7 @@ static inline void generate_cvc4(OptionStorage& opts) {
     CVC4Problem P;
 
     l_message("parse problem...");
-    l_warn("TODO: parse problem"); // TODO
+    parse_Cvc(opts.input, S.getExprManager(), P);
 
     l_message("generate decomposition structures...");
     l_warn("FIXME: cvc4 decomposition structures");

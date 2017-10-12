@@ -204,7 +204,7 @@ if(MINISAT_SOLVER_INTERFACE)
   target_link_libraries(gpid minisat-lib-shared)
 endif()
 if(CVC4_SOLVER_INTERFACE)
-  target_link_libraries(gpid cvc4)
+  target_link_libraries(gpid cvc4 cvc4parser)
 endif()
 
 # ========== Example Programs Targets ==========

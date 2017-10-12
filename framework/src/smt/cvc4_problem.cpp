@@ -6,7 +6,7 @@
 using namespace snlog;
 using namespace gpid;
 
-void CVC4Problem::addConstraint(CVC4::Expr& cons) {
+void CVC4Problem::addConstraint(CVC4::Expr cons) {
     t_warn(mode != IOMode::IO_WRITE, "Writing problem on reading mode");
     cons_data.push_back(cons);
 }

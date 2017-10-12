@@ -32,7 +32,7 @@ namespace gpid {
         void initCurrentMode();
     public:
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
-        void addConstraint(CVC4::Expr& cons);
+        void addConstraint(CVC4::Expr cons);
         bool hasMoreConstraints();
         CVC4::Expr& nextConstraint();
     };
