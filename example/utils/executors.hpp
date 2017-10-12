@@ -67,7 +67,7 @@ static inline void generate_cvc4(OptionStorage& opts) {
     l_message("generate decomposition structures...");
     l_warn("FIXME: cvc4 decomposition structures");
     CVC4HypothesesSet A(1/* TODO: Correct size */);
-    initRawSet(A);
+    initRawSet(S.getExprManager(), A);
 
     CVC4DecompEngine E(opts.engine, S, P, A);
 

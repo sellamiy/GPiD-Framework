@@ -68,7 +68,7 @@ namespace gpid {
 
     typedef HypothesesSet<CVC4Solver> CVC4HypothesesSet;
     typedef DecompositionEngine<CVC4Solver> CVC4DecompEngine;
-    extern void initRawSet(CVC4HypothesesSet& set);
+    extern void initRawSet(CVC4::ExprManager&em, CVC4HypothesesSet& set);
 };
 
 #endif
