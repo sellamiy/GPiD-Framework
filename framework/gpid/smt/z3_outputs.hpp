@@ -11,7 +11,7 @@ namespace gpid {
 
     extern inline
     void p_implicate(std::ostream& out, z3::context& ctx,
-                     std::vector<const Z3Hypothesis>& impl, bool negate) {
+                     std::vector<Z3Hypothesis>& impl, bool negate) {
         out << "> ";
         z3::expr pfl = ctx.bool_val(true);;
         for (const Z3Hypothesis hyp : impl) pfl = pfl && hyp.expr;

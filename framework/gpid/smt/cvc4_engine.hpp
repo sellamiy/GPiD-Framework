@@ -43,7 +43,7 @@ namespace gpid {
         CVC4ModelWrapper iw_mdl;
 
         // TODO: Fix. This is only required for printing. Not efficient -> needs improvement
-        std::vector<const CVC4Hypothesis> hyp_loc_mem;
+        std::vector<CVC4Hypothesis> hyp_loc_mem;
 
         uint32_t c_level;
 
