@@ -20,30 +20,24 @@ namespace gpid {
         struct HypothesisT { };
         struct StorageT    { };
         struct ModelT
-        {
-            inline bool isSkippable
-            (HypothesisT& hypothesis __attribute__((unused)))
-            { return false; }
-        };
+        { inline bool isSkippable (HypothesisT&) { return false; } };
         std::vector<HypothesisT> sst_int;
         ModelT sst_mdl;
         StorageT sst_str;
     public:
-        inline void setProblem(ProblemT& problem __attribute__((unused))) { }
+        inline void setProblem(ProblemT&) { }
         inline void start() { }
         inline std::vector<HypothesisT>& extractActive() { return sst_int; }
         inline void addHypothesis
-        (HypothesisT& hypothesis __attribute__((unused)), uint32_t level __attribute__((unused))) { }
-        inline void removeHypotheses(uint32_t level __attribute__((unused))) { }
-        inline SolverTestStatus testHypotheses(uint32_t level __attribute__((unused)))
+        (HypothesisT&, uint32_t) { }
+        inline void removeHypotheses(uint32_t) { }
+        inline SolverTestStatus testHypotheses(uint32_t)
         { return SolverTestStatus::SOLVER_UNSAT; }
         inline void printActiveNegation() { }
         inline void storeActive() { }
         inline ModelT& recoverModel() { return sst_mdl; }
         inline StorageT& getStorage() { return sst_str; }
-        inline bool currentlySubsumed
-        (HypothesisT& additional __attribute__((unused)), uint32_t level __attribute__((unused)))
-        { return false; }
+        inline bool currentlySubsumed (HypothesisT&, uint32_t) { return false; }
     };
 #endif
 

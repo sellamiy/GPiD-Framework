@@ -21,7 +21,7 @@ static inline void generate_true_solver(OptionStorage& opts) {
     E.printStatistics();
 }
 #else
-static inline void generate_true_solver(OptionStorage& opts __attribute__((unused))) {
+static inline void generate_true_solver(OptionStorage&) {
     l_internal("Got access to unconfigured interface generator");
 }
 #endif
@@ -50,7 +50,7 @@ static inline void generate_minisat(OptionStorage& opts) {
     E.printStatistics();
 }
 #else
-static inline void generate_minisat(OptionStorage& opts __attribute__((unused))) {
+static inline void generate_minisat(OptionStorage&) {
     l_internal("Got access to unconfigured interface generator");
 }
 #endif
@@ -78,7 +78,7 @@ static inline void generate_cvc4(OptionStorage& opts) {
     E.printStatistics();
 }
 #else
-static inline void generate_cvc4(OptionStorage& opts __attribute__((unused))) {
+static inline void generate_cvc4(OptionStorage&) {
     l_internal("Got access to unconfigured interface generator");
 }
 #endif
@@ -105,7 +105,7 @@ static inline void generate_z3(OptionStorage& opts) {
     E.printStatistics();
 }
 #else
-static inline void generate_z3(OptionStorage& opts __attribute__((unused))) {
+static inline void generate_z3(OptionStorage&) {
     l_internal("Got access to unconfigured interface generator");
 }
 #endif
