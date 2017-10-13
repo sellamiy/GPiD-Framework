@@ -90,7 +90,7 @@ static inline void generate_z3(OptionStorage& opts) {
     Z3Problem P;
 
     l_message("parse problem...");
-    parse_Z(opts.input, P);
+    parse_Z(opts.input, S.getContext(), P);
 
     l_message("generate decomposition structures...");
     Z3HypothesesSet A(1/* TODO: Correct size */);

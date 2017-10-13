@@ -5,7 +5,7 @@
 
 namespace gpid {
 
-    extern void parse_Z(const std::string& filename, Z3Problem& pbl);
+    extern void parse_Z(const std::string& filename, z3::context& ctx, Z3Problem& pbl);
 
 };
 
