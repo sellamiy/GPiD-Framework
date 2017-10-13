@@ -1,5 +1,5 @@
-(set-option :produce-models true)
-(set-logic QF_ALL_SUPPORTED)
+;(set-option :produce-models true)
+;(set-logic QF_ALL_SUPPORTED)
 
 (declare-const x Int)
 (declare-const y Int)
@@ -13,5 +13,5 @@
 (assert (or (not (distinct x t)) (distinct y t)))
 (assert (or (not (distinct x z)) (distinct x y)))
 
-(check-sat)
-(get-model)
+;(check-sat)
+;(get-model)
