@@ -10,8 +10,8 @@ namespace gpid {
 
     // typedef /*CVC4 Content*/ CVC4Internal;
     struct CVC4Hypothesis {
-        CVC4::Expr& expr;
-        CVC4Hypothesis(CVC4::Expr& e) : expr(e) {}
+        CVC4::Expr expr;
+        CVC4Hypothesis(CVC4::Expr e) : expr(e) {}
         CVC4Hypothesis(CVC4Hypothesis& e) : expr(e.expr) {}
     };
     struct CVC4ModelWrapper {
@@ -34,7 +34,7 @@ namespace gpid {
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
         void addConstraint(CVC4::Expr cons);
         bool hasMoreConstraints();
-        CVC4::Expr& nextConstraint();
+        CVC4::Expr nextConstraint();
     };
 
     class CVC4Solver {

@@ -16,7 +16,7 @@ bool CVC4Problem::hasMoreConstraints() {
     return reading_pos < cons_data.size();
 }
 
-CVC4::Expr& CVC4Problem::nextConstraint() {
+CVC4::Expr CVC4Problem::nextConstraint() {
     t_warn(mode != IOMode::IO_READ, "Reading problem on writing mode");
     return cons_data[reading_pos++];
 }
