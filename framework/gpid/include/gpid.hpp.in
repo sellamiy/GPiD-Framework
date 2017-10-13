@@ -17,11 +17,13 @@
 #ifdef CVC4_SOLVER_INTERFACE
 #include <gpid/smt/cvc4_engine.hpp>
 #include <gpid/smt/cvc4_inputs.hpp>
+#include <gpid/smt/cvc4_outputs.hpp>
 #endif
 
 #ifdef Z3_SOLVER_INTERFACE
 #include <gpid/smt/z3_engine.hpp>
 #include <gpid/smt/z3_inputs.hpp>
+#include <gpid/smt/z3_outputs.hpp>
 #endif
 
 #endif

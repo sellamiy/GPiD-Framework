@@ -14,7 +14,7 @@ extern void gpid::initRawSet(ExprManager& em, CVC4HypothesesSet& set) {
     res = requestContinuousArray(c4helpers_gab_tag, set.getSourceSize(), sizeof(CVC4Hypothesis));
     if (res != GAB_Status::SUCCESS) l_error("Memory request for minisat hypotheses wrappers failed!");
     for (uint32_t i = 0; i < set.getSourceSize(); i++) {
-        Expr cstl = em.mkConst(true);
+        Expr cstl = em.mkConst(false);
         l_warn("Fixme: add correct abducible instanciation for cvc4 expression instances"); // TODO
         CVC4Hypothesis *mloc;
         res = accessContinuousPointer(c4helpers_gab_tag, i, (void**)&mloc);

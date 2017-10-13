@@ -12,7 +12,7 @@ namespace gpid {
     struct CVC4Hypothesis {
         CVC4::Expr expr;
         CVC4Hypothesis(CVC4::Expr e) : expr(e) {}
-        CVC4Hypothesis(CVC4Hypothesis& e) : expr(e.expr) {}
+        CVC4Hypothesis(const CVC4Hypothesis& e) : expr(e.expr) {}
     };
     struct CVC4ModelWrapper {
         inline bool isSkippable(CVC4Hypothesis& hypothesis) {
@@ -41,6 +41,9 @@ namespace gpid {
         CVC4::ExprManager em;
         CVC4::SmtEngine solver;
         CVC4ModelWrapper iw_mdl;
+
+        // TODO: Fix. This is only required for printing. Not efficient -> needs improvement
+        std::vector<const CVC4Hypothesis> hyp_loc_mem;
 
         uint32_t c_level;
 

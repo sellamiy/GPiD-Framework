@@ -14,7 +14,7 @@ extern void gpid::initRawSet(context& ctx, Z3HypothesesSet& set) {
     res = requestContinuousArray(z3helpers_gab_tag, set.getSourceSize(), sizeof(Z3Hypothesis));
     t_error(res != GAB_Status::SUCCESS, "Memory request for minisat hypotheses wrappers failed!");
     for (uint32_t i = 0; i < set.getSourceSize(); i++) {
-        expr cstl = ctx.bool_val(true);
+        expr cstl = ctx.bool_val(false);
         l_warn("Fixme: add correct abducible instanciation for z3 expression instances"); // TODO
         Z3Hypothesis *mloc;
         res = accessContinuousPointer(z3helpers_gab_tag, i, (void**)&mloc);

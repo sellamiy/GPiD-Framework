@@ -11,7 +11,7 @@ namespace gpid {
     struct Z3Hypothesis {
         z3::expr expr;
         Z3Hypothesis(z3::expr e) : expr(e) {}
-        Z3Hypothesis(Z3Hypothesis& e) : expr(e.expr) {}
+        Z3Hypothesis(const Z3Hypothesis& e) : expr(e.expr) {}
     };
     struct Z3ModelWrapper {
         inline bool isSkippable(Z3Hypothesis& hypothesis) {
@@ -40,6 +40,9 @@ namespace gpid {
         z3::context ctx;
         z3::solver solver;
         Z3ModelWrapper iw_mdl;
+
+        // TODO: Fix. This is only required for printing. Not efficient -> needs improvement
+        std::vector<const Z3Hypothesis> hyp_loc_mem;
 
         uint32_t c_level;
 
