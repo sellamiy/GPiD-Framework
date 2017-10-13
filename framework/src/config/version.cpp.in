@@ -26,6 +26,9 @@ extern const std::string gpid::list_configured_generators(const std::string sepa
 #ifdef CVC4_SOLVER_INTERFACE
     listm += separator + "cvc4";
 #endif
+#ifdef Z3_SOLVER_INTERFACE
+    listm += separator + "z3";
+#endif
     return listm;
 }
 

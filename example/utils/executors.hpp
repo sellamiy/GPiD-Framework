@@ -83,4 +83,31 @@ static inline void generate_cvc4(OptionStorage& opts __attribute__((unused))) {
 }
 #endif
 
+#ifdef Z3_SOLVER_INTERFACE
+static inline void generate_z3(OptionStorage& opts) {
+    l_message("init z3 engine...");
+    Z3Solver S;
+    Z3Problem P;
+
+    l_message("parse problem...");
+    parse_Z(opts.input, P);
+
+    l_message("generate decomposition structures...");
+    Z3HypothesesSet A(1/* TODO: Correct size */);
+    initRawSet(S.getContext(), A);
+
+    Z3DecompEngine E(opts.engine, S, P, A);
+
+    l_message("generate implicates...");
+    E.generateImplicates();
+
+    l_message("print generation statistics...");
+    E.printStatistics();
+}
+#else
+static inline void generate_z3(OptionStorage& opts __attribute__((unused))) {
+    l_internal("Got access to unconfigured interface generator");
+}
+#endif
+
 #endif

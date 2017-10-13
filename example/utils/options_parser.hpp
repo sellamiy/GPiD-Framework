@@ -11,6 +11,7 @@ enum EngineSelection {
     TRUE_SOLVER,
     MINISAT,
     SMT_CVC4,
+    SMT_Z3,
     UNCONFIGURED_INTERFACE,
     UNKNOWN_INTERFACE
 };
@@ -48,6 +49,13 @@ static inline EngineSelection toEngineSelection(std::string v) {
     if (v == "cvc4") {
 #ifdef CVC4_SOLVER_INTERFACE
         return EngineSelection::SMT_CVC4;
+#else
+        return EngineSelection::UNCONFIGURED_INTERFACE;
+#endif
+    }
+    if (v == "z3") {
+#ifdef Z3_SOLVER_INTERFACE
+        return EngineSelection::SMT_Z3;
 #else
         return EngineSelection::UNCONFIGURED_INTERFACE;
 #endif

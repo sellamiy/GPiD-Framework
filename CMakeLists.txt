@@ -13,6 +13,7 @@ option(USE_COLORS "Configure color print outputs" ON)
 option(TRUE_SOLVER_INTERFACE "Define an example solver class" ON)
 option(MINISAT_SOLVER_INTERFACE "Define a propositional solver class based on minisat" ON)
 option(CVC4_SOLVER_INTERFACE "Define a smt solver class based on cvc4" ON)
+option(Z3_SOLVER_INTERFACE "Define a smt solver class based on z3" ON)
 
 option(MERGE_MINISAT_WRAPPERS "Merge Minisat wrappers into its original namespace" ON)
 
@@ -52,6 +53,12 @@ if (NOT CVC4_FOUND)
   set(CVC4_SOLVER_INTERFACE OFF CACHE BOOL "Define a smt solver class based on cvc4" FORCE)
 endif()
 
+find_package(Z3)
+if (NOT Z3_FOUND)
+  message(WARNING "Forcefully deactivates Z3 interface as the Solver was not found")
+  set(Z3_SOLVER_INTERFACE OFF CACHE BOOL "Define a smt solver class based on z3" FORCE)
+endif()
+
 # ========== Logging Global Configuration Infos ==========
 if(BUILD_DOC)
   message(STATUS "Documentation generation enabled")
@@ -81,6 +88,9 @@ if(MINISAT_SOLVER_INTERFACE)
 endif()
 if(CVC4_SOLVER_INTERFACE)
   message(STATUS "Add solver interface: CVC4")
+endif()
+if(Z3_SOLVER_INTERFACE)
+  message(STATUS "Add solver interface: Z3")
 endif()
 message(STATUS "Libraries target directory: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 message(STATUS "Executables target directory: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
@@ -155,6 +165,11 @@ if(CVC4_SOLVER_INTERFACE)
   include_directories(${CVC4_INCLUDE_DIR})
 endif()
 
+# ========== Z3 ==========
+if(Z3_SOLVER_INTERFACE)
+  include_directories(${Z3_CXX_INCLUDE_DIRS})
+endif()
+
 # ========== External Inserted Libraires ==========
 include_directories("lib/cxxopts")
 
@@ -194,6 +209,13 @@ if(NOT CVC4_SOLVER_INTERFACE)
   endforeach()
 endif()
 
+if(NOT Z3_SOLVER_INTERFACE)
+  file(GLOB Z3_SOURCES "framework/src/*/z3*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/z3*.cpp")
+  foreach(filename ${Z3_SOURCES})
+    list(REMOVE_ITEM LIBGPID_SOURCES ${filename})
+  endforeach()
+endif()
+
 # ========== Libraries Targets ==========
 add_library(starray STATIC ${LIBSTARRAY_SOURCES})
 
@@ -205,6 +227,9 @@ if(MINISAT_SOLVER_INTERFACE)
 endif()
 if(CVC4_SOLVER_INTERFACE)
   target_link_libraries(gpid cvc4 cvc4parser)
+endif()
+if(Z3_SOLVER_INTERFACE)
+  target_link_libraries(gpid ${Z3_LIBRARIES})
 endif()
 
 # ========== Example Programs Targets ==========

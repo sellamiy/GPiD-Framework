@@ -31,6 +31,9 @@ int main(int argc, char** argv) {
     case SMT_CVC4:
         generate_cvc4(opts);
         break;
+    case SMT_Z3:
+        generate_z3(opts);
+        break;
     default:
         l_internal("Got start access to unknown generator");
         return EXIT_FAILURE;

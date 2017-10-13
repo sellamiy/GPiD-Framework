@@ -19,4 +19,9 @@
 #include <gpid/smt/cvc4_inputs.hpp>
 #endif
 
+#ifdef Z3_SOLVER_INTERFACE
+#include <gpid/smt/z3_engine.hpp>
+#include <gpid/smt/z3_inputs.hpp>
+#endif
+
 #endif
