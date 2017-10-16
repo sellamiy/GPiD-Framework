@@ -1,26 +1,100 @@
 #define MINISAT_GENERATION_HELPERS
 #include <snlog/snlog.hpp>
-#include <starray/starray.hpp>
-#include <gpid/propositional/minisat_pengine.hpp>
+#include <gpid/util/parsers.hpp>
+#include <gpid/util/generators.hpp>
+#include <gpid/propositional/minisat_inputs.hpp>
 
 using namespace snlog;
-using namespace starray;
 using namespace Minisat;
 
-static std::string mhelpers_gab_tag = "MinisatHypotheses";
+namespace gpid {
 
-extern void gpid::initRawSet(gpid::MinisatHypothesesSet& set) {
-    GAB_Status res;
-    res = requestContinuousArray(mhelpers_gab_tag, set.getSourceSize(), sizeof(MinisatHypothesis));
-    if (res != GAB_Status::SUCCESS) l_error("Memory request for minisat hypotheses wrappers failed!");
-    for (uint32_t i = 0; i < set.getSourceSize(); i++) {
-        Lit cstl;
-        cstl.x = i;
-        MinisatHypothesis *mloc;
-        res = accessContinuousPointer(mhelpers_gab_tag, i, (void**)&mloc);
-        if (res != GAB_Status::SUCCESS) l_error("Memory access for minisat hypothesis wrapper failed!");
-        new (mloc) MinisatHypothesis(cstl);
-        set.mapHypothesis(i, mloc);
-        set.mapLink(i, i%2 == 0 ? i+1 : i-1);
+    struct mContext {};
+
+    enum mInputGenerator { MIG_NONE, MIG_ALL };
+    static inline mInputGenerator toMInputGenerator(std::string key) {
+        if (key == "all") return mInputGenerator::MIG_ALL;
+        else {
+            l_error("Unknown minisat abducible generator: " + key);
+            return mInputGenerator::MIG_NONE;
+        }
     }
+
+    static inline uint32_t mAbducibleCompt(mInputGenerator g, MinisatProblem& pbl) {
+        switch (g) {
+        case MIG_NONE: return 0;
+        case MIG_ALL: return 2*pbl.getVarCpt();
+        default:
+            l_internal("Unknown minisat abducible generator: " + std::to_string(g));
+            return 0;
+        }
+    }
+
+    struct mGeneratorCounter {
+        inline uint32_t operator() (std::string gkey, MinisatProblem& pbl)
+        { return mAbducibleCompt(toMInputGenerator(gkey), pbl); }
+    };
+
+    static inline void loadAbducibles(std::string filename, MinisatHypothesesSet& set) {
+        alloc_gab<MinisatHypothesis>(set.getSourceSize());
+        std::map<int, int> linker;
+        AbducibleParser parser(filename);
+        parser.init();
+        for (uint32_t i = 0; i < set.getSourceSize(); i++) {
+            if (!parser.isOk()) {
+                l_fatal("Error loading from @file:" + filename);
+                break;
+            }
+            int lit_data = std::stoi(parser.nextAbducible());
+            int lit_var = abs(lit_data)-1;
+            Lit cstl = lit_data > 0 ? mkLit(lit_var) : ~mkLit(lit_var);
+            store_gab_hyp<MinisatHypothesesSet, Lit>(set, i, cstl);
+            // Check for literal linkage
+            int lit_complement = cstl.x%2 == 0 ? cstl.x+1 : cstl.x-1;
+            if (linker.find(lit_complement) == linker.end()) {
+                linker[cstl.x] = i;
+            } else {
+                set.mapLink(i, linker[lit_complement]);
+                set.mapLink(linker[lit_complement], i);
+            }
+        }
+    }
+
+    struct mLoader {
+        inline void operator() (std::string filename, mContext&, MinisatHypothesesSet& set)
+        { loadAbducibles(filename, set); }
+    };
+
+    static inline void generateAbducibles_ALL(MinisatHypothesesSet& set) {
+        alloc_gab<MinisatHypothesis>(set.getSourceSize());
+        for (uint32_t i = 0; i < set.getSourceSize(); i++) {
+            Lit cstl;
+            cstl.x = i;
+            store_gab_hyp<MinisatHypothesesSet, Lit>(set, i, cstl);
+            set.mapLink(i, i%2 == 0 ? i+1 : i-1);
+        }
+    }
+
+    static inline void generateAbducibles(mInputGenerator g, MinisatHypothesesSet& set) {
+        switch (g) {
+        case MIG_NONE: break;
+        case MIG_ALL: generateAbducibles_ALL(set);
+            break;
+        default: l_internal("Unknown minisat abducible generator: " + std::to_string(g));
+        }
+    }
+
+    struct mGenerator {
+        inline void operator() (std::string gkey, mContext&, MinisatHypothesesSet& set)
+        { generateAbducibles(toMInputGenerator(gkey), set); }
+    };
+
+    extern uint32_t countAbducibles(AbduciblesOptions& opts, MinisatProblem& pbl) {
+        return countAbducibles<MinisatProblem, mGeneratorCounter>(opts, pbl);
+    }
+    extern void generateAbducibles(AbduciblesOptions& opts, MinisatHypothesesSet& hys) {
+        mContext dummy;
+        generateAbducibles<MinisatHypothesesSet, mContext, mLoader, mGenerator>(opts, dummy, hys);
+    }
+
 }

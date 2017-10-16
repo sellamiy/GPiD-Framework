@@ -77,6 +77,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 
 	parser.add_options("Input")
 	    ("i,input", "Input file", cxxopts::value<std::string>())
+            ("r,abducible-read", "Abducible file", cxxopts::value<std::string>())
+            ("a,abducible-auto", "Abducible auto generation type", cxxopts::value<std::string>())
 	    ;
 
         parser.add_options("Generator")
@@ -144,6 +146,20 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
             snlog::l_fatal("No generator selected");
             snlog::l_info(parser.help({"Generator"}));
             return OptionStatus::FAILURE;
+        }
+
+        if (parser.count("abducible-read")) {
+            opts.abducibles.input_type = gpid::AbdInputType::ABDIT_FILE;
+            opts.abducibles.input_file = parser["abducible-read"].as<std::string>();
+        }
+
+        if (parser.count("abducible-auto")) {
+            if (opts.abducibles.input_type == gpid::AbdInputType::ABDIT_FILE) {
+                snlog::l_error("Multiple abducible instanciators selected. Skipping internal.");
+            } else {
+                opts.abducibles.input_type = gpid::AbdInputType::ABDIT_GENERATOR;
+            }
+            opts.abducibles.input_generator = parser["abducible-auto"].as<std::string>();
         }
 
 	return OptionStatus::OK;

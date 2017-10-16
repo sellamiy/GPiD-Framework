@@ -47,6 +47,8 @@ namespace gpid {
         /** Skip available hypotheses if induced by the active model or stored implicates
          * @return false if and only if all possible hypotheses have been skipped. */
         inline bool skipSkippables(SolverT& storage, level_t level);
+
+        typedef typename SolverT::HypothesisT HypothesisT;
     };
 
     template<class SolverT>

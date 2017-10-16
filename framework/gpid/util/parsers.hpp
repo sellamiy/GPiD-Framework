@@ -55,6 +55,8 @@ namespace gpid {
         inline bool isOk() { return status != AbdParserStatus::ABDP_ERROR; }
     };
 
+    extern uint32_t getAbducibleCount(std::string filename);
+
 };
 
 #endif

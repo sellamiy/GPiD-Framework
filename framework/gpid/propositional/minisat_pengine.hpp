@@ -89,7 +89,6 @@ namespace gpid {
 
     typedef HypothesesSet<MinisatSolver> MinisatHypothesesSet;
     typedef DecompositionEngine<MinisatSolver> MinisatDecompEngine;
-    extern void initRawSet(MinisatHypothesesSet& set);
 };
 
 #endif

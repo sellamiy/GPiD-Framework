@@ -37,10 +37,11 @@ static inline void generate_minisat(OptionStorage& opts) {
     parse_DIMACS(in, P);
     gzclose(in);
 
-    l_message("generate decompostition structures...");
-    MinisatHypothesesSet A(2*P.getVarCpt());
-    initRawSet(A);
+    l_message("generate abducibles...");
+    MinisatHypothesesSet A(countAbducibles(opts.abducibles, P));
+    generateAbducibles(opts.abducibles, A); // TODO: Handle errors
 
+    l_message("create decomposition engine...");
     MinisatDecompEngine E(opts.engine, S, P, A);
 
     l_message("generate implicates...");
@@ -62,13 +63,13 @@ static inline void generate_cvc4(OptionStorage& opts) {
     CVC4Problem P;
 
     l_message("parse problem...");
-    parse_Cvc(opts.input, S.getExprManager(), P);
+    parse_Cvc(opts.input, S.getExprManager(), P); // TODO: Handle errors
 
-    l_message("generate decomposition structures...");
-    l_warn("FIXME: cvc4 decomposition structures");
-    CVC4HypothesesSet A(1/* TODO: Correct size */);
-    initRawSet(S.getExprManager(), A);
+    l_message("generate abducibles...");
+    CVC4HypothesesSet A(countAbducibles(opts.abducibles, P));
+    generateAbducibles(opts.abducibles, S.getExprManager(), A); // TODO: Handle errors
 
+    l_message("create decomposition engine...");
     CVC4DecompEngine E(opts.engine, S, P, A);
 
     l_message("generate implicates...");
@@ -90,12 +91,13 @@ static inline void generate_z3(OptionStorage& opts) {
     Z3Problem P;
 
     l_message("parse problem...");
-    parse_Z(opts.input, S.getContext(), P);
+    parse_Z(opts.input, S.getContext(), P); // TODO: Handle errors
 
-    l_message("generate decomposition structures...");
-    Z3HypothesesSet A(1/* TODO: Correct size */);
-    initRawSet(S.getContext(), A);
+    l_message("generate abducibles...");
+    Z3HypothesesSet A(countAbducibles(opts.abducibles, P));
+    generateAbducibles(opts.abducibles, S.getContext(), A); // TODO: Handle errors
 
+    l_message("create decomposition engine...");
     Z3DecompEngine E(opts.engine, S, P, A);
 
     l_message("generate implicates...");

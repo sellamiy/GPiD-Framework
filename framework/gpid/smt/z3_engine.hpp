@@ -70,7 +70,6 @@ namespace gpid {
 
     typedef HypothesesSet<Z3Solver> Z3HypothesesSet;
     typedef DecompositionEngine<Z3Solver> Z3DecompEngine;
-    extern void initRawSet(z3::context& ctx, Z3HypothesesSet& set);
 };
 
 #endif

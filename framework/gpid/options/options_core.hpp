@@ -3,11 +3,13 @@
 
 #include <gpid/config.hpp>
 #include <gpid/options/options_engine.hpp>
+#include <gpid/options/options_abducibles.hpp>
 
 namespace gpid {
 
     struct CoreOptions {
 
+        AbduciblesOptions abducibles;
         EngineOptions engine;
 
     };
