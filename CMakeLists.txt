@@ -296,7 +296,7 @@ if(BUILD_TESTS)
     foreach(filename ${DIMACS_TEST_FILES})
       message(STATUS "Found dimacs test file: ${filename}")
       get_filename_component(mfilename "${filename}" NAME)
-      add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-gts -g minisat -i "${filename}")
+      add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-gts -g minisat -a all -i "${filename}")
     endforeach()
   endif()
 
