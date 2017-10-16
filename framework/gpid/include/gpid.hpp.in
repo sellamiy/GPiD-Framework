@@ -26,4 +26,6 @@
 #include <gpid/smt/z3_outputs.hpp>
 #endif
 
+#include <gpid/util/parsers.hpp>
+
 #endif
