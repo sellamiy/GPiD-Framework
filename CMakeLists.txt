@@ -303,6 +303,14 @@ if(BUILD_TESTS)
     endforeach()
   endif()
 
+  # == Abducible Parser Targets ==
+  file(GLOB ABDUCE_TEST_FILES "test/abduce/*.abduce")
+  foreach(filename ${ABDUCE_TEST_FILES})
+    message(STATUS "Found abduce test file: ${filename}")
+    get_filename_component(mfilename "${filename}" NAME)
+    add_test(NAME "${mfilename}:Parse" COMMAND gpid-parser -i "${filename}")
+  endforeach()
+
   # ===== Coverage =====
 
   if (COVERAGE_TOOLS)
