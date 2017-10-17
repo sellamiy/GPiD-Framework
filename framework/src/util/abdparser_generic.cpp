@@ -132,7 +132,7 @@ AbducibleParser::AbdParserToken AbducibleParser::nextToken(AbdParserState state)
     char c;
     int pars = state == AbdParserState::COMMAND_IN ? 1 : 0;
     if (state == AbdParserState::COMMAND_IN) {
-        while(stream >> c) {
+        while(stream.get(c)) {
             updateFilePosition(c);
             if (c == ';') skipComment();
             if (c == '(') pars++;
@@ -144,17 +144,17 @@ AbducibleParser::AbdParserToken AbducibleParser::nextToken(AbdParserState state)
         ded_type = pars == 0 ? AbdParserTokenType::ABDC_EXPR : ded_type;
     } else {
         bool cin = false;
-        while(stream >> c) {
+        while(stream.get(c)) {
             updateFilePosition(c);
             if (c == ';') skipComment();
+            if (c == '\t' || c == '\n' || c == '\r') c = ' ';
+            if (c == ' ' && cin && buffer != "") break;
+            if (c != ' ' && cin) buffer += c;
             if (c == ')') pars--;
             if (c == '(') {
                 pars++;
                 cin = true;
             }
-            if (c == '\t' || c == '\n' || c == '\r') c = ' ';
-            if (c == ' ' && cin && buffer != "") break;
-            if (c != ' ' && cin) buffer += c;
         }
         ded_type = (pars == 1 && buffer != "") ? AbdParserTokenType::ABDC_COMMAND : ded_type;
     }
@@ -164,7 +164,7 @@ AbducibleParser::AbdParserToken AbducibleParser::nextToken(AbdParserState state)
 
 void AbducibleParser::skipComment() {
     char c;
-    while(stream >> c) {
+    while(stream.get(c)) {
         updateFilePosition(c);
         if (c == '\n') break;
     }
