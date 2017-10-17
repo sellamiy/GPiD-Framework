@@ -1,0 +1,5 @@
+(size 3)
+; Abducibles
+(abducible a)
+(abducible (+ 1 2))
+(abducible (f 50))
