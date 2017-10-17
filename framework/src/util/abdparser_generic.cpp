@@ -75,6 +75,7 @@ void AbducibleParser::readHeader() {
             if (token.content == "abducible") {
                 lastToken = token;
                 lastTokenUse = true;
+                break;
             } else {
                 readOption(token.content);
             }
