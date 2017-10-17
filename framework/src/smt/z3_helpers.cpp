@@ -55,8 +55,18 @@ namespace gpid {
     };
 
     static inline void loadAbducibles(std::string filename, z3::context& ctx, Z3HypothesesSet& set) {
-        // TODO : Update
-        l_warn("Not implemented Yet : Z3 Abducible loader");
+        alloc_gab<Z3Hypothesis>(set.getSourceSize());
+        AbducibleParser parser(filename);
+        parser.init();
+        for (uint32_t i = 0; i < set.getSourceSize(); i++) {
+            if (!parser.isOk()) {
+                l_fatal("Error loading from @file:" + filename);
+                break;
+            }
+            std::string expr = parser.nextAbducible();
+            z3::expr cstl = ctx.parse_string(("(assert " + expr + ")").c_str());
+            store_gab_hyp<Z3HypothesesSet, z3::expr>(set, i, cstl);
+        }
     }
 
     struct z3Loader {
