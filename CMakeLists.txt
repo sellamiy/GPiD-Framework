@@ -236,6 +236,9 @@ endif()
 add_executable(gpid-gts "example/gpid-gts.cpp")
 target_link_libraries(gpid-gts gpid)
 
+add_executable(gpid-parser "example/gpid-parser.cpp")
+target_link_libraries(gpid-parser gpid)
+
 # ========== Tests ==========
 
 if(BUILD_TESTS)
