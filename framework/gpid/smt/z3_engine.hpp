@@ -13,7 +13,7 @@ namespace gpid {
         Z3Hypothesis(const Z3Hypothesis& e) : expr(e.expr) {}
     };
     struct Z3ModelWrapper {
-        inline bool isSkippable(Z3Hypothesis& hypothesis) {
+        inline bool isSkippable(Z3Hypothesis&) {
             snlog::l_warn("Not implemented yet - Z3 model wrapper skipper");
             return false;
         }

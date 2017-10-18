@@ -21,7 +21,7 @@ namespace gpid {
         /*}*/
     }
 
-    static inline uint32_t c4AbducibleCompt(c4InputGenerator g, CVC4Problem& pbl) {
+    static inline uint32_t c4AbducibleCompt(c4InputGenerator g, CVC4Problem&) {
         switch (g) {
         case C4IG_NONE: return 0;
         default:
@@ -68,7 +68,7 @@ namespace gpid {
 
     static inline
     void generateAbducibles
-    (c4InputGenerator g, CVC4::ExprManager& em, CVC4Declarations& decls, CVC4HypothesesSet& set) {
+    (c4InputGenerator g, CVC4::ExprManager&, CVC4Declarations&, CVC4HypothesesSet&) {
         switch (g) {
         case C4IG_NONE: break;
             break;

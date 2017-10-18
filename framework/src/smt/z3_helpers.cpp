@@ -21,7 +21,7 @@ namespace gpid {
         /*}*/
     }
 
-    static inline uint32_t z3AbducibleCompt(z3InputGenerator g, Z3Problem& pbl) {
+    static inline uint32_t z3AbducibleCompt(z3InputGenerator g, Z3Problem&) {
         switch (g) {
         case Z3IG_NONE: return 0;
         default:
@@ -60,7 +60,7 @@ namespace gpid {
 
     static inline
     void generateAbducibles
-    (z3InputGenerator g, z3::context& ctx, Z3Declarations& decls, Z3HypothesesSet& set) {
+    (z3InputGenerator g, z3::context&, Z3Declarations&, Z3HypothesesSet&) {
         switch (g) {
         case Z3IG_NONE: break;
             break;

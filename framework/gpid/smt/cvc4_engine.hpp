@@ -14,7 +14,7 @@ namespace gpid {
         CVC4Hypothesis(const CVC4Hypothesis& e) : expr(e.expr) {}
     };
     struct CVC4ModelWrapper {
-        inline bool isSkippable(CVC4Hypothesis& hypothesis) {
+        inline bool isSkippable(CVC4Hypothesis&) {
             snlog::l_warn("Not implemented yet - CVC4 model wrapper skipper");
             return false;
         }

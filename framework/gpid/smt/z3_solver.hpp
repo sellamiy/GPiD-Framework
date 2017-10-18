@@ -56,7 +56,7 @@ namespace gpid {
         }
     }
 
-    inline bool Z3Solver::currentlySubsumed(Z3Hypothesis& additional, bool with_storage, uint32_t level) {
+    inline bool Z3Solver::currentlySubsumed(Z3Hypothesis&, bool with_storage, uint32_t level) {
         accessLevel(level);
         if (with_storage) {
             snlog::l_warn("Not implemented yet - Z3 storage subsumption");
