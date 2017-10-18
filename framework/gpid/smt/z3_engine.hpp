@@ -1,10 +1,9 @@
 #ifndef GPID_SMT_ENGINE__Z3_HPP
 #define GPID_SMT_ENGINE__Z3_HPP
 
-#include <vector>
-#include <z3++.h>
 #include <gpid/config.hpp>
 #include <gpid/core/engine.hpp>
+#include <gpid/smt/z3_context.hpp>
 
 namespace gpid {
 
@@ -28,10 +27,13 @@ namespace gpid {
         std::vector<z3::expr> cons_data;
         uint32_t reading_pos = -1;
 
+        Z3Declarations decls;
+
         void initCurrentMode();
     public:
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
-        void addConstraint(z3::expr cons);
+        inline Z3Declarations getDeclarations() { return decls; }
+        void addConstraint(z3::expr cons, z3::context& ctx);
         bool hasMoreConstraints();
         z3::expr nextConstraint();
     };

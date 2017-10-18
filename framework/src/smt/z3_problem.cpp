@@ -6,9 +6,10 @@
 using namespace snlog;
 using namespace gpid;
 
-void Z3Problem::addConstraint(z3::expr cons) {
+void Z3Problem::addConstraint(z3::expr cons, z3::context& ctx) {
     t_warn(mode != IOMode::IO_WRITE, "Writing problem on reading mode");
     cons_data.push_back(cons);
+    decls.collect(ctx, cons);
 }
 
 bool Z3Problem::hasMoreConstraints() {
