@@ -28,6 +28,7 @@ enum OptionStatus {
 static inline EngineSelection toEngineSelection(std::string v);
 static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** argv);
 static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& parser);
+static inline OptionStatus detectConflicts(OptionStorage& opts, cxxopts::Options& parser);
 
 /* ===== Converters ===== */
 
@@ -94,7 +95,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 
 	parser.parse(argc, argv);
 
-	return handleOptions(opts, parser);
+        OptionStatus str = detectConflicts(opts, parser);
+        return str == OptionStatus::OK ? handleOptions(opts, parser) : str;
 
     } catch (const cxxopts::OptionException& e) {
 	snlog::l_error(e.what());
@@ -154,15 +156,41 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
         }
 
         if (parser.count("abducible-auto")) {
-            if (opts.abducibles.input_type == gpid::AbdInputType::ABDIT_FILE) {
-                snlog::l_error("Multiple abducible instanciators selected. Skipping internal.");
-            } else {
-                opts.abducibles.input_type = gpid::AbdInputType::ABDIT_GENERATOR;
-            }
+            opts.abducibles.input_type = gpid::AbdInputType::ABDIT_GENERATOR;
             opts.abducibles.input_generator = parser["abducible-auto"].as<std::string>();
         }
 
 	return OptionStatus::OK;
+
+    } catch (const cxxopts::OptionException& e) {
+	snlog::l_error(e.what());
+	return OptionStatus::FAILURE;
+    }
+}
+
+/* ===== Detectors ===== */
+
+static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& parser) {
+    try {
+
+        const std::vector<std::vector<std::string>> p_illeg
+        {
+            { "abducible-read", "abducible-auto" }
+        };
+
+        for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {
+            bool active = true;
+            for (uint32_t lc = 0; lc < p_illeg[pc].size(); lc++)
+                if (!parser.count(p_illeg[pc][lc])) active = false;
+            if (active) {
+                snlog::l_fatal("Conflictual options detected:");
+                for (uint32_t lc = 0; lc < p_illeg[pc].size(); lc++)
+                    snlog::l_info("   @option: " + p_illeg[pc][lc]);
+                return OptionStatus::FAILURE;
+            }
+        }
+
+        return OptionStatus::OK;
 
     } catch (const cxxopts::OptionException& e) {
 	snlog::l_error(e.what());
