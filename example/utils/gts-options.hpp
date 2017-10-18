@@ -126,26 +126,20 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 	    return OptionStatus::ENDED;
 	}
 
-	if (parser.count("print-implicates")) {
+	if (parser.count("print-implicates"))
 	    opts.engine.print_implicates = true;
-	}
-	if (parser.count("dont-print-implicates")) {
+	if (parser.count("dont-print-implicates"))
 	    opts.engine.print_implicates = false;
-	}
 
-        if (parser.count("store-implicates")) {
+        if (parser.count("store-implicates"))
 	    opts.engine.store_implicates = true;
-	}
-	if (parser.count("dont-store-implicates")) {
+	if (parser.count("dont-store-implicates"))
 	    opts.engine.store_implicates = false;
-	}
 
-        if (parser.count("use-models")) {
+        if (parser.count("use-models"))
 	    opts.engine.use_models = true;
-	}
-	if (parser.count("dont-use-models")) {
+	if (parser.count("dont-use-models"))
 	    opts.engine.use_models = false;
-	}
 
 	if (parser.count("input")) {
 	    opts.input = parser["input"].as<std::string>();
