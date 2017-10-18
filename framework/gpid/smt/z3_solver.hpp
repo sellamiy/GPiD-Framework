@@ -16,19 +16,17 @@ namespace gpid {
         }
         while (level < c_level) {
             solver.pop();
-            hyp_loc_mem.pop_back(); // TODO: UNSAFE! BROKEN IF NO OR MORE THAN 1 HYP ARE ADDED BY LEVEL!
             c_level--;
         }
     }
 
     inline void Z3Solver::addHypothesis(Z3Hypothesis& hypothesis, uint32_t level) {
         accessLevel(level);
-        hyp_loc_mem.push_back(hypothesis);
         solver.add(hypothesis.expr);
     }
 
     inline void Z3Solver::printActiveNegation() {
-        p_implicate(std::cout, getContext(), hyp_loc_mem, true);
+        p_implicate(std::cout, ctx, solver.assertions(), true);
     }
 
     inline void Z3Solver::storeActive() {

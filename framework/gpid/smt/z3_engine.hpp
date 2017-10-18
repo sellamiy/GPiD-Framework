@@ -46,9 +46,6 @@ namespace gpid {
         z3::solver solver;
         Z3ModelWrapper iw_mdl;
 
-        // TODO: Fix. This is only required for printing. Not efficient -> needs improvement
-        std::vector<Z3Hypothesis> hyp_loc_mem;
-
         uint32_t c_level;
 
         void accessLevel(uint32_t level);
