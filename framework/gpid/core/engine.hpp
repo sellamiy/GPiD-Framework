@@ -10,7 +10,7 @@
 namespace gpid {
 
     enum GenerationAlgorithm {
-        BPD, PID
+        PID
     };
 
     template <class SolverT>
@@ -39,9 +39,6 @@ namespace gpid {
 
         void pushStackLevel();
         void popStackLevel();
-
-        void selectNextBPD();
-        void generateBPD();
 
         void selectNextPID();
         void generatePID();
@@ -106,7 +103,6 @@ template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>
 ::generateImplicates(gpid::GenerationAlgorithm algorithm) {
     switch (algorithm) {
-    case BPD: generateBPD(); break;
     case PID: generatePID(); break;
     default: snlog::l_internal("Trying to generate implicates using unknown algorithm!");
     }
