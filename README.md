@@ -26,4 +26,4 @@ The library and associated executable example can then be built using the builde
 
 # Usage
 
-```./bin/gpid-gts -i <file> -g <generator> [-a <abd-generator> | -r <abd-file>]```
+```./bin/gpid-gts -i <file> -g <generator> [-a <abd-generator> | -l <abd-file>]```
