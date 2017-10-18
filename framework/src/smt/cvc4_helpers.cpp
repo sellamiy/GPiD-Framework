@@ -71,7 +71,8 @@ namespace gpid {
 
             CVC4::parser::ParserBuilder pb(&em, "<internal>", opts4);
             CVC4::parser::Parser* p = pb.withStringInput(expr).build();
-            CVC4::Expr cstl = p->nextExpression(); // BROKEN
+            l_warn("Fixme: This is Broken, we need context preservation");
+            CVC4::Expr cstl = p->nextExpression(); // TODO: BROKEN
 
             store_gab_hyp<CVC4HypothesesSet, CVC4::Expr>(set, i, cstl);
         }
