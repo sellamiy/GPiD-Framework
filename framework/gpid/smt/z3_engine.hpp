@@ -32,7 +32,7 @@ namespace gpid {
         void initCurrentMode();
     public:
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
-        inline Z3Declarations getDeclarations() { return decls; }
+        inline Z3Declarations& getDeclarations() { return decls; }
         void addConstraint(z3::expr cons, z3::context& ctx);
         bool hasMoreConstraints();
         z3::expr nextConstraint();

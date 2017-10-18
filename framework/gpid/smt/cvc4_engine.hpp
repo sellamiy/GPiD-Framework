@@ -1,10 +1,9 @@
 #ifndef GPID_SMT_ENGINE__CVC4_HPP
 #define GPID_SMT_ENGINE__CVC4_HPP
 
-#include <vector>
-#include <cvc4/cvc4.h>
 #include <gpid/config.hpp>
 #include <gpid/core/engine.hpp>
+#include <gpid/smt/cvc4_context.hpp>
 
 namespace gpid {
 
@@ -29,9 +28,12 @@ namespace gpid {
         std::vector<CVC4::Expr> cons_data;
         uint32_t reading_pos = -1;
 
+        CVC4Declarations decls;
+
         void initCurrentMode();
     public:
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
+        inline CVC4Declarations& getDeclarations() { return decls; }
         void addConstraint(CVC4::Expr cons);
         bool hasMoreConstraints();
         CVC4::Expr nextConstraint();

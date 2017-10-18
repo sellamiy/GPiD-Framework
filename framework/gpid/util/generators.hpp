@@ -45,12 +45,14 @@ namespace gpid {
         }
     }
 
-    template <typename HypothesesSetT, typename ContextT, typename LoaderT, typename GeneratorT>
-    static inline void generateAbducibles(AbduciblesOptions& opts, ContextT& ctx, HypothesesSetT& set) {
+    template <typename HypothesesSetT, typename ContextT, typename DeclarationsT,
+              typename LoaderT, typename GeneratorT>
+    static inline void generateAbducibles
+    (AbduciblesOptions& opts, ContextT& ctx, DeclarationsT& decls, HypothesesSetT& set) {
         if (opts.input_type == AbdInputType::ABDIT_FILE) {
-            LoaderT()(opts.input_file, ctx, set);
+            LoaderT()(opts.input_file, ctx, decls, set);
         } else if (opts.input_type == AbdInputType::ABDIT_GENERATOR) {
-            GeneratorT()(opts.input_generator, ctx, set);
+            GeneratorT()(opts.input_generator, ctx, decls, set);
         } else {
             snlog::l_internal("Unknown abducible input type: " + std::to_string(opts.input_type));
         }

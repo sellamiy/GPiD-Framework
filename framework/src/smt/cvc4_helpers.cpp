@@ -35,7 +35,8 @@ namespace gpid {
         { return c4AbducibleCompt(toC4InputGenerator(gkey), pbl); }
     };
 
-    static inline void loadAbducibles(std::string filename, CVC4::ExprManager& em, CVC4HypothesesSet& set) {
+    static inline void loadAbducibles
+    (std::string filename, CVC4::ExprManager& em, CVC4Declarations& decls, CVC4HypothesesSet& set) {
         alloc_gab<CVC4Hypothesis>(set.getSourceSize());
         AbducibleParser parser(filename);
         parser.init();
@@ -60,12 +61,14 @@ namespace gpid {
     }
 
     struct c4Loader {
-        inline void operator() (std::string filename, CVC4::ExprManager& em, CVC4HypothesesSet& set)
-        { loadAbducibles(filename, em, set); }
+        inline void operator()
+        (std::string filename, CVC4::ExprManager& em, CVC4Declarations& decls, CVC4HypothesesSet& set)
+        { loadAbducibles(filename, em, decls, set); }
     };
 
     static inline
-    void generateAbducibles(c4InputGenerator g, CVC4::ExprManager& em, CVC4HypothesesSet& set) {
+    void generateAbducibles
+    (c4InputGenerator g, CVC4::ExprManager& em, CVC4Declarations& decls, CVC4HypothesesSet& set) {
         switch (g) {
         case C4IG_NONE: break;
             break;
@@ -74,15 +77,18 @@ namespace gpid {
     }
 
     struct c4Generator {
-        inline void operator() (std::string gkey, CVC4::ExprManager& em, CVC4HypothesesSet& set)
-        { generateAbducibles(toC4InputGenerator(gkey), em, set); }
+        inline void operator()
+        (std::string gkey, CVC4::ExprManager& em, CVC4Declarations& decls, CVC4HypothesesSet& set)
+        { generateAbducibles(toC4InputGenerator(gkey), em, decls, set); }
     };
 
     extern uint32_t countAbducibles(AbduciblesOptions& opts, CVC4Problem& pbl) {
         return countAbducibles<CVC4Problem, c4GeneratorCounter>(opts, pbl);
     }
-    extern void generateAbducibles(AbduciblesOptions& opts, CVC4::ExprManager& em, CVC4HypothesesSet& hys) {
-        generateAbducibles<CVC4HypothesesSet, CVC4::ExprManager, c4Loader, c4Generator>(opts, em, hys);
+    extern void generateAbducibles
+    (AbduciblesOptions& opts, CVC4::ExprManager& em, CVC4Declarations& decls, CVC4HypothesesSet& hys) {
+        generateAbducibles<CVC4HypothesesSet, CVC4::ExprManager, CVC4Declarations, c4Loader, c4Generator>
+            (opts, em, decls, hys);
     }
 
 }

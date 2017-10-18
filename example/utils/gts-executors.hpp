@@ -39,7 +39,7 @@ static inline void generate_minisat(OptionStorage& opts) {
 
     l_message("generate abducibles...");
     MinisatHypothesesSet A(countAbducibles(opts.abducibles, P));
-    generateAbducibles(opts.abducibles, A); // TODO: Handle errors
+    generateAbducibles(opts.abducibles, A, P.getVarCpt()); // TODO: Handle errors
 
     l_message("create decomposition engine...");
     MinisatDecompEngine E(opts.engine, S, P, A);
@@ -67,7 +67,7 @@ static inline void generate_cvc4(OptionStorage& opts) {
 
     l_message("generate abducibles...");
     CVC4HypothesesSet A(countAbducibles(opts.abducibles, P));
-    generateAbducibles(opts.abducibles, S.getExprManager(), A); // TODO: Handle errors
+    generateAbducibles(opts.abducibles, S.getExprManager(), P.getDeclarations(), A); // TODO: Handle errors
 
     l_message("create decomposition engine...");
     CVC4DecompEngine E(opts.engine, S, P, A);
@@ -95,7 +95,7 @@ static inline void generate_z3(OptionStorage& opts) {
 
     l_message("generate abducibles...");
     Z3HypothesesSet A(countAbducibles(opts.abducibles, P));
-    generateAbducibles(opts.abducibles, S.getContext(), A); // TODO: Handle errors
+    generateAbducibles(opts.abducibles, S.getContext(), P.getDeclarations(), A); // TODO: Handle errors
 
     l_message("create decomposition engine...");
     Z3DecompEngine E(opts.engine, S, P, A);

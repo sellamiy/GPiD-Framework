@@ -35,7 +35,8 @@ namespace gpid {
         { return z3AbducibleCompt(toZ3InputGenerator(gkey), pbl); }
     };
 
-    static inline void loadAbducibles(std::string filename, z3::context& ctx, Z3HypothesesSet& set) {
+    static inline void loadAbducibles
+    (std::string filename, z3::context& ctx, Z3Declarations& decls, Z3HypothesesSet& set) {
         alloc_gab<Z3Hypothesis>(set.getSourceSize());
         AbducibleParser parser(filename);
         parser.init();
@@ -52,12 +53,14 @@ namespace gpid {
     }
 
     struct z3Loader {
-        inline void operator() (std::string filename, z3::context& ctx, Z3HypothesesSet& set)
-        { loadAbducibles(filename, ctx, set); }
+        inline void operator()
+        (std::string filename, z3::context& ctx, Z3Declarations& decls, Z3HypothesesSet& set)
+        { loadAbducibles(filename, ctx, decls, set); }
     };
 
     static inline
-    void generateAbducibles(z3InputGenerator g, z3::context& ctx, Z3HypothesesSet& set) {
+    void generateAbducibles
+    (z3InputGenerator g, z3::context& ctx, Z3Declarations& decls, Z3HypothesesSet& set) {
         switch (g) {
         case Z3IG_NONE: break;
             break;
@@ -66,15 +69,18 @@ namespace gpid {
     }
 
     struct z3Generator {
-        inline void operator() (std::string gkey, z3::context& ctx, Z3HypothesesSet& set)
-        { generateAbducibles(toZ3InputGenerator(gkey), ctx, set); }
+        inline void operator()
+        (std::string gkey, z3::context& ctx, Z3Declarations& decls, Z3HypothesesSet& set)
+        { generateAbducibles(toZ3InputGenerator(gkey), ctx, decls, set); }
     };
 
     extern uint32_t countAbducibles(AbduciblesOptions& opts, Z3Problem& pbl) {
         return countAbducibles<Z3Problem, z3GeneratorCounter>(opts, pbl);
     }
-    extern void generateAbducibles(AbduciblesOptions& opts, z3::context& ctx, Z3HypothesesSet& hys) {
-        generateAbducibles<Z3HypothesesSet, z3::context, z3Loader, z3Generator>(opts, ctx, hys);
+    extern void generateAbducibles
+    (AbduciblesOptions& opts, z3::context& ctx, Z3Declarations& decls, Z3HypothesesSet& hys) {
+        generateAbducibles<Z3HypothesesSet, z3::context, Z3Declarations, z3Loader, z3Generator>
+            (opts, ctx, decls, hys);
     }
 
 }

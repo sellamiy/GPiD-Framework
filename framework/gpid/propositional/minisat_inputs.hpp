@@ -9,7 +9,7 @@ namespace gpid {
     extern void parse_DIMACS(gzFile input_stream, MinisatProblem& P, bool strictp = false);
 
     extern uint32_t countAbducibles(AbduciblesOptions& opts, MinisatProblem& pbl);
-    extern void generateAbducibles(AbduciblesOptions& opts, MinisatHypothesesSet& hys);
+    extern void generateAbducibles(AbduciblesOptions& opts, MinisatHypothesesSet& hys, int nVars);
 
 };
 

@@ -35,6 +35,11 @@ namespace gpid {
         { return mAbducibleCompt(toMInputGenerator(gkey), pbl); }
     };
 
+    struct mDeclsInfo {
+        const int nVars;
+        inline mDeclsInfo(int n) : nVars(n) {}
+    };
+
     static inline void loadAbducibles(std::string filename, MinisatHypothesesSet& set) {
         alloc_gab<MinisatHypothesis>(set.getSourceSize());
         std::map<int, int> linker;
@@ -61,7 +66,7 @@ namespace gpid {
     }
 
     struct mLoader {
-        inline void operator() (std::string filename, mContext&, MinisatHypothesesSet& set)
+        inline void operator() (std::string filename, mContext&, mDeclsInfo&, MinisatHypothesesSet& set)
         { loadAbducibles(filename, set); }
     };
 
@@ -85,16 +90,18 @@ namespace gpid {
     }
 
     struct mGenerator {
-        inline void operator() (std::string gkey, mContext&, MinisatHypothesesSet& set)
+        inline void operator() (std::string gkey, mContext&, mDeclsInfo&, MinisatHypothesesSet& set)
         { generateAbducibles(toMInputGenerator(gkey), set); }
     };
 
     extern uint32_t countAbducibles(AbduciblesOptions& opts, MinisatProblem& pbl) {
         return countAbducibles<MinisatProblem, mGeneratorCounter>(opts, pbl);
     }
-    extern void generateAbducibles(AbduciblesOptions& opts, MinisatHypothesesSet& hys) {
+    extern void generateAbducibles(AbduciblesOptions& opts, MinisatHypothesesSet& hys, int nVars) {
         mContext dummy;
-        generateAbducibles<MinisatHypothesesSet, mContext, mLoader, mGenerator>(opts, dummy, hys);
+        mDeclsInfo decls(nVars);
+        generateAbducibles<MinisatHypothesesSet, mContext, mDeclsInfo, mLoader, mGenerator>
+            (opts, dummy, decls, hys);
     }
 
 }
