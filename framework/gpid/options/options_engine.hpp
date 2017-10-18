@@ -10,6 +10,8 @@ namespace gpid {
 
         bool use_models = true;
 
+        bool allow_inconsistencies = false;
+
     };
 
 };

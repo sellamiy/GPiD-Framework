@@ -6,7 +6,7 @@
 using namespace gpid;
 
 Z3Solver::Z3Solver()
-    : solver(ctx)
+    : solver(ctx), csty_solver(ctx)
 {
 }
 

@@ -40,6 +40,17 @@ extern void gpid::DecompositionEngine<SolverT>::generatePID() {
 
         } else {
             node_counter++;
+
+            if (!options.allow_inconsistencies) {
+                SolverTestStatus status = solver.checkConsistency(level);
+                if (status == SolverTestStatus::SOLVER_UNSAT) {
+                    popStackLevel();
+                    continue;
+                } else if (status == SolverTestStatus::SOLVER_UNKNOWN) {
+                    l_fatal("Solver could not decide consistency query!");
+                }
+            }
+
             SolverTestStatus status = solver.testHypotheses(level);
 
             if (status == SolverTestStatus::SOLVER_SAT) {

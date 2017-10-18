@@ -42,6 +42,7 @@ namespace gpid {
     class CVC4Solver {
         CVC4::ExprManager em;
         CVC4::SmtEngine solver;
+        CVC4::SmtEngine csty_solver;
         CVC4ModelWrapper iw_mdl;
 
         // TODO: Fix. This is only required for printing. Not efficient -> needs improvement
@@ -58,6 +59,7 @@ namespace gpid {
         inline void removeHypotheses(uint32_t level) { accessLevel(level); }
         void addHypothesis(CVC4Hypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
+        gpid::SolverTestStatus checkConsistency(uint32_t level);
         bool currentlySubsumed(CVC4Hypothesis& additional, bool with_storage, uint32_t level);
 
         inline CVC4ModelWrapper& recoverModel() { return iw_mdl; }

@@ -94,6 +94,9 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 
             ("use-models", "Use solver models to prune hypotheses sets")
             ("dont-use-models", "Do not use solver models")
+
+            ("allow-inconsistencies", "Let the engine generate inconsistent implicates")
+            ("dont-allow-inconsistencies", "Force the engine generate consistent implicates only")
             ;
 
 	parser.add_options("Output")
@@ -140,6 +143,11 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 	    opts.engine.use_models = true;
 	if (parser.count("dont-use-models"))
 	    opts.engine.use_models = false;
+
+        if (parser.count("allow-inconsistencies"))
+	    opts.engine.allow_inconsistencies = true;
+	if (parser.count("dont-allow-inconsistencies"))
+	    opts.engine.allow_inconsistencies = false;
 
 	if (parser.count("input")) {
 	    opts.input = parser["input"].as<std::string>();
@@ -194,7 +202,8 @@ static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& par
             { "load-abducibles", "autogen-abducibles" },
             { "print-implicates", "dont-print-implicates"},
             { "store-implicates", "dont-store-implicates"},
-            { "use-models", "dont-use-models"}
+            { "use-models", "dont-use-models"},
+            { "allow-inconsistencies", "dont-allow-inconsistencies" }
         };
 
         for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {

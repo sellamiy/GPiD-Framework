@@ -12,10 +12,12 @@ namespace gpid {
     inline void Z3Solver::accessLevel(uint32_t level) {
         while (level > c_level) {
             solver.push();
+            csty_solver.push();
             c_level++;
         }
         while (level < c_level) {
             solver.pop();
+            csty_solver.pop();
             c_level--;
         }
     }
@@ -23,10 +25,11 @@ namespace gpid {
     inline void Z3Solver::addHypothesis(Z3Hypothesis& hypothesis, uint32_t level) {
         accessLevel(level);
         solver.add(hypothesis.expr);
+        csty_solver.add(hypothesis.expr);
     }
 
     inline void Z3Solver::printActiveNegation() {
-        p_implicate(std::cout, ctx, solver.assertions(), true);
+        p_implicate(std::cout, ctx, csty_solver.assertions(), true);
     }
 
     inline void Z3Solver::storeActive() {
@@ -36,6 +39,16 @@ namespace gpid {
     inline gpid::SolverTestStatus Z3Solver::testHypotheses(uint32_t level) {
         accessLevel(level);
         z3::check_result qres = solver.check();
+        switch (qres) {
+        case z3::sat:   return SolverTestStatus::SOLVER_SAT;
+        case z3::unsat: return SolverTestStatus::SOLVER_UNSAT;
+        default:        return SolverTestStatus::SOLVER_UNKNOWN;
+        }
+    }
+
+    inline gpid::SolverTestStatus Z3Solver::checkConsistency(uint32_t level) {
+        accessLevel(level);
+        z3::check_result qres = csty_solver.check();
         switch (qres) {
         case z3::sat:   return SolverTestStatus::SOLVER_SAT;
         case z3::unsat: return SolverTestStatus::SOLVER_UNSAT;

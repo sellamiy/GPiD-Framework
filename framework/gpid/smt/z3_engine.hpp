@@ -44,6 +44,7 @@ namespace gpid {
     class Z3Solver {
         z3::context ctx;
         z3::solver solver;
+        z3::solver csty_solver;
         Z3ModelWrapper iw_mdl;
 
         uint32_t c_level;
@@ -57,6 +58,7 @@ namespace gpid {
         inline void removeHypotheses(uint32_t level) { accessLevel(level); }
         void addHypothesis(Z3Hypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
+        gpid::SolverTestStatus checkConsistency(uint32_t level);
         bool currentlySubsumed(Z3Hypothesis& additional, bool with_storage, uint32_t level);
 
         inline Z3ModelWrapper& recoverModel() { return iw_mdl; }

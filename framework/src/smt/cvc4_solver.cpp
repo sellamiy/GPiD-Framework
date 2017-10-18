@@ -6,11 +6,15 @@
 using namespace gpid;
 
 CVC4Solver::CVC4Solver()
-    : solver(&em)
+    : solver(&em), csty_solver(&em)
 {
     solver.setOption("incremental", true);
     solver.setOption("produce-models", true);
     solver.setLogic("QF_ALL_SUPPORTED");
+
+    csty_solver.setOption("incremental", true);
+    csty_solver.setOption("produce-models", true);
+    csty_solver.setLogic("QF_ALL_SUPPORTED");
 }
 
 void CVC4Solver::start() {

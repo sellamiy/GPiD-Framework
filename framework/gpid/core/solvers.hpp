@@ -33,6 +33,8 @@ namespace gpid {
         inline void removeHypotheses(uint32_t) { }
         inline SolverTestStatus testHypotheses(uint32_t)
         { return SolverTestStatus::SOLVER_UNSAT; }
+        inline SolverTestStatus checkConsistency(uint32_t)
+        { return SolverTestStatus::SOLVER_SAT; }
         inline void printActiveNegation() { }
         inline void storeActive() { }
         inline ModelT& recoverModel() { return sst_mdl; }

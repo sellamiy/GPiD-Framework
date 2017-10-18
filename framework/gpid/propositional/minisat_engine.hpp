@@ -73,6 +73,9 @@ namespace gpid {
         void removeHypotheses(uint32_t level) { accessLevel(level); }
         void addHypothesis(MinisatHypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
+        inline gpid::SolverTestStatus checkConsistency(uint32_t)
+        /* For this engine, consistency is ensured by linked hypotheses */
+        { return SolverTestStatus::SOLVER_SAT; }
         bool currentlySubsumed(MinisatHypothesis& additional, bool with_storage, uint32_t level);
 
         inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }

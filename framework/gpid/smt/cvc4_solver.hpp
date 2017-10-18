@@ -12,10 +12,12 @@ namespace gpid {
     inline void CVC4Solver::accessLevel(uint32_t level) {
         while (level > c_level) {
             solver.push();
+            csty_solver.push();
             c_level++;
         }
         while (level < c_level) {
             solver.pop();
+            csty_solver.pop();
             hyp_loc_mem.pop_back(); // TODO: UNSAFE! BROKEN IF NO OR MORE THAN 1 HYP ARE ADDED BY LEVEL!
             c_level--;
         }
@@ -25,6 +27,7 @@ namespace gpid {
         accessLevel(level);
         hyp_loc_mem.push_back(hypothesis);
         solver.assertFormula(hypothesis.expr);
+        csty_solver.assertFormula(hypothesis.expr);
     }
 
     inline void CVC4Solver::printActiveNegation() {
@@ -38,6 +41,14 @@ namespace gpid {
     inline gpid::SolverTestStatus CVC4Solver::testHypotheses(uint32_t level) {
         accessLevel(level);
         CVC4::Result qres = solver.checkSat();
+        if      (qres.isSat() == CVC4::Result::SAT)   return SolverTestStatus::SOLVER_SAT;
+        else if (qres.isSat() == CVC4::Result::UNSAT) return SolverTestStatus::SOLVER_UNSAT;
+        else                                          return SolverTestStatus::SOLVER_UNKNOWN;
+    }
+
+    inline gpid::SolverTestStatus CVC4Solver::checkConsistency(uint32_t level) {
+        accessLevel(level);
+        CVC4::Result qres = csty_solver.checkSat();
         if      (qres.isSat() == CVC4::Result::SAT)   return SolverTestStatus::SOLVER_SAT;
         else if (qres.isSat() == CVC4::Result::UNSAT) return SolverTestStatus::SOLVER_UNSAT;
         else                                          return SolverTestStatus::SOLVER_UNKNOWN;

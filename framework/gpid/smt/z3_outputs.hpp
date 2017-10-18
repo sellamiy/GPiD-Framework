@@ -14,11 +14,7 @@ namespace gpid {
         out << "> ";
         z3::expr pfl(ctx);
         bool pfl_inited = false;
-        for (unsigned i = 1 /* HACK, see below */; i < active.size(); ++i) {
-            /* HACK: Assertion 1 considered to be the original problem,
-               It is thus not part the abducible.
-               This is very very very unsafe. */
-            // TODO : Fixme : Sanitize Hack !
+        for (unsigned i = 0; i < active.size(); ++i) {
             if (pfl_inited)
                 pfl = pfl && active[i];
             else {
