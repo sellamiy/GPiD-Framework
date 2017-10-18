@@ -78,8 +78,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 
 	parser.add_options("Input")
 	    ("i,input", "Input file", cxxopts::value<std::string>())
-            ("r,abducible-read", "Abducible file", cxxopts::value<std::string>())
-            ("a,abducible-auto", "Abducible auto generation type", cxxopts::value<std::string>())
+            ("l,load-abducibles", "Abducible file", cxxopts::value<std::string>())
+            ("a,autogen-abducibles", "Abducible auto generation type", cxxopts::value<std::string>())
 	    ;
 
         parser.add_options("Generator")
@@ -150,14 +150,14 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
             return OptionStatus::FAILURE;
         }
 
-        if (parser.count("abducible-read")) {
+        if (parser.count("load-abducibles")) {
             opts.abducibles.input_type = gpid::AbdInputType::ABDIT_FILE;
-            opts.abducibles.input_file = parser["abducible-read"].as<std::string>();
+            opts.abducibles.input_file = parser["load-abducibles"].as<std::string>();
         }
 
-        if (parser.count("abducible-auto")) {
+        if (parser.count("autogen-abducibles")) {
             opts.abducibles.input_type = gpid::AbdInputType::ABDIT_GENERATOR;
-            opts.abducibles.input_generator = parser["abducible-auto"].as<std::string>();
+            opts.abducibles.input_generator = parser["autogen-abducibles"].as<std::string>();
         }
 
 	return OptionStatus::OK;
@@ -175,7 +175,7 @@ static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& par
 
         const std::vector<std::vector<std::string>> p_illeg
         {
-            { "abducible-read", "abducible-auto" }
+            { "load-abducibles", "autogen-abducibles" }
         };
 
         for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {
