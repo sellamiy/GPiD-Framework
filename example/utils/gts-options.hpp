@@ -95,7 +95,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 
 	parser.add_options("Output")
 	    ("p,print-implicates", "Print generated implicates")
-	    ("no-print-implicates", "Do not print generated implicates")
+	    ("dont-print-implicates", "Do not print generated implicates")
 	    ;
 
 	parser.parse(argc, argv);
@@ -126,7 +126,7 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 	if (parser.count("print-implicates")) {
 	    opts.engine.print_implicates = true;
 	}
-	if (parser.count("no-print-implicates")) {
+	if (parser.count("dont-print-implicates")) {
 	    opts.engine.print_implicates = false;
 	}
 
@@ -188,6 +188,7 @@ static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& par
         const std::vector<std::vector<std::string>> p_illeg
         {
             { "load-abducibles", "autogen-abducibles" },
+            { "print-implicates", "dont-print-implicates"},
             { "store-implicates", "dont-store-implicates"}
         };
 
