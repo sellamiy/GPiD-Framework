@@ -45,9 +45,6 @@ namespace gpid {
         CVC4::SmtEngine csty_solver;
         CVC4ModelWrapper iw_mdl;
 
-        // TODO: Fix. This is only required for printing. Not efficient -> needs improvement
-        std::vector<CVC4Hypothesis> hyp_loc_mem;
-
         uint32_t c_level;
 
         void accessLevel(uint32_t level);

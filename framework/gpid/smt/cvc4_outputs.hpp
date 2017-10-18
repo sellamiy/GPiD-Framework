@@ -11,10 +11,9 @@ namespace gpid {
 
     extern inline
     void p_implicate(std::ostream& out, CVC4::ExprManager& em,
-                     std::vector<CVC4Hypothesis>& impl, bool negate) {
+                     const std::vector<CVC4::Expr>& impl, bool negate) {
         out << "> ";
-        CVC4::Expr pfl = em.mkConst(true);
-        for (const CVC4Hypothesis hyp : impl) pfl = em.mkExpr(CVC4::kind::AND, pfl, hyp.expr);
+        CVC4::Expr pfl = em.mkExpr(CVC4::kind::AND, impl);
         if (negate) pfl = em.mkExpr(CVC4::kind::NOT, pfl);
         out << pfl << std::endl;
     }

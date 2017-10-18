@@ -18,20 +18,18 @@ namespace gpid {
         while (level < c_level) {
             solver.pop();
             csty_solver.pop();
-            hyp_loc_mem.pop_back(); // TODO: UNSAFE! BROKEN IF NO OR MORE THAN 1 HYP ARE ADDED BY LEVEL!
             c_level--;
         }
     }
 
     inline void CVC4Solver::addHypothesis(CVC4Hypothesis& hypothesis, uint32_t level) {
         accessLevel(level);
-        hyp_loc_mem.push_back(hypothesis);
         solver.assertFormula(hypothesis.expr);
         csty_solver.assertFormula(hypothesis.expr);
     }
 
     inline void CVC4Solver::printActiveNegation() {
-        p_implicate(std::cout, getExprManager(), hyp_loc_mem, true);
+        p_implicate(std::cout, getExprManager(), csty_solver.getAssertions(), true);
     }
 
     inline void CVC4Solver::storeActive() {
