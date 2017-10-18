@@ -46,8 +46,8 @@ namespace gpid {
                 break;
             }
             std::string expr = parser.nextAbducible();
-            l_warn("Fixme: This is Broken, we need context preservation");
-            z3::expr cstl = ctx.parse_string(("(assert " + expr + ")").c_str()); // TODO: BROKEN
+            std::string smt_assert = "(assert " + expr + ")";
+            z3::expr cstl = ctx.parse_string(smt_assert.c_str(), decls.getSortDecls(), decls.getFunDecls());
             store_gab_hyp<Z3HypothesesSet, z3::expr>(set, i, cstl);
         }
     }

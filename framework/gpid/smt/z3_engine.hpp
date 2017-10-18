@@ -27,13 +27,16 @@ namespace gpid {
         std::vector<z3::expr> cons_data;
         uint32_t reading_pos = -1;
 
+        z3::context& ctx;
         Z3Declarations decls;
 
         void initCurrentMode();
     public:
+        inline Z3Problem(z3::context& ctx) : ctx(ctx), decls(ctx) {}
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
+        inline z3::context& getContext() { return ctx; }
         inline Z3Declarations& getDeclarations() { return decls; }
-        void addConstraint(z3::expr cons, z3::context& ctx);
+        void addConstraint(z3::expr cons);
         bool hasMoreConstraints();
         z3::expr nextConstraint();
     };

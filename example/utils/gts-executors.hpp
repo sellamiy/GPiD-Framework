@@ -88,10 +88,10 @@ static inline void generate_cvc4(OptionStorage&) {
 static inline void generate_z3(OptionStorage& opts) {
     l_message("init z3 engine...");
     Z3Solver S;
-    Z3Problem P;
+    Z3Problem P(S.getContext());
 
     l_message("parse problem...");
-    parse_Z(opts.input, S.getContext(), P); // TODO: Handle errors
+    parse_Z(opts.input, P); // TODO: Handle errors
 
     l_message("generate abducibles...");
     Z3HypothesesSet A(countAbducibles(opts.abducibles, P));
