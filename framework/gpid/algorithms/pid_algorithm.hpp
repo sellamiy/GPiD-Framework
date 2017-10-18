@@ -43,7 +43,9 @@ extern void gpid::DecompositionEngine<SolverT>::generatePID() {
             SolverTestStatus status = solver.testHypotheses(level);
 
             if (status == SolverTestStatus::SOLVER_SAT) {
-                available_h.modelCleanUp(solver.recoverModel(), level);
+                if (options.use_models) {
+                    available_h.modelCleanUp(solver.recoverModel(), level);
+                }
                 selectNextPID();
             } else if (status == SolverTestStatus::SOLVER_UNSAT) {
                 // We have found an implicate

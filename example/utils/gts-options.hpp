@@ -91,6 +91,9 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
         parser.add_options("Engine")
             ("s,store-implicates", "Allow generated implicate to be stored")
             ("dont-store-implicates", "Allow generated implicate to be stored")
+
+            ("use-models", "Use solver models to prune hypotheses sets")
+            ("dont-use-models", "Do not use solver models")
             ;
 
 	parser.add_options("Output")
@@ -135,6 +138,13 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 	}
 	if (parser.count("dont-store-implicates")) {
 	    opts.engine.store_implicates = false;
+	}
+
+        if (parser.count("use-models")) {
+	    opts.engine.use_models = true;
+	}
+	if (parser.count("dont-use-models")) {
+	    opts.engine.use_models = false;
 	}
 
 	if (parser.count("input")) {
@@ -189,7 +199,8 @@ static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& par
         {
             { "load-abducibles", "autogen-abducibles" },
             { "print-implicates", "dont-print-implicates"},
-            { "store-implicates", "dont-store-implicates"}
+            { "store-implicates", "dont-store-implicates"},
+            { "use-models", "dont-use-models"}
         };
 
         for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {

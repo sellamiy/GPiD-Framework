@@ -8,6 +8,8 @@ namespace gpid {
         bool print_implicates = true;
         bool store_implicates = false;
 
+        bool use_models = true;
+
     };
 
 };
