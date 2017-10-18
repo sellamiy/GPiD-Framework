@@ -60,7 +60,7 @@ namespace gpid {
         inline void removeHypotheses(uint32_t level) { accessLevel(level); }
         void addHypothesis(Z3Hypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
-        bool currentlySubsumed(Z3Hypothesis& additional, uint32_t level);
+        bool currentlySubsumed(Z3Hypothesis& additional, bool with_storage, uint32_t level);
 
         inline Z3ModelWrapper& recoverModel() { return iw_mdl; }
         inline z3::context& getContext() { return ctx; }

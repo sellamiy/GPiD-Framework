@@ -54,13 +54,18 @@ namespace gpid {
         else                              return gpid::SolverTestStatus::SOLVER_UNKNOWN;
     }
 
-    inline bool MinisatSolver::currentlySubsumed(MinisatHypothesis& additional, uint32_t level) {
+    inline bool MinisatSolver::currentlySubsumed
+    (MinisatHypothesis& additional, bool with_storage, uint32_t level) {
         accessLevel(level);
-        assumps.push(additional.lit);
-        MinisatVecWrapper<Minisat::Lit> wrp(assumps);
-        bool res = storage.subsets(wrp);
-        assumps.pop();
-        return res;
+        if (with_storage) {
+            assumps.push(additional.lit);
+            MinisatVecWrapper<Minisat::Lit> wrp(assumps);
+            bool res = storage.subsets(wrp);
+            assumps.pop();
+            return res;
+        } else {
+            return false;
+        }
     }
 
 };

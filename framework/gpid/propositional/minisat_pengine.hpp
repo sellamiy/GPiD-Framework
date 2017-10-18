@@ -73,7 +73,7 @@ namespace gpid {
         void removeHypotheses(uint32_t level) { accessLevel(level); }
         void addHypothesis(MinisatHypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
-        bool currentlySubsumed(MinisatHypothesis& additional, uint32_t level);
+        bool currentlySubsumed(MinisatHypothesis& additional, bool with_storage, uint32_t level);
 
         inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }
         inline MinisatModelWrapper& recoverModel() { return iw_mdl; }

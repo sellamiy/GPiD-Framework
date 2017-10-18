@@ -46,7 +46,7 @@ namespace gpid {
         inline void modelCleanUp(typename SolverT::ModelT& model, uint32_t level);
         /** Skip available hypotheses if induced by the active model or stored implicates
          * @return false if and only if all possible hypotheses have been skipped. */
-        inline bool skipSkippables(SolverT& storage, level_t level);
+        inline bool skipSkippables(SolverT& storage, bool with_storage, level_t level);
 
         typedef typename SolverT::HypothesisT HypothesisT;
     };
@@ -91,11 +91,11 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline bool HypothesesSet<SolverT>::skipSkippables(SolverT& solver, level_t level) {
+    inline bool HypothesesSet<SolverT>::skipSkippables(SolverT& solver, bool with_storage, level_t level) {
         accessLevel(level);
         for (int index : hp_active) {
             if (hp_active.is_active(index)) {
-                if (solver.currentlySubsumed(*hp_mapping[index], level)) {
+                if (solver.currentlySubsumed(*hp_mapping[index], with_storage, level)) {
                     hp_active.deactivate(index);
                     deactivation_map[current_level].push_back(index);
                 }

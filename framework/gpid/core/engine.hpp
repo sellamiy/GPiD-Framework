@@ -83,10 +83,10 @@ inline void gpid::DecompositionEngine<SolverT>::resetEngine() {
 template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
     gi_counter++;
-    if (options.print_implicates) {
+    if (options.print_implicates)
         solver.printActiveNegation();
-    }
-    solver.storeActive();
+    if (options.store_implicates)
+        solver.storeActive();
 }
 
 template<class SolverT>

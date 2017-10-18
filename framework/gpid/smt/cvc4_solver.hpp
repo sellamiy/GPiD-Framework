@@ -43,10 +43,15 @@ namespace gpid {
         else                                          return SolverTestStatus::SOLVER_UNKNOWN;
     }
 
-    inline bool CVC4Solver::currentlySubsumed(CVC4Hypothesis& additional, uint32_t level) {
+    inline bool CVC4Solver::currentlySubsumed
+    (CVC4Hypothesis& additional, bool with_storage, uint32_t level) {
         accessLevel(level);
-        snlog::l_warn("Not implemented yet - CVC4 storage subsumption");
-        return false;
+        if (with_storage) {
+            snlog::l_warn("Not implemented yet - CVC4 storage subsumption");
+            return false;
+        } else {
+            return false;
+        }
     }
 
 };

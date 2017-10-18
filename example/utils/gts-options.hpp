@@ -88,6 +88,11 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
              cxxopts::value<std::string>())
             ;
 
+        parser.add_options("Engine")
+            ("s,store-implicates", "Allow generated implicate to be stored")
+            ("dont-store-implicates", "Allow generated implicate to be stored")
+            ;
+
 	parser.add_options("Output")
 	    ("p,print-implicates", "Print generated implicates")
 	    ("no-print-implicates", "Do not print generated implicates")
@@ -110,7 +115,7 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
     try {
 
 	if (parser.count("help")) {
-	    snlog::l_message(parser.help({"", "Generator", "Input", "Output"}));
+	    snlog::l_message(parser.help({"", "Generator", "Input", "Output", "Engine"}));
 	    return OptionStatus::ENDED;
 	}
 	if (parser.count("version")) {
@@ -123,6 +128,13 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 	}
 	if (parser.count("no-print-implicates")) {
 	    opts.engine.print_implicates = false;
+	}
+
+        if (parser.count("store-implicates")) {
+	    opts.engine.store_implicates = true;
+	}
+	if (parser.count("dont-store-implicates")) {
+	    opts.engine.store_implicates = false;
 	}
 
 	if (parser.count("input")) {
@@ -175,7 +187,8 @@ static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& par
 
         const std::vector<std::vector<std::string>> p_illeg
         {
-            { "load-abducibles", "autogen-abducibles" }
+            { "load-abducibles", "autogen-abducibles" },
+            { "store-implicates", "dont-store-implicates"}
         };
 
         for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {

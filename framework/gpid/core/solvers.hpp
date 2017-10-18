@@ -37,7 +37,7 @@ namespace gpid {
         inline void storeActive() { }
         inline ModelT& recoverModel() { return sst_mdl; }
         inline StorageT& getStorage() { return sst_str; }
-        inline bool currentlySubsumed (HypothesisT&, uint32_t) { return false; }
+        inline bool currentlySubsumed (HypothesisT&, bool, uint32_t) { return false; }
     };
 #endif
 
