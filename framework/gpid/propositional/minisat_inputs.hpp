@@ -2,7 +2,7 @@
 #define GPID_MINISAT_INPUT_HANDLING_HPP
 
 #include <gpid/options/options_abducibles.hpp>
-#include <gpid/propositional/minisat_pengine.hpp>
+#include <gpid/propositional/minisat_engine.hpp>
 
 namespace gpid {
 

@@ -8,7 +8,7 @@
 #include <gpid/core/engine.hpp>
 
 #ifdef MINISAT_SOLVER_INTERFACE
-#include <gpid/propositional/minisat_pengine.hpp>
+#include <gpid/propositional/minisat_engine.hpp>
 #include <gpid/propositional/minisat_solver.hpp>
 #include <gpid/propositional/minisat_inputs.hpp>
 #include <gpid/propositional/minisat_outputs.hpp>

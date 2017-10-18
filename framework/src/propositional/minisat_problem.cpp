@@ -1,7 +1,7 @@
 #define GPID__MINISAT_PROBLEM_CPP
 
 #include <snlog/snlog.hpp>
-#include <gpid/propositional/minisat_pengine.hpp>
+#include <gpid/propositional/minisat_engine.hpp>
 
 using namespace snlog;
 using namespace gpid;

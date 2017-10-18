@@ -2,7 +2,7 @@
 #define GPID_PROPOSITIONAL_SOLVER__MINISAT_DETAILS_HPP
 
 #include <gpid/config.hpp>
-#include <gpid/propositional/minisat_pengine.hpp>
+#include <gpid/propositional/minisat_engine.hpp>
 #include <gpid/propositional/minisat_outputs.hpp>
 
 using namespace snlog;

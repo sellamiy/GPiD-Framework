@@ -4,7 +4,7 @@
 #include <iostream>
 #include <snlog/snlog.hpp>
 #include <gpid/config.hpp>
-#include <gpid/propositional/minisat_pengine.hpp>
+#include <gpid/propositional/minisat_engine.hpp>
 
 /* Strict Minisat output printers */
 #ifdef MERGE_MINISAT_WRAPPERS
