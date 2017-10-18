@@ -23,6 +23,7 @@ namespace gpid {
         for (CVC4::Expr expr : temp.getAssertions()) {
             pbl.addConstraint(expr);
         }
+        pbl.collectDeclarations(parser->getSymbolTable());
     }
 
 };

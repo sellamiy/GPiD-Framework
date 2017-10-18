@@ -33,6 +33,7 @@ namespace gpid {
         void initCurrentMode();
     public:
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
+        inline void collectDeclarations(CVC4::SymbolTable* table) { decls.collect(table); }
         inline CVC4Declarations& getDeclarations() { return decls; }
         void addConstraint(CVC4::Expr cons);
         bool hasMoreConstraints();

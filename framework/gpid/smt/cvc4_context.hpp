@@ -7,9 +7,11 @@
 namespace gpid {
 
     class CVC4Declarations {
-        /* TODO */
+        CVC4::SymbolTable* stable;
     public:
-        /* TODO: Collect */
+        inline CVC4::SymbolTable* getSymbolTable() { return stable; }
+
+        void collect(CVC4::SymbolTable* table);
     };
 
 };
