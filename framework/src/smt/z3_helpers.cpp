@@ -9,21 +9,22 @@ using namespace z3;
 
 namespace gpid {
 
-    enum z3InputGenerator { Z3IG_NONE };
+    enum z3InputGenerator { Z3IG_NONE, Z3IG_ALL_CONST_EQ };
     static inline z3InputGenerator toZ3InputGenerator(std::string key) {
-        /*
-        if (key == "machin") return mInputGenerator::Z3IG_MACHIN;
+        if (key == "all-const-eq") return z3InputGenerator::Z3IG_ALL_CONST_EQ;
         else {
-        */
-        l_error("Unknown z3 abducible generator: " + key);
-        l_info("Currently, there are no z3 abducible generator available");
-        return z3InputGenerator::Z3IG_NONE;
-        /*}*/
+            l_error("Unknown z3 abducible generator: " + key);
+            return z3InputGenerator::Z3IG_NONE;
+        }
     }
 
-    static inline uint32_t z3AbducibleCompt(z3InputGenerator g, Z3Problem&) {
+    static inline uint32_t z3AbducibleCompt(z3InputGenerator g, Z3Problem& pbl) {
+        uint32_t l_gvr;
         switch (g) {
         case Z3IG_NONE: return 0;
+        case Z3IG_ALL_CONST_EQ:
+            l_gvr = pbl.getDeclarations().getFunDecls().size();
+            return l_gvr > 1 ? l_gvr * (l_gvr - 1) : 0;
         default:
             l_internal("Unknown z3 abducible generator: " + std::to_string(g));
             return 0;
@@ -59,10 +60,29 @@ namespace gpid {
     };
 
     static inline
+    void generateAbducibles_ALL_CONST_EQ(z3::context&, Z3Declarations& decls, Z3HypothesesSet& set) {
+        alloc_gab<Z3Hypothesis>(set.getSourceSize());
+        uint32_t vCount = decls.getFunDecls().size();
+        uint32_t pos = 0;
+        for (uint32_t i = 0; i < vCount; i++) {
+            for (uint32_t j = i+1; j < vCount; j++) {
+                z3::expr cstl_eq = decls.getFunDecls()[i]() == decls.getFunDecls()[j]();
+                z3::expr cstl_neq = decls.getFunDecls()[i]() != decls.getFunDecls()[j]();
+                store_gab_hyp<Z3HypothesesSet, z3::expr>(set, pos, cstl_eq);
+                store_gab_hyp<Z3HypothesesSet, z3::expr>(set, pos+1, cstl_neq);
+                set.mapLink(pos, pos+1);
+                set.mapLink(pos+1, pos);
+                pos += 2;
+            }
+        }
+    }
+
+    static inline
     void generateAbducibles
-    (z3InputGenerator g, z3::context&, Z3Declarations&, Z3HypothesesSet&) {
+    (z3InputGenerator g, z3::context& ctx, Z3Declarations& decls, Z3HypothesesSet& set) {
         switch (g) {
         case Z3IG_NONE: break;
+        case Z3IG_ALL_CONST_EQ: generateAbducibles_ALL_CONST_EQ(ctx, decls, set);
             break;
         default: l_internal("Unknown minisat abducible generator: " + std::to_string(g));
         }
