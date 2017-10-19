@@ -54,7 +54,7 @@ namespace gpid {
         typedef CVC4ModelWrapper ModelT;
         typedef CVC4Problem ProblemT;
 
-        inline void removeHypotheses(uint32_t level) { accessLevel(level); }
+        void removeHypotheses(uint32_t level);
         void addHypothesis(CVC4Hypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
         gpid::SolverTestStatus checkConsistency(uint32_t level);

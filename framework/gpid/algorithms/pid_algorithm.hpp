@@ -14,6 +14,7 @@ extern void gpid::DecompositionEngine<SolverT>::selectNextPID() {
         // Recovering next possible hypothesis
         bool has_next = available_h.skipSkippables(solver, options.store_implicates, level);
         if (has_next) {
+            solver.removeHypotheses(level);
             typename SolverT::HypothesisT& sel = available_h.nextHypothesis(level);
             // Actual possible hypothesis
             solver.addHypothesis(sel, level);

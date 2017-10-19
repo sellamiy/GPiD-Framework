@@ -28,6 +28,11 @@ namespace gpid {
         csty_solver.add(hypothesis.expr);
     }
 
+    inline void Z3Solver::removeHypotheses(uint32_t level) {
+        accessLevel(level - 1);
+        accessLevel(level);
+    }
+
     inline void Z3Solver::printActiveNegation() {
         p_implicate(std::cout, ctx, csty_solver.assertions(), true);
     }

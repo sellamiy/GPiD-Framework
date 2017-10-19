@@ -55,7 +55,7 @@ namespace gpid {
         typedef Z3ModelWrapper ModelT;
         typedef Z3Problem ProblemT;
 
-        inline void removeHypotheses(uint32_t level) { accessLevel(level); }
+        void removeHypotheses(uint32_t level);
         void addHypothesis(Z3Hypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
         gpid::SolverTestStatus checkConsistency(uint32_t level);

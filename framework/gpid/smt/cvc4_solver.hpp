@@ -28,6 +28,11 @@ namespace gpid {
         csty_solver.assertFormula(hypothesis.expr);
     }
 
+    inline void CVC4Solver::removeHypotheses(uint32_t level) {
+        accessLevel(level - 1);
+        accessLevel(level);
+    }
+
     inline void CVC4Solver::printActiveNegation() {
         p_implicate(std::cout, getExprManager(), csty_solver.getAssertions(), true);
     }
