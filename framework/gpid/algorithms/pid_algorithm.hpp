@@ -45,6 +45,7 @@ extern void gpid::DecompositionEngine<SolverT>::generatePID() {
             if (!options.allow_inconsistencies) {
                 SolverTestStatus status = solver.checkConsistency(level);
                 if (status == SolverTestStatus::SOLVER_UNSAT) {
+                    incons_counter++;
                     popStackLevel();
                     continue;
                 } else if (status == SolverTestStatus::SOLVER_UNKNOWN) {

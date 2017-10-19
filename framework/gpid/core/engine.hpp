@@ -20,6 +20,7 @@ namespace gpid {
 
         uint64_t gi_counter;
         uint64_t node_counter;
+        uint64_t incons_counter;
 
         enum IStackDirection {
             STACK_PUSH,
@@ -63,6 +64,7 @@ template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::printStatistics() {
     snlog::l_notif("implicates generated", gi_counter);
     snlog::l_notif("nodes explored", node_counter);
+    snlog::l_notif("inconsistent implicates skipped", incons_counter);
 }
 
 /* ========== Helpers ========== */
@@ -71,6 +73,7 @@ template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::resetEngine() {
     gi_counter = 0;
     node_counter = 0;
+    incons_counter = 0;
     solver.setProblem(problem);
     solver.start();
     level = 1;
