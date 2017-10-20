@@ -9,9 +9,9 @@ using namespace z3;
 
 namespace gpid {
 
-    enum z3InputGenerator { Z3IG_NONE, Z3IG_ALL_CONST_EQ };
+    enum z3InputGenerator { Z3IG_NONE, Z3IG_CONST_ALL_EQ };
     static inline z3InputGenerator toZ3InputGenerator(std::string key) {
-        if (key == "all-const-eq") return z3InputGenerator::Z3IG_ALL_CONST_EQ;
+        if (key == "const-all-eq") return z3InputGenerator::Z3IG_CONST_ALL_EQ;
         else {
             l_error("Unknown z3 abducible generator: " + key);
             return z3InputGenerator::Z3IG_NONE;
@@ -22,7 +22,7 @@ namespace gpid {
         uint32_t l_gvr;
         switch (g) {
         case Z3IG_NONE: return 0;
-        case Z3IG_ALL_CONST_EQ:
+        case Z3IG_CONST_ALL_EQ:
             l_gvr = pbl.getDeclarations().getFunDecls().size();
             return l_gvr > 1 ? l_gvr * (l_gvr - 1) : 0;
         default:
@@ -60,7 +60,7 @@ namespace gpid {
     };
 
     static inline
-    void generateAbducibles_ALL_CONST_EQ(z3::context&, Z3Declarations& decls, Z3HypothesesSet& set) {
+    void generateAbducibles_CONST_ALL_EQ(z3::context&, Z3Declarations& decls, Z3HypothesesSet& set) {
         alloc_gab<Z3Hypothesis>(set.getSourceSize());
         uint32_t vCount = decls.getFunDecls().size();
         uint32_t pos = 0;
@@ -82,7 +82,7 @@ namespace gpid {
     (z3InputGenerator g, z3::context& ctx, Z3Declarations& decls, Z3HypothesesSet& set) {
         switch (g) {
         case Z3IG_NONE: break;
-        case Z3IG_ALL_CONST_EQ: generateAbducibles_ALL_CONST_EQ(ctx, decls, set);
+        case Z3IG_CONST_ALL_EQ: generateAbducibles_CONST_ALL_EQ(ctx, decls, set);
             break;
         default: l_internal("Unknown minisat abducible generator: " + std::to_string(g));
         }
