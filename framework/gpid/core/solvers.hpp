@@ -20,7 +20,7 @@ namespace gpid {
         struct HypothesisT { };
         struct StorageT    { };
         struct ModelT
-        { inline bool isSkippable (HypothesisT&) { return false; } };
+        { inline bool isSkippable (HypothesisT&) const { return false; } };
         std::vector<HypothesisT> sst_int;
         ModelT sst_mdl;
         StorageT sst_str;

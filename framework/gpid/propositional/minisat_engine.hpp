@@ -19,7 +19,7 @@ namespace gpid {
     struct MinisatModelWrapper {
         const Minisat::vec<Minisat::lbool>& model;
         MinisatModelWrapper(Minisat::vec<Minisat::lbool>& m) : model(m) {}
-        inline bool isSkippable(MinisatHypothesis& hypothesis) {
+        inline bool isSkippable(MinisatHypothesis& hypothesis) const {
             return model[Minisat::var(hypothesis.lit)] == (sign(hypothesis.lit) ? Minisat::l_False : Minisat::l_True);
         }
     };

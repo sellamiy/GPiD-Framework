@@ -13,9 +13,11 @@ namespace gpid {
         Z3Hypothesis(const Z3Hypothesis& e) : expr(e.expr) {}
     };
     struct Z3ModelWrapper {
-        inline bool isSkippable(Z3Hypothesis&) {
-            snlog::l_warn("Not implemented yet - Z3 model wrapper skipper");
-            return false;
+        const z3::model model;
+        Z3ModelWrapper(const z3::model m) : model(m) {}
+        Z3ModelWrapper(const Z3ModelWrapper& mdw) : model(mdw.model) {}
+        inline bool isSkippable(Z3Hypothesis& h) const {
+            return model.eval(h.expr).bool_value() == Z3_lbool::Z3_L_TRUE;
         }
     };
 
@@ -45,7 +47,6 @@ namespace gpid {
         z3::context ctx;
         z3::solver solver;
         z3::solver csty_solver;
-        Z3ModelWrapper iw_mdl;
 
         uint32_t c_level;
 
@@ -61,7 +62,7 @@ namespace gpid {
         gpid::SolverTestStatus checkConsistency(uint32_t level);
         bool currentlySubsumed(Z3Hypothesis& additional, bool with_storage, uint32_t level);
 
-        inline Z3ModelWrapper& recoverModel() { return iw_mdl; }
+        inline Z3ModelWrapper recoverModel() { return Z3ModelWrapper(solver.get_model()); }
         inline z3::context& getContext() { return ctx; }
 
         void printActiveNegation();
