@@ -11,9 +11,13 @@ namespace gpid {
     /** Class for handling abducible hypotheses. */
     template<class SolverT>
     class HypothesesSet {
+    public:
+        typedef typename SolverT::HypothesisT HypothesisT;
+        typedef typename SolverT::ModelT ModelT;
+    private:
         typedef uint32_t hyp_index_t ;
         typedef uint32_t level_t ;
-        std::map<hyp_index_t, typename SolverT::HypothesisT*> hp_mapping;
+        std::map<hyp_index_t, HypothesisT*> hp_mapping;
         std::map<hyp_index_t, std::list<hyp_index_t> > hp_links;
         std::map<level_t, std::list<hyp_index_t> > deactivation_map;
         std::map<level_t, std::list<hyp_index_t> > consequences_map;
@@ -28,7 +32,7 @@ namespace gpid {
     public:
         HypothesesSet(uint32_t size) : hp_active(size), current_level(0) {}
         /** Map an index of the set to a specific hypothesis. */
-        inline void mapHypothesis(uint32_t idx, typename SolverT::HypothesisT* hyp);
+        inline void mapHypothesis(uint32_t idx, HypothesisT* hyp);
         /** Specify incompatible hypotheses. */
         inline void mapLink(uint32_t idx, uint32_t tgt_idx);
 
@@ -40,15 +44,13 @@ namespace gpid {
 
         /** Recover for usage the next available hypothesis at a given level.
          * @warning Works as an iterator on the hypotheses at the given level. */
-        inline typename SolverT::HypothesisT& nextHypothesis(uint32_t level);
+        inline HypothesisT& nextHypothesis(uint32_t level);
 
         /** Internally selects hypotheses to skip according to a model. */
-        inline void modelCleanUp(const typename SolverT::ModelT& model, uint32_t level);
+        inline void modelCleanUp(const ModelT& model, uint32_t level);
         /** Skip available hypotheses if induced by the active model or stored implicates
          * @return false if and only if all possible hypotheses have been skipped. */
         inline bool skipSkippables(SolverT& storage, bool with_storage, level_t level);
-
-        typedef typename SolverT::HypothesisT HypothesisT;
     };
 
     template<class SolverT>
@@ -118,7 +120,7 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::mapHypothesis(uint32_t idx, typename SolverT::HypothesisT* hyp) {
+    inline void HypothesesSet<SolverT>::mapHypothesis(uint32_t idx, HypothesisT* hyp) {
         hp_mapping[idx] = hyp;
     }
     template<class SolverT>
@@ -148,8 +150,7 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::modelCleanUp
-    (const typename SolverT::ModelT& model, uint32_t level) {
+    inline void HypothesesSet<SolverT>::modelCleanUp(const ModelT& model, uint32_t level) {
         if (isEmpty(level)) return;
         for (uint32_t l_idx : hp_active) {
             if (hp_active.is_active(l_idx) && model.isSkippable(*hp_mapping[l_idx])) {
