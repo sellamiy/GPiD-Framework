@@ -6,6 +6,17 @@
 using namespace snlog;
 using namespace gpid;
 
+/* Additional utils */
+
+namespace gpid {
+    static inline bool aplc_ctf_isSizeCommand(std::string command) {
+        return command == "size";
+    }
+    static inline bool aplc_ctf_isAbduceCommand(std::string command) {
+        return command == "abduce" || command == "abducible";
+    }
+}
+
 /* Parser engine utils */
 
 AbducibleParser::AbducibleParser(std::string filename)
@@ -42,7 +53,7 @@ void AbducibleParser::handleError(std::string msg) {
 }
 
 void AbducibleParser::setOption(std::string oname, std::string ovalue) {
-    if (oname == "size") {
+    if (aplc_ctf_isSizeCommand(oname)) {
         abd_count = std::stoi(ovalue);
     } else {
         handleError("Unknown abducible parser option: " + oname);
@@ -72,7 +83,7 @@ void AbducibleParser::readHeader() {
         if (status != AbdParserStatus::ABDP_OPENED) break;
         AbdParserToken token = nextToken(AbdParserState::COMMAND_OUT);
         if (token.type == AbdParserTokenType::ABDC_COMMAND) {
-            if (token.content == "abducible") {
+            if (aplc_ctf_isAbduceCommand(token.content)) {
                 lastToken = token;
                 lastTokenUse = true;
                 break;
@@ -107,7 +118,7 @@ std::string AbducibleParser::nextAbducible() {
     } else {
         lastToken = nextToken(AbdParserState::COMMAND_OUT);
     }
-    if (lastToken.content == "abducible") {
+    if (aplc_ctf_isAbduceCommand(lastToken.content)) {
         lastToken = nextToken(AbdParserState::COMMAND_IN);
         if (lastToken.type == AbdParserTokenType::ABDC_EXPR) {
             result = lastToken.content;
