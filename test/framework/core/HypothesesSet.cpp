@@ -36,10 +36,11 @@ protected:
         for (int i = 0; i < HSET_SIZE; i++) new (&(hmemory[i])) HSTest_S(i);
     }
 
+    HSTest_SWrapper glob;
     HypothesesSet<HSTest_SWrapper> *set;
 
     virtual void SetUp() {
-        set = new HypothesesSet<HSTest_SWrapper>(HSET_SIZE);
+        set = new HypothesesSet<HSTest_SWrapper>(glob, HSET_SIZE);
         for (int i = 0; i < HSET_SIZE; i++) set->mapHypothesis(i, &(hmemory[i]));
     }
 

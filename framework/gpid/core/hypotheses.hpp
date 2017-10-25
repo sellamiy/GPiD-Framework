@@ -8,6 +8,15 @@
 
 namespace gpid {
 
+    template<class SolverT>
+    class HypothesisSkipper {
+        SolverT& solver;
+    public:
+        HypothesisSkipper(SolverT& s) : solver(s) {}
+
+        inline bool canBeSkipped(typename SolverT::HypothesisT& h);
+    };
+
     /** Class for handling abducible hypotheses. */
     template<class SolverT>
     class HypothesesSet {
@@ -15,6 +24,8 @@ namespace gpid {
         typedef typename SolverT::HypothesisT HypothesisT;
         typedef typename SolverT::ModelT ModelT;
     private:
+        HypothesisSkipper<SolverT> skipper;
+
         typedef uint32_t index_t;
         typedef uint32_t level_t;
         starray::SequentialActivableArray      hp_active;
@@ -35,7 +46,8 @@ namespace gpid {
 
         inline void selectCurrentHypothesis();
     public:
-        HypothesesSet(uint32_t size) : hp_active(size), clevel(1)
+        HypothesesSet(SolverT& solver, uint32_t size)
+            : skipper(solver), hp_active(size), clevel(1)
         { limit[1] = 0; pointer[1] = size; }
         /** Map an index of the set to a specific hypothesis. */
         inline void mapHypothesis(uint32_t idx, HypothesisT* hyp);
