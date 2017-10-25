@@ -43,20 +43,20 @@ void SequentialActivableArray::deactivate(uint32_t i)
     tab[i].status = aa_elt_st::INACTIVE;
 }
 
-uint32_t SequentialActivableArray::get_last()
-{
-    uint32_t pos = total_size;
+uint32_t SequentialActivableArray::get_downward(uint32_t src) {
+    uint32_t pos = src;
     do {
+        if (pos == 0) return src;
         pos--;
     } while(tab[pos].status == aa_elt_st::INACTIVE);
     return pos;
 }
 
-uint32_t SequentialActivableArray::get_first()
-{
-    uint32_t pos = 0;
+uint32_t SequentialActivableArray::get_upward(uint32_t src) {
+    uint32_t pos = src;
     while (tab[pos].status == aa_elt_st::INACTIVE) {
         pos++;
+        if (pos == total_size) return src;
     }
     return pos;
 }

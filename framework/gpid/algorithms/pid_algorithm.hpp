@@ -10,18 +10,15 @@ using namespace snlog;
 
 template<class SolverT>
 extern void gpid::DecompositionEngine<SolverT>::selectNextPID() {
-    if (!available_h.isEmpty(level)) {
-        // Recovering next possible hypothesis
-        bool has_next = available_h.skipSkippables(solver, options.store_implicates, level);
-        if (has_next) {
-            solver.removeHypotheses(level);
-            typename SolverT::HypothesisT& sel = available_h.nextHypothesis(level);
-            // Actual possible hypothesis
-            solver.addHypothesis(sel, level);
-            pushStackLevel();
-        } else {
-            popStackLevel();
-        }
+    // Recovering next possible hypothesis
+    // bool has_next = available_h.skipSkippables(solver, options.store_implicates, level);
+    bool has_next = available_h.nextHypothesis(level);
+    if (has_next) {
+        solver.removeHypotheses(level);
+        typename SolverT::HypothesisT& sel = available_h.getHypothesis();
+        // Actual possible hypothesis
+        solver.addHypothesis(sel, level);
+        pushStackLevel();
     } else {
         // Actually no more hypotheses
         popStackLevel();

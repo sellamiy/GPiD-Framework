@@ -49,21 +49,22 @@ protected:
 };
 
 TEST_F(HypothesesSetTest, InitNonEmpty) {
-    ASSERT_FALSE(set->isEmpty(0));
+    ASSERT_TRUE(set->nextHypothesis(1));
 }
 
 TEST_F(HypothesesSetTest, InitSize) {
     ASSERT_EQ(set->getSourceSize(), (uint32_t)HSET_SIZE);
-    ASSERT_EQ(set->getSize(), (uint32_t)HSET_SIZE);
+    // ASSERT_EQ(set->getSize(), (uint32_t)HSET_SIZE);
 }
 
 TEST_F(HypothesesSetTest, RecoverFirstHypothesis) {
     uint32_t ssz = HSET_SIZE;
-    HSTest_S& dat = set->nextHypothesis(0);
+    set->nextHypothesis(1);
+    HSTest_S& dat = set->getHypothesis();
     /* Set status */
     ASSERT_EQ(set->getSourceSize(), ssz);
-    ASSERT_EQ(set->getSize() + 1, ssz);
-    ASSERT_FALSE(set->isEmpty(0));
+    // ASSERT_EQ(set->getSize() + 1, ssz);
+    ASSERT_TRUE(set->nextHypothesis(1));
     /* Content status */
     ASSERT_EQ(dat.data + 1, HSET_SIZE);
 }
@@ -72,15 +73,41 @@ TEST_F(HypothesesSetTest, RecoverAllHypotheses) {
     uint32_t ssz = HSET_SIZE;
     int64_t inds = HSET_SIZE * (HSET_SIZE - 1) / 2;
     for (int i = HSET_SIZE; i > 0; i--) {
-        ASSERT_FALSE(set->isEmpty(0)) << " @loop:" << i;
-        HSTest_S& dat = set->nextHypothesis(0);
+        bool has_next = set->nextHypothesis(1);
+        ASSERT_TRUE(has_next) << " @loop:" << i;
+        HSTest_S& dat = set->getHypothesis();
         /* Set status */
         ASSERT_EQ(set->getSourceSize(), ssz) << " @loop:" << i;
-        ASSERT_EQ(set->getSize() + 1, (unsigned int)i) << " @loop:" << i;
+        // ASSERT_EQ(set->getSize() + 1, (unsigned int)i) << " @loop:" << i;
         /* Content status */
         ASSERT_EQ(dat.data + 1, i);
         inds -= dat.data;
     }
-    ASSERT_TRUE(set->isEmpty(0));
+    ASSERT_FALSE(set->nextHypothesis(1));
     ASSERT_EQ(inds, 0);
+}
+
+TEST_F(HypothesesSetTest, FirstAndSecondSublevel) {
+    bool has_next;
+    // First Hyp
+    has_next = set->nextHypothesis(1);
+    ASSERT_TRUE(has_next);
+    ASSERT_EQ(set->getHypothesis().data + 1, HSET_SIZE);
+    // No Hyp
+    has_next = set->nextHypothesis(2);
+    ASSERT_FALSE(has_next);
+    // Second Hyp
+    has_next = set->nextHypothesis(1);
+    ASSERT_TRUE(has_next);
+    ASSERT_EQ(set->getHypothesis().data + 2, HSET_SIZE);
+    // Has 1 Hyp
+    has_next = set->nextHypothesis(2);
+    ASSERT_TRUE(has_next);
+    ASSERT_EQ(set->getHypothesis().data + 1, HSET_SIZE);
+    has_next = set->nextHypothesis(2);
+    ASSERT_FALSE(has_next);
+    // Pursue
+    has_next = set->nextHypothesis(1);
+    ASSERT_TRUE(has_next);
+    ASSERT_EQ(set->getHypothesis().data + 3, HSET_SIZE);
 }

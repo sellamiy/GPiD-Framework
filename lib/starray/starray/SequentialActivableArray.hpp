@@ -57,8 +57,11 @@ namespace starray {
         inline uint32_t get_activated_size() { return active_size; }
         inline uint32_t get_maximal_size()   { return total_size ; }
 
-        uint32_t get_last();
-        uint32_t get_first();
+        uint32_t get_downward(uint32_t src);
+        uint32_t get_upward(uint32_t src);
+
+        inline uint32_t get_last()  { return get_downward(total_size); }
+        inline uint32_t get_first() { return get_upward(0); }
     };
 
     template<typename Type> inline SequentialActivableArray::SeqAAIterator<Type>&

@@ -15,36 +15,40 @@ namespace gpid {
         typedef typename SolverT::HypothesisT HypothesisT;
         typedef typename SolverT::ModelT ModelT;
     private:
-        typedef uint32_t hyp_index_t ;
-        typedef uint32_t level_t ;
-        std::map<hyp_index_t, HypothesisT*> hp_mapping;
-        std::map<hyp_index_t, std::list<hyp_index_t> > hp_links;
-        std::map<level_t, std::list<hyp_index_t> > deactivation_map;
-        std::map<level_t, std::list<hyp_index_t> > consequences_map;
-        std::map<level_t, std::map<hyp_index_t, bool> > modelquences_map;
-        starray::SequentialActivableArray hp_active;
-        level_t current_level;
+        typedef uint32_t index_t;
+        typedef uint32_t level_t;
+        starray::SequentialActivableArray      hp_active;
+        std::map<index_t, HypothesisT*>        hp_mapping;
+        std::map<index_t, std::list<index_t> > hp_links;
 
-        inline void keepLevel();
+        std::map<level_t, std::list<index_t> > selection_map;
+
+        std::map<level_t, index_t> limit;
+        std::map<level_t, index_t> pointer;
+        level_t clevel;
+
         inline void increaseLevel(level_t target);
         inline void decreaseLevel(level_t target);
         inline void accessLevel(level_t level);
+
+        inline void unselectLevel(level_t level);
+
+        inline void selectCurrentHypothesis();
     public:
-        HypothesesSet(uint32_t size) : hp_active(size), current_level(0) {}
+        HypothesesSet(uint32_t size) : hp_active(size), clevel(1)
+        { limit[1] = 0; pointer[1] = size; }
         /** Map an index of the set to a specific hypothesis. */
         inline void mapHypothesis(uint32_t idx, HypothesisT* hyp);
         /** Specify incompatible hypotheses. */
         inline void mapLink(uint32_t idx, uint32_t tgt_idx);
 
-        /** Current size of the set. */
-        inline uint32_t getSize();
         /** Original size of the set. */
         inline uint32_t getSourceSize();
-        inline bool isEmpty(uint32_t level);
 
+        inline bool nextHypothesis(uint32_t level);
         /** Recover for usage the next available hypothesis at a given level.
          * @warning Works as an iterator on the hypotheses at the given level. */
-        inline HypothesisT& nextHypothesis(uint32_t level);
+        inline HypothesisT& getHypothesis();
 
         /** Internally selects hypotheses to skip according to a model. */
         inline void modelCleanUp(const ModelT& model, uint32_t level);
@@ -53,67 +57,6 @@ namespace gpid {
         inline bool skipSkippables(SolverT& storage, bool with_storage, level_t level);
     };
 
-    template<class SolverT>
-    inline void HypothesesSet<SolverT>::keepLevel() {
-        for (hyp_index_t i : consequences_map[current_level])
-            if (modelquences_map[current_level][i])
-                hp_active.pause(i);
-            else
-                hp_active.activate(i);
-        consequences_map[current_level].clear();
-    }
-
-    template<class SolverT>
-    inline void HypothesesSet<SolverT>::increaseLevel(uint32_t target) {
-        while (current_level < target) {
-            ++current_level;
-            deactivation_map[current_level].clear();
-            consequences_map[current_level].clear();
-            modelquences_map[current_level].clear();
-        }
-    }
-
-    template<class SolverT>
-    inline void HypothesesSet<SolverT>::decreaseLevel(uint32_t target) {
-        while (current_level > target) {
-            for (hyp_index_t i : deactivation_map[current_level])
-                hp_active.activate(i);
-            for (hyp_index_t i : consequences_map[current_level])
-                hp_active.activate(i);
-            --current_level;
-        }
-        keepLevel();
-    }
-
-    template<class SolverT>
-    inline void HypothesesSet<SolverT>::accessLevel(uint32_t level) {
-        if (level == current_level) keepLevel();
-        else if (level > current_level) increaseLevel(level);
-        else decreaseLevel(level);
-    }
-
-    template<class SolverT>
-    inline bool HypothesesSet<SolverT>::skipSkippables(SolverT& solver, bool with_storage, level_t level) {
-        accessLevel(level);
-        for (int index : hp_active) {
-            if (hp_active.is_active(index)) {
-                if (solver.currentlySubsumed(*hp_mapping[index], with_storage, level)) {
-                    hp_active.deactivate(index);
-                    deactivation_map[current_level].push_back(index);
-                }
-                else return true;
-            } else if (modelquences_map[current_level][index]) {
-                hp_active.activate(index);
-                modelquences_map[current_level][index] = false;
-            }
-        }
-        return false;
-    }
-
-    template<class SolverT>
-    inline uint32_t HypothesesSet<SolverT>::getSize() {
-        return hp_active.get_activated_size();
-    }
     template<class SolverT>
     inline uint32_t HypothesesSet<SolverT>::getSourceSize() {
         return hp_active.get_maximal_size();
@@ -129,36 +72,81 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline bool HypothesesSet<SolverT>::isEmpty(uint32_t level) {
-        if (level != current_level) accessLevel(level);
-        return hp_active.get_activated_size() == 0;
+    inline void HypothesesSet<SolverT>::accessLevel(uint32_t level) {
+        if (level > clevel) increaseLevel(level);
+        else                decreaseLevel(level);
     }
 
     template<class SolverT>
-    inline typename SolverT::HypothesisT& HypothesesSet<SolverT>::nextHypothesis(uint32_t level) {
-        accessLevel(level);
-        int index = hp_active.get_last();
-        hp_active.deactivate(index);
-        deactivation_map[current_level].push_back(index);
-        for (int linked_index : hp_links[index]) {
-            if (!hp_active.is_inactive(linked_index)) {
-                hp_active.deactivate(linked_index);
-                consequences_map[current_level].push_back(linked_index);
-            }
+    inline void HypothesesSet<SolverT>::increaseLevel(uint32_t target) {
+        while (clevel < target) {
+            /* TODO: Fixme.
+               The hack +1 to is necessary to access the first active when asking
+               to get downward. However, this is tragically unsafe.
+               Which is why we add a min to unsure we do not make oob accesses later.
+            */
+#define MIN(a,b) (a) < (b) ? (a) : (b)
+            pointer[clevel + 1] = MIN(hp_active.get_last() + 1, hp_active.get_maximal_size());
+            limit[clevel + 1] = pointer[clevel];
+            ++clevel;
         }
-        return *hp_mapping[index];
+    }
+
+    template<class SolverT>
+    inline void HypothesesSet<SolverT>::decreaseLevel(uint32_t target) {
+        while (clevel > target) {
+            unselectLevel(clevel);
+            --clevel;
+        }
+    }
+
+    template<class SolverT>
+    inline void HypothesesSet<SolverT>::selectCurrentHypothesis() {
+        index_t selected = pointer[clevel];
+        hp_active.deactivate(selected);
+        selection_map[clevel].push_back(selected);
+        for (index_t linked : hp_links[selected]) {
+            hp_active.deactivate(linked);
+            selection_map[clevel].push_back(linked);
+        }
+    }
+
+    template<class SolverT>
+    inline void HypothesesSet<SolverT>::unselectLevel(uint32_t level) {
+        for (index_t skipped : selection_map[level]) {
+            hp_active.activate(skipped);
+        }
+        selection_map[level].clear();
+    }
+
+    template<class SolverT>
+    inline bool HypothesesSet<SolverT>::nextHypothesis(uint32_t level) {
+        accessLevel(level);
+        unselectLevel(clevel);
+        index_t next = hp_active.get_downward(pointer[clevel]);
+        if (next != pointer[clevel]) {
+            pointer[clevel] = next;
+            return pointer[clevel] >= limit[clevel];
+        } else {
+            return false;
+        }
+    }
+
+    template<class SolverT>
+    inline typename SolverT::HypothesisT& HypothesesSet<SolverT>::getHypothesis() {
+        selectCurrentHypothesis();
+        return *hp_mapping[pointer[clevel]];
+    }
+
+    template<class SolverT>
+    inline bool HypothesesSet<SolverT>::skipSkippables(SolverT& solver, bool with_storage, level_t level) {
+        snlog::l_warn("Not reimplemented"); // TODO : REDO
+        return true;
     }
 
     template<class SolverT>
     inline void HypothesesSet<SolverT>::modelCleanUp(const ModelT& model, uint32_t level) {
-        if (isEmpty(level)) return;
-        for (uint32_t l_idx : hp_active) {
-            if (hp_active.is_active(l_idx) && model.isSkippable(*hp_mapping[l_idx])) {
-                hp_active.pause(l_idx);
-                deactivation_map[current_level].push_back(l_idx);
-                modelquences_map[current_level][l_idx] = true;
-            }
-        }
+        snlog::l_warn("Not reimplemented"); // TODO : REDO
     }
 
 };
