@@ -64,9 +64,6 @@ namespace gpid {
 
         /** Internally selects hypotheses to skip according to a model. */
         inline void modelCleanUp(const ModelT& model, uint32_t level);
-        /** Skip available hypotheses if induced by the active model or stored implicates
-         * @return false if and only if all possible hypotheses have been skipped. */
-        inline bool skipSkippables(SolverT& storage, bool with_storage, level_t level);
     };
 
     template<class SolverT>
@@ -132,28 +129,29 @@ namespace gpid {
     }
 
     template<class SolverT>
+    inline bool HypothesisSkipper<SolverT>::canBeSkipped(typename SolverT::HypothesisT& h) {
+        return false;
+    }
+
+    template<class SolverT>
     inline bool HypothesesSet<SolverT>::nextHypothesis(uint32_t level) {
         accessLevel(level);
         unselectLevel(clevel);
-        index_t next = hp_active.get_downward(pointer[clevel]);
-        if (next != pointer[clevel]) {
-            pointer[clevel] = next;
-            return pointer[clevel] >= limit[clevel];
-        } else {
-            return false;
-        }
+        do {
+            index_t next = hp_active.get_downward(pointer[clevel]);
+            if (next != pointer[clevel]) {
+                pointer[clevel] = next;
+            } else {
+                return false;
+            }
+        } while (skipper.canBeSkipped(*hp_mapping[pointer[clevel]]));
+        return pointer[clevel] >= limit[clevel];
     }
 
     template<class SolverT>
     inline typename SolverT::HypothesisT& HypothesesSet<SolverT>::getHypothesis() {
         selectCurrentHypothesis();
         return *hp_mapping[pointer[clevel]];
-    }
-
-    template<class SolverT>
-    inline bool HypothesesSet<SolverT>::skipSkippables(SolverT& solver, bool with_storage, level_t level) {
-        snlog::l_warn("Not reimplemented"); // TODO : REDO
-        return true;
     }
 
     template<class SolverT>
