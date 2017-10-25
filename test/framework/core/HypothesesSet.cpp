@@ -22,9 +22,16 @@ struct HSTest_SWrapper {
     typedef HSTest_S HypothesisT;
     typedef HSTest_MW ModelT;
     typedef HSTest_MW StorageT;
+
+    static inline bool currentlySubsumed(HSTest_S&, bool, uint32_t)
+    { return false; }
 };
 
 static HSTest_S hmemory[HSET_SIZE];
+
+static CoreOptions HSTest_DefaultOptions;
+
+static SkipperController HSTest_SkCtrl(HSTest_DefaultOptions);
 
 /* These tests assumes the hypothesis mapping works as expected. */
 /* This hypothesis mapping should be tested elsewhere */
@@ -40,7 +47,7 @@ protected:
     HypothesesSet<HSTest_SWrapper> *set;
 
     virtual void SetUp() {
-        set = new HypothesesSet<HSTest_SWrapper>(glob, HSET_SIZE);
+        set = new HypothesesSet<HSTest_SWrapper>(glob, HSTest_SkCtrl, HSET_SIZE);
         for (int i = 0; i < HSET_SIZE; i++) set->mapHypothesis(i, &(hmemory[i]));
     }
 

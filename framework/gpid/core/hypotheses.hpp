@@ -5,16 +5,19 @@
 #include <list>
 #include <starray/starray.hpp>
 #include <snlog/snlog.hpp>
+#include <gpid/util/skipper_controller.hpp>
 
 namespace gpid {
 
     template<class SolverT>
     class HypothesisSkipper {
         SolverT& solver;
+        SkipperController& actives;
     public:
-        HypothesisSkipper(SolverT& s) : solver(s) {}
+        HypothesisSkipper(SolverT& s, SkipperController& ctrler)
+            : solver(s), actives(ctrler) {}
 
-        inline bool canBeSkipped(typename SolverT::HypothesisT& h);
+        inline bool canBeSkipped(typename SolverT::HypothesisT& h, uint32_t level);
     };
 
     /** Class for handling abducible hypotheses. */
@@ -46,8 +49,8 @@ namespace gpid {
 
         inline void selectCurrentHypothesis();
     public:
-        HypothesesSet(SolverT& solver, uint32_t size)
-            : skipper(solver), hp_active(size), clevel(1)
+        HypothesesSet(SolverT& solver, SkipperController& ctrler, uint32_t size)
+            : skipper(solver, ctrler), hp_active(size), clevel(1)
         { limit[1] = 0; pointer[1] = size; }
         /** Map an index of the set to a specific hypothesis. */
         inline void mapHypothesis(uint32_t idx, HypothesisT* hyp);
@@ -129,8 +132,8 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline bool HypothesisSkipper<SolverT>::canBeSkipped(typename SolverT::HypothesisT& h) {
-        return false;
+    inline bool HypothesisSkipper<SolverT>::canBeSkipped(typename SolverT::HypothesisT& h, uint32_t level) {
+        return solver.currentlySubsumed(h, actives.storage, level);
     }
 
     template<class SolverT>
@@ -144,7 +147,7 @@ namespace gpid {
             } else {
                 return false;
             }
-        } while (skipper.canBeSkipped(*hp_mapping[pointer[clevel]]));
+        } while (skipper.canBeSkipped(*hp_mapping[pointer[clevel]], clevel));
         return pointer[clevel] >= limit[clevel];
     }
 

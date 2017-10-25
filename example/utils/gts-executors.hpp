@@ -13,7 +13,8 @@ static inline void generate_true_solver(OptionStorage& opts) {
     TrueSolver S;
     TrueSolver::ProblemT P;
     l_message("generate decompostition structures...");
-    HypothesesSet<TrueSolver> A(S, 1);
+    SkipperController SkCtrl(opts);
+    HypothesesSet<TrueSolver> A(S, SkCtrl, 1);
     DecompositionEngine<TrueSolver> E(opts.engine, S, P, A);
     l_message("generate implicates...");
     E.generateImplicates();
@@ -38,7 +39,8 @@ static inline void generate_minisat(OptionStorage& opts) {
     gzclose(in);
 
     l_message("generate abducibles...");
-    MinisatHypothesesSet A(S, countAbducibles(opts.abducibles, P));
+    SkipperController SkCtrl(opts);
+    MinisatHypothesesSet A(S, SkCtrl, countAbducibles(opts.abducibles, P));
     generateAbducibles(opts.abducibles, A, P.getVarCpt()); // TODO: Handle errors
 
     l_message("create decomposition engine...");
@@ -66,7 +68,8 @@ static inline void generate_cvc4(OptionStorage& opts) {
     parse_Cvc(opts.input, S.getExprManager(), P); // TODO: Handle errors
 
     l_message("generate abducibles...");
-    CVC4HypothesesSet A(S, countAbducibles(opts.abducibles, P));
+    SkipperController SkCtrl(opts);
+    CVC4HypothesesSet A(S, SkCtrl, countAbducibles(opts.abducibles, P));
     generateAbducibles(opts.abducibles, S.getExprManager(), P.getDeclarations(), A); // TODO: Handle errors
 
     l_message("create decomposition engine...");
@@ -94,7 +97,8 @@ static inline void generate_z3(OptionStorage& opts) {
     parse_Z(opts.input, P); // TODO: Handle errors
 
     l_message("generate abducibles...");
-    Z3HypothesesSet A(S, countAbducibles(opts.abducibles, P));
+    SkipperController SkCtrl(opts);
+    Z3HypothesesSet A(S, SkCtrl, countAbducibles(opts.abducibles, P));
     generateAbducibles(opts.abducibles, S.getContext(), P.getDeclarations(), A); // TODO: Handle errors
 
     l_message("create decomposition engine...");
