@@ -36,6 +36,7 @@ namespace gpid {
         std::map<index_t, std::list<index_t> > hp_links;
 
         std::map<level_t, std::list<index_t> > selection_map;
+        std::map<level_t, bool>                limit_predefs;
 
         std::map<level_t, index_t> limit;
         std::map<level_t, index_t> pointer;
@@ -46,6 +47,7 @@ namespace gpid {
         inline void accessLevel(level_t level);
 
         inline void unselectLevel(level_t level);
+        inline void predefineLimit(index_t idx, level_t level);
 
         inline void selectCurrentHypothesis();
     public:
@@ -99,7 +101,10 @@ namespace gpid {
             */
 #define MIN(a,b) (a) < (b) ? (a) : (b)
             pointer[clevel + 1] = MIN(hp_active.get_last() + 1, hp_active.get_maximal_size());
-            limit[clevel + 1] = pointer[clevel];
+            if (!limit_predefs[clevel + 1]) {
+                limit[clevel + 1] = pointer[clevel];
+            }
+            limit_predefs[clevel + 1] = false;
             ++clevel;
         }
     }
@@ -158,8 +163,24 @@ namespace gpid {
     }
 
     template<class SolverT>
+    inline void HypothesesSet<SolverT>::predefineLimit(index_t idx, level_t level) {
+        limit[level] = idx;
+        limit_predefs[level] = true;
+    }
+
+    template<class SolverT>
     inline void HypothesesSet<SolverT>::modelCleanUp(const ModelT& model, uint32_t level) {
-        snlog::l_warn("Not reimplemented"); // TODO : REDO
+        accessLevel(level);
+        for (index_t idx : hp_active) {
+            if (!hp_active.is_active(idx)) continue;
+            if (model.isSkippable(*hp_mapping[idx])) {
+                hp_active.deactivate(idx);
+                selection_map[clevel-1].push_back(idx);
+                if (idx < pointer[clevel]) {
+                    predefineLimit(idx, clevel + 1);
+                }
+            }
+        }
     }
 
 };
