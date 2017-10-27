@@ -2,7 +2,6 @@
 #define _UGLY_SET_OF_SETS_HPP_
 
 #include <set>
-#include <snlog/snlog.hpp>
 
 namespace ugly {
 
