@@ -55,6 +55,9 @@ namespace snlog {
     template<typename printable>
     inline void l_fatal(const printable& msg)
     { std::cerr << s_bfg_red << "FATAL: "    << s_nfg_red << msg << s_reset << std::endl; }
+    template<typename printable>
+    inline void l_notif(const printable& msg)
+    { std::cerr << s_bfg_cya << "-- " << msg << s_reset        << std::endl; }
     template<typename printable_a, typename printable_b>
     inline void l_notif(const printable_a& nmg, const printable_b&msg)
     { std::cerr << s_bfg_gre << "-- " << nmg << ": "  << s_reset << msg << std::endl; }
@@ -71,6 +74,8 @@ namespace snlog {
     inline void l_internal(const printable& msg) { std::cerr << "INTERNAL: " << msg << std::endl; }
     template<typename printable>
     inline void l_fatal(const printable& msg)    { std::cerr << "FATAL: "    << msg << std::endl; }
+    template<typename printable>
+    inline void l_notif(const printable& msg)    { std::cerr << "-- "        << msg << std::endl; }
     template<typename printable_a, typename printable_b>
     inline void l_notif(const printable_a& nmg, const printable_b&msg)
     { std::cerr << "-- " << nmg << ": " << msg << std::endl; }
