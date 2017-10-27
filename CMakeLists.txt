@@ -119,6 +119,7 @@ set(FRAMEWORK_CONF_SOURCE_DIR "${CMAKE_BINARY_DIR}/framework-configured")
 # ========== Files Configuration ==========
 configure_file(lib/snlog/snlog/snlog.hpp.in ${LOCAL_LIB_HEADERS_DIR}/snlog/snlog.hpp)
 configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
+configure_file(lib/dot/dot/dotgraph.hpp.in ${LOCAL_LIB_HEADERS_DIR}/dot/dotgraph.hpp)
 
 configure_file(framework/gpid/include/config.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/config.hpp)
 configure_file(framework/gpid/include/gpid.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/gpid.hpp)
@@ -179,12 +180,14 @@ include_directories("${LOCAL_LIB_HEADERS_DIR}")
 # ========== Headers ==========
 include_directories("lib/starray")
 include_directories("lib/ugly")
+include_directories("lib/dot")
 
 include_directories("${FRAMEWORK_CONF_HEADERS_DIR}")
 include_directories("framework")
 
 # ========== Source Files ==========
 file(GLOB LIBSTARRAY_SOURCES "lib/starray/src/*.cpp")
+file(GLOB LIBDOT_SOURCES "lib/dot/src/*.cpp")
 
 file(GLOB LIBGPID_SOURCES "framework/src/*/*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/*.cpp")
 
@@ -218,9 +221,10 @@ endif()
 
 # ========== Libraries Targets ==========
 add_library(starray STATIC ${LIBSTARRAY_SOURCES})
+add_library(dot STATIC ${LIBDOT_SOURCES})
 
 add_library(gpid STATIC ${LIBGPID_SOURCES})
-target_link_libraries(gpid starray)
+target_link_libraries(gpid starray dot)
 target_link_libraries(gpid ${ZLIB_LIBRARY})
 if(MINISAT_SOLVER_INTERFACE)
   target_link_libraries(gpid minisat-lib-shared)

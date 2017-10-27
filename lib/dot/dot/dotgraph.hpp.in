@@ -1,0 +1,7 @@
+#ifndef _DOT_GRAPHER_LIBRARY_HEADER_
+#define _DOT_GRAPHER_LIBRARY_HEADER_
+
+#include <dot/Graph.hpp>
+#include <dot/TypesLibrary.hpp>
+
+#endif
