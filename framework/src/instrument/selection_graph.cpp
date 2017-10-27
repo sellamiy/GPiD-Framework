@@ -25,7 +25,9 @@ void instrument::SelectionGrapher::backtrackSelection() {
 
 void instrument::SelectionGrapher::initialize() {
     graph.clear();
+    // TODO: Clear Stack
     temp_node = graph.createNode("init", dot::types::ClassicDiamondNode);
+    nstack.push(temp_node);
 }
 
 void instrument::SelectionGrapher::terminate() {
