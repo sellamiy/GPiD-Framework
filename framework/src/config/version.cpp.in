@@ -41,6 +41,9 @@ extern const std::string gpid::generate_version_message()
 	+ "configured @" + project_timestamp_configure
 	+ "+" + project_mode
         + list_configured_generators("+")
+#ifdef GPID_INSTRUMENTATION
+        + "+instrumentation"
+#endif
 	+ "\n"
 	+ "built @" + project_timestamp_build
 	;

@@ -19,6 +19,12 @@ int main(int argc, char** argv) {
 	return EXIT_SUCCESS;
     }
 
+#ifdef GPID_INSTRUMENTATION
+    l_message("start instrumentation engine...");
+    instrument::InstrumentController ictrl(opts.instrument);
+    instrument::initialize(opts.instrument, ictrl);
+#endif
+
     l_message("start implicate generator...");
 
     switch (opts.generator) {

@@ -17,6 +17,8 @@ option(Z3_SOLVER_INTERFACE "Define a smt solver class based on z3" ON)
 
 option(MERGE_MINISAT_WRAPPERS "Merge Minisat wrappers into its original namespace" ON)
 
+option(GPID_INSTRUMENTATION "Activate gpid instrumentation toolset" OFF)
+
 # ========== Cmake Project Global Configuration ==========
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/coverage/")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/git/")
@@ -215,6 +217,13 @@ endif()
 if(NOT Z3_SOLVER_INTERFACE)
   file(GLOB Z3_SOURCES "framework/src/*/z3*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/*/z3*.cpp")
   foreach(filename ${Z3_SOURCES})
+    list(REMOVE_ITEM LIBGPID_SOURCES ${filename})
+  endforeach()
+endif()
+
+if(NOT GPID_INSTRUMENTATION)
+  file(GLOB INST_SOURCES "framework/src/instrument/*.cpp" "${FRAMEWORK_CONF_SOURCE_DIR}/instrument/*.cpp")
+  foreach(filename ${INST_SOURCES})
     list(REMOVE_ITEM LIBGPID_SOURCES ${filename})
   endforeach()
 endif()

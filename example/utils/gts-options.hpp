@@ -104,6 +104,11 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 	    ("dont-print-implicates", "Do not print generated implicates")
 	    ;
 
+        parser.add_options("Instrument")
+            ("generate-selection-graph", "Generate a selection graph via instrumentation",
+             cxxopts::value<std::string>())
+            ;
+
 	parser.parse(argc, argv);
 
         OptionStatus str = detectConflicts(opts, parser);
@@ -121,7 +126,7 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
     try {
 
 	if (parser.count("help")) {
-	    snlog::l_message(parser.help({"", "Generator", "Input", "Output", "Engine"}));
+	    snlog::l_message(parser.help({"", "Generator", "Input", "Output", "Engine", "Instrument"}));
 	    return OptionStatus::ENDED;
 	}
 	if (parser.count("version")) {
@@ -184,6 +189,11 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
             opts.abducibles.input_generator = parser["autogen-abducibles"].as<std::string>();
         }
 
+        if (parser.count("generate-selection-graph")) {
+            opts.instrument.selection_graph = true;
+            opts.instrument.selection_graph_file = parser["generate-selection-graph"].as<std::string>();
+        }
+
 	return OptionStatus::OK;
 
     } catch (const cxxopts::OptionException& e) {
@@ -197,6 +207,7 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& parser) {
     try {
 
+        /* Incompatible options */
         const std::vector<std::vector<std::string>> p_illeg
         {
             { "load-abducibles", "autogen-abducibles" },
@@ -217,6 +228,18 @@ static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& par
                 return OptionStatus::FAILURE;
             }
         }
+
+        /* Inactive options */
+#ifndef GPID_INSTRUMENTATION
+        const std::vector<std::string> instr_opts
+        { "generate-selection-graph" };
+        for (uint32_t pc = 0; pc < instr_opts.size(); pc++) {
+            if (parser.count(instr_opts[pc])) {
+                snlog::l_fatal("Option uses instrumentation but instrumentation is not configured:");
+                snlog::l_info("   @option: " + instr_opts[pc]);
+            }
+        }
+#endif
 
         return OptionStatus::OK;
 

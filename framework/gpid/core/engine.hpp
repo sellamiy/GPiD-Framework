@@ -78,6 +78,7 @@ inline void gpid::DecompositionEngine<SolverT>::resetEngine() {
     solver.start();
     level = 1;
     sdir = IStackDirection::STACK_PUSH;
+    instrument::analyze(NULL, instrument::analyze_type::reset);
 }
 
 template<class SolverT>
@@ -93,6 +94,7 @@ template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::pushStackLevel() {
     level++;
     sdir = IStackDirection::STACK_PUSH;
+    instrument::analyze(&level, instrument::analyze_type::stack_push);
 }
 
 template<class SolverT>
@@ -100,6 +102,7 @@ inline void gpid::DecompositionEngine<SolverT>::popStackLevel() {
     solver.removeHypotheses(level);
     level--;
     sdir = IStackDirection::STACK_POP;
+    instrument::analyze(&level, instrument::analyze_type::stack_pop);
 }
 
 template<class SolverT>
@@ -109,6 +112,7 @@ inline void gpid::DecompositionEngine<SolverT>
     case PID: generatePID(); break;
     default: snlog::l_internal("Trying to generate implicates using unknown algorithm!");
     }
+    instrument::analyze(NULL, instrument::analyze_type::end);
 }
 
 #endif

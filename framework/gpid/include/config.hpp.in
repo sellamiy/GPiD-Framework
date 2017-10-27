@@ -10,4 +10,7 @@
 /* Minisat additional components options */
 #cmakedefine MERGE_MINISAT_WRAPPERS
 
+/* Internal components */
+#cmakedefine GPID_INSTRUMENTATION
+
 #endif

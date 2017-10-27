@@ -28,4 +28,8 @@
 
 #include <gpid/util/parsers.hpp>
 
+#ifdef GPID_INSTRUMENTATION
+#include <gpid/instrument/instrument.hpp>
+#endif
+
 #endif

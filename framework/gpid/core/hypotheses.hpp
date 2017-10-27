@@ -7,6 +7,8 @@
 #include <snlog/snlog.hpp>
 #include <gpid/util/skipper_controller.hpp>
 
+#include <gpid/instrument/instrument.hpp>
+
 namespace gpid {
 
     template<class SolverT>
@@ -152,6 +154,7 @@ namespace gpid {
             } else {
                 return false;
             }
+            instrument::analyze(&next, instrument::analyze_type::pre_select);
         } while (skipper.canBeSkipped(*hp_mapping[pointer[clevel]], clevel));
         return pointer[clevel] >= limit[clevel];
     }
@@ -179,6 +182,7 @@ namespace gpid {
                 if (idx < pointer[clevel]) {
                     predefineLimit(idx, clevel + 1);
                 }
+                instrument::analyze(&idx, instrument::analyze_type::model_skip);
             }
         }
     }
