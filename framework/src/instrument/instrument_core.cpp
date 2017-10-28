@@ -20,7 +20,6 @@ namespace instrument {
     }
 
     /* Wrapping definitions */
-    static inline void nope(void*) {  }
 
     static SelectionGrapher* selectionGrapher;
     static inline void selectionGrapher_stack_push(void*)
