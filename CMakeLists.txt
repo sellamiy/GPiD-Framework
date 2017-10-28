@@ -18,10 +18,12 @@ option(Z3_SOLVER_INTERFACE "Define a smt solver class based on z3" ON)
 option(MERGE_MINISAT_WRAPPERS "Merge Minisat wrappers into its original namespace" ON)
 
 option(GPID_INSTRUMENTATION "Activate gpid instrumentation toolset" OFF)
+option(DOT_AUTOCOMPILATION "Configure Dot graphs autocompilation" ON)
 
 # ========== Cmake Project Global Configuration ==========
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/coverage/")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/git/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/dot/")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/cvc4/")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -59,6 +61,10 @@ find_package(Z3)
 if (NOT Z3_FOUND)
   message(WARNING "Forcefully deactivates Z3 interface as the Solver was not found")
   set(Z3_SOLVER_INTERFACE OFF CACHE BOOL "Define a smt solver class based on z3" FORCE)
+endif()
+
+if (DOT_AUTOCOMPILATION)
+  find_package(Dot REQUIRED)
 endif()
 
 # ========== Logging Global Configuration Infos ==========
@@ -122,6 +128,7 @@ set(FRAMEWORK_CONF_SOURCE_DIR "${CMAKE_BINARY_DIR}/framework-configured")
 configure_file(lib/snlog/snlog/snlog.hpp.in ${LOCAL_LIB_HEADERS_DIR}/snlog/snlog.hpp)
 configure_file(lib/starray/starray/starray.hpp.in ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)
 configure_file(lib/dot/dot/dotgraph.hpp.in ${LOCAL_LIB_HEADERS_DIR}/dot/dotgraph.hpp)
+configure_file(lib/dot/dot/dotcommand.hpp.in ${LOCAL_LIB_HEADERS_DIR}/dot/dotcommand.hpp)
 
 configure_file(framework/gpid/include/config.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/config.hpp)
 configure_file(framework/gpid/include/gpid.hpp.in ${FRAMEWORK_CONF_HEADERS_DIR}/gpid/gpid.hpp)

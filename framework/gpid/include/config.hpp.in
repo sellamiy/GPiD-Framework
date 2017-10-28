@@ -11,6 +11,7 @@
 #cmakedefine MERGE_MINISAT_WRAPPERS
 
 /* Internal components */
+#cmakedefine DOT_AUTOCOMPILATION
 #cmakedefine GPID_INSTRUMENTATION
 
 #endif
