@@ -20,7 +20,6 @@ int main(int argc, char** argv) {
     }
 
 #ifdef GPID_INSTRUMENTATION
-    l_message("start instrumentation engine...");
     instrument::InstrumentController ictrl(opts.instrument);
     instrument::initialize(opts.instrument, ictrl);
 #endif
@@ -44,6 +43,10 @@ int main(int argc, char** argv) {
         l_internal("Got start access to unknown generator");
         return EXIT_FAILURE;
     }
+
+#ifdef GPID_INSTRUMENTATION
+    instrument::finalize(opts.instrument, ictrl);
+#endif
 
     l_message("complete.");
     return EXIT_SUCCESS;

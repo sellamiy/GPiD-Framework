@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cxxopts/cxxopts.hpp>
+#include <dot/dotcommand.hpp>
 #include <gpid/gpid.hpp>
 
 /* ===== Structures ===== */
@@ -102,6 +103,9 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 	parser.add_options("Output")
 	    ("p,print-implicates", "Print generated implicates")
 	    ("dont-print-implicates", "Do not print generated implicates")
+#ifdef DOT_FOUND
+            ("dot-autocompile", "Autocompile dot graphs")
+#endif
 	    ;
 
         parser.add_options("Instrument")
@@ -193,6 +197,12 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
             opts.instrument.selection_graph = true;
             opts.instrument.selection_graph_file = parser["generate-selection-graph"].as<std::string>();
         }
+
+#ifdef DOT_FOUND
+        if (parser.count("dot-autocompile")) {
+            opts.instrument.autocompile_graphs = true;
+        }
+#endif
 
 	return OptionStatus::OK;
 

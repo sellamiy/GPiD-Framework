@@ -3,12 +3,22 @@
 #include <map>
 #include <list>
 #include <snlog/snlog.hpp>
+#include <dot/dotcommand.hpp>
 #include <gpid/instrument/instrument.hpp>
-
 #include <gpid/instrument/selection_graph.hpp>
 
 namespace gpid {
 namespace instrument {
+
+    /* Finalization handlers */
+    typedef void (*finalizer) (InstrumentOptions&, InstrumentController&);
+    std::list<finalizer> finalizers;
+    extern void finalize(InstrumentOptions& opts, InstrumentController& ctrler) {
+        snlog::l_notif("finalize instruments...");
+        for (void (*finalizer)(InstrumentOptions&, InstrumentController&) : finalizers) {
+            finalizer(opts, ctrler);
+        }
+    }
 
     /* Analyses core handler */
     typedef void (*analyzer) (void*);
@@ -35,8 +45,13 @@ namespace instrument {
     static inline void selectionGrapher_end(void*)
     { selectionGrapher->terminate(); }
 
+    static inline void selectionGrapher_finalizer
+    (InstrumentOptions& opts, InstrumentController&)
+    { if (opts.autocompile_graphs) dot::system::autocompile(opts.selection_graph_file, opts.selection_graph_file + ".svg"); }
+
     /* Instrumentation initializer */
     extern void initialize(InstrumentOptions& opts, InstrumentController& ctrler) {
+        snlog::l_notif("initialize instruments...");
         if (opts.selection_graph) {
             selectionGrapher = new SelectionGrapher(ctrler.getSelectionGraphStream());
             analyzers[stack_push].push_back(&selectionGrapher_stack_push);
@@ -45,6 +60,7 @@ namespace instrument {
             analyzers[model_skip].push_back(&selectionGrapher_model_skip);
             analyzers[reset].push_back(&selectionGrapher_reset);
             analyzers[end].push_back(&selectionGrapher_end);
+            finalizers.push_back(&selectionGrapher_finalizer);
         }
     }
 
