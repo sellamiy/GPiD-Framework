@@ -4,16 +4,13 @@
 #include <dot/dotcommand.hpp>
 
 #ifdef DOT_FOUND
-extern void dot::system::autocompile(Graph& g, std::string filename) {
-    std::ofstream temporary(filename + ".dot");
-    temporary << g;
-    temporary.close();
+extern void dot::system::autocompile(std::string source, std::string target) {
     std::string command = DOT_EXEC_PATH " -Tsvg -o ";
-    command += filename + " " + filename + ".dot";
+    command += target + " " + source;
     std::system(command.c_str());
 }
 #else
-extern void dot::system::autocompile(Graph& g, std::string filename) {
+extern void dot::system::autocompile(std::string source, std::string target) {
     snlog::l_internal("Dot autocompilation not configured");
 }
 #endif

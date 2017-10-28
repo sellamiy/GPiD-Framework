@@ -1,14 +1,12 @@
 #ifndef _DOT_CALLER_LIBRARY_HEADER_
 #define _DOT_CALLER_LIBRARY_HEADER_
 
-#include <dot/dotgraph.hpp>
-
 #cmakedefine DOT_FOUND
 #define DOT_EXEC_PATH "@DOT_EXEC_PATH@"
 
 namespace dot {
     namespace system {
-        extern void autocompile(Graph& g, std::string filename);
+        extern void autocompile(std::string source, std::string target);
     }
 }
 #endif
