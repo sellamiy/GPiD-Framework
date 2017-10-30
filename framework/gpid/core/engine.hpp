@@ -88,6 +88,7 @@ inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
         solver.printActiveNegation();
     if (options.store_implicates)
         solver.storeActive();
+    instrument::analyze(NULL, instrument::analyze_type::implicate);
 }
 
 template<class SolverT>

@@ -6,7 +6,7 @@
 #include <iostream>
 namespace gpid {
 namespace instrument {
-    enum analyze_type { stack_push, stack_pop, pre_select, model_skip, reset, end };
+    enum analyze_type { stack_push, stack_pop, pre_select, implicate, model_skip, reset, end };
 #ifdef GPID_INSTRUMENTATION
     extern void initialize(InstrumentOptions& opts, InstrumentController& ctrler);
     extern void analyze(void* data, analyze_type analysis);

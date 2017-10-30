@@ -38,6 +38,8 @@ namespace instrument {
     { selectionGrapher->backtrackSelection(); }
     static inline void selectionGrapher_pre_select(void* d)
     { selectionGrapher->selection(*((uint32_t*)d)); }
+    static inline void selectionGrapher_implicate(void*)
+    { selectionGrapher->implicateDetected(); }
     static inline void selectionGrapher_model_skip(void* d)
     { selectionGrapher->skip(*((uint32_t*)d), "model"); }
     static inline void selectionGrapher_reset(void*)
@@ -57,6 +59,7 @@ namespace instrument {
             analyzers[stack_push].push_back(&selectionGrapher_stack_push);
             analyzers[stack_pop] .push_back(&selectionGrapher_stack_pop);
             analyzers[pre_select].push_back(&selectionGrapher_pre_select);
+            analyzers[implicate].push_back(&selectionGrapher_implicate);
             analyzers[model_skip].push_back(&selectionGrapher_model_skip);
             analyzers[reset].push_back(&selectionGrapher_reset);
             analyzers[end].push_back(&selectionGrapher_end);

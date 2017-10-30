@@ -8,7 +8,11 @@ namespace types {
 
     /* node types */
     extern const GraphNodeType ClassicBoxNode;
+    extern const GraphNodeType ClassicUnshapedNode;
+
     extern const GraphNodeType ClassicDiamondNode;
+    extern const GraphNodeType RedDiamondNode;
+    extern const GraphNodeType GreenDiamondNode;
 
     /* edge types */
     extern const GraphEdgeType ClassicEdge;

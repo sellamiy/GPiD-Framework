@@ -23,6 +23,7 @@ namespace instrument {
         void skip(uint32_t id, std::string reason);
         void confirmSelection();
         void backtrackSelection();
+        void implicateDetected();
 
         void initialize();
         void terminate();
