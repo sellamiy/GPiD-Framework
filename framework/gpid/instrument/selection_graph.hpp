@@ -15,6 +15,7 @@ namespace instrument {
         dot::Graph graph;
         std::stack<int> nstack;
         int temp_node;
+        int order;
     public:
         SelectionGrapher(std::ostream& target)
             : target(target), graph("selectionGraph") {}

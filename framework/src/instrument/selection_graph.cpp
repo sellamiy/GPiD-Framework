@@ -5,13 +5,17 @@
 using namespace gpid;
 
 void instrument::SelectionGrapher::selection(uint32_t id) {
+    order++;
     temp_node = graph.createNode("", dot::types::ClassicUnshapedNode);
-    graph.createEdge(nstack.top(), temp_node, std::to_string(id), dot::types::ClassicDottedEdge);
+    std::string label = std::to_string(id) + '(' + std::to_string(order) + ')';
+    graph.createEdge(nstack.top(), temp_node, label, dot::types::ClassicDottedEdge);
 }
 
 void instrument::SelectionGrapher::skip(uint32_t id, std::string reason) {
+    order++;
     int node = graph.createNode(reason, dot::types::ClassicUnshapedNode);
-    graph.createEdge(nstack.top(), node, std::to_string(id), dot::types::ClassicDottedEdge);
+    std::string label = std::to_string(id) + '(' + std::to_string(order) + ')';
+    graph.createEdge(nstack.top(), node, label, dot::types::ClassicDottedEdge);
 }
 
 void instrument::SelectionGrapher::confirmSelection() {
@@ -31,6 +35,7 @@ void instrument::SelectionGrapher::backtrackSelection() {
 void instrument::SelectionGrapher::initialize() {
     graph.clear();
     // TODO: Clear Stack
+    order = 0;
     temp_node = graph.createNode("init", dot::types::ClassicDiamondNode);
     nstack.push(temp_node);
 }
