@@ -44,12 +44,14 @@ namespace instrument {
     { selectionGrapher->skip(*((uint32_t*)d), "model"); }
     static inline void selectionGrapher_reset(void*)
     { selectionGrapher->initialize(); }
-    static inline void selectionGrapher_end(void*)
-    { selectionGrapher->terminate(); }
 
     static inline void selectionGrapher_finalizer
     (InstrumentOptions& opts, InstrumentController&)
-    { if (opts.autocompile_graphs) dot::system::autocompile(opts.selection_graph_file, opts.selection_graph_file + ".svg"); }
+    {
+        selectionGrapher->terminate();
+        if (opts.autocompile_graphs)
+            dot::system::autocompile(opts.selection_graph_file, opts.selection_graph_file + ".svg");
+    }
 
     /* Instrumentation initializer */
     extern void initialize(InstrumentOptions& opts, InstrumentController& ctrler) {
@@ -62,7 +64,6 @@ namespace instrument {
             analyzers[implicate].push_back(&selectionGrapher_implicate);
             analyzers[model_skip].push_back(&selectionGrapher_model_skip);
             analyzers[reset].push_back(&selectionGrapher_reset);
-            analyzers[end].push_back(&selectionGrapher_end);
             finalizers.push_back(&selectionGrapher_finalizer);
         }
     }
