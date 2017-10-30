@@ -125,8 +125,10 @@ namespace gpid {
         hp_active.deactivate(selected);
         selection_map[clevel].push_back(selected);
         for (index_t linked : hp_links[selected]) {
-            hp_active.deactivate(linked);
-            selection_map[clevel].push_back(linked);
+            if (hp_active.is_active(linked)) {
+                hp_active.deactivate(linked);
+                selection_map[clevel].push_back(linked);
+            }
         }
     }
 
