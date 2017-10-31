@@ -179,12 +179,20 @@ namespace gpid {
         for (index_t idx : hp_active) {
             if (!hp_active.is_active(idx)) continue;
             if (model.isSkippable(*hp_mapping[idx])) {
-                hp_active.deactivate(idx);
-                selection_map[clevel-1].push_back(idx);
-                if (idx < pointer[clevel]) {
+                if (idx >= pointer[clevel]) {
+                    hp_active.deactivate(idx);
+                    selection_map[clevel-1].push_back(idx);
+                } else {
                     predefineLimit(idx, clevel + 1);
                 }
                 instrument::analyze(&idx, instrument::analyze_type::model_skip);
+            } else {
+                /*
+                if (idx < pointer[clevel]) {
+                    hp_active.deactivate(idx);
+                    selection_map[clevel-1].push_back(idx);
+                }
+                */
             }
         }
     }
