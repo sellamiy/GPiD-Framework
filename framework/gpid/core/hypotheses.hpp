@@ -180,6 +180,7 @@ namespace gpid {
             if (!hp_active.is_active(idx)) continue;
             if (model.isSkippable(*hp_mapping[idx])) {
                 if (idx >= pointer[clevel]) {
+                    // TODO: We actually need to really skip them after we come back to this level and the pointer is increased !
                     hp_active.deactivate(idx);
                     selection_map[clevel-1].push_back(idx);
                 } else {
@@ -187,10 +188,12 @@ namespace gpid {
                 }
                 instrument::analyze(&idx, instrument::analyze_type::model_skip);
             } else {
+                // TODO: Deactivate lower level indexes while this should be done in skipper
+                // not in the cleaner !
                 /*
                 if (idx < pointer[clevel]) {
                     hp_active.deactivate(idx);
-                    selection_map[clevel-1].push_back(idx);
+                    selection_map[clevel].push_back(idx);
                 }
                 */
             }
