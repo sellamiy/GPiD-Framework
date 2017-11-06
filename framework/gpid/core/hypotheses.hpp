@@ -104,8 +104,9 @@ namespace gpid {
                Which is why we add a min to unsure we do not make oob accesses later.
             */
 #define MIN(a,b) (a) < (b) ? (a) : (b)
+#define MAX(a,b) (a) > (b) ? (a) : (b)
             pointer[clevel + 1] = MIN(hp_active.get_last() + 1, hp_active.get_maximal_size());
-            limit[clevel + 1] = pointer[clevel];
+            limit[clevel + 1] = MAX(pointer[clevel], limit[clevel]);
             ++clevel;
         }
     }
@@ -120,8 +121,9 @@ namespace gpid {
 
     template<class SolverT>
     inline bool HypothesesSet<SolverT>::isReallyActive(index_t idx) {
-        return hp_active.is_active(idx)
-            && idx >= limit[clevel];
+        return idx >= limit[clevel]
+            && (hp_active.is_active(idx)
+                || (hp_active.is_paused(idx) && clevel != hp_active.get(idx)));
     }
 
     template<class SolverT>
