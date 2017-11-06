@@ -128,8 +128,8 @@ namespace gpid {
     inline bool HypothesesSet<SolverT>::isActuallyActive(index_t idx) {
         level_t level = hp_active.get(idx);
         return hp_active.is_paused(idx)
-            && level != clevel
-            && limit[level + 1] > idx;
+            && clevel == level + 1
+            && limit[clevel] > idx;
     }
 
     template<class SolverT>
