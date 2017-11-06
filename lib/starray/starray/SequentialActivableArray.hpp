@@ -12,6 +12,7 @@ namespace starray {
         struct aa_elt {
             aa_elt_st status;
             uint32_t index;
+            uint32_t value;
         };
         typedef aa_elt aa_elt_t;
 
@@ -62,6 +63,9 @@ namespace starray {
 
         inline uint32_t get_last()  { return get_downward(total_size); }
         inline uint32_t get_first() { return get_upward(0); }
+
+        inline void set(uint32_t i, uint32_t v) { tab[i].value = v; }
+        inline uint32_t get(uint32_t i)         { return tab[i].value; }
     };
 
     template<typename Type> inline SequentialActivableArray::SeqAAIterator<Type>&
