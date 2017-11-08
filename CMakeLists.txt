@@ -30,10 +30,6 @@ if(NOT CMAKE_BUILD_TYPE)
     "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
-if(BUILD_TESTS)
-  enable_testing()
-endif()
-
 set(LOCAL_LIBRARIES_DIRECTORY "${CMAKE_BINARY_DIR}/local/lib/include")
 set(FRAMEWORK_CHEADERS_DIRECTORY "${CMAKE_BINARY_DIR}/local/framework/include")
 set(FRAMEWORK_CSOURCES_DIRECTORY "${CMAKE_BINARY_DIR}/local/framework/cxx")
@@ -59,6 +55,11 @@ include(FrameworkDocumentation)
 # Targets
 # ==============================================================================
 add_subdirectory(lib)
+
 add_subdirectory(framework)
 add_subdirectory(exec)
-add_subdirectory(test)
+
+if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(test)
+endif()
