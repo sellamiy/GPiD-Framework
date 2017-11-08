@@ -1,0 +1,75 @@
+# ==============================================================================
+# Tests configuration - tests targets
+# ==============================================================================
+if(BUILD_TESTS)
+
+  # ===== Configuring Test Framework =====
+
+  # Download and unpack googletest at configure time
+  configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/GoogleTest.cmake.in
+    ${CMAKE_BINARY_DIR}/googletest-download/CMakeLists.txt)
+  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+    RESULT_VARIABLE result
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+  if(result)
+    message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+  endif()
+  execute_process(COMMAND ${CMAKE_COMMAND} --build .
+    RESULT_VARIABLE result
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+  if(result)
+    message(FATAL_ERROR "Build step for googletest failed: ${result}")
+  endif()
+
+  # Prevent overriding the parent project's compiler/linker
+  # settings on Windows
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+  # Add googletest directly to our build. This defines
+  # the gtest and gtest_main targets.
+  add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
+    ${CMAKE_BINARY_DIR}/googletest-build EXCLUDE_FROM_ALL)
+
+  # The gtest/gtest_main targets carry header search path
+  # dependencies automatically when using CMake 2.8.11 or
+  # later. Otherwise we have to add them here ourselves.
+  if (CMAKE_VERSION VERSION_LESS 2.8.11)
+    include_directories("${gtest_SOURCE_DIR}/include")
+  endif()
+
+  # ===== Generating Test Targets =====
+
+  # == Unit Targets ==
+  file(GLOB LIB_TEST_FILES "lib/*/*.cpp" "framework/*/*.cpp")
+  foreach(filename ${LIB_TEST_FILES})
+    get_filename_component(execname "${filename}" NAME_WE)
+    add_executable(${execname} "${filename}")
+    target_link_libraries(${execname} starray)
+    target_link_libraries(${execname} gpid)
+    target_link_libraries(${execname} gtest gtest_main)
+    set_target_properties(${execname} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_RUNTIME_OUTPUT_DIRECTORY})
+    add_test(NAME ${execname} COMMAND ${execname})
+  endforeach()
+
+  # == Dimacs Targets ==
+  if(MINISAT_SOLVER_INTERFACE)
+    file(GLOB DIMACS_TEST_FILES "dimacs/basic/*.dimacs")
+    foreach(filename ${DIMACS_TEST_FILES})
+      get_filename_component(mfilename "${filename}" NAME)
+      add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-gts -g minisat -a all -i "${filename}")
+    endforeach()
+  endif()
+
+  # == Abducible Parser Targets ==
+  file(GLOB ABDUCE_TEST_FILES "abduce/*.abduce")
+  foreach(filename ${ABDUCE_TEST_FILES})
+    get_filename_component(mfilename "${filename}" NAME)
+    add_test(NAME "${mfilename}:Parse" COMMAND gpid-parser -i "${filename}")
+  endforeach()
+
+  # ===== Coverage =====
+
+  if (COVERAGE_TOOLS)
+    setup_target_for_coverage(NAME coverage EXECUTABLE ctest)
+  endif()
+endif()
