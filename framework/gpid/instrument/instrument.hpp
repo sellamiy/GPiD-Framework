@@ -12,9 +12,9 @@ namespace instrument {
     extern void analyze(void* data, analyze_type analysis);
     extern void finalize(InstrumentOptions& opts, InstrumentController& ctrler);
 #else
-    static inline void initialize(InstrumentsOption&, InstrumentController&) {}
+    static inline void initialize(InstrumentOptions&, InstrumentController&) {}
     static inline void analyze(void*, analyze_type)  {}
-    static inline void finalize(InstrumentOptions& opts, InstrumentController& ctrler) {}
+    static inline void finalize(InstrumentOptions&, InstrumentController&) {}
 #endif
 }
 }
