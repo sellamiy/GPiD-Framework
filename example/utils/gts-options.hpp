@@ -247,6 +247,7 @@ static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& par
             if (parser.count(instr_opts[pc])) {
                 snlog::l_fatal("Option uses instrumentation but instrumentation is not configured:");
                 snlog::l_info("   @option: " + instr_opts[pc]);
+                return OptionStatus::FAILURE;
             }
         }
 #endif
