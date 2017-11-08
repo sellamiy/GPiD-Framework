@@ -40,6 +40,8 @@ namespace gpid {
         std::map<level_t, std::list<index_t> >  selection_map;
         std::map<level_t, std::list<index_t> > pselection_map;
 
+        std::map<index_t, std::list<level_t> > pvalues_map;
+
         std::map<level_t, index_t> limit;
         std::map<level_t, index_t> pointer;
         level_t clevel;
@@ -50,6 +52,8 @@ namespace gpid {
 
         inline void unselectLevel(level_t level);
 
+        inline void deactivateHypothesis(index_t idx, level_t level);
+        inline void deactivateSequents(index_t ub, level_t level);
         inline void selectCurrentHypothesis();
     public:
         HypothesesSet(SolverT& solver, SkipperController& ctrler, uint32_t size)
@@ -62,9 +66,6 @@ namespace gpid {
 
         /** Original size of the set. */
         inline uint32_t getSourceSize();
-
-        inline bool isReallyActive(index_t idx);
-        inline bool isActuallyActive(index_t idx);
 
         inline bool nextHypothesis(uint32_t level);
         /** Recover for usage the next available hypothesis at a given level.
@@ -96,6 +97,16 @@ namespace gpid {
     }
 
     template<class SolverT>
+    inline void HypothesesSet<SolverT>::deactivateHypothesis(index_t idx, level_t level) {
+        if (hp_active.is_active(idx)) {
+            selection_map[level].push_back(idx);
+        } else if (hp_active.is_paused(idx)) {
+            pselection_map[level].push_back(idx);
+        }
+        hp_active.deactivate(idx);
+    }
+
+    template<class SolverT>
     inline void HypothesesSet<SolverT>::increaseLevel(uint32_t target) {
         while (clevel < target) {
             /* TODO: Fixme.
@@ -104,9 +115,8 @@ namespace gpid {
                Which is why we add a min to unsure we do not make oob accesses later.
             */
 #define MIN(a,b) (a) < (b) ? (a) : (b)
-#define MAX(a,b) (a) > (b) ? (a) : (b)
             pointer[clevel + 1] = MIN(hp_active.get_last() + 1, hp_active.get_maximal_size());
-            limit[clevel + 1] = MAX(pointer[clevel], limit[clevel]);
+            limit[clevel + 1] = pointer[clevel];
             ++clevel;
         }
     }
@@ -120,43 +130,40 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline bool HypothesesSet<SolverT>::isReallyActive(index_t idx) {
-        return idx >= limit[clevel]
-            && (hp_active.is_active(idx)
-                || (hp_active.is_paused(idx) && clevel != hp_active.get(idx)));
-    }
-
-    template<class SolverT>
-    inline bool HypothesesSet<SolverT>::isActuallyActive(index_t idx) {
-        level_t level = hp_active.get(idx);
-        return hp_active.is_paused(idx)
-            && clevel == level + 1
-            && limit[clevel] > idx;
+    inline void HypothesesSet<SolverT>::deactivateSequents(index_t ub, level_t level) {
+        index_t curr = ub;
+        index_t next = hp_active.get_downward(curr);
+        while (curr != next) {
+            curr = next;
+            if (hp_active.is_active(curr)) {
+                hp_active.deactivate(curr);
+                selection_map[level].push_back(curr);
+            }
+            if (hp_active.is_paused(curr) && hp_active.get(curr) != level) {
+                hp_active.deactivate(curr);
+                pselection_map[level].push_back(curr);
+            }
+            next = hp_active.get_downward(curr);
+        }
     }
 
     template<class SolverT>
     inline void HypothesesSet<SolverT>::selectCurrentHypothesis() {
         index_t selected = pointer[clevel];
-        if (hp_active.is_active(selected)) {
-            selection_map[clevel].push_back(selected);
-        } else if (hp_active.is_paused(selected)) {
-            pselection_map[clevel].push_back(selected);
-        } else { /* TODO: Error */ }
-        hp_active.deactivate(selected);
+        deactivateHypothesis(selected, clevel);
         for (index_t linked : hp_links[selected]) {
-            if (hp_active.is_active(linked)) {
-                hp_active.deactivate(linked);
-                selection_map[clevel].push_back(linked);
-            } else if (hp_active.is_paused(linked)) {
-                hp_active.deactivate(linked);
-                pselection_map[clevel].push_back(linked);
-            }
+            deactivateHypothesis(linked, clevel);
         }
+        deactivateSequents(selected, clevel);
     }
 
     template<class SolverT>
     inline void HypothesesSet<SolverT>::unselectLevel(uint32_t level) {
         for (index_t skipped : selection_map[level]) {
+            if (hp_active.is_paused(skipped)) {
+                hp_active.set(skipped, pvalues_map[skipped].back());
+                pvalues_map[skipped].pop_back();
+            }
             hp_active.activate(skipped);
         }
         for (index_t skipped : pselection_map[level]) {
@@ -181,7 +188,8 @@ namespace gpid {
                 pointer[clevel] = next;
                 instrument::analyze(&next, instrument::analyze_type::pre_select);
                 if (!skipper.canBeSkipped(*hp_mapping[pointer[clevel]], clevel)) {
-                    if (isReallyActive(pointer[clevel]) || isActuallyActive(pointer[clevel])) {
+                    if (!hp_active.is_paused(pointer[clevel])
+                        || hp_active.get(pointer[clevel]) != clevel) {
                         return true;
                     }
                 }
@@ -204,6 +212,7 @@ namespace gpid {
             if (!hp_active.is_active(idx)) continue;
             if (model.isSkippable(*hp_mapping[idx])) {
                 hp_active.pause(idx);
+                pvalues_map[idx].push_back(hp_active.get(idx));
                 hp_active.set(idx, clevel);
                 selection_map[clevel-1].push_back(idx);
                 instrument::analyze(&idx, instrument::analyze_type::model_skip);
