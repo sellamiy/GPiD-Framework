@@ -10,7 +10,8 @@ extern void dot::system::autocompile(std::string source, std::string target) {
     std::system(command.c_str());
 }
 #else
-extern void dot::system::autocompile(std::string source, std::string target) {
+#include <snlog/snlog.hpp>
+extern void dot::system::autocompile(std::string, std::string) {
     snlog::l_internal("Dot autocompilation not configured");
 }
 #endif
