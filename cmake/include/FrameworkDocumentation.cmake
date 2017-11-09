@@ -26,6 +26,4 @@ if(BUILD_DOC AND DOXYGEN_FOUND)
     COMMENT "Doxygen: Generating API documentation"
     VERBATIM)
 
-else()
-  message(WARNING "Doxygen was not found. No documentation generated.")
 endif()
