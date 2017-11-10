@@ -12,12 +12,17 @@ namespace gpid {
     struct mContext {};
 
     enum mInputGenerator { MIG_NONE, MIG_ALL };
+    static std::map<std::string, mInputGenerator> mInputGeneratorTable =
+        { { "all", MIG_ALL } };
     static inline mInputGenerator toMInputGenerator(std::string key) {
-        if (key == "all") return mInputGenerator::MIG_ALL;
-        else {
+        if (mInputGeneratorTable[key] == mInputGenerator::MIG_NONE) {
             l_error("Unknown minisat abducible generator: " + key);
-            return mInputGenerator::MIG_NONE;
+            for (std::pair<std::string, mInputGenerator> akey : mInputGeneratorTable) {
+                if (akey.second != MIG_NONE)
+                    l_info("   -- available: " + akey.first);
+            }
         }
+        return mInputGeneratorTable[key];
     }
 
     static inline uint32_t mAbducibleCompt(mInputGenerator g, MinisatProblem& pbl) {

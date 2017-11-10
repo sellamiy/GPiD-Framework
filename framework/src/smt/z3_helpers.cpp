@@ -10,13 +10,18 @@ using namespace z3;
 namespace gpid {
 
     enum z3InputGenerator { Z3IG_NONE, Z3IG_CONST_ALL_EQ, Z3IG_CONST_ALL_COMP };
+    static std::map<std::string, z3InputGenerator> z3InputGeneratorTable =
+        { { "const-all-eq", Z3IG_CONST_ALL_EQ },
+          { "const-all-comp", Z3IG_CONST_ALL_COMP } };
     static inline z3InputGenerator toZ3InputGenerator(std::string key) {
-        if (key == "const-all-eq") return z3InputGenerator::Z3IG_CONST_ALL_EQ;
-        else if (key == "const-all-comp") return z3InputGenerator::Z3IG_CONST_ALL_COMP;
-        else {
+        if (z3InputGeneratorTable[key] == z3InputGenerator::Z3IG_NONE) {
             l_error("Unknown z3 abducible generator: " + key);
-            return z3InputGenerator::Z3IG_NONE;
+            for (std::pair<std::string, z3InputGenerator> akey : z3InputGeneratorTable) {
+                if (akey.second != Z3IG_NONE)
+                    l_info("   -- available: " + akey.first);
+            }
         }
+        return z3InputGeneratorTable[key];
     }
 
     static inline uint32_t z3AbducibleCompt(z3InputGenerator g, Z3Problem& pbl) {

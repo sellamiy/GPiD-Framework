@@ -10,15 +10,18 @@ using namespace CVC4;
 namespace gpid {
 
     enum c4InputGenerator { C4IG_NONE };
+    static std::map<std::string, c4InputGenerator> c4InputGeneratorTable =
+        { };
     static inline c4InputGenerator toC4InputGenerator(std::string key) {
-        /*
-        if (key == "machin") return mInputGenerator::C4IG_MACHIN;
-        else {
-        */
-        l_error("Unknown cvc4 abducible generator: " + key);
-        l_info("Currently, there are no cvc4 abducible generator available");
-        return c4InputGenerator::C4IG_NONE;
-        /*}*/
+        l_warn("Currently, there are no cvc4 abducible generator available");
+        if (c4InputGeneratorTable[key] == c4InputGenerator::C4IG_NONE) {
+            l_error("Unknown cvc4 abducible generator: " + key);
+            for (std::pair<std::string, c4InputGenerator> akey : c4InputGeneratorTable) {
+                if (akey.second != C4IG_NONE)
+                    l_info("   -- available: " + akey.first);
+            }
+        }
+        return c4InputGeneratorTable[key];
     }
 
     static inline uint32_t c4AbducibleCompt(c4InputGenerator g, CVC4Problem&) {
