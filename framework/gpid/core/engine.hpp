@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include <gpid/options/options_engine.hpp>
+#include <gpid/core/system.hpp>
 #include <gpid/core/hypotheses.hpp>
 #include <gpid/core/solvers.hpp>
 
@@ -17,6 +18,7 @@ namespace gpid {
     class DecompositionEngine {
 
         EngineOptions& options;
+        SystemInterruptsFlags des_iflags;
 
         uint64_t gi_counter;
         uint64_t node_counter;
@@ -100,10 +102,12 @@ inline void gpid::DecompositionEngine<SolverT>::popStackLevel() {
 template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>
 ::generateImplicates(gpid::GenerationAlgorithm algorithm) {
+    registerInterruptsHandlers(&des_iflags);
     switch (algorithm) {
     case PID: generatePID(); break;
     default: snlog::l_internal("Trying to generate implicates using unknown algorithm!");
     }
+    restoreInterruptsHandlers();
     instrument::analyze(NULL, instrument::analyze_type::end);
 }
 
