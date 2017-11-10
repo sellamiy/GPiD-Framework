@@ -17,7 +17,9 @@ static inline void generate_true_solver(OptionStorage& opts) {
     HypothesesSet<TrueSolver> A(S, SkCtrl, 1);
     DecompositionEngine<TrueSolver> E(opts.engine, S, P, A);
     l_message("generate implicates...");
+    opts.control.time.registerTime("generation");
     E.generateImplicates();
+    opts.control.time.registerTime("generation-end");
 }
 #else
 static inline void generate_true_solver(OptionStorage&) {
@@ -45,7 +47,9 @@ static inline void generate_minisat(OptionStorage& opts) {
     MinisatDecompEngine E(opts.engine, S, P, A);
 
     l_message("generate implicates...");
+    opts.control.time.registerTime("generation");
     E.generateImplicates();
+    opts.control.time.registerTime("generation-end");
 
     opts.control.stats.addStatisticGroup();
     opts.control.stats.addStatistic("Number of implicates generated", E.getGeneratedImplicatesCount());
@@ -78,7 +82,9 @@ static inline void generate_cvc4(OptionStorage& opts) {
     CVC4DecompEngine E(opts.engine, S, P, A);
 
     l_message("generate implicates...");
+    opts.control.time.registerTime("generation");
     E.generateImplicates();
+    opts.control.time.registerTime("generation-end");
 
     opts.control.stats.addStatisticGroup();
     opts.control.stats.addStatistic("Number of implicates generated", E.getGeneratedImplicatesCount());
@@ -111,7 +117,9 @@ static inline void generate_z3(OptionStorage& opts) {
     Z3DecompEngine E(opts.engine, S, P, A);
 
     l_message("generate implicates...");
+    opts.control.time.registerTime("generation");
     E.generateImplicates();
+    opts.control.time.registerTime("generation-end");
 
     opts.control.stats.addStatisticGroup();
     opts.control.stats.addStatistic("Number of implicates generated", E.getGeneratedImplicatesCount());

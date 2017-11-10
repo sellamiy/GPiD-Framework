@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
 #endif
 
     l_message("start implicate generator...");
+    opts.control.time.registerTime("start");
 
     switch (opts.generator) {
     case TRUE_SOLVER:
@@ -44,11 +45,18 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
+    opts.control.time.registerTime("end");
+
 #ifdef GPID_INSTRUMENTATION
     instrument::finalize(opts.instrument, ictrl);
 #endif
 
     l_message("print generation statistics...");
+    opts.control.stats.addStatisticGroup();
+    opts.control.stats.addStatistic
+        ("Total time", opts.control.time.microseconds("start", "end"));
+    opts.control.stats.addStatistic
+        ("Generation time", opts.control.time.microseconds("generation", "generation-end"), 2);
     l_raw(opts.control.stats);
 
     l_message("complete.");
