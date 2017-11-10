@@ -49,23 +49,14 @@ namespace gpid {
                             HypothesesSet<SolverT>& h)
             : options(o), solver(s), problem(p), available_h(h)
         { }
-        inline uint64_t getGeneratedImplicatesCount() { return gi_counter; }
+        inline uint64_t getGeneratedImplicatesCount()      const { return gi_counter;     }
+        inline uint64_t getExploredNodesCount()            const { return node_counter;   }
+        inline uint64_t getInconsistentNodesSkippedCount() const { return incons_counter; }
 
         void generateImplicates(GenerationAlgorithm algorithm = GenerationAlgorithm::PID);
-
-        void printStatistics();
     };
 
 };
-
-/* ========== Printers ========== */
-
-template<class SolverT>
-inline void gpid::DecompositionEngine<SolverT>::printStatistics() {
-    snlog::l_notif("implicates generated", gi_counter);
-    snlog::l_notif("nodes explored", node_counter);
-    snlog::l_notif("inconsistent implicates skipped", incons_counter);
-}
 
 /* ========== Helpers ========== */
 

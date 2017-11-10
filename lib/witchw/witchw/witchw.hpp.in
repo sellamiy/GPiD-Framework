@@ -1,0 +1,9 @@
+#ifndef _WITCHW_LIBRARY_HEADER_
+#define _WITCHW_LIBRARY_HEADER_
+
+#include <witchw/WitchTime.hpp>
+#include <witchw/WitchPrinters.hpp>
+
+#include <witchw/WitchControl.hpp>
+
+#endif

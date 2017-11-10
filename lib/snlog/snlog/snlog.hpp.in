@@ -81,6 +81,12 @@ namespace snlog {
     { std::cerr << "-- " << nmg << ": " << msg << std::endl; }
 #endif
     template<typename printable>
+    inline void l_raw(const printable& msg)      { std::cout << msg; }
+
+    template<typename printable>
+    inline void t_raw(bool test, const printable& msg)      { if(test) l_raw(msg); }
+
+    template<typename printable>
     inline void t_message(bool test, const printable& msg)  { if(test) l_message(msg); }
     template<typename printable>
     inline void t_info(bool test, const printable& msg)     { if(test) l_info(msg); }

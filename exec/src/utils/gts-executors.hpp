@@ -18,8 +18,6 @@ static inline void generate_true_solver(OptionStorage& opts) {
     DecompositionEngine<TrueSolver> E(opts.engine, S, P, A);
     l_message("generate implicates...");
     E.generateImplicates();
-    l_message("print generation statistics...");
-    E.printStatistics();
 }
 #else
 static inline void generate_true_solver(OptionStorage&) {
@@ -49,8 +47,12 @@ static inline void generate_minisat(OptionStorage& opts) {
     l_message("generate implicates...");
     E.generateImplicates();
 
-    l_message("print generation statistics...");
-    E.printStatistics();
+    opts.control.stats.addStatisticGroup();
+    opts.control.stats.addStatistic("Number of implicates generated", E.getGeneratedImplicatesCount());
+    opts.control.stats.addStatisticGroup();
+    opts.control.stats.addStatistic("Number of nodes explored", E.getExploredNodesCount());
+    opts.control.stats.addStatistic("Number of nodes skipped", "");
+    opts.control.stats.addStatistic("Inconsistency", E.getInconsistentNodesSkippedCount(), 4);
 }
 #else
 static inline void generate_minisat(OptionStorage&) {
@@ -78,8 +80,12 @@ static inline void generate_cvc4(OptionStorage& opts) {
     l_message("generate implicates...");
     E.generateImplicates();
 
-    l_message("print generation statistics...");
-    E.printStatistics();
+    opts.control.stats.addStatisticGroup();
+    opts.control.stats.addStatistic("Number of implicates generated", E.getGeneratedImplicatesCount());
+    opts.control.stats.addStatisticGroup();
+    opts.control.stats.addStatistic("Number of nodes explored", E.getExploredNodesCount());
+    opts.control.stats.addStatistic("Number of nodes skipped", "");
+    opts.control.stats.addStatistic("Inconsistency", E.getInconsistentNodesSkippedCount(), 4);
 }
 #else
 static inline void generate_cvc4(OptionStorage&) {
@@ -107,8 +113,12 @@ static inline void generate_z3(OptionStorage& opts) {
     l_message("generate implicates...");
     E.generateImplicates();
 
-    l_message("print generation statistics...");
-    E.printStatistics();
+    opts.control.stats.addStatisticGroup();
+    opts.control.stats.addStatistic("Number of implicates generated", E.getGeneratedImplicatesCount());
+    opts.control.stats.addStatisticGroup();
+    opts.control.stats.addStatistic("Number of nodes explored", E.getExploredNodesCount());
+    opts.control.stats.addStatistic("Number of nodes skipped", "");
+    opts.control.stats.addStatistic("Inconsistency", E.getInconsistentNodesSkippedCount(), 4);
 }
 #else
 static inline void generate_z3(OptionStorage&) {

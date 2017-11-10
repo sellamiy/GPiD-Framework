@@ -48,6 +48,9 @@ int main(int argc, char** argv) {
     instrument::finalize(opts.instrument, ictrl);
 #endif
 
+    l_message("print generation statistics...");
+    l_raw(opts.control.stats);
+
     l_message("complete.");
     return EXIT_SUCCESS;
 }

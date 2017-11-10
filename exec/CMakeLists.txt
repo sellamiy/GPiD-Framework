@@ -6,7 +6,7 @@ project(gpid-execs LANGUAGES CXX)
 # GTS - an implicate generator
 # ==============================================================================
 add_executable(gpid-gts "src/gpid-gts.cpp")
-target_link_libraries(gpid-gts gpid cxxopts)
+target_link_libraries(gpid-gts gpid witchw cxxopts)
 # ==============================================================================
 # Parser - an abducible files parser
 # ==============================================================================

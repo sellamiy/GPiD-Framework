@@ -4,6 +4,7 @@
 #include <vector>
 #include <cxxopts/cxxopts.hpp>
 #include <dot/dotcommand.hpp>
+#include <witchw/witchw.hpp>
 #include <gpid/gpid.hpp>
 
 /* ===== Structures ===== */
@@ -18,8 +19,10 @@ enum EngineSelection {
 };
 
 struct OptionStorage : public gpid::CoreOptions {
-	std::string input;
-        EngineSelection generator;
+    std::string input;
+    EngineSelection generator;
+
+    witchw::wController control;
 };
 
 enum OptionStatus {
