@@ -1,7 +1,7 @@
 #ifndef _INCL_EX_EXECUTORS_PARSER_
 #define _INCL_EX_EXECUTORS_PARSER_
 
-#include <gpid/gpid.hpp>
+#include <gpid/gpid.all.hpp>
 #include "gts-options.hpp"
 
 using namespace snlog;

@@ -1,7 +1,7 @@
 #define GPID_GTS_PI_GENERATOR
 
 #include <iostream>
-#include <gpid/gpid.hpp>
+#include <gpid/gpid.all.hpp>
 
 #include "utils/gts-options.hpp"
 #include "utils/gts-executors.hpp"

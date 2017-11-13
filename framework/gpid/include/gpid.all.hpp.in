@@ -1,0 +1,8 @@
+#ifndef _PI_DECOMP_FRAMEWORK_ALL_SOLVERS_HEADER_
+#define _PI_DECOMP_FRAMEWORK_ALL_SOLVERS_HEADER_
+
+#include <gpid/gpid.cvc4.hpp>
+#include <gpid/gpid.minisat.hpp>
+#include <gpid/gpid.z3.hpp>
+
+#endif

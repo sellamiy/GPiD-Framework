@@ -1,0 +1,13 @@
+#ifndef _PI_DECOMP_FRAMEWORK_MINISAT_HEADER_
+#define _PI_DECOMP_FRAMEWORK_MINISAT_HEADER_
+
+#include <gpid/gpid.hpp>
+
+#ifdef MINISAT_SOLVER_INTERFACE
+#include <gpid/propositional/minisat_engine.hpp>
+#include <gpid/propositional/minisat_solver.hpp>
+#include <gpid/propositional/minisat_inputs.hpp>
+#include <gpid/propositional/minisat_outputs.hpp>
+#endif
+
+#endif

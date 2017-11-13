@@ -1,0 +1,12 @@
+#ifndef _PI_DECOMP_FRAMEWORK_Z3_HEADER_
+#define _PI_DECOMP_FRAMEWORK_Z3_HEADER_
+
+#include <gpid/gpid.hpp>
+
+#ifdef Z3_SOLVER_INTERFACE
+#include <gpid/smt/z3_engine.hpp>
+#include <gpid/smt/z3_inputs.hpp>
+#include <gpid/smt/z3_outputs.hpp>
+#endif
+
+#endif
