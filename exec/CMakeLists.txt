@@ -16,38 +16,25 @@ endif()
 # ==============================================================================
 # Split-GTS - single implicate generators linked to specific solver
 # ==============================================================================
-if(MINISAT_SOLVER_INTERFACE)
-  add_executable(gpid-minisat-gts "src/gpid-gts.cpp")
-  target_compile_definitions(gpid-minisat-gts PRIVATE
+function(add_split_gts exec_name solver_macro static-ass shared-ass)
+  add_executable(${exec_name} "src/gpid-gts.cpp")
+  target_compile_definitions(${exec_name} PRIVATE
     SINGLE_SOLVER_ONLY
-    SINGLE_SOLVER_MINISAT)
+    ${solver_macro})
   if(STATIC_EXECUTABLES)
-    target_link_libraries(gpid-minisat-gts gpid-minisat-static ${GTS_STATIC_LINK_LIBRARIES})
+    target_link_libraries(${exec_name} ${static-ass} ${GTS_STATIC_LINK_LIBRARIES})
   else()
-    target_link_libraries(gpid-minisat-gts gpid-minisat-shared ${GTS_SHARED_LINK_LIBRARIES})
+    target_link_libraries(${exec_name} ${shared-ass} ${GTS_SHARED_LINK_LIBRARIES})
   endif()
+endfunction()
+if(MINISAT_SOLVER_INTERFACE)
+  add_split_gts(gpid-minisat-gts SINGLE_SOLVER_MINISAT gpid-minisat-static gpid-minisat-shared)
 endif()
 if(CVC4_SOLVER_INTERFACE)
-  add_executable(gpid-cvc4-gts "src/gpid-gts.cpp")
-  target_compile_definitions(gpid-cvc4-gts PRIVATE
-    SINGLE_SOLVER_ONLY
-    SINGLE_SOLVER_CVC4)
-  if(STATIC_EXECUTABLES)
-    target_link_libraries(gpid-cvc4-gts gpid-cvc4-static ${GTS_STATIC_LINK_LIBRARIES})
-  else()
-    target_link_libraries(gpid-cvc4-gts gpid-cvc4-shared ${GTS_SHARED_LINK_LIBRARIES})
-  endif()
+  add_split_gts(gpid-cvc4-gts SINGLE_SOLVER_CVC4 gpid-cvc4-static gpid-cvc4-shared)
 endif()
 if(Z3_SOLVER_INTERFACE)
-  add_executable(gpid-z3-gts "src/gpid-gts.cpp")
-  target_compile_definitions(gpid-z3-gts PRIVATE
-    SINGLE_SOLVER_ONLY
-    SINGLE_SOLVER_Z3)
-  if(STATIC_EXECUTABLES)
-    target_link_libraries(gpid-z3-gts gpid-z3-static ${GTS_STATIC_LINK_LIBRARIES})
-  else()
-    target_link_libraries(gpid-z3-gts gpid-z3-shared ${GTS_SHARED_LINK_LIBRARIES})
-  endif()
+  add_split_gts(gpid-z3-gts SINGLE_SOLVER_Z3 gpid-z3-static gpid-z3-shared)
 endif()
 # ==============================================================================
 # Parser - an abducible files parser
