@@ -71,20 +71,31 @@ endif()
 # ==============================================================================
 # Library target definition
 # ==============================================================================
-add_library(gpid STATIC ${LIBGPID_SOURCES})
+add_library(gpid-static STATIC ${LIBGPID_SOURCES})
+add_library(gpid-shared SHARED ${LIBGPID_SOURCES})
 
-target_include_directories(gpid
+target_include_directories(gpid-static
+  PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${FRAMEWORK_CHEADERS_DIRECTORY}"
+  PRIVATE "${FRAMEWORK_CSOURCES_DIRECTORY}")
+target_include_directories(gpid-shared
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${FRAMEWORK_CHEADERS_DIRECTORY}"
   PRIVATE "${FRAMEWORK_CSOURCES_DIRECTORY}")
 
-target_link_libraries(gpid snlog starray dot ugly)
+target_link_libraries(gpid-static snlog starray-static dot-static ugly)
+target_link_libraries(gpid-shared snlog starray-shared dot-shared ugly)
+
+set_target_properties(gpid-static PROPERTIES OUTPUT_NAME gpid CLEAN_DIRECT_OUTPUT 1)
+set_target_properties(gpid-shared PROPERTIES OUTPUT_NAME gpid VERSION ${VERSION} CLEAN_DIRECT_OUTPUT 1)
 
 if(MINISAT_SOLVER_INTERFACE)
-  target_link_libraries(gpid minisat-lib-shared ${ZLIB_LIBRARY})
+  target_link_libraries(gpid-static minisat-lib-static ${ZLIB_LIBRARY})
+  target_link_libraries(gpid-shared minisat-lib-shared ${ZLIB_LIBRARY})
 endif()
 if(CVC4_SOLVER_INTERFACE)
-  target_link_libraries(gpid cvc4 cvc4parser)
+  target_link_libraries(gpid-static cvc4 cvc4parser)
+  target_link_libraries(gpid-shared cvc4 cvc4parser)
 endif()
 if(Z3_SOLVER_INTERFACE)
-  target_link_libraries(gpid ${Z3_LIBRARIES})
+  target_link_libraries(gpid-static ${Z3_LIBRARIES})
+  target_link_libraries(gpid-shared ${Z3_LIBRARIES})
 endif()
