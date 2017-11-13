@@ -23,7 +23,7 @@ struct HSTest_SWrapper {
     typedef HSTest_MW ModelT;
     typedef HSTest_MW StorageT;
 
-    static inline bool currentlySubsumed(HSTest_S&, bool, uint32_t)
+    static inline bool storageSubsumed(HSTest_S&, uint32_t)
     { return false; }
 };
 

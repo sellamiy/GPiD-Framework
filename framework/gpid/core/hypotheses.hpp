@@ -14,10 +14,10 @@ namespace gpid {
     template<class SolverT>
     class HypothesisSkipper {
         SolverT& solver;
-        SkipperController& actives;
+        SkipperController& control;
     public:
         HypothesisSkipper(SolverT& s, SkipperController& ctrler)
-            : solver(s), actives(ctrler) {}
+            : solver(s), control(ctrler) {}
 
         inline bool canBeSkipped(typename SolverT::HypothesisT& h, uint32_t level);
     };
@@ -175,7 +175,7 @@ namespace gpid {
 
     template<class SolverT>
     inline bool HypothesisSkipper<SolverT>::canBeSkipped(typename SolverT::HypothesisT& h, uint32_t level) {
-        return solver.currentlySubsumed(h, actives.storage, level);
+        return (control.storage && solver.storageSubsumed(h, level));
     }
 
     template<class SolverT>

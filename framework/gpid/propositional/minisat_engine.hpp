@@ -76,7 +76,7 @@ namespace gpid {
         inline gpid::SolverTestStatus checkConsistency(uint32_t)
         /* For this engine, consistency is ensured by linked hypotheses */
         { return SolverTestStatus::SOLVER_SAT; }
-        bool currentlySubsumed(MinisatHypothesis& additional, bool with_storage, uint32_t level);
+        bool storageSubsumed(MinisatHypothesis& additional, uint32_t level);
 
         inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }
         inline MinisatModelWrapper& recoverModel() { return iw_mdl; }

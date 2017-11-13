@@ -58,7 +58,7 @@ namespace gpid {
         void addHypothesis(CVC4Hypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
         gpid::SolverTestStatus checkConsistency(uint32_t level);
-        bool currentlySubsumed(CVC4Hypothesis& additional, bool with_storage, uint32_t level);
+        bool storageSubsumed(CVC4Hypothesis& additional, uint32_t level);
 
         inline CVC4ModelWrapper& recoverModel() { return iw_mdl; }
         inline CVC4::ExprManager& getExprManager() { return em; }
