@@ -1,7 +1,6 @@
 #define GPID_GTS_PI_GENERATOR
 
 #include <iostream>
-#include <gpid/gpid.all.hpp>
 
 #include "utils/gts-options.hpp"
 #include "utils/gts-executors.hpp"
@@ -27,6 +26,9 @@ int main(int argc, char** argv) {
     l_message("start implicate generator...");
     opts.control.time.registerTime("start");
 
+#ifdef SINGLE_SOLVER_ONLY
+    generate(opts);
+#else
     switch (opts.generator) {
     case TRUE_SOLVER:
         generate_true_solver(opts);
@@ -44,6 +46,7 @@ int main(int argc, char** argv) {
         l_internal("Got start access to unknown generator");
         return EXIT_FAILURE;
     }
+#endif
 
     opts.control.time.registerTime("end");
 

@@ -9,6 +9,7 @@
 
 /* ===== Structures ===== */
 
+#ifndef SINGLE_SOLVER_ONLY
 enum EngineSelection {
     TRUE_SOLVER,
     MINISAT,
@@ -17,10 +18,13 @@ enum EngineSelection {
     UNCONFIGURED_INTERFACE,
     UNKNOWN_INTERFACE
 };
+#endif
 
 struct OptionStorage : public gpid::CoreOptions {
     std::string input;
+#ifndef SINGLE_SOLVER_ONLY
     EngineSelection generator;
+#endif
 
     witchw::wController control;
 };
@@ -29,13 +33,16 @@ enum OptionStatus {
     OK, ENDED, FAILURE
 };
 
+#ifndef SINGLE_SOLVER_ONLY
 static inline EngineSelection toEngineSelection(std::string v);
+#endif
 static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** argv);
 static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& parser);
 static inline OptionStatus detectConflicts(OptionStorage& opts, cxxopts::Options& parser);
 
 /* ===== Converters ===== */
 
+#ifndef SINGLE_SOLVER_ONLY
 static inline EngineSelection toEngineSelection(std::string v) {
     if (v == "true-solver") {
 #ifdef TRUE_SOLVER_INTERFACE
@@ -67,6 +74,7 @@ static inline EngineSelection toEngineSelection(std::string v) {
     }
     return EngineSelection::UNKNOWN_INTERFACE;
 }
+#endif
 
 /* ===== Parser ===== */
 
@@ -86,11 +94,13 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
             ("a,autogen-abducibles", "Abducible auto generation type", cxxopts::value<std::string>())
 	    ;
 
+#ifndef SINGLE_SOLVER_ONLY
         parser.add_options("Generator")
             ("g,generator",
              "Generator to use in [" + gpid::list_configured_generators() + "]",
              cxxopts::value<std::string>())
             ;
+#endif
 
         parser.add_options("Engine")
             ("s,store-implicates", "Allow generated implicate to be stored")
@@ -133,9 +143,13 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 
 static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& parser) {
     try {
-
+#ifndef SINGLE_SOLVER_ONLY
+        std::vector<std::string> help_cats = {"", "Generator", "Input", "Output", "Engine", "Instrument"};
+#else
+        std::vector<std::string> help_cats = {"", "Input", "Output", "Engine", "Instrument"};
+#endif
 	if (parser.count("help")) {
-	    snlog::l_message(parser.help({"", "Generator", "Input", "Output", "Engine", "Instrument"}));
+	    snlog::l_message(parser.help(help_cats));
 	    return OptionStatus::ENDED;
 	}
 	if (parser.count("version")) {
@@ -174,6 +188,7 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 	    return OptionStatus::FAILURE;
 	}
 
+#ifndef SINGLE_SOLVER_ONLY
         if (parser.count("generator")) {
             opts.generator = toEngineSelection(parser["generator"].as<std::string>());
             if (opts.generator == EngineSelection::UNKNOWN_INTERFACE) {
@@ -190,6 +205,7 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
             snlog::l_info(parser.help({"Generator"}));
             return OptionStatus::FAILURE;
         }
+#endif
 
         if (parser.count("load-abducibles")) {
             opts.abducibles.input_type = gpid::AbdInputType::ABDIT_FILE;
