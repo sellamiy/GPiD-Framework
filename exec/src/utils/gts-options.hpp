@@ -101,6 +101,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 
             ("allow-inconsistencies", "Let the engine generate inconsistent implicates")
             ("dont-allow-inconsistencies", "Force the engine generate consistent implicates only")
+
+            ("implicate-size-limit", "Max number of abducibles in implicates", cxxopts::value<uint32_t>())
             ;
 
 	parser.add_options("Output")
@@ -160,6 +162,9 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 	    opts.engine.allow_inconsistencies = true;
 	if (parser.count("dont-allow-inconsistencies"))
 	    opts.engine.allow_inconsistencies = false;
+
+        if (parser.count("implicate-size-limit"))
+            opts.engine.max_level = parser["implicate-size-limit"].as<uint32_t>() + 1;
 
 	if (parser.count("input")) {
 	    opts.input = parser["input"].as<std::string>();

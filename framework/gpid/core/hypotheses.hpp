@@ -175,7 +175,10 @@ namespace gpid {
 
     template<class SolverT>
     inline bool HypothesisSkipper<SolverT>::canBeSkipped(typename SolverT::HypothesisT& h, uint32_t level) {
-        return (control.storage && solver.storageSubsumed(h, level));
+        return
+            (control.storage && solver.storageSubsumed(h, level))
+            || (control.max_level <= level)
+            ;
     }
 
     template<class SolverT>

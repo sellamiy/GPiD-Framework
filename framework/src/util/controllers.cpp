@@ -7,11 +7,13 @@
 using namespace gpid;
 
 SkipperController::SkipperController(const CoreOptions& opts) :
-    storage(opts.engine.store_implicates)
+    storage(opts.engine.store_implicates),
+    max_level(opts.engine.max_level)
 { }
 
 SkipperController::SkipperController(const SkipperController& ctrler) :
-    storage(ctrler.storage)
+    storage(ctrler.storage),
+    max_level(ctrler.max_level)
 { }
 
 static std::ofstream nullstream;

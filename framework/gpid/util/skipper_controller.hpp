@@ -11,7 +11,7 @@ namespace gpid {
         SkipperController(const SkipperController& ctrler);
 
         const bool storage;
-
+        const uint32_t max_level;
     };
 
 };
