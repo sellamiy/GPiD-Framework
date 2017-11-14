@@ -2,6 +2,7 @@
 #define _SEQUENTIAL_ACTIVABLE_ARRAY_HPP_
 
 #include <cinttypes>
+#include <snlog/snlog.hpp>
 
 namespace starray {
 
@@ -29,20 +30,20 @@ namespace starray {
             uint32_t pos;
             bool ooa;
         public:
-            SeqAAIterator(aa_elt_t* tab, uint32_t pos, bool ooa=false)
-                : tptr(tab), pos(pos), ooa(ooa) {}
+            SeqAAIterator(aa_elt_t* tab, uint32_t pos, uint32_t ooa_chk, bool ooa=false)
+                : tptr(tab), pos(pos), ooa(ooa || pos == ooa_chk) {}
             inline bool operator!=(const SeqAAIterator<Type>& rIt) const
-            { return ooa != rIt.ooa || (tptr != rIt.tptr || pos != rIt.pos); }
+            { return ooa != rIt.ooa || (!ooa && (tptr != rIt.tptr || pos != rIt.pos)); }
             SeqAAIterator& operator++();
             inline       Type operator*()       { return tptr[pos].index; }
             inline const Type operator*() const { return tptr[pos].index; }
         };
         typedef SeqAAIterator<uint32_t> iterator;
-        inline iterator begin() { return iterator(tab, get_last()); }
-        inline iterator end()   { return iterator(tab, 0, true); }
+        inline iterator begin() { return iterator(tab, get_last(), total_size); }
+        inline iterator end()   { return iterator(tab, 0, total_size, true); }
         typedef SeqAAIterator<const uint32_t> const_iterator;
-        inline const_iterator cbegin() { return const_iterator(tab, get_last()); }
-        inline const_iterator cend()   { return const_iterator(tab, 0, true); }
+        inline const_iterator cbegin() { return const_iterator(tab, get_last(), total_size); }
+        inline const_iterator cend()   { return const_iterator(tab, 0, total_size, true); }
 
         void activate(uint32_t i);
         void pause(uint32_t i);
