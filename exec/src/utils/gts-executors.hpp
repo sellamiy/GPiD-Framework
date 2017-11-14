@@ -55,9 +55,7 @@ static inline void generate_minisat(OptionStorage& opts) {
     MinisatProblem P;
 
     l_message("parse problem...");
-    gzFile in = gzopen(opts.input.c_str(), "rb"); // TODO: Handle input errors
-    parse_DIMACS(in, P);
-    gzclose(in);
+    parse_file(opts.input, P, opts.input_lang);
 
     l_message("generate abducibles...");
     SkipperController SkCtrl(opts);
@@ -94,7 +92,7 @@ static inline void generate_cvc4(OptionStorage& opts) {
     CVC4Problem P;
 
     l_message("parse problem...");
-    parse_Cvc(opts.input, S.getExprManager(), P); // TODO: Handle errors
+    parse_file(opts.input, S.getExprManager(), P, opts.input_lang); // TODO: Handle errors
 
     l_message("generate abducibles...");
     SkipperController SkCtrl(opts);
@@ -131,7 +129,7 @@ static inline void generate_z3(OptionStorage& opts) {
     Z3Problem P(S.getContext());
 
     l_message("parse problem...");
-    parse_Z(opts.input, P); // TODO: Handle errors
+    parse_file(opts.input, P, opts.input_lang); // TODO: Handle errors
 
     l_message("generate abducibles...");
     SkipperController SkCtrl(opts);

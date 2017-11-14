@@ -6,7 +6,7 @@
 
 namespace gpid {
 
-    extern void parse_Z(const std::string& filename, Z3Problem& pbl);
+    extern void parse_file(std::string filename, Z3Problem& pbl, std::string language);
 
     extern uint32_t countAbducibles(AbduciblesOptions& opts, Z3Problem& pbl);
     extern void generateAbducibles

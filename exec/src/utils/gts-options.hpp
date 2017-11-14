@@ -22,6 +22,7 @@ enum EngineSelection {
 
 struct OptionStorage : public gpid::CoreOptions {
     std::string input;
+    std::string input_lang;
 #ifndef SINGLE_SOLVER_ONLY
     EngineSelection generator;
 #endif
@@ -92,6 +93,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 	    ("i,input", "Input file", cxxopts::value<std::string>())
             ("l,load-abducibles", "Abducible file", cxxopts::value<std::string>())
             ("a,autogen-abducibles", "Abducible auto generation type", cxxopts::value<std::string>())
+            ("input-language", "Language of input file", cxxopts::value<std::string>())
 	    ;
 
 #ifndef SINGLE_SOLVER_ONLY
@@ -186,6 +188,13 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 	    snlog::l_fatal("No input file provided");
 	    snlog::l_info(parser.help({"Input"}));
 	    return OptionStatus::FAILURE;
+	}
+
+        if (parser.count("input-language")) {
+	    opts.input_lang = parser["input-language"].as<std::string>();
+	} else {
+            // TODO: Show meaningful info message here
+            opts.input_lang = "default";
 	}
 
 #ifndef SINGLE_SOLVER_ONLY
