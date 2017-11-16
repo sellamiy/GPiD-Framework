@@ -5,16 +5,16 @@
 #ifdef SINGLE_SOLVER_TRUESOLVER
 #include <gpid/gpid.hpp>
 #elif SINGLE_SOLVER_MINISAT
-#include <gpid/gpid.minisat.hpp>
+#include <gpid/solvers/minisat.hpp>
 #elif SINGLE_SOLVER_CVC4
-#include <gpid/gpid.cvc4.hpp>
+#include <gpid/solvers/cvc4.hpp>
 #elif SINGLE_SOLVER_Z3
-#include <gpid/gpid.z3.hpp>
+#include <gpid/solvers/z3.hpp>
 #else
 #error Unsupported Single Solver
 #endif
 #else
-#include <gpid/gpid.all.hpp>
+#include <gpid/solvers/all.hpp>
 #define SINGLE_SOLVER_TRUESOLVER
 #define SINGLE_SOLVER_MINISAT
 #define SINGLE_SOLVER_CVC4
@@ -26,7 +26,6 @@ using namespace snlog;
 using namespace gpid;
 
 #ifdef SINGLE_SOLVER_TRUESOLVER
-#ifdef TRUE_SOLVER_INTERFACE
 static inline void generate_true_solver(OptionStorage& opts) {
     l_info("True Solver -- The Only True Solver.");
     TrueSolver S;
@@ -40,15 +39,14 @@ static inline void generate_true_solver(OptionStorage& opts) {
     E.generateImplicates();
     opts.control.time.registerTime("generation-end");
 }
-#else
+/*
 static inline void generate_true_solver(OptionStorage&) {
     l_internal("Got access to unconfigured interface generator");
 }
-#endif
+*/
 #endif
 
 #ifdef SINGLE_SOLVER_MINISAT
-#ifdef MINISAT_SOLVER_INTERFACE
 static inline void generate_minisat(OptionStorage& opts) {
     l_message("start minisat engine...");
     MinisatSolver S;
@@ -77,15 +75,9 @@ static inline void generate_minisat(OptionStorage& opts) {
     opts.control.stats.addStatistic("Number of nodes skipped", "");
     opts.control.stats.addStatistic("Inconsistency", E.getInconsistentNodesSkippedCount(), 4);
 }
-#else
-static inline void generate_minisat(OptionStorage&) {
-    l_internal("Got access to unconfigured interface generator");
-}
-#endif
 #endif
 
 #ifdef SINGLE_SOLVER_CVC4
-#ifdef CVC4_SOLVER_INTERFACE
 static inline void generate_cvc4(OptionStorage& opts) {
     l_message("init cvc4 engine...");
     CVC4Solver S;
@@ -114,15 +106,9 @@ static inline void generate_cvc4(OptionStorage& opts) {
     opts.control.stats.addStatistic("Number of nodes skipped", "");
     opts.control.stats.addStatistic("Inconsistency", E.getInconsistentNodesSkippedCount(), 4);
 }
-#else
-static inline void generate_cvc4(OptionStorage&) {
-    l_internal("Got access to unconfigured interface generator");
-}
-#endif
 #endif
 
 #ifdef SINGLE_SOLVER_Z3
-#ifdef Z3_SOLVER_INTERFACE
 static inline void generate_z3(OptionStorage& opts) {
     l_message("init z3 engine...");
     Z3Solver S;
@@ -151,11 +137,6 @@ static inline void generate_z3(OptionStorage& opts) {
     opts.control.stats.addStatistic("Number of nodes skipped", "");
     opts.control.stats.addStatistic("Inconsistency", E.getInconsistentNodesSkippedCount(), 4);
 }
-#else
-static inline void generate_z3(OptionStorage&) {
-    l_internal("Got access to unconfigured interface generator");
-}
-#endif
 #endif
 
 #ifdef SINGLE_SOLVER_ONLY

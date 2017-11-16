@@ -46,32 +46,17 @@ static inline OptionStatus detectConflicts(OptionStorage& opts, cxxopts::Options
 #ifndef SINGLE_SOLVER_ONLY
 static inline EngineSelection toEngineSelection(std::string v) {
     if (v == "true-solver") {
-#ifdef TRUE_SOLVER_INTERFACE
         return EngineSelection::TRUE_SOLVER;
-#else
-        return EngineSelection::UNCONFIGURED_INTERFACE;
-#endif
+        // return EngineSelection::UNCONFIGURED_INTERFACE;
     }
     if (v == "minisat") {
-#ifdef MINISAT_SOLVER_INTERFACE
         return EngineSelection::MINISAT;
-#else
-        return EngineSelection::UNCONFIGURED_INTERFACE;
-#endif
     }
     if (v == "cvc4") {
-#ifdef CVC4_SOLVER_INTERFACE
         return EngineSelection::SMT_CVC4;
-#else
-        return EngineSelection::UNCONFIGURED_INTERFACE;
-#endif
     }
     if (v == "z3") {
-#ifdef Z3_SOLVER_INTERFACE
         return EngineSelection::SMT_Z3;
-#else
-        return EngineSelection::UNCONFIGURED_INTERFACE;
-#endif
     }
     return EngineSelection::UNKNOWN_INTERFACE;
 }

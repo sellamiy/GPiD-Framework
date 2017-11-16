@@ -18,13 +18,6 @@ option(DOT_AUTOCOMPILATION "Configure Dot graphs autocompilation" ON)
 # ==============================================================================
 option(MERGE_MINISAT_WRAPPERS "Merge Minisat wrappers into its original namespace" ON)
 # ==============================================================================
-# Solvers
-# ==============================================================================
-option(TRUE_SOLVER_INTERFACE "Define an example solver class" ON)
-option(MINISAT_SOLVER_INTERFACE "Define a propositional solver class based on minisat" ON)
-option(CVC4_SOLVER_INTERFACE "Define a smt solver class based on cvc4" ON)
-option(Z3_SOLVER_INTERFACE "Define a smt solver class based on z3" ON)
-# ==============================================================================
 # Computed options
 # ==============================================================================
 if(USE_COLORS AND NOT WIN32)

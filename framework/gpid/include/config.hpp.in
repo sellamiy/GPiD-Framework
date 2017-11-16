@@ -1,12 +1,6 @@
 #ifndef _PI_DECOMP_CONFIGURATION_HEADER_
 #define _PI_DECOMP_CONFIGURATION_HEADER_
 
-/* Solvers definitions */
-#cmakedefine TRUE_SOLVER_INTERFACE
-#cmakedefine MINISAT_SOLVER_INTERFACE
-#cmakedefine CVC4_SOLVER_INTERFACE
-#cmakedefine Z3_SOLVER_INTERFACE
-
 /* Minisat additional components options */
 #cmakedefine MERGE_MINISAT_WRAPPERS
 

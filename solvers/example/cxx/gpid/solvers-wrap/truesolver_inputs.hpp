@@ -1,0 +1,4 @@
+#ifndef GPID_TRUE_SOLVER_INPUTS_HPP
+#define GPID_TRUE_SOLVER_INPUTS_HPP
+
+#endif

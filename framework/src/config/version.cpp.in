@@ -15,26 +15,8 @@ extern const std::string gpid::project_mode = "@CMAKE_BUILD_TYPE@";
 extern const std::string gpid::project_timestamp_configure = "@PROJECT_CFG_TIMESTAMP@";
 extern const std::string gpid::project_timestamp_build     = __DATE__ "+" __TIME__;
 
-extern const std::string gpid::list_configured_generators(const std::string separator) {
-    std::string listm = "";
-    bool started = false;
-#ifdef TRUE_SOLVER_INTERFACE
-    listm += (started ? separator : "") + "true-solver";
-    started = true;
-#endif
-#ifdef MINISAT_SOLVER_INTERFACE
-    listm += (started ? separator : "") + "minisat";
-    started = true;
-#endif
-#ifdef CVC4_SOLVER_INTERFACE
-    listm += (started ? separator : "") + "cvc4";
-    started = true;
-#endif
-#ifdef Z3_SOLVER_INTERFACE
-    listm += (started ? separator : "") + "z3";
-    started = true;
-#endif
-    return listm;
+extern const std::string gpid::list_configured_generators() {
+    return "@SOLVERS_TARGETS@";
 }
 
 extern const std::string gpid::generate_version_message()
@@ -48,7 +30,7 @@ extern const std::string gpid::generate_version_message()
 #endif
 	+ "\n"
         + "solvers configured: "
-        + list_configured_generators(", ")
+        + list_configured_generators()
         + "\n"
 	+ "configured @" + project_timestamp_configure
 	+ "\n"

@@ -52,13 +52,11 @@ if(BUILD_TESTS)
   endforeach()
 
   # == Dimacs Targets ==
-  if(MINISAT_SOLVER_INTERFACE)
-    file(GLOB DIMACS_TEST_FILES "dimacs/basic/*.dimacs")
-    foreach(filename ${DIMACS_TEST_FILES})
-      get_filename_component(mfilename "${filename}" NAME)
-      add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-minisat-gts -a all -i "${filename}")
-    endforeach()
-  endif()
+  file(GLOB DIMACS_TEST_FILES "dimacs/basic/*.dimacs")
+  foreach(filename ${DIMACS_TEST_FILES})
+    get_filename_component(mfilename "${filename}" NAME)
+    add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-minisat-gts -a all -i "${filename}")
+  endforeach()
 
   # == Abducible Parser Targets ==
   file(GLOB ABDUCE_TEST_FILES "abduce/*.abduce")

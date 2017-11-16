@@ -30,9 +30,16 @@ if(NOT CMAKE_BUILD_TYPE)
     "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
-set(LOCAL_LIBRARIES_DIRECTORY "${CMAKE_BINARY_DIR}/local/lib/include")
-set(FRAMEWORK_CHEADERS_DIRECTORY "${CMAKE_BINARY_DIR}/local/framework/include")
-set(FRAMEWORK_CSOURCES_DIRECTORY "${CMAKE_BINARY_DIR}/local/framework/cxx")
+set(LOCAL_LIB_HEADERS_DIR "${CMAKE_BINARY_DIR}/local/lib/include")
+
+set(LOCAL_SOLVERS_HEADERS_INCLUDE "${CMAKE_BINARY_DIR}/local/solvers/include")
+set(LOCAL_SOLVERS_SOURCES_DIR "${CMAKE_BINARY_DIR}/local/solvers/cxx")
+
+set(LOCAL_FRAMEWORK_HEADERS_DIR "${CMAKE_BINARY_DIR}/local/framework/include")
+set(LOCAL_FRAMEWORK_SOURCES_DIR "${CMAKE_BINARY_DIR}/local/framework/cxx")
+
+set(LOCAL_SOLVERS_HEADERS_DIR_RELATIVE "gpid/solvers")
+set(LOCAL_SOLVERS_HEADERS_DIR "${LOCAL_SOLVERS_HEADERS_INCLUDE}/${LOCAL_SOLVERS_HEADERS_DIR_RELATIVE}")
 
 include(GetGitRevisionDescription)
 get_git_head_revision(VERSION_GIT_REFSPEC VERSION_GIT_SHA1)
@@ -46,7 +53,6 @@ include(FrameworkConfigurationOptions)
 include(ExternalProject)
 include(FrameworkCoverage)
 
-include(FrameworkSolvers)
 include(FrameworkCosystems)
 
 include(FrameworkDocumentation)
@@ -55,7 +61,7 @@ include(FrameworkDocumentation)
 # Targets
 # ==============================================================================
 add_subdirectory(lib)
-
+add_subdirectory(solvers)
 add_subdirectory(framework)
 add_subdirectory(exec)
 
