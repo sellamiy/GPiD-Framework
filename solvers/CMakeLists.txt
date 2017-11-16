@@ -2,11 +2,21 @@
 # GPiD Target solvers
 # ==============================================================================
 include(FrameworkSolverRegistration)
+macro(subdirlist result curdir)
+  file(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  set(dirlist "")
+  foreach(child ${children})
+    if(IS_DIRECTORY ${curdir}/${child})
+      list(APPEND dirlist ${child})
+    endif()
+  endforeach()
+  set(${result} ${dirlist})
+endmacro()
 # ==============================================================================
-add_subdirectory(example)
-add_subdirectory(minisat)
-add_subdirectory(cvc4)
-add_subdirectory(z3)
+subdirlist(SOLVERS_SUBDIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR})
+foreach(solver_subdir ${SOLVERS_SUBDIRECTORIES})
+  add_subdirectory(${solver_subdir})
+endforeach()
 # ==============================================================================
 add_library(gpid-solvers-static INTERFACE)
 add_library(gpid-solvers-shared INTERFACE)
