@@ -17,7 +17,3 @@ register_solver_library(cvc4 ${SOLVER_INTERFACE_HEADER_DIR} ${SOLVER_INTERFACE_S
 target_solver_libraries(cvc4 cvc4 cvc4parser)
 generate_solver_interface_header(cvc4 "gpid/solvers-wrap")
 # ==============================================================================
-set(SOLVERS_TARGETS ${SOLVERS_TARGETS} PARENT_SCOPE)
-set(SOLVERS_HEADERS ${SOLVERS_HEADERS} PARENT_SCOPE)
-set(SOLVERS_STATIC_TARGETS ${SOLVERS_STATIC_TARGETS} PARENT_SCOPE)
-set(SOLVERS_SHARED_TARGETS ${SOLVERS_SHARED_TARGETS} PARENT_SCOPE)

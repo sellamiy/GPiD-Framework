@@ -33,7 +33,3 @@ target_solver_static_libraries(minisat minisat-lib-static)
 target_solver_shared_libraries(minisat minisat-lib-shared)
 generate_solver_interface_header(minisat "gpid/solvers-wrap")
 # ==============================================================================
-set(SOLVERS_TARGETS ${SOLVERS_TARGETS} PARENT_SCOPE)
-set(SOLVERS_HEADERS ${SOLVERS_HEADERS} PARENT_SCOPE)
-set(SOLVERS_STATIC_TARGETS ${SOLVERS_STATIC_TARGETS} PARENT_SCOPE)
-set(SOLVERS_SHARED_TARGETS ${SOLVERS_SHARED_TARGETS} PARENT_SCOPE)
