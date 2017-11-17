@@ -66,13 +66,3 @@ macro(generate_solver_interface_header solver_name local_include_dir)
     "${LOCAL_SOLVERS_HEADERS_DIR_RELATIVE}/${solver_name}.hpp" PARENT_SCOPE)
 endmacro()
 # ==============================================================================
-macro(generate_solver_interfaces_global_header)
-  set(ALL_SOLVERS_INTERFACE_HEADER "${LOCAL_SOLVERS_HEADERS_DIR}/all.hpp")
-  file(WRITE ${ALL_SOLVERS_INTERFACE_HEADER}  "#ifndef GPID_ALL_SOLVERS_INTERFACE_HPP\n")
-  file(APPEND ${ALL_SOLVERS_INTERFACE_HEADER} "#define GPID_ALL_SOLVERS_INTERFACE_HPP\n")
-  foreach(header ${SOLVERS_HEADERS})
-    file(APPEND ${ALL_SOLVERS_INTERFACE_HEADER} "#include<${header}>\n")
-  endforeach()
-  file(APPEND ${ALL_SOLVERS_INTERFACE_HEADER} "#endif\n")
-endmacro()
-# ==============================================================================
