@@ -24,11 +24,14 @@ namespace gpid {
         }
     };
 
+    struct MinisatContext { };
+    struct MinisatDeclarations { int nVars = 0; };
+
     class MinisatProblem {
     public:
         enum IOMode { IO_READ, IO_WRITE };
     private:
-        int var_cpt = 0;
+        MinisatDeclarations decls;
         IOMode mode = IOMode::IO_WRITE;
 
         Minisat::vec<Minisat::Lit> cons_data;
@@ -40,8 +43,12 @@ namespace gpid {
 
         void initCurrentMode();
     public:
-        inline int getVarCpt() { return var_cpt; }
-        inline void newVar() { ++var_cpt; }
+        MinisatProblem(MinisatContext&) { }
+
+        inline MinisatDeclarations& getDeclarations() { return decls; }
+
+        inline int getVarCpt() { return decls.nVars; }
+        inline void newVar() { ++decls.nVars; }
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
 
         void addConstraint(Minisat::vec<Minisat::Lit>& ps);
@@ -60,6 +67,8 @@ namespace gpid {
         Minisat::vec<int> lvl_stack;
         uint32_t c_level;
 
+        MinisatContext ctx;
+
         void increaseLevel(uint32_t target);
         void decreaseLevel(uint32_t target);
         void accessLevel(uint32_t level);
@@ -69,6 +78,9 @@ namespace gpid {
         typedef MinisatProblem ProblemT;
         typedef MinisatModelWrapper ModelT;
         typedef MinisatStorage StorageT;
+
+        inline void printSolverInformations()
+        { snlog::l_info("Interface for Minisat"); }
 
         void removeHypotheses(uint32_t level) { accessLevel(level); }
         void addHypothesis(MinisatHypothesis& hypothesis, uint32_t level);
@@ -81,6 +93,7 @@ namespace gpid {
         inline std::vector<MinisatHypothesis>& extractActive() { return loc_ass; }
         inline MinisatModelWrapper& recoverModel() { return iw_mdl; }
         inline MinisatStorage& getStorage() { return storage; }
+        inline MinisatContext& getContextManager() { return ctx; }
 
         void printActiveNegation();
         void storeActive();

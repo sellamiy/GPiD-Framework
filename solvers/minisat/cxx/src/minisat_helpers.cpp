@@ -9,8 +9,6 @@ using namespace Minisat;
 
 namespace gpid {
 
-    struct mContext {};
-
     enum mInputGenerator { MIG_NONE, MIG_ALL };
     static std::map<std::string, mInputGenerator> mInputGeneratorTable =
         { { "all", MIG_ALL } };
@@ -40,11 +38,6 @@ namespace gpid {
         { return mAbducibleCompt(toMInputGenerator(gkey), pbl); }
     };
 
-    struct mDeclsInfo {
-        const int nVars;
-        inline mDeclsInfo(int n) : nVars(n) {}
-    };
-
     static inline void loadAbducibles(std::string filename, MinisatHypothesesSet& set) {
         alloc_gab<MinisatHypothesis>(set.getSourceSize());
         std::map<int, int> linker;
@@ -71,7 +64,7 @@ namespace gpid {
     }
 
     struct mLoader {
-        inline void operator() (std::string filename, mContext&, mDeclsInfo&, MinisatHypothesesSet& set)
+        inline void operator() (std::string filename, MinisatContext&, MinisatDeclarations&, MinisatHypothesesSet& set)
         { loadAbducibles(filename, set); }
     };
 
@@ -95,18 +88,17 @@ namespace gpid {
     }
 
     struct mGenerator {
-        inline void operator() (std::string gkey, mContext&, mDeclsInfo&, MinisatHypothesesSet& set)
+        inline void operator() (std::string gkey, MinisatContext&, MinisatDeclarations&, MinisatHypothesesSet& set)
         { generateAbducibles(toMInputGenerator(gkey), set); }
     };
 
     extern uint32_t countAbducibles(AbduciblesOptions& opts, MinisatProblem& pbl) {
         return countAbducibles<MinisatProblem, mGeneratorCounter>(opts, pbl);
     }
-    extern void generateAbducibles(AbduciblesOptions& opts, MinisatHypothesesSet& hys, int nVars) {
-        mContext dummy;
-        mDeclsInfo decls(nVars);
-        generateAbducibles<MinisatHypothesesSet, mContext, mDeclsInfo, mLoader, mGenerator>
-            (opts, dummy, decls, hys);
+    extern void generateAbducibles(AbduciblesOptions& opts, MinisatContext& ctx,
+                                   MinisatDeclarations& decls, MinisatHypothesesSet& hys) {
+        generateAbducibles<MinisatHypothesesSet, MinisatContext, MinisatDeclarations, mLoader, mGenerator>
+            (opts, ctx, decls, hys);
     }
 
 }

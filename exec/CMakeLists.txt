@@ -3,6 +3,16 @@
 # ==============================================================================
 project(gpid-execs LANGUAGES CXX)
 # ==============================================================================
+# Generate Solver code snippets for executables
+# ==============================================================================
+include(FrameworkSolverSnippets)
+generate_solver_snippet(${LOCAL_SOLVERS_SNIPPETS_DIR}
+  ${LOCAL_SOLVERS_SNIPPETS_CONFIG}
+  gts-interfaces.hpp ${SOLVERS_TARGETS})
+generate_solver_snippet(${LOCAL_SOLVERS_SNIPPETS_DIR}
+  ${LOCAL_SOLVERS_SNIPPETS_CONFIG}
+  gts-executors.hpp  ${SOLVERS_TARGETS})
+# ==============================================================================
 # GTS - an implicate generator
 # ==============================================================================
 set(GTS_STATIC_LINK_LIBRARIES witchw-static cxxopts)
@@ -16,23 +26,25 @@ endif()
 # ==============================================================================
 # Split-GTS - single implicate generators linked to specific solver
 # ==============================================================================
-function(add_split_gts exec_name solver_macro static-ass shared-ass)
-  add_executable(${exec_name} "src/gpid-gts.cpp")
-  target_compile_definitions(${exec_name} PRIVATE
+function(add_split_gts solver)
+  set(SGTS_EXECUTABLE_NAME gpid-gts-${solver})
+  set(SGTS_SSOLVER_MACRO SINGLE_SOLVER_${solver})
+  set(SGTS_STATIC_LINK gpid-${solver}-static)
+  set(SGTS_SHARED_LINK gpid-${solver}-shared)
+  add_executable(${SGTS_EXECUTABLE_NAME} "src/gpid-gts.cpp")
+  target_compile_definitions(${SGTS_EXECUTABLE_NAME} PRIVATE
     SINGLE_SOLVER_ONLY
-    ${solver_macro})
+    ${SGTS_SSOLVER_MACRO})
   if(STATIC_EXECUTABLES)
-    target_link_libraries(${exec_name} ${static-ass} ${GTS_STATIC_LINK_LIBRARIES})
+    target_link_libraries(${SGTS_EXECUTABLE_NAME} ${SGTS_STATIC_LINK} ${GTS_STATIC_LINK_LIBRARIES})
   else()
-    target_link_libraries(${exec_name} ${shared-ass} ${GTS_SHARED_LINK_LIBRARIES})
+    target_link_libraries(${SGTS_EXECUTABLE_NAME} ${SGTS_SHARED_LINK} ${GTS_SHARED_LINK_LIBRARIES})
   endif()
 endfunction()
 
-add_split_gts(gpid-minisat-gts SINGLE_SOLVER_MINISAT gpid-minisat-static gpid-minisat-shared)
-
-add_split_gts(gpid-cvc4-gts SINGLE_SOLVER_CVC4 gpid-cvc4-static gpid-cvc4-shared)
-
-add_split_gts(gpid-z3-gts SINGLE_SOLVER_Z3 gpid-z3-static gpid-z3-shared)
+foreach(solver ${SOLVERS_TARGETS})
+  add_split_gts(${solver})
+endforeach()
 # ==============================================================================
 # Parser - an abducible files parser
 # ==============================================================================

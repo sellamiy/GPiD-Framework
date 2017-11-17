@@ -1,0 +1,34 @@
+#ifndef GTS_EXECUTORS_SNIPPET
+#define GTS_EXECUTORS_SNIPPET
+
+#include <snlog/snlog.hpp>
+
+#ifdef SINGLE_SOLVER_ONLY
+<% for @solver in @solvers %>
+#ifdef SINGLE_SOLVER_<%= @solver.name %>
+#include <gpid/solvers/<%= @solver.name %>.hpp>
+template void generate<<%= @solver.solverClass %>>(OptionStorage& opts);
+static inline void wrap_generate(OptionStorage& opts) {
+    generate<<%= @solver.solverClass %>>(opts);
+}
+#endif
+<% end %>
+#else
+<% for @solver in @solvers %>
+#include <gpid/solvers/<%= @solver.name %>.hpp>
+template void generate<<%= @solver.solverClass %>>(OptionStorage& opts);
+<% end %>
+static inline void wrap_generate(OptionStorage& opts) {
+    switch (opts.generator) {
+    <% for @solver in @solvers %>
+    case <%= @solver.name %>_INTERFACE:
+        generate<<%= @solver.solverClass %>>(opts);
+        break;
+    <% end %>
+    default:
+        snlog::l_internal("Internal access to unknown generator");
+    }
+}
+#endif
+
+#endif

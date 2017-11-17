@@ -56,6 +56,9 @@ namespace gpid {
         typedef Z3ModelWrapper ModelT;
         typedef Z3Problem ProblemT;
 
+        inline void printSolverInformations()
+        { snlog::l_info("Interface for z3"); }
+
         void removeHypotheses(uint32_t level);
         void addHypothesis(Z3Hypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
@@ -63,7 +66,7 @@ namespace gpid {
         bool storageSubsumed(Z3Hypothesis& additional, uint32_t level);
 
         inline Z3ModelWrapper recoverModel() { return Z3ModelWrapper(solver.get_model()); }
-        inline z3::context& getContext() { return ctx; }
+        inline z3::context& getContextManager() { return ctx; }
 
         void printActiveNegation();
         void storeActive();

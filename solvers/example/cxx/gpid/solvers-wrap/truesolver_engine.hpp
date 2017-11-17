@@ -9,14 +9,21 @@ namespace gpid {
     /** The True Solver : Example Solver interface class. */
     class TrueSolver {
     public:
-        struct ProblemT    { };
         struct HypothesisT { };
         struct StorageT    { };
+        struct ContextManagerT { };
+        struct ProblemT    {
+            ProblemT(ContextManagerT&) { }
+            struct DeclarationsT { };
+            DeclarationsT sst_decl;
+            inline DeclarationsT& getDeclarations() { return  sst_decl; }
+        };
         struct ModelT
         { inline bool isSkippable (HypothesisT&) const { return false; } };
         std::vector<HypothesisT> sst_int;
         ModelT sst_mdl;
         StorageT sst_str;
+        ContextManagerT sst_ctm;
     public:
         inline void setProblem(ProblemT&) { }
         inline void start() { }
@@ -32,7 +39,10 @@ namespace gpid {
         inline void storeActive() { }
         inline ModelT& recoverModel() { return sst_mdl; }
         inline StorageT& getStorage() { return sst_str; }
+        inline ContextManagerT& getContextManager() { return sst_ctm; }
         inline bool storageSubsumed (HypothesisT&, uint32_t) { return false; }
+        inline void printSolverInformations()
+        { snlog::l_info("True Solver - The One True Solver"); }
     };
 
 };

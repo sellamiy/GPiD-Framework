@@ -6,10 +6,11 @@
 
 namespace gpid {
 
-    extern void parse_file(std::string filename, MinisatProblem& P, std::string language);
+    extern void parse_file(std::string filename, MinisatContext&, MinisatProblem& P, std::string language);
 
     extern uint32_t countAbducibles(AbduciblesOptions& opts, MinisatProblem& pbl);
-    extern void generateAbducibles(AbduciblesOptions& opts, MinisatHypothesesSet& hys, int nVars);
+    extern void generateAbducibles(AbduciblesOptions& opts, MinisatContext& ctx,
+                                   MinisatDeclarations& decls, MinisatHypothesesSet& hys);
 
 };
 

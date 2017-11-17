@@ -32,6 +32,8 @@ namespace gpid {
 
         void initCurrentMode();
     public:
+        CVC4Problem(CVC4::ExprManager&) { }
+
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
         inline void collectDeclarations(CVC4::SymbolTable* table) { decls.collect(table); }
         inline CVC4Declarations& getDeclarations() { return decls; }
@@ -54,6 +56,9 @@ namespace gpid {
         typedef CVC4ModelWrapper ModelT;
         typedef CVC4Problem ProblemT;
 
+        inline void printSolverInformations()
+        { snlog::l_info("Interface for CVC4"); }
+
         void removeHypotheses(uint32_t level);
         void addHypothesis(CVC4Hypothesis& hypothesis, uint32_t level);
         gpid::SolverTestStatus testHypotheses(uint32_t level);
@@ -61,7 +66,7 @@ namespace gpid {
         bool storageSubsumed(CVC4Hypothesis& additional, uint32_t level);
 
         inline CVC4ModelWrapper& recoverModel() { return iw_mdl; }
-        inline CVC4::ExprManager& getExprManager() { return em; }
+        inline CVC4::ExprManager& getContextManager() { return em; }
 
         void printActiveNegation();
         void storeActive();

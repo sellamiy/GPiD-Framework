@@ -32,7 +32,7 @@ namespace gpid {
             {"default", &parse_DIMACS}
         };
 
-    extern void parse_file(std::string filename, MinisatProblem& P, std::string language) {
+    extern void parse_file(std::string filename, MinisatContext&, MinisatProblem& P, std::string language) {
         if (minisatParsers.find(language) != minisatParsers.end()) {
             minisatParsers[language](filename, P);
         } else {

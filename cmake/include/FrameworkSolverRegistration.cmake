@@ -48,6 +48,12 @@ macro(target_solver_include_directories solver_name)
     PUBLIC "${ARGN}")
 endmacro()
 # ==============================================================================
+macro(register_solver_snippet_config solver_name config_file)
+  configure_file(${config_file}
+    ${LOCAL_SOLVERS_SNIPPETS_CONFIG}/${solver_name}.yaml
+    COPYONLY)
+endmacro()
+# ==============================================================================
 macro(generate_solver_interface_header solver_name local_include_dir)
   set(SOLVER_INTERFACE_NAME "${solver_name}")
   set(SOLVER_INTERFACE_HEADER "${LOCAL_SOLVERS_HEADERS_DIR}/${solver_name}.hpp")

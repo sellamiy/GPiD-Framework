@@ -15,6 +15,7 @@ endmacro()
 # ==============================================================================
 subdirlist(SOLVERS_SUBDIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR})
 foreach(solver_subdir ${SOLVERS_SUBDIRECTORIES})
+  message(STATUS "loading solver configuration: ${solver_subdir}")
   add_subdirectory(${solver_subdir})
 endforeach()
 # ==============================================================================

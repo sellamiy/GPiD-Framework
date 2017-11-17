@@ -26,27 +26,7 @@ int main(int argc, char** argv) {
     l_message("start implicate generator...");
     opts.control.time.registerTime("start");
 
-#ifdef SINGLE_SOLVER_ONLY
     generate(opts);
-#else
-    switch (opts.generator) {
-    case TRUE_SOLVER:
-        generate_true_solver(opts);
-        break;
-    case MINISAT:
-        generate_minisat(opts);
-        break;
-    case SMT_CVC4:
-        generate_cvc4(opts);
-        break;
-    case SMT_Z3:
-        generate_z3(opts);
-        break;
-    default:
-        l_internal("Got start access to unknown generator");
-        return EXIT_FAILURE;
-    }
-#endif
 
     opts.control.time.registerTime("end");
 

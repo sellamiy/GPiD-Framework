@@ -1,0 +1,21 @@
+#ifndef GTS_INTERFACES_SNIPPET
+#define GTS_INTERFACES_SNIPPET
+
+enum EngineSelection {
+    <% for @solver in @solvers %>
+    <%= @solver.name %>_INTERFACE,
+    <% end %>
+    UNCONFIGURED_INTERFACE,
+    UNKNOWN_INTERFACE
+};
+
+static inline EngineSelection toEngineSelection(std::string v) {
+    <% for @solver in @solvers %>
+    if (v == "<%= @solver.name %>") {
+        return EngineSelection::<%= @solver.name %>_INTERFACE;
+    }
+    <% end %>
+    return EngineSelection::UNKNOWN_INTERFACE;
+}
+
+#endif

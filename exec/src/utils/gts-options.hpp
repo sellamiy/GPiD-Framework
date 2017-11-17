@@ -10,14 +10,7 @@
 /* ===== Structures ===== */
 
 #ifndef SINGLE_SOLVER_ONLY
-enum EngineSelection {
-    TRUE_SOLVER,
-    MINISAT,
-    SMT_CVC4,
-    SMT_Z3,
-    UNCONFIGURED_INTERFACE,
-    UNKNOWN_INTERFACE
-};
+#include <gpid/solvers/snippets/gts-interfaces.hpp>
 #endif
 
 struct OptionStorage : public gpid::CoreOptions {
@@ -34,33 +27,9 @@ enum OptionStatus {
     OK, ENDED, FAILURE
 };
 
-#ifndef SINGLE_SOLVER_ONLY
-static inline EngineSelection toEngineSelection(std::string v);
-#endif
 static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** argv);
 static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& parser);
 static inline OptionStatus detectConflicts(OptionStorage& opts, cxxopts::Options& parser);
-
-/* ===== Converters ===== */
-
-#ifndef SINGLE_SOLVER_ONLY
-static inline EngineSelection toEngineSelection(std::string v) {
-    if (v == "true-solver") {
-        return EngineSelection::TRUE_SOLVER;
-        // return EngineSelection::UNCONFIGURED_INTERFACE;
-    }
-    if (v == "minisat") {
-        return EngineSelection::MINISAT;
-    }
-    if (v == "cvc4") {
-        return EngineSelection::SMT_CVC4;
-    }
-    if (v == "z3") {
-        return EngineSelection::SMT_Z3;
-    }
-    return EngineSelection::UNKNOWN_INTERFACE;
-}
-#endif
 
 /* ===== Parser ===== */
 

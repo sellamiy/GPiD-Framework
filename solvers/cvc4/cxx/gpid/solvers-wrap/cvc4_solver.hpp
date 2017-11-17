@@ -34,7 +34,7 @@ namespace gpid {
     }
 
     inline void CVC4Solver::printActiveNegation() {
-        p_implicate(std::cout, getExprManager(), csty_solver.getAssertions(), true);
+        p_implicate(std::cout, getContextManager(), csty_solver.getAssertions(), true);
     }
 
     inline void CVC4Solver::storeActive() {

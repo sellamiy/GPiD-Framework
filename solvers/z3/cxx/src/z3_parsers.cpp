@@ -19,7 +19,7 @@ namespace gpid {
             {"default", &parse_Z3_SMT2}
         };
 
-    extern void parse_file(std::string filename, Z3Problem& pbl, std::string language) {
+    extern void parse_file(std::string filename, z3::context&, Z3Problem& pbl, std::string language) {
         if (z3Parsers.find(language) != z3Parsers.end()) {
             z3Parsers[language](filename, pbl);
         } else {
