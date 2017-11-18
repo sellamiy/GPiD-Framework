@@ -22,8 +22,8 @@ add_custom_target(gts-solvers-snippets
 # ==============================================================================
 # GTS - an implicate generator
 # ==============================================================================
-set(GTS_STATIC_LINK_LIBRARIES witchw-static cxxopts)
-set(GTS_SHARED_LINK_LIBRARIES witchw-shared cxxopts)
+set(GTS_STATIC_LINK_LIBRARIES gpid-core-static witchw-static cxxopts)
+set(GTS_SHARED_LINK_LIBRARIES gpid-core-shared witchw-shared cxxopts)
 add_executable(gpid-gts "src/gpid-gts.cpp")
 add_dependencies(gpid-gts gts-solvers-snippets)
 if(STATIC_EXECUTABLES)

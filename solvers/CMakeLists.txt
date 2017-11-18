@@ -25,6 +25,10 @@ endforeach()
 # ==============================================================================
 add_library(gpid-solvers-static INTERFACE)
 add_library(gpid-solvers-shared INTERFACE)
+target_include_directories(gpid-solvers-static INTERFACE
+  ${LOCAL_SOLVERS_HEADERS_INCLUDE})
+target_include_directories(gpid-solvers-shared INTERFACE
+  ${LOCAL_SOLVERS_HEADERS_INCLUDE})
 target_link_libraries(gpid-solvers-static INTERFACE ${SOLVERS_STATIC_TARGETS})
 target_link_libraries(gpid-solvers-shared INTERFACE ${SOLVERS_SHARED_TARGETS})
 
