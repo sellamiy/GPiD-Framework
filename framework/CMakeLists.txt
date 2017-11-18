@@ -13,8 +13,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/include/gpid.hpp.in
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config/version.cpp.in
   ${LOCAL_FRAMEWORK_SOURCES_DIR}/config/version.cpp)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/gpid/include/version.hpp
-  DESTINATION ${LOCAL_FRAMEWORK_HEADERS_DIR}/gpid/)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/include/version.hpp
+  ${LOCAL_FRAMEWORK_HEADERS_DIR}/gpid/version.hpp COPYONLY)
 
 # ==============================================================================
 # Locating and selecting library sources
