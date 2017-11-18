@@ -1,1 +1,5 @@
 solverClass : MinisatSolver
+requiredHeaders :
+  - minisat_engine.hpp
+  - minisat_inputs.hpp
+  - minisat_outputs.hpp

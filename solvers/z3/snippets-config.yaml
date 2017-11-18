@@ -1,1 +1,5 @@
 solverClass : Z3Solver
+requiredHeaders :
+  - z3_engine.hpp
+  - z3_inputs.hpp
+  - z3_outputs.hpp

@@ -6,7 +6,7 @@
 #ifdef SINGLE_SOLVER_ONLY
 <% for @solver in @solvers %>
 #ifdef SINGLE_SOLVER_<%= @solver.name %>
-#include <gpid/solvers/<%= @solver.name %>.hpp>
+#include <gpid/solvers/<%= @solver.name %>_interface.hpp>
 template void generate<<%= @solver.solverClass %>>(OptionStorage& opts);
 static inline void wrap_generate(OptionStorage& opts) {
     generate<<%= @solver.solverClass %>>(opts);
@@ -14,8 +14,8 @@ static inline void wrap_generate(OptionStorage& opts) {
 #endif
 <% end %>
 #else
+#include <gpid/solvers/all.hpp>
 <% for @solver in @solvers %>
-#include <gpid/solvers/<%= @solver.name %>.hpp>
 template void generate<<%= @solver.solverClass %>>(OptionStorage& opts);
 <% end %>
 static inline void wrap_generate(OptionStorage& opts) {

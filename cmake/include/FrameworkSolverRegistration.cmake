@@ -54,15 +54,3 @@ macro(register_solver_snippet_config solver_name config_file)
     COPYONLY)
 endmacro()
 # ==============================================================================
-macro(generate_solver_interface_header solver_name local_include_dir)
-  set(SOLVER_INTERFACE_NAME "${solver_name}")
-  set(SOLVER_INTERFACE_HEADER "${LOCAL_SOLVERS_HEADERS_DIR}/${solver_name}.hpp")
-  set(SOLVER_ENGINE_HEADER "${local_include_dir}/${solver_name}_engine.hpp")
-  set(SOLVER_INPUT_HEADER  "${local_include_dir}/${solver_name}_inputs.hpp")
-  set(SOLVER_OUTPUT_HEADER "${local_include_dir}/${solver_name}_outputs.hpp")
-  configure_file("${CMAKE_SOURCE_DIR}/framework/gpid/include/solver_interface.hpp.in"
-    "${SOLVER_INTERFACE_HEADER}" @ONLY)
-  set(SOLVERS_HEADERS ${SOLVERS_HEADERS}
-    "${LOCAL_SOLVERS_HEADERS_DIR_RELATIVE}/${solver_name}.hpp" PARENT_SCOPE)
-endmacro()
-# ==============================================================================

@@ -1,1 +1,4 @@
 solverClass : TrueSolver
+requiredHeaders :
+  - truesolver_engine.hpp
+  - truesolver_inputs.hpp

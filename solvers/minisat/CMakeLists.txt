@@ -31,6 +31,5 @@ target_solver_include_directories(minisat "${CMAKE_BINARY_DIR}/minisat-src")
 target_solver_libraries(minisat ugly)
 target_solver_static_libraries(minisat minisat-lib-static)
 target_solver_shared_libraries(minisat minisat-lib-shared)
-generate_solver_interface_header(minisat "gpid/solvers-wrap")
 register_solver_snippet_config(minisat "${CMAKE_CURRENT_SOURCE_DIR}/snippets-config.yaml")
 # ==============================================================================

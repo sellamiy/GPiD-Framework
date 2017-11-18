@@ -1,0 +1,10 @@
+#ifndef GPID_<%= @solver.name %>_SOLVER_INTERFACE_HPP
+#define GPID_<%= @solver.name %>_SOLVER_INTERFACE_HPP
+
+#include <gpid/gpid.hpp>
+
+<% for @header in @solver.requiredHeaders %>
+#include <gpid/solvers-wrap/<%= @header %>>
+<% end %>
+
+#endif

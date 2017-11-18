@@ -1,1 +1,5 @@
 solverClass : CVC4Solver
+requiredHeaders :
+  - cvc4_engine.hpp
+  - cvc4_inputs.hpp
+  - cvc4_outputs.hpp

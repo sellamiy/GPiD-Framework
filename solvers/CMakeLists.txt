@@ -28,7 +28,9 @@ add_library(gpid-solvers-shared INTERFACE)
 target_link_libraries(gpid-solvers-static INTERFACE ${SOLVERS_STATIC_TARGETS})
 target_link_libraries(gpid-solvers-shared INTERFACE ${SOLVERS_SHARED_TARGETS})
 generate_solver_snippet(${LOCAL_SOLVERS_HEADERS_DIR}
-  ${LOCAL_SOLVERS_SNIPPETS_CONFIG} all.hpp)
+  ${LOCAL_SOLVERS_SNIPPETS_CONFIG} all.hpp ${SOLVERS_TARGETS})
+generate_solver_snippet(${LOCAL_SOLVERS_HEADERS_DIR}
+  ${LOCAL_SOLVERS_SNIPPETS_CONFIG} interface.hpp ${SOLVERS_TARGETS})
 # ==============================================================================
 set(SOLVERS_TARGETS ${SOLVERS_TARGETS} PARENT_SCOPE)
 set(SOLVERS_STATIC_TARGETS ${SOLVERS_STATIC_TARGETS} PARENT_SCOPE)
