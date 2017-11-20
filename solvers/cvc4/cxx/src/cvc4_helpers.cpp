@@ -9,11 +9,10 @@ using namespace CVC4;
 
 namespace gpid {
 
-    enum c4InputGenerator { C4IG_NONE };
+    enum c4InputGenerator { C4IG_NONE, C4IG_ALL_EQ };
     static std::map<std::string, c4InputGenerator> c4InputGeneratorTable =
-        { };
+        { { "all-eq", C4IG_ALL_EQ } };
     static inline c4InputGenerator toC4InputGenerator(std::string key) {
-        l_warn("Currently, there are no cvc4 abducible generator available");
         if (c4InputGeneratorTable[key] == c4InputGenerator::C4IG_NONE) {
             l_error("Unknown cvc4 abducible generator: " + key);
             for (std::pair<std::string, c4InputGenerator> akey : c4InputGeneratorTable) {
@@ -27,6 +26,7 @@ namespace gpid {
     static inline uint32_t c4AbducibleCompt(c4InputGenerator g, CVC4Problem&) {
         switch (g) {
         case C4IG_NONE: return 0;
+        case C4IG_ALL_EQ: l_warn("Not Done"); /* TODO */ return 0;
         default:
             l_internal("Unknown cvc4 abducible generator: " + std::to_string(g));
             return 0;
@@ -70,10 +70,17 @@ namespace gpid {
     };
 
     static inline
+    void generateAbducibles_ALL_EQ(CVC4::ExprManager& ctx, CVC4Declarations& decls, CVC4HypothesesSet& set) {
+        // TODO
+        l_warn("Not Done");
+    }
+
+    static inline
     void generateAbducibles
-    (c4InputGenerator g, CVC4::ExprManager&, CVC4Declarations&, CVC4HypothesesSet&) {
+    (c4InputGenerator g, CVC4::ExprManager& ctx, CVC4Declarations& decls, CVC4HypothesesSet& set) {
         switch (g) {
         case C4IG_NONE: break;
+        case C4IG_ALL_EQ: generateAbducibles_ALL_EQ(ctx, decls, set);
             break;
         default: l_internal("Unknown minisat abducible generator: " + std::to_string(g));
         }
