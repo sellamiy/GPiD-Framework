@@ -35,7 +35,8 @@ namespace gpid {
         CVC4Problem(CVC4::ExprManager&) { }
 
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
-        inline void collectDeclarations(CVC4::SymbolTable* table) { decls.collect(table); }
+        inline void collectDeclarations(CVC4::SymbolTable* table) { decls.store(table); }
+        inline void collectDeclarations(CVC4::Command* cmd)       { decls.collect(cmd); }
         inline CVC4Declarations& getDeclarations() { return decls; }
         void addConstraint(CVC4::Expr cons);
         bool hasMoreConstraints();

@@ -19,6 +19,7 @@ namespace gpid {
         l_warn("Fixme: CVC4 Parser - safer assertions recovery handler required"); // TODO
         CVC4::Command* cmd;
         while ((cmd = parser->nextCommand())) {
+            pbl.collectDeclarations(cmd);
             cmd->invoke(&temp);
         }
         for (CVC4::Expr expr : temp.getAssertions()) {
