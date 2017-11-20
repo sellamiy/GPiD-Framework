@@ -13,8 +13,8 @@ namespace gpid {
         inline CVC4::SymbolTable* getSymbolTable() { return stable; }
         inline std::vector<std::string>::iterator begin() { return nameDefs.begin(); }
         inline std::vector<std::string>::iterator end()   { return nameDefs.end(); }
-        inline std::vector<const std::string>::iterator cbegin() { return nameDefs.cbegin(); }
-        inline std::vector<const std::string>::iterator cend()   { return nameDefs.cend(); }
+        inline std::vector<std::string>::const_iterator cbegin() { return nameDefs.cbegin(); }
+        inline std::vector<std::string>::const_iterator cend()   { return nameDefs.cend(); }
 
         void store(CVC4::SymbolTable* table);
         void collect(CVC4::Command* cmd);
