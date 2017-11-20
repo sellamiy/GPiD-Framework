@@ -23,10 +23,46 @@ namespace gpid {
         return c4InputGeneratorTable[key];
     }
 
-    static inline uint32_t c4AbducibleCompt(c4InputGenerator g, CVC4Problem&) {
+    static inline
+    void abduciblesUtils_ALL_EQ(CVC4::ExprManager& ctx,
+                                CVC4Declarations& decls,
+                                std::vector<CVC4::Expr>& knownVars) {
+        /*
+         * Delegate symbol accesses to a dummy parser as direct accesses
+         * to the symbolTable seem to raise segmentation faults.
+         */
+        CVC4::Options opts4;
+        opts4.setInputLanguage(CVC4::language::input::LANG_SMTLIB_V2);
+        CVC4::parser::ParserBuilder pb(&ctx, "<internal>", opts4);
+        CVC4::parser::Parser* p = pb.withStringInput("").build();
+        p->useDeclarationsFrom(decls.getSymbolTable());
+
+        /* Building a type table for abducible generation */
+        std::map<CVC4::Type, std::list<Expr>> typeTable;
+        for (const std::string decl : decls) {
+            CVC4::Expr fun = p->getFunction(decl);
+            if (fun.getType().isFunction()) {
+                snlog::l_warn("Function are currently not handles by this CVC4 abducible generator");
+                // TODO : Handle functions
+                // snlog::l_info(fun.getType());
+                // snlog::l_info(fun.getType().getBaseType());
+            } else {
+                knownVars.push_back(fun);
+                typeTable[fun.getType()].push_back(fun);
+            }
+        }
+    }
+
+    static inline uint32_t countAbducibles_ALL_EQ(CVC4::ExprManager& ctx, CVC4Declarations& decls) {
+        std::vector<CVC4::Expr> knownVars;
+        abduciblesUtils_ALL_EQ(ctx, decls, knownVars);
+        return knownVars.size() > 1 ? knownVars.size() * (knownVars.size() - 1) : 0;
+    }
+
+    static inline uint32_t c4AbducibleCompt(c4InputGenerator g, CVC4Problem& pbl) {
         switch (g) {
         case C4IG_NONE: return 0;
-        case C4IG_ALL_EQ: l_warn("Not Done"); /* TODO */ return 0;
+        case C4IG_ALL_EQ: return countAbducibles_ALL_EQ(pbl.getExprManager(), pbl.getDeclarations());
         default:
             l_internal("Unknown cvc4 abducible generator: " + std::to_string(g));
             return 0;
@@ -70,9 +106,25 @@ namespace gpid {
     };
 
     static inline
-    void generateAbducibles_ALL_EQ(CVC4::ExprManager& ctx, CVC4Declarations& decls, CVC4HypothesesSet& set) {
-        // TODO
-        l_warn("Not Done");
+    void generateAbducibles_ALL_EQ(CVC4::ExprManager& ctx,
+                                   CVC4Declarations& decls, CVC4HypothesesSet& set) {
+        std::vector<CVC4::Expr> knownVars;
+        abduciblesUtils_ALL_EQ(ctx, decls, knownVars);
+
+        /* Building abducibles */
+        uint32_t pos = 0;
+        alloc_gab<CVC4HypothesesSet>(set.getSourceSize());
+        for (uint32_t i = 0; i < knownVars.size(); i++) {
+            for (uint32_t j = i + 1; j < knownVars.size(); j++) {
+                CVC4::Expr eq_expr  = ctx.mkExpr(kind::EQUAL, knownVars[i], knownVars[j]);
+                CVC4::Expr neq_expr = ctx.mkExpr(kind::DISTINCT, knownVars[i], knownVars[j]);
+                store_gab_hyp<CVC4HypothesesSet, CVC4::Expr>(set, pos, eq_expr);
+                store_gab_hyp<CVC4HypothesesSet, CVC4::Expr>(set, pos+1, neq_expr);
+                set.mapLink(pos, pos+1);
+                set.mapLink(pos+1, pos);
+                pos += 2;
+            }
+        }
     }
 
     static inline

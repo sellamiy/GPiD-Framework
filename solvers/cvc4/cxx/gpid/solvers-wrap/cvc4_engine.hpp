@@ -28,15 +28,17 @@ namespace gpid {
         std::vector<CVC4::Expr> cons_data;
         uint32_t reading_pos = -1;
 
+        CVC4::ExprManager& em;
         CVC4Declarations decls;
 
         void initCurrentMode();
     public:
-        CVC4Problem(CVC4::ExprManager&) { }
+        CVC4Problem(CVC4::ExprManager& em) : em(em) { }
 
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
         inline void collectDeclarations(CVC4::SymbolTable* table) { decls.store(table); }
         inline void collectDeclarations(CVC4::Command* cmd)       { decls.collect(cmd); }
+        inline CVC4::ExprManager& getExprManager() { return em; }
         inline CVC4Declarations& getDeclarations() { return decls; }
         void addConstraint(CVC4::Expr cons);
         bool hasMoreConstraints();
