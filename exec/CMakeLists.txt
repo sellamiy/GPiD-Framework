@@ -3,6 +3,9 @@
 # ==============================================================================
 project(gpid-execs LANGUAGES CXX)
 # ==============================================================================
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+# ==============================================================================
 # Generate Solver code snippets for executables
 # ==============================================================================
 include(FrameworkSolverSnippets)
@@ -22,8 +25,8 @@ add_custom_target(gts-solvers-snippets
 # ==============================================================================
 # GTS - an implicate generator
 # ==============================================================================
-set(GTS_STATIC_LINK_LIBRARIES gpid-core-static witchw-static cxxopts)
-set(GTS_SHARED_LINK_LIBRARIES gpid-core-shared witchw-shared cxxopts)
+set(GTS_STATIC_LINK_LIBRARIES gpid-core-static witchw-static cxxopts Threads::Threads)
+set(GTS_SHARED_LINK_LIBRARIES gpid-core-shared witchw-shared cxxopts Threads::Threads)
 add_executable(gpid-gts "src/gpid-gts.cpp")
 add_dependencies(gpid-gts gts-solvers-snippets)
 if(STATIC_EXECUTABLES)
