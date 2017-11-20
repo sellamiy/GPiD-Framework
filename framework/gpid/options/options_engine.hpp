@@ -16,6 +16,8 @@ namespace gpid {
 
         uint32_t max_level = std::numeric_limits<uint32_t>::max();
 
+        uint64_t time_limit = 0;
+
     };
 
 };

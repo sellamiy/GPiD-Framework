@@ -103,10 +103,12 @@ template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>
 ::generateImplicates(gpid::GenerationAlgorithm algorithm) {
     registerInterruptsHandlers(&des_iflags);
+    startTimeout(&des_iflags, options.time_limit);
     switch (algorithm) {
     case PID: generatePID(); break;
     default: snlog::l_internal("Trying to generate implicates using unknown algorithm!");
     }
+    stopTimeout();
     restoreInterruptsHandlers();
     instrument::analyze(NULL, instrument::analyze_type::end);
 }
