@@ -10,7 +10,7 @@ namespace gpid {
     { snlog::l_info("The True Solver does not need to parse files!"); }
 
     inline uint32_t countAbducibles(AbduciblesOptions&, TrueSolver::ProblemT&)
-    { return 0; }
+    { return 1; }
 
     inline void generateAbducibles
     (AbduciblesOptions&, TrueSolver::ContextManagerT&,
