@@ -8,12 +8,14 @@ using namespace gpid;
 
 SkipperController::SkipperController(const CoreOptions& opts) :
     storage(opts.engine.store_implicates),
-    max_level(opts.engine.max_level)
+    max_level(opts.engine.max_level),
+    inconsistencies(opts.engine.allow_inconsistencies)
 { }
 
 SkipperController::SkipperController(const SkipperController& ctrler) :
     storage(ctrler.storage),
-    max_level(ctrler.max_level)
+    max_level(ctrler.max_level),
+    inconsistencies(ctrler.inconsistencies)
 { }
 
 static std::ofstream nullstream;

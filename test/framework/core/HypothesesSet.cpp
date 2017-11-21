@@ -23,8 +23,10 @@ struct HSTest_SWrapper {
     typedef HSTest_MW ModelT;
     typedef HSTest_MW StorageT;
 
-    static inline bool storageSubsumed(HSTest_S&, uint32_t)
-    { return false; }
+    static inline SolverTestStatus checkConsistency(uint32_t) { return SOLVER_SAT; }
+    static inline bool storageSubsumed(HSTest_S&, uint32_t)   { return false; }
+    static inline void addHypothesis(HSTest_S&, uint32_t)     { }
+    static inline void removeHypotheses(uint32_t)             { }
 };
 
 static HSTest_S hmemory[HSET_SIZE];

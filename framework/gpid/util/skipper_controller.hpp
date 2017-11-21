@@ -12,6 +12,7 @@ namespace gpid {
 
         const bool storage;
         const uint32_t max_level;
+        const bool inconsistencies;
     };
 
 };

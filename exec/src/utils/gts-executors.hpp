@@ -35,8 +35,10 @@ static inline void generate(OptionStorage& opts) {
     opts.control.stats.addStatistic("Number of implicates generated", E.getGeneratedImplicatesCount());
     opts.control.stats.addStatisticGroup();
     opts.control.stats.addStatistic("Number of nodes explored", E.getExploredNodesCount());
-    opts.control.stats.addStatistic("Number of nodes skipped", "");
-    opts.control.stats.addStatistic("Inconsistency", E.getInconsistentNodesSkippedCount(), 4);
+    opts.control.stats.addStatistic("Nodes skipped", "");
+    for (std::pair<std::string, uint64_t> p : A.getSkippedCounts()) {
+        opts.control.stats.addStatistic(p.first, p.second, 4);
+    }
 }
 
 #include <gpid/solvers/snippets/gts-executors.hpp>

@@ -2,7 +2,6 @@
 #define GPID_ABSTRACT_SOLVER_HPP
 
 #include <gpid/config.hpp>
-#include <gpid/core/hypotheses.hpp>
 
 namespace gpid {
 

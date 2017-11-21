@@ -5,6 +5,7 @@
 #include <list>
 #include <starray/starray.hpp>
 #include <snlog/snlog.hpp>
+#include <gpid/core/solvers.hpp>
 #include <gpid/util/skipper_controller.hpp>
 
 #include <gpid/instrument/instrument.hpp>
@@ -15,11 +16,18 @@ namespace gpid {
     class HypothesisSkipper {
         SolverT& solver;
         SkipperController& control;
+        struct {
+            uint64_t storage     = 0;
+            uint64_t level_depth = 0;
+            uint64_t consistency = 0;
+        } counters;
     public:
         HypothesisSkipper(SolverT& s, SkipperController& ctrler)
             : solver(s), control(ctrler) {}
 
         inline bool canBeSkipped(typename SolverT::HypothesisT& h, uint32_t level);
+        inline bool consistent(typename SolverT::HypothesisT& h, uint32_t level);
+        inline void storeCounts(std::map<std::string, uint64_t>& target);
     };
 
     /** Class for handling abducible hypotheses. */
@@ -46,6 +54,8 @@ namespace gpid {
         std::map<level_t, index_t> pointer;
         level_t clevel;
 
+        std::map<std::string, uint64_t> counts_wrap;
+
         inline void increaseLevel(level_t target);
         inline void decreaseLevel(level_t target);
         inline void accessLevel(level_t level);
@@ -66,6 +76,7 @@ namespace gpid {
 
         /** Original size of the set. */
         inline uint32_t getSourceSize();
+        inline std::map<std::string, uint64_t>& getSkippedCounts();
 
         inline bool nextHypothesis(uint32_t level);
         /** Recover for usage the next available hypothesis at a given level.
@@ -88,6 +99,18 @@ namespace gpid {
     template<class SolverT>
     inline void HypothesesSet<SolverT>::mapLink(uint32_t idx, uint32_t tgt_idx) {
         hp_links[idx].push_back(tgt_idx);
+    }
+
+    template<class SolverT>
+    inline void HypothesisSkipper<SolverT>::storeCounts(std::map<std::string, uint64_t>& target) {
+        target["storage"]     = counters.storage;
+        target["level depth"] = counters.level_depth;
+        target["consistency"] = counters.consistency;
+    }
+    template<class SolverT>
+    inline std::map<std::string, uint64_t>& HypothesesSet<SolverT>::getSkippedCounts() {
+        skipper.storeCounts(counts_wrap);
+        return counts_wrap;
     }
 
     template<class SolverT>
@@ -174,11 +197,31 @@ namespace gpid {
     }
 
     template<class SolverT>
+    inline bool HypothesisSkipper<SolverT>::consistent(typename SolverT::HypothesisT& h, uint32_t level) {
+        solver.addHypothesis(h, level+1);
+        SolverTestStatus status = solver.checkConsistency(level);
+        if (status == SolverTestStatus::SOLVER_UNKNOWN) {
+            snlog::l_fatal("Solver could not decide consistency query!");
+        }
+        solver.removeHypotheses(level+1);
+        return status == SolverTestStatus::SOLVER_SAT;
+    }
+
+    template<class SolverT>
     inline bool HypothesisSkipper<SolverT>::canBeSkipped(typename SolverT::HypothesisT& h, uint32_t level) {
-        return
-            (control.storage && solver.storageSubsumed(h, level))
-            || (control.max_level <= level)
-            ;
+        if (control.storage && solver.storageSubsumed(h, level)) {
+            counters.storage++;
+            return true;
+        }
+        if (control.max_level <= level) {
+            counters.level_depth++;
+            return true;
+        }
+        if (!control.inconsistencies && !consistent(h, level)) {
+            counters.consistency++;
+            return true;
+        }
+        return false;
     }
 
     template<class SolverT>
