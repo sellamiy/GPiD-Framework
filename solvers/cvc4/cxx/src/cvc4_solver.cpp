@@ -6,7 +6,7 @@
 using namespace gpid;
 
 CVC4Solver::CVC4Solver()
-    : solver(&em), csty_solver(&em)
+    : solver(&em), csty_solver(&em), iw_mdl(solver)
 {
     solver.setOption("incremental", true);
     solver.setOption("produce-models", true);

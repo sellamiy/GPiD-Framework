@@ -14,9 +14,11 @@ namespace gpid {
         CVC4Hypothesis(const CVC4Hypothesis& e) : expr(e.expr) {}
     };
     struct CVC4ModelWrapper {
-        inline bool isSkippable(CVC4Hypothesis&) const {
-            snlog::l_warn("Not implemented yet - CVC4 model wrapper skipper");
-            return false;
+        const CVC4::SmtEngine& engine;
+        inline CVC4ModelWrapper(CVC4::SmtEngine& engine) : engine(engine) { }
+        inline CVC4ModelWrapper(CVC4ModelWrapper& mdlw) : engine(mdlw.engine) { }
+        inline bool isSkippable(CVC4Hypothesis& h) const {
+            return engine.getValue(h.expr) == engine.getExprManager()->mkConst(true);
         }
     };
 
