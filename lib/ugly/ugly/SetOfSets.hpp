@@ -1,5 +1,5 @@
-#ifndef _UGLY_SET_OF_SETS_HPP_
-#define _UGLY_SET_OF_SETS_HPP_
+#ifndef LIB_UGLY__SET_OF_SETS_HPP
+#define LIB_UGLY__SET_OF_SETS_HPP
 
 #include <set>
 

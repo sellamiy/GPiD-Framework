@@ -1,4 +1,4 @@
-#define _DOT_GRAPH_
+#define LIB_DOT__GRAPH_CPP
 
 #include <dot/Graph.hpp>
 

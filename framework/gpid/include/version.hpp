@@ -1,5 +1,5 @@
-#ifndef _PI_DECOMP_VERSION_HEADER_
-#define _PI_DECOMP_VERSION_HEADER_
+#ifndef GPID_FRAMEWORK__VERSION_HPP
+#define GPID_FRAMEWORK__VERSION_HPP
 
 #include <string>
 

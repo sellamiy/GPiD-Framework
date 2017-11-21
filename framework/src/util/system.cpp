@@ -1,4 +1,4 @@
-#define _GPID_SYSTEM_CPP_
+#define GPID_FRAMEWORK__SYSTEM_CPP
 
 #include <csignal>
 #include <thread>

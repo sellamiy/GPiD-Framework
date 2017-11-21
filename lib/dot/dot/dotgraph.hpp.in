@@ -1,5 +1,5 @@
-#ifndef _DOT_GRAPHER_LIBRARY_HEADER_
-#define _DOT_GRAPHER_LIBRARY_HEADER_
+#ifndef LIB_DOT__GRAPH_HEADER
+#define LIB_DOT__GRAPH_HEADER
 
 #include <dot/Graph.hpp>
 #include <dot/TypesLibrary.hpp>

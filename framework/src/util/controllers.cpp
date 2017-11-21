@@ -1,4 +1,4 @@
-#define GPID_CONTROLLERS_CONSTRUCTORS
+#define GPID_FRAMEWORK__UTIL__CONTROLLERS_CPP
 
 #include <fstream>
 #include <gpid/util/skipper_controller.hpp>

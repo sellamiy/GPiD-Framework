@@ -1,4 +1,4 @@
-#define _DOT_TYPE_TABLES_
+#define LIB_DOT__DOT_TYPE_WRITERS_CPP
 
 #include <dot/GraphUtils.hpp>
 

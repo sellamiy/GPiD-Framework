@@ -1,4 +1,4 @@
-#define _WITCHW_WTIME_CPP_
+#define LIB_WITCHW__WTIME_CPP
 
 #include <map>
 #include <sstream>

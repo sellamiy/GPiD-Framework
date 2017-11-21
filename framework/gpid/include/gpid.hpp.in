@@ -1,5 +1,5 @@
-#ifndef _PI_DECOMP_FRAMEWORK_HEADER_
-#define _PI_DECOMP_FRAMEWORK_HEADER_
+#ifndef GPID_FRAMEWORK__CORE_HEADER_
+#define GPID_FRAMEWORK__CORE_HEADER_
 
 #include <gpid/config.hpp>
 #include <gpid/version.hpp>

@@ -1,4 +1,4 @@
-#define _STATIC_ACTIVABLE_ARRAY_CPP_
+#define LIB_STARRAY__STATIC_ACTIVABLE_ARRAY_CPP
 
 #include <cstdlib>
 #include <cassert>

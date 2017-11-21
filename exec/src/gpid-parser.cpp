@@ -1,4 +1,4 @@
-#define GPID_GTS_PI_GENERATOR
+#define GPID_EXEC_GPID_PARSER_CPP
 
 #include <iostream>
 #include <gpid/gpid.hpp>

@@ -1,4 +1,4 @@
-#define GPID_INSTRUMENTATION_CORE_IMPLEM
+#define GPID_FRAMEWORK__INSTRUMENT__CORE_CPP
 
 #include <map>
 #include <list>

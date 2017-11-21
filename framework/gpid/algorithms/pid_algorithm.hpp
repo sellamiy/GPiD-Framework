@@ -1,5 +1,5 @@
-#ifndef GPID_PID_ALGORITHMS_HPP
-#define GPID_PID_ALGORITHMS_HPP
+#ifndef GPID_FRAMEWORK__ALGORITHMS__PID_ALGORITHM_HPP
+#define GPID_FRAMEWORK__ALGORITHMS__PID_ALGORITHM_HPP
 
 #include <snlog/snlog.hpp>
 #include <gpid/core/engine.hpp>

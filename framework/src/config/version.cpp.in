@@ -1,4 +1,4 @@
-#define _PI_DECOMP_VERSION_DEFINITIONS_
+#define GPID_FRAMEWORK__CONFIG__VERSION_CPP
 #include <gpid/config.hpp>
 #include <gpid/version.hpp>
 

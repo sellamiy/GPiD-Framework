@@ -1,5 +1,5 @@
-#ifndef _LIB_SNLOG_HEADER_
-#define _LIB_SNLOG_HEADER_
+#ifndef LIB_SNLOG__HEADER
+#define LIB_SNLOG__HEADER
 
 #include <iostream>
 

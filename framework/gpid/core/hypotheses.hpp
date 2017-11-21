@@ -1,5 +1,5 @@
-#ifndef GPID_HYPOTHESES_HPP
-#define GPID_HYPOTHESES_HPP
+#ifndef GPID_FRAMEWORK__CORE__HYPOTHESES_HPP
+#define GPID_FRAMEWORK__CORE__HYPOTHESES_HPP
 
 #include <map>
 #include <list>

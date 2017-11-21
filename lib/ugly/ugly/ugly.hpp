@@ -1,5 +1,5 @@
-#ifndef _LIB_UGLY_HEADER_
-#define _LIB_UGLY_HEADER_
+#ifndef LIB_UGLY__HEADER
+#define LIB_UGLY__HEADER
 
 #include <ugly/SetOfSets.hpp>
 

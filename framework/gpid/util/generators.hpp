@@ -1,5 +1,5 @@
-#ifndef GPID_GENERATORS_HPP
-#define GPID_GENERATORS_HPP
+#ifndef GPID_FRAMEWORK__UTIL__GENERATORS_HPP
+#define GPID_FRAMEWORK__UTIL__GENERATORS_HPP
 
 #include <snlog/snlog.hpp>
 #include <starray/starray.hpp>

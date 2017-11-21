@@ -1,5 +1,5 @@
-#ifndef GPID_OPTIONS_HPP
-#define GPID_OPTIONS_HPP
+#ifndef GPID_FRAMEWORK__OPTIONS__CORE_HPP
+#define GPID_FRAMEWORK__OPTIONS__CORE_HPP
 
 #include <gpid/config.hpp>
 #include <gpid/options/options_engine.hpp>

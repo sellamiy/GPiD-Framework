@@ -1,4 +1,4 @@
-#define _DOT_SYSTEM_LIBRARY_
+#define LIB_DOT__SYSTEM_CPP
 #include <cstdlib>
 #include <fstream>
 #include <dot/dotcommand.hpp>

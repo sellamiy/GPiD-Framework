@@ -1,4 +1,4 @@
-#define GPID_SELCTION_GRAPH_INSTR_IMPLEM
+#define GPID_FRAMEWORK__CONFIG__SELECTION_GRAPH_CPP
 
 #include <gpid/instrument/selection_graph.hpp>
 

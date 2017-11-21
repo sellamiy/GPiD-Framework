@@ -1,5 +1,5 @@
-#ifndef _WITCHW_PRINTERS_
-#define _WITCHW_PRINTERS_
+#ifndef LIB_WITCHW__WITCH_PRINTERS_HPP
+#define LIB_WITCHW__WITCH_PRINTERS_HPP
 
 #include <cstdint>
 #include <string>

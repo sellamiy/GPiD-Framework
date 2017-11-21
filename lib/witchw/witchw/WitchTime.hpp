@@ -1,5 +1,5 @@
-#ifndef _WITCHW_TIME_
-#define _WITCHW_TIME_
+#ifndef LIB_WITCHW__WITCH_TIME_HPP
+#define LIB_WITCHW__WITCH_TIME_HPP
 
 #include <string>
 #include <chrono>

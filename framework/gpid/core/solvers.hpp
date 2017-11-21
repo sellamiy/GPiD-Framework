@@ -1,5 +1,5 @@
-#ifndef GPID_ABSTRACT_SOLVER_HPP
-#define GPID_ABSTRACT_SOLVER_HPP
+#ifndef GPID_FRAMEWORK__CORE__SOLVERS_HPP
+#define GPID_FRAMEWORK__CORE__SOLVERS_HPP
 
 #include <gpid/config.hpp>
 

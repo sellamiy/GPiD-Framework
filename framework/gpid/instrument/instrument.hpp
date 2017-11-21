@@ -1,5 +1,5 @@
-#ifndef GPID_INSTRUMENT_HPP
-#define GPID_INSTRUMENT_HPP
+#ifndef GPID_FRAMEWORK__INSTRUMENT__INSTRUMENT_HPP
+#define GPID_FRAMEWORK__INSTRUMENT__INSTRUMENT_HPP
 #include <gpid/config.hpp>
 #include <gpid/options/options_instrument.hpp>
 #include <gpid/util/instrument_controller.hpp>

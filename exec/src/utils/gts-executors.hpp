@@ -1,5 +1,5 @@
-#ifndef _INCL_EX_EXECUTORS_PARSER_
-#define _INCL_EX_EXECUTORS_PARSER_
+#ifndef GPID_EXEC__UTILS__GTS_EXECUTORS_HPP
+#define GPID_EXEC__UTILS__GTS_EXECUTORS_HPP
 
 #include <gpid/gpid.hpp>
 #include "gts-options.hpp"

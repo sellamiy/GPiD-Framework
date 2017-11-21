@@ -1,5 +1,5 @@
-#ifndef _STATIC_ARRAYS_LIBRARY_HEADER_
-#define _STATIC_ARRAYS_LIBRARY_HEADER_
+#ifndef LIB_STARRAY__HEADER
+#define LIB_STARRAY__HEADER
 
 #include <starray/StaticActivableArray.hpp>
 #include <starray/SequentialActivableArray.hpp>

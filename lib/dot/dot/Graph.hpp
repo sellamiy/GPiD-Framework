@@ -1,5 +1,5 @@
-#ifndef _DOT_GRAPH_HEADER_
-#define _DOT_GRAPH_HEADER_
+#ifndef LIB_DOT__GRAPH_HPP
+#define LIB_DOT__GRAPH_HPP
 
 #include <map>
 #include <dot/GraphUtils.hpp>

@@ -1,5 +1,5 @@
-#ifndef _WITCHW_CONTROL_
-#define _WITCHW_CONTROL_
+#ifndef LIB_WITCHW__WITCH_CONTROL_HPP
+#define LIB_WITCHW__WITCH_CONTROL_HPP
 
 #include <witchw/WitchPrinters.hpp>
 #include <witchw/WitchTime.hpp>

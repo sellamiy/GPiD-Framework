@@ -1,5 +1,4 @@
-#ifndef _DOT_TYPES_LIBRARY_
-#define _DOT_TYPES_LIBRARY_
+#define LIB_DOT__DOT_TYPE_LIBRARY_CPP
 
 #include <dot/TypesLibrary.hpp>
 
@@ -27,5 +26,3 @@ extern const GraphEdgeType dot::types::ClassicDashedEdge
 extern const GraphEdgeType dot::types::ClassicDottedEdge
 = GraphEdgeType(DotColor::dc_black, DotArrowType::dat_normal, DotArrowType::dat_normal,
                 DotArrowDir::dad_forward, DotArrowStyle::das_dotted);
-
-#endif

@@ -1,5 +1,5 @@
-#ifndef GPID_DECOMP_ENGINE_HPP
-#define GPID_DECOMP_ENGINE_HPP
+#ifndef GPID_FRAMEWORK__CORE__ENGINE_HPP
+#define GPID_FRAMEWORK__CORE__ENGINE_HPP
 
 #include <cstdint>
 #include <vector>

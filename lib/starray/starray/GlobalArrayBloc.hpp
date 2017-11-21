@@ -1,5 +1,5 @@
-#ifndef _GLOBAL_ARRAY_BLOC_HPP_
-#define _GLOBAL_ARRAY_BLOC_HPP_
+#ifndef LIB_STARRAY__GLOBAL_ARRAY_BLOC_HPP
+#define LIB_STARRAY__GLOBAL_ARRAY_BLOC_HPP
 
 #include <cinttypes>
 #include <string>

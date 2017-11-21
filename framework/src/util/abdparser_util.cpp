@@ -1,4 +1,4 @@
-#define GPID_UTILITIES_ABDUCIBLE_PARSER
+#define GPID_FRAMEWORK__UTIL__ABDPARSER_UTIL_CPP
 
 #include <snlog/snlog.hpp>
 #include <gpid/util/parsers.hpp>

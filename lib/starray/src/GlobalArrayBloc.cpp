@@ -1,4 +1,4 @@
-#define _GLOBAL_ARRAY_BLOC_CPP_
+#define LIB_STARRAY__GLOBAL_ARRAY_BLOC_CPP
 
 #include <map>
 #include <starray/GlobalArrayBloc.hpp>

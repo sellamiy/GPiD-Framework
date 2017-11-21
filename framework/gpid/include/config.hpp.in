@@ -1,5 +1,5 @@
-#ifndef _PI_DECOMP_CONFIGURATION_HEADER_
-#define _PI_DECOMP_CONFIGURATION_HEADER_
+#ifndef GPID_FRAMEWORK__CONFIG_HPP
+#define GPID_FRAMEWORK__CONFIG_HPP
 
 /* Minisat additional components options */
 #cmakedefine MERGE_MINISAT_WRAPPERS

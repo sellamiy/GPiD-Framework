@@ -1,5 +1,5 @@
-#ifndef _GPID_SYSTEM_HPP_
-#define _GPID_SYSTEM_HPP_
+#ifndef GPID_FRAMEWORK__CORE__SYSTEM_HPP
+#define GPID_FRAMEWORK__CORE__SYSTEM_HPP
 
 namespace gpid {
 

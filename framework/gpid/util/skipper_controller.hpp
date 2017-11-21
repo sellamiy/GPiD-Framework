@@ -1,5 +1,5 @@
-#ifndef GPID_CONTROLLER_SKIPPER_HPP
-#define GPID_CONTROLLER_SKIPPER_HPP
+#ifndef GPID_FRAMEWORK__SKIPPER_CONTROLLER__PARSERS_HPP
+#define GPID_FRAMEWORK__SKIPPER_CONTROLLER__PARSERS_HPP
 
 #include <gpid/config.hpp>
 #include <gpid/options/options_core.hpp>

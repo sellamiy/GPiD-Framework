@@ -1,4 +1,4 @@
-#define _SEQUENTIAL_ACTIVABLE_ARRAY_CPP_
+#define LIB_STARRAY__SEQUENTIAL_ACTIVABLE_ARRAY_CPP
 
 #include <cstdlib>
 #include <cassert>

@@ -1,5 +1,5 @@
-#ifndef GPID_PARSERS_HPP
-#define GPID_PARSERS_HPP
+#ifndef GPID_FRAMEWORK__UTIL__PARSERS_HPP
+#define GPID_FRAMEWORK__UTIL__PARSERS_HPP
 
 #include <fstream>
 #include <gpid/config.hpp>

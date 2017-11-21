@@ -1,5 +1,5 @@
-#ifndef _DOT_GRAPH_UTILS_HEADER_
-#define _DOT_GRAPH_UTILS_HEADER_
+#ifndef LIB_DOT__GRAPH_UTILS_HPP
+#define LIB_DOT__GRAPH_UTILS_HPP
 
 #include <string>
 #include <iostream>
