@@ -1,0 +1,103 @@
+#define GPID_<%= @solver.name %>_ABDUCIBLE_WRAPPERS_CPP
+
+#include <snlog/snlog.hpp>
+#include <gpid/util/parsers.hpp>
+#include <gpid/util/generators.hpp>
+#include <gpid/solver-interfaces/<%= @solver.name %>_inputs.hpp>
+
+<% for @snippet in @solver.abducibleSnippets %>
+#include <gpid/solver-snippets/<%= @solver.name %>/<%= @snippet %>>
+<% end %>
+
+using namespace snlog;
+
+namespace gpid {
+
+    enum <%= @solver.name %>InputGenerator {
+        <% for @generator in @solver.abducibleGenerators %>
+        <%= @solver.name %>_IG_<%= @generator["name"] %>,
+        <% end %>
+        <%= @solver.name %>_IG_NONE
+    };
+
+    static inline <%= @solver.name %>InputGenerator to<%= @solver.name %>InputGenerator(std::string key) {
+        <% for @generator in @solver.abducibleGenerators %>
+        if (key == "<%= @generator["name"] %>") {
+            return <%= @solver.name %>_IG_<%= @generator["name"] %>;
+        }
+        <% end %>
+        l_error("Unknown <%= @solver.name %> abducible generator: " + key);
+        <% for @generator in @solver.abducibleGenerators %>
+        l_info("   -- available: <%= @generator["name"] %>");
+        <% end %>
+        return <%= @solver.name %>_IG_NONE;
+    }
+
+    static inline uint32_t <%= @solver.name %>AbducibleCompt
+    (<%= @solver.name %>InputGenerator g, <%= @solver.problemClass %>& pbl) {
+        switch (g) {
+        <% for @generator in @solver.abducibleGenerators %>
+        case <%= @solver.name %>_IG_<%= @generator["name"] %>:
+            return <%= @generator["counter"] %>(pbl.getContextManager(), pbl.getDeclarations());
+        <% end %>
+        default:
+            l_internal("Unknown <%= @solver.name %> abducible generator: " + std::to_string(g));
+            return 0;
+        }
+    }
+
+    struct <%= @solver.name %>GeneratorCounter {
+        inline uint32_t operator() (std::string gkey, <%= @solver.problemClass %>& pbl)
+        { return <%= @solver.name %>AbducibleCompt(to<%= @solver.name %>InputGenerator(gkey), pbl); }
+    };
+
+    struct <%= @solver.name %>Loader {
+        inline void operator()
+        (std::string filename,
+         <%= @solver.contextManagerClass %>& ctx,
+         <%= @solver.declarationsClass %>& decls,
+         HypothesesSet<<%= @solver.solverClass %>>& set)
+        { loadAbducibles(filename, ctx, decls, set); }
+    };
+
+    static inline void <%= @solver.name %>AbducibleGen
+    (<%= @solver.name %>InputGenerator g,
+     <%= @solver.contextManagerClass %>& ctx,
+     <%= @solver.declarationsClass %>& decls,
+     HypothesesSet<<%= @solver.solverClass %>>& set) {
+        switch (g) {
+        <% for @generator in @solver.abducibleGenerators %>
+        case <%= @solver.name %>_IG_<%= @generator["name"] %>:
+            <%= @generator["generator"] %>(ctx, decls, set);
+            break;
+        <% end %>
+        default: l_internal("Unknown minisat abducible generator: " + std::to_string(g));
+        }
+    }
+
+    struct <%= @solver.name %>Generator {
+        inline void operator()
+        (std::string gkey,
+         <%= @solver.contextManagerClass %>& ctx,
+         <%= @solver.declarationsClass %>& decls,
+         HypothesesSet<<%= @solver.solverClass %>>& set)
+        { <%= @solver.name %>AbducibleGen(to<%= @solver.name %>InputGenerator(gkey), ctx, decls, set); }
+    };
+
+    extern uint32_t countAbducibles(AbduciblesOptions& opts, <%= @solver.problemClass %>& pbl) {
+        return countAbducibles<<%= @solver.problemClass %>, <%= @solver.name %>GeneratorCounter>(opts, pbl);
+    }
+
+    extern void generateAbducibles
+    (AbduciblesOptions& opts,
+     <%= @solver.contextManagerClass %>& ctx,
+     <%= @solver.declarationsClass %>& decls,
+     HypothesesSet<<%= @solver.solverClass %>>& set) {
+        generateAbducibles<HypothesesSet<<%= @solver.solverClass %>>,
+                           <%= @solver.contextManagerClass %>,
+                           <%= @solver.declarationsClass %>,
+                           <%= @solver.name %>Loader, <%= @solver.name %>Generator>
+            (opts, ctx, decls, set);
+    }
+
+}

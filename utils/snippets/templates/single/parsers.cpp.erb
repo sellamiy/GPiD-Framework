@@ -1,0 +1,29 @@
+#define GPID_<%= @solver.name %>_PARSERS_CPP
+
+#include <gpid/solver-interfaces/<%= @solver.name %>_inputs.hpp>
+
+<% for @parser_src in @solver.parserSnippets %>
+#include <gpid/solver-snippets/<%= @solver.name %>/<%= @parser_src %>>
+<% end %>
+
+namespace gpid {
+
+    extern void parse_file(std::string filename, <%= @solver.contextManagerClass %>& ctx,
+                           <%= @solver.problemClass %>& pbl, std::string language) {
+        <% for @parser in @solver.parsers %>
+        if (language == "<%= @parser["language"] %>") {
+            <%= @parser["function"] %>(filename, ctx, pbl);
+            return;
+        }
+        <% end %>
+        if (language == "default") {
+            <%= @solver.parsers[0]["function"] %>(filename, ctx, pbl);
+        } else {
+            snlog::l_fatal("Unknown input language for solver <%= @solver.name %>: " + language);
+            <% for @parser in @solver.parsers %>
+            snlog::l_info("   -- available: <%= @parser["language"] %>");
+            <% end %>
+        }
+    }
+
+}

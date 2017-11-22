@@ -1,0 +1,23 @@
+#ifndef GPID_<%= @solver.name %>_INPUT_HANDLING_HPP
+#define GPID_<%= @solver.name %>_INPUT_HANDLING_HPP
+
+#include <gpid/options/options_abducibles.hpp>
+#include <gpid/solver-interfaces/<%= @solver.name %>_engine.hpp>
+
+namespace gpid {
+
+    extern void parse_file(std::string filename,
+                           <%= @solver.contextManagerClass %>& ctx,
+                           <%= @solver.problemClass %>& pbl,
+                           std::string language);
+
+    extern uint32_t countAbducibles(AbduciblesOptions& opts, <%= @solver.problemClass %>& pbl);
+
+    extern void generateAbducibles(AbduciblesOptions& opts,
+                                   <%= @solver.contextManagerClass %>& ctx,
+                                   <%= @solver.declarationsClass %>& decls,
+                                   HypothesesSet<<%= @solver.solverClass %>>& hys);
+
+};
+
+#endif

@@ -1,0 +1,7 @@
+#define GPID_<%= @solver.name %>_CONTEXT_CPP
+
+#include <gpid/solver-interfaces/<%= @solver.name %>_context.hpp>
+
+<% for @inlined in @solver.contextSrcSnippets %>
+#include <gpid/solver-snippets/<%= @solver.name %>/<%= @inlined %>>
+<% end %>

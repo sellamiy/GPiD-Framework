@@ -1,0 +1,8 @@
+#ifndef GPID_<%= @solver.name %>_CONTEXT_HPP
+#define GPID_<%= @solver.name %>_CONTEXT_HPP
+
+<% for @header in @solver.contextSnippets %>
+#include <gpid/solver-snippets/<%= @solver.name %>/<%= @header %>>
+<% end %>
+
+#endif

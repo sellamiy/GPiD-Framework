@@ -1,0 +1,9 @@
+#define GPID_<%= @solver.name %>_ALGORITHMS_INSTANCIATION_CPP
+
+#include <gpid/solver-interfaces/<%= @solver.name %>_engine.hpp>
+#include <gpid/solver-interfaces/<%= @solver.name %>_solver.hpp>
+#include <gpid/algorithms/pid_algorithm.hpp>
+
+namespace gpid {
+    template class DecompositionEngine<<%= @solver.solverClass %>>;
+};

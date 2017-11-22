@@ -1,12 +1,8 @@
-#ifndef GPID_CVC4_OUTPUT_HANDLING_HPP
-#define GPID_CVC4_OUTPUT_HANDLING_HPP
+#ifndef GPID_CVC4_IMPLICATE_PRINTER_SPP
+#define GPID_CVC4_IMPLICATE_PRINTER_SPP
 
 #include <iostream>
-#include <snlog/snlog.hpp>
-#include <gpid/config.hpp>
-#include <gpid/solvers-wrap/cvc4_engine.hpp>
 
-/* Gpid CVC4 integr. output printers */
 namespace gpid {
 
     extern inline

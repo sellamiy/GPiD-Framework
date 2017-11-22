@@ -1,5 +1,45 @@
 solverClass : CVC4Solver
-requiredHeaders :
-  - cvc4_engine.hpp
-  - cvc4_inputs.hpp
-  - cvc4_outputs.hpp
+problemClass : CVC4Problem
+declarationsClass : CVC4Declarations
+modelClass : CVC4ModelWrapper
+contextManagerClass : CVC4::ExprManager
+hypothesisClass : CVC4Hypothesis
+
+problemConstraintType : CVC4::Expr
+
+contextSnippets :
+  - context.spp
+contextSrcSnippets :
+  - string_utils.spp
+  - cvc4_utils.spp
+  - context_src.spp
+outputSnippets :
+  - implicate_printer.spp
+solverInlineSnippets:
+  - solver.spp
+problemSrcSnippets:
+  - problem_src.spp
+solverSrcSnippets:
+  - solver_src.spp
+parserSnippets :
+  - parsers.spp
+abducibleSnippets :
+  - generator_loader.spp
+  - generator_all_eq.spp
+
+parsers:
+  -
+    language : smtl2
+    function : parse_CVC4_SMT2 
+  -
+    language : tptp
+    function : parse_CVC4_TPTP
+  -
+    language : cvc4
+    function : parse_CVC4_CVC4
+
+abducibleGenerators:
+  -
+    name : allEq
+    counter : countAbducibles_allEq
+    generator : generateAbducibles_allEq

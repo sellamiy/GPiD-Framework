@@ -1,5 +1,5 @@
-#ifndef GPID_CVC4_CONTEXT_HPP
-#define GPID_CVC4_CONTEXT_HPP
+#ifndef GPID_CVC4_CONTEXT_SPP
+#define GPID_CVC4_CONTEXT_SPP
 
 #include <vector>
 #include <cvc4/cvc4.h>
@@ -18,6 +18,21 @@ namespace gpid {
 
         void store(CVC4::SymbolTable* table);
         void collect(CVC4::Command* cmd);
+    };
+
+    struct CVC4Hypothesis {
+        CVC4::Expr expr;
+        CVC4Hypothesis(CVC4::Expr e) : expr(e) {}
+        CVC4Hypothesis(const CVC4Hypothesis& e) : expr(e.expr) {}
+    };
+
+    struct CVC4ModelWrapper {
+        const CVC4::SmtEngine& engine;
+        inline CVC4ModelWrapper(CVC4::SmtEngine& engine) : engine(engine) { }
+        inline CVC4ModelWrapper(CVC4ModelWrapper& mdlw) : engine(mdlw.engine) { }
+        inline bool isSkippable(CVC4Hypothesis& h) const {
+            return engine.getValue(h.expr) == engine.getExprManager()->mkConst(true);
+        }
     };
 
 };

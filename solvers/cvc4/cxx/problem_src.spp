@@ -1,33 +1,48 @@
-#define GPID__CVC4_PROBLEM_CPP
+#ifndef GPID_CVC4_PROBLEM_SRC_SPP
+#define GPID_CVC4_PROBLEM_SRC_SPP
 
 #include <snlog/snlog.hpp>
-#include <gpid/solvers-wrap/cvc4_engine.hpp>
+
+namespace gpid {
+
+    class CVC4ProblemInternal {
+    public:
+        std::vector<CVC4::Expr> cons_data;
+        uint32_t reading_pos = -1;
+    };
+
+}
 
 using namespace snlog;
 using namespace gpid;
 
+CVC4Problem::CVC4Problem(CVC4::ExprManager& ctx)
+    : handler(new Internal()), ctx(ctx) { }
+
+CVC4Problem::~CVC4Problem() { }
+
 void CVC4Problem::addConstraint(CVC4::Expr cons) {
     t_warn(mode != IOMode::IO_WRITE, "Writing problem on reading mode");
-    cons_data.push_back(cons);
+    handler->cons_data.push_back(cons);
 }
 
 bool CVC4Problem::hasMoreConstraints() {
     t_warn(mode != IOMode::IO_READ, "Reading problem on writing mode");
-    return reading_pos < cons_data.size();
+    return handler->reading_pos < handler->cons_data.size();
 }
 
 CVC4::Expr CVC4Problem::nextConstraint() {
     t_warn(mode != IOMode::IO_READ, "Reading problem on writing mode");
-    return cons_data[reading_pos++];
+    return handler->cons_data[handler->reading_pos++];
 }
 
 void CVC4Problem::initCurrentMode() {
     switch (mode) {
     case IO_READ:
-        reading_pos = 0;
+        handler->reading_pos = 0;
         break;
     case IO_WRITE:
-        reading_pos = -1;
+        handler->reading_pos = -1;
         break;
     default:
         // TODO: Raise Error
@@ -35,3 +50,5 @@ void CVC4Problem::initCurrentMode() {
         break;
     }
 }
+
+#endif

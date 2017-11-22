@@ -1,0 +1,7 @@
+#define GPID_<%= @solver.name %>_PROBLEM_CPP
+
+#include <gpid/solver-interfaces/<%= @solver.name %>_problem.hpp>
+
+<% for @inlined in @solver.problemSrcSnippets %>
+#include <gpid/solver-snippets/<%= @solver.name %>/<%= @inlined %>>
+<% end %>

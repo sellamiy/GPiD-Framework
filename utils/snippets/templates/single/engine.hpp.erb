@@ -1,0 +1,48 @@
+#ifndef GPID_<%= @solver.name %>_ENGINE_INTERFACE_HPP
+#define GPID_<%= @solver.name %>_ENGINE_INTERFACE_HPP
+
+#include <gpid/config.hpp>
+#include <gpid/core/engine.hpp>
+#include <gpid/solver-interfaces/<%= @solver.name %>_problem.hpp>
+
+namespace gpid {
+
+    class <%= @solver.solverClass %>Internal;
+
+    class <%= @solver.solverClass %> {
+        <%= @solver.contextManagerClass %> ctx;
+        typedef <%= @solver.solverClass %>Internal Internal;
+        std::unique_ptr<Internal> solvers;
+
+        uint32_t c_level;
+
+        void accessLevel(uint32_t level);
+    public:
+        typedef <%= @solver.hypothesisClass %> HypothesisT;
+        typedef <%= @solver.modelClass %> ModelT;
+        typedef <%= @solver.problemClass %> ProblemT;
+
+        inline void printSolverInformations()
+        { snlog::l_info("Interface for <%= @solver.name %>"); }
+
+        void removeHypotheses(uint32_t level);
+        void addHypothesis(<%= @solver.hypothesisClass %>& hypothesis, uint32_t level);
+        gpid::SolverTestStatus testHypotheses(uint32_t level);
+        gpid::SolverTestStatus checkConsistency(uint32_t level);
+        bool storageSubsumed(<%= @solver.hypothesisClass %>& additional, uint32_t level);
+
+        inline <%= @solver.modelClass %>& recoverModel();
+        inline <%= @solver.contextManagerClass %>& getContextManager() { return ctx; }
+
+        void printActiveNegation();
+        void storeActive();
+
+        <%= @solver.solverClass %>();
+        ~<%= @solver.solverClass %>();
+        void setProblem(ProblemT& problem);
+        void start();
+    };
+
+};
+
+#endif

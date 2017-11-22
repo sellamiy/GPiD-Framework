@@ -2,9 +2,8 @@
 #define GPID_<%= @solver.name %>_SOLVER_INTERFACE_HPP
 
 #include <gpid/gpid.hpp>
-
-<% for @header in @solver.requiredHeaders %>
-#include <gpid/solvers-wrap/<%= @header %>>
-<% end %>
+#include <gpid/solver-interfaces/<%= @solver.name %>_engine.hpp>
+#include <gpid/solver-interfaces/<%= @solver.name %>_inputs.hpp>
+#include <gpid/solver-interfaces/<%= @solver.name %>_outputs.hpp>
 
 #endif

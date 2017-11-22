@@ -1,0 +1,36 @@
+#ifndef GPID_<%= @solver.name %>_PROBLEM_HPP
+#define GPID_<%= @solver.name %>_PROBLEM_HPP
+
+#include <gpid/solver-interfaces/<%= @solver.name %>_context.hpp>
+
+namespace gpid {
+
+    class <%= @solver.problemClass %>Internal;
+
+    class <%= @solver.problemClass %> {
+    public:
+        enum IOMode { IO_READ, IO_WRITE };
+    private:
+        IOMode mode = IOMode::IO_WRITE;
+        typedef <%= @solver.problemClass %>Internal Internal;
+        std::unique_ptr<Internal> handler;
+
+        <%= @solver.contextManagerClass %>& ctx;
+        <%= @solver.declarationsClass %> decls;
+
+        void initCurrentMode();
+    public:
+        <%= @solver.problemClass %>(<%= @solver.contextManagerClass %>& ctx);
+        ~<%= @solver.problemClass %>();
+
+        inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
+        inline <%= @solver.contextManagerClass %>& getContextManager() { return ctx; }
+        inline <%= @solver.declarationsClass %>& getDeclarations() { return decls; }
+        void addConstraint(<%= @solver.problemConstraintType %> cons);
+        bool hasMoreConstraints();
+        <%= @solver.problemConstraintType %> nextConstraint();
+    };
+
+};
+
+#endif

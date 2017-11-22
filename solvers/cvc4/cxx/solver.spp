@@ -1,31 +1,46 @@
-#ifndef GPID_SMT_SOLVER__CVC4_DETAILS_HPP
-#define GPID_SMT_SOLVER__CVC4_DETAILS_HPP
+#ifndef GPID_CVC4_SOLVER_INLINED_SPP
+#define GPID_CVC4_SOLVER_INLINED_SPP
 
-#include <gpid/config.hpp>
-#include <gpid/solvers-wrap/cvc4_engine.hpp>
-#include <gpid/solvers-wrap/cvc4_outputs.hpp>
-
-using namespace snlog;
+#include <snlog/snlog.hpp>
 
 namespace gpid {
 
+    class CVC4SolverInternal {
+    public:
+        CVC4::SmtEngine solver;
+        CVC4::SmtEngine csty_solver;
+        CVC4ModelWrapper iw_mdl;
+
+        CVC4SolverInternal(CVC4::ExprManager* ctx)
+            : solver(ctx), csty_solver(ctx), iw_mdl(solver)
+        {
+            solver.setOption("incremental", true);
+            solver.setOption("produce-models", true);
+            solver.setLogic("QF_ALL_SUPPORTED");
+
+            csty_solver.setOption("incremental", true);
+            csty_solver.setOption("produce-models", true);
+            csty_solver.setLogic("QF_ALL_SUPPORTED");
+        }
+    };
+
     inline void CVC4Solver::accessLevel(uint32_t level) {
         while (level > c_level) {
-            solver.push();
-            csty_solver.push();
+            solvers->solver.push();
+            solvers->csty_solver.push();
             c_level++;
         }
         while (level < c_level) {
-            solver.pop();
-            csty_solver.pop();
+            solvers->solver.pop();
+            solvers->csty_solver.pop();
             c_level--;
         }
     }
 
     inline void CVC4Solver::addHypothesis(CVC4Hypothesis& hypothesis, uint32_t level) {
         accessLevel(level);
-        solver.assertFormula(hypothesis.expr);
-        csty_solver.assertFormula(hypothesis.expr);
+        solvers->solver.assertFormula(hypothesis.expr);
+        solvers->csty_solver.assertFormula(hypothesis.expr);
     }
 
     inline void CVC4Solver::removeHypotheses(uint32_t level) {
@@ -34,16 +49,20 @@ namespace gpid {
     }
 
     inline void CVC4Solver::printActiveNegation() {
-        p_implicate(std::cout, getContextManager(), csty_solver.getAssertions(), true);
+        p_implicate(std::cout, getContextManager(), solvers->csty_solver.getAssertions(), true);
     }
 
     inline void CVC4Solver::storeActive() {
         snlog::l_warn("Not implemented yet - CVC4 active storage");
     }
 
+    inline CVC4ModelWrapper& CVC4Solver::recoverModel() {
+        return solvers->iw_mdl;
+    }
+
     inline gpid::SolverTestStatus CVC4Solver::testHypotheses(uint32_t level) {
         accessLevel(level);
-        CVC4::Result qres = solver.checkSat();
+        CVC4::Result qres = solvers->solver.checkSat();
         if      (qres.isSat() == CVC4::Result::SAT)   return SolverTestStatus::SOLVER_SAT;
         else if (qres.isSat() == CVC4::Result::UNSAT) return SolverTestStatus::SOLVER_UNSAT;
         else                                          return SolverTestStatus::SOLVER_UNKNOWN;
@@ -51,7 +70,7 @@ namespace gpid {
 
     inline gpid::SolverTestStatus CVC4Solver::checkConsistency(uint32_t level) {
         accessLevel(level);
-        CVC4::Result qres = csty_solver.checkSat();
+        CVC4::Result qres = solvers->csty_solver.checkSat();
         if      (qres.isSat() == CVC4::Result::SAT)   return SolverTestStatus::SOLVER_SAT;
         else if (qres.isSat() == CVC4::Result::UNSAT) return SolverTestStatus::SOLVER_UNSAT;
         else                                          return SolverTestStatus::SOLVER_UNKNOWN;

@@ -1,0 +1,10 @@
+#ifndef GPID_<%= @solver.name %>_OUTPUT_HANDLING_HPP
+#define GPID_<%= @solver.name %>_OUTPUT_HANDLING_HPP
+
+#include <gpid/solver-interfaces/<%= @solver.name %>_engine.hpp>
+
+<% for @printer in @solver.outputSnippets %>
+#include <gpid/solver-snippets/<%= @solver.name %>/<%= @printer %>>
+<% end %>
+
+#endif
