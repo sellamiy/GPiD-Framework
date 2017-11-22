@@ -1,14 +1,13 @@
-#define GPID__Z3_SOLVER_CPP
-
-#include <gpid/solvers-wrap/z3_engine.hpp>
-#include <gpid/solvers-wrap/z3_solver.hpp>
+#ifndef GPID_Z3_SOLVER_SRC_SPP
+#define GPID_Z3_SOLVER_SRC_SPP
 
 using namespace gpid;
 
 Z3Solver::Z3Solver()
-    : solver(ctx), csty_solver(ctx)
-{
-}
+    : solvers(new Internal(ctx))
+{ }
+
+Z3Solver::~Z3Solver() { }
 
 void Z3Solver::start() {
     c_level = 0;
@@ -17,6 +16,8 @@ void Z3Solver::start() {
 void Z3Solver::setProblem(Z3Problem& problem) {
     problem.setMode(Z3Problem::IOMode::IO_READ);
     while (problem.hasMoreConstraints()) {
-        solver.add(problem.nextConstraint());
+        solvers->solver.add(problem.nextConstraint());
     }
 }
+
+#endif

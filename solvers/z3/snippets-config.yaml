@@ -1,5 +1,42 @@
 solverClass : Z3Solver
-requiredHeaders :
-  - z3_engine.hpp
-  - z3_inputs.hpp
-  - z3_outputs.hpp
+problemClass : Z3Problem
+declarationsClass : Z3Declarations
+modelClass : Z3ModelWrapper
+contextManagerClass : z3::context
+hypothesisClass : Z3Hypothesis
+
+problemConstraintType : z3::expr
+
+contextSnippets :
+  - context.spp
+contextSrcSnippets :
+  - context_src.spp
+outputSnippets :
+  - implicate_printer.spp
+solverInlineSnippets:
+  - solver.spp
+problemSrcSnippets:
+  - problem_src.spp
+solverSrcSnippets:
+  - solver_src.spp
+parserSnippets :
+  - parsers.spp
+abducibleSnippets :
+  - generator_loader.spp
+  - generator_const_all_eq.spp
+  - generator_const_all_comp.spp
+
+parsers:
+  -
+    language : smtl2
+    function : parse_Z3_SMT2 
+
+abducibleGenerators:
+  -
+    name : constAllEq
+    counter : countAbducibles_constAllEq
+    generator : generateAbducibles_constAllEq
+  -
+    name : constAllComp
+    counter : countAbducibles_constAllComp
+    generator : generateAbducibles_constAllComp

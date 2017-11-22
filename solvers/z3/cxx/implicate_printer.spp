@@ -1,12 +1,8 @@
-#ifndef GPID_Z3_OUTPUT_HANDLING_HPP
-#define GPID_Z3_OUTPUT_HANDLING_HPP
+#ifndef GPID_Z3_IMPLICATE_PRINTER_SPP
+#define GPID_Z3_IMPLICATE_PRINTER_SPP
 
 #include <iostream>
-#include <snlog/snlog.hpp>
-#include <gpid/config.hpp>
-#include <gpid/solvers-wrap/z3_engine.hpp>
 
-/* Gpid Z3 integr. output printers */
 namespace gpid {
 
     extern inline
