@@ -26,10 +26,10 @@ include(FrameworkSolverRegistration)
 # ==============================================================================
 set(SOLVER_INTERFACE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cxx")
 file(GLOB SOLVER_INTERFACE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/cxx/src/*.cpp")
+register_solver_snippet_config(minisat "${CMAKE_CURRENT_SOURCE_DIR}/snippets-config.yaml")
 register_solver_library(minisat ${SOLVER_INTERFACE_HEADER_DIR} ${SOLVER_INTERFACE_SOURCES})
 target_solver_include_directories(minisat "${CMAKE_BINARY_DIR}/minisat-src")
 target_solver_libraries(minisat ugly)
 target_solver_static_libraries(minisat minisat-lib-static)
 target_solver_shared_libraries(minisat minisat-lib-shared)
-register_solver_snippet_config(minisat "${CMAKE_CURRENT_SOURCE_DIR}/snippets-config.yaml")
 # ==============================================================================
