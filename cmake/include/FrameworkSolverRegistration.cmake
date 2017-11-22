@@ -9,9 +9,15 @@ macro(register_solver_library solver_name solver_includes)
   add_library(${INTERFACE_STATIC_TARGET} STATIC ${INTERFACE_SOURCES})
   add_library(${INTERFACE_SHARED_TARGET} SHARED ${INTERFACE_SOURCES})
   target_include_directories(${INTERFACE_STATIC_TARGET}
-    PUBLIC "${solver_includes}" "${LOCAL_SOLVERS_HEADERS_INCLUDE}")
+    PUBLIC "${solver_includes}"
+    "${LOCAL_SOLVERS_HEADERS_INCLUDE}"
+    "${LOCAL_SOLVERS_SNIPPETS_INCLUDE}"
+    "${LOCAL_SOLVERS_INTERFACES_INCLUDE}")
   target_include_directories(${INTERFACE_SHARED_TARGET}
-    PUBLIC "${solver_includes}" "${LOCAL_SOLVERS_HEADERS_INCLUDE}")
+    PUBLIC "${solver_includes}"
+    "${LOCAL_SOLVERS_HEADERS_INCLUDE}"
+    "${LOCAL_SOLVERS_SNIPPETS_INCLUDE}"
+    "${LOCAL_SOLVERS_INTERFACES_INCLUDE}")
   set_target_properties(${INTERFACE_STATIC_TARGET} PROPERTIES
     OUTPUT_NAME ${INTERFACE_TARGET}
     CLEAN_DIRECT_OUTPUT 1)

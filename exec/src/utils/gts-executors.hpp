@@ -41,7 +41,7 @@ static inline void generate(OptionStorage& opts) {
     }
 }
 
-#include <gpid/solvers/snippets/gts-executors.hpp>
+#include <gpid/solver-snippets/gts-executors.hpp>
 
 static inline void generate(OptionStorage& opts) {
     wrap_generate(opts);

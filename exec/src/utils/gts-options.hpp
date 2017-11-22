@@ -10,7 +10,7 @@
 /* ===== Structures ===== */
 
 #ifndef SINGLE_SOLVER_ONLY
-#include <gpid/solvers/snippets/gts-interfaces.hpp>
+#include <gpid/solver-snippets/gts-interfaces.hpp>
 #endif
 
 struct OptionStorage : public gpid::CoreOptions {
