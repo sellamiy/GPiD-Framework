@@ -1,7 +1,8 @@
-#ifndef _MINISAT_WRAPPERS_HPP
-#define _MINISAT_WRAPPERS_HPP
+#ifndef GPID_MINISAT_VECTOR_WRAPPERS_SPP
+#define GPID_MINISAT_VECTOR_WRAPPERS_SPP
 
 #include <minisat/core/SolverTypes.h>
+#include <ugly/ugly.hpp>
 
 namespace gpid {
     template<class T>
@@ -36,6 +37,8 @@ namespace gpid {
         inline const_iterator cbegin() { return const_iterator(data, 0); }
         inline const_iterator cend()   { return const_iterator(data, data.size()); }
     };
+
+    typedef ugly::SetOfSets<Minisat::Lit, MinisatVecWrapper<Minisat::Lit> > MinisatStorage;
 }
 
 #endif

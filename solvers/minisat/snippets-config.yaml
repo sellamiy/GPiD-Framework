@@ -1,5 +1,38 @@
 solverClass : MinisatSolver
-requiredHeaders :
-  - minisat_engine.hpp
-  - minisat_inputs.hpp
-  - minisat_outputs.hpp
+problemClass : MinisatProblem
+declarationsClass : MinisatDeclarations
+modelClass : MinisatModelWrapper
+contextManagerClass : MinisatContextManager
+hypothesisClass : MinisatHypothesis
+
+problemConstraintType : Minisat::vec<Minisat::Lit>&
+
+contextSnippets :
+  - vector_wrappers.spp
+  - context.spp
+contextSrcSnippets : []
+outputSnippets :
+  - minisat_printers.spp
+  - gpid_printers.spp
+solverInlineSnippets:
+  - solver.spp
+problemSrcSnippets:
+  - problem_src.spp
+solverSrcSnippets:
+  - solver_src.spp
+parserSnippets :
+  - parsers.spp
+abducibleSnippets :
+  - generator_loader.spp
+  - generator_all.spp
+
+parsers:
+  -
+    language : dimacs
+    function : parse_DIMACS
+
+abducibleGenerators:
+  -
+    name : all
+    counter : countAbducibles_all
+    generator : generateAbducibles_all
