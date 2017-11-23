@@ -17,7 +17,11 @@ namespace gpid {
         }
         <% end %>
         if (language == "default") {
+          <% if ! @solver.parsers.empty? %>
             <%= @solver.parsers[0]["function"] %>(filename, ctx, pbl);
+          <% else %>
+            snlog::l_fatal("No default parser for solver <%= @solver.name %>");
+          <% end %>
         } else {
             snlog::l_fatal("Unknown input language for solver <%= @solver.name %>: " + language);
             <% for @parser in @solver.parsers %>
