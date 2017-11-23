@@ -1,4 +1,25 @@
-solverClass : TrueSolver
-requiredHeaders :
-  - truesolver_engine.hpp
-  - truesolver_inputs.hpp
+solverClass : ts__solv
+problemClass : ts__pbl
+declarationsClass : ts__decls
+modelClass : ts__mdl
+contextManagerClass : ts__ctxm
+hypothesisClass : ts__hy
+
+problemConstraintType : int
+
+contextSnippets :
+  - context.spp
+contextSrcSnippets : []
+outputSnippets : []
+solverInlineSnippets: []
+problemSrcSnippets:
+  - problem_src.spp
+solverSrcSnippets:
+  - solver_src.spp
+parserSnippets : []
+abducibleSnippets :
+  - dloader.spp
+
+parsers: []
+
+abducibleGenerators: []
