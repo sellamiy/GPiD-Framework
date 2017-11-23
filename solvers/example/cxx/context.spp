@@ -1,8 +1,6 @@
 #ifndef GPID_TRUESOLVER_CONTEXT_SPP
 #define GPID_TRUESOLVER_CONTEXT_SPP
 
-#include <memory>
-
 namespace gpid {
 
     struct ts__ctxm  { };
