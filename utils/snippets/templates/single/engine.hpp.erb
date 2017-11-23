@@ -31,7 +31,7 @@ namespace gpid {
         gpid::SolverTestStatus checkConsistency(uint32_t level);
         bool storageSubsumed(<%= @solver.hypothesisClass %>& additional, uint32_t level);
 
-        inline <%= @solver.modelClass %>& recoverModel();
+        <%= @solver.modelClass %>& recoverModel();
         inline <%= @solver.contextManagerClass %>& getContextManager() { return ctx; }
 
         void printActiveNegation();
