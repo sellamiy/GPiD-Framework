@@ -60,7 +60,7 @@ WARN_LOGFILE           =
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/framework @CMAKE_CURRENT_SOURCE_DIR@/lib @CMAKE_CURRENT_SOURCE_DIR@/exec @CMAKE_CURRENT_SOURCE_DIR@/solvers @CMAKE_CURRENT_BINARY_DIR@/local
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/framework @CMAKE_CURRENT_SOURCE_DIR@/lib @CMAKE_CURRENT_SOURCE_DIR@/exec @CMAKE_CURRENT_BINARY_DIR@/local
 INPUT_ENCODING         = UTF-8
 RECURSIVE              = YES
 
