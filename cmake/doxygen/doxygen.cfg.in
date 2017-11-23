@@ -22,7 +22,8 @@ SHORT_NAMES            = NO
 
 INHERIT_DOCS           = YES
 
-EXTENSION_MAPPING      = C++
+FILE_PATTERNS          = *.hpp *.cpp *.spp
+EXTENSION_MAPPING      = hpp=C++ cpp=C++ spp=C++
 
 #---------------------------------------------------------------------------
 # Build related configuration options
@@ -59,11 +60,11 @@ WARN_LOGFILE           =
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/framework @CMAKE_CURRENT_SOURCE_DIR@/lib/starray
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/framework @CMAKE_CURRENT_SOURCE_DIR@/lib @CMAKE_CURRENT_SOURCE_DIR@/exec @CMAKE_CURRENT_SOURCE_DIR@/solvers @CMAKE_CURRENT_BINARY_DIR@/local
 INPUT_ENCODING         = UTF-8
 RECURSIVE              = YES
 
-EXCLUDE                =
+EXCLUDE                = @CMAKE_CURRENT_SOURCE_DIR@/lib/cxxopts
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
