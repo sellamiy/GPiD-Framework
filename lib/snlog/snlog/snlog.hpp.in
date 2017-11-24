@@ -1,3 +1,12 @@
+/**
+ * \defgroup snloglib Simple Native Logger Library
+ * \brief Library for fast cli logging of C++ objects
+ * \file snlog/snlog.hpp
+ * \brief Simple Native Logger Library header.
+ * \ingroup snloglib
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef LIB_SNLOG__HEADER
 #define LIB_SNLOG__HEADER
 
