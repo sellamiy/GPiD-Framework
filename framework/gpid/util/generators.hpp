@@ -1,3 +1,9 @@
+/**
+ * \file gpid/util/generators.hpp
+ * \brief Wrappers for abducibles generation
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_FRAMEWORK__UTIL__GENERATORS_HPP
 #define GPID_FRAMEWORK__UTIL__GENERATORS_HPP
 

@@ -1,3 +1,8 @@
+/**
+ * \file gpid/instrument/selection_graph.hpp
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_FRAMEWORK__INSTRUMENT__SELECTION_GRAPH_HPP
 #define GPID_FRAMEWORK__INSTRUMENT__SELECTION_GRAPH_HPP
 
@@ -9,6 +14,10 @@
 namespace gpid {
 namespace instrument {
 
+    /**
+     * \brief Class for logging and exporting the hypotheses selection graph.
+     * \ingroup gpidinstrumentlib
+     */
     class SelectionGrapher {
         
         std::ostream& target;

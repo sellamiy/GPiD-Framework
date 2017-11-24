@@ -1,3 +1,9 @@
+/**
+ * \file gpid/algorithms/pid_algorithm.hpp
+ * \brief PiD decomposition algorithm implementation.
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_FRAMEWORK__ALGORITHMS__PID_ALGORITHM_HPP
 #define GPID_FRAMEWORK__ALGORITHMS__PID_ALGORITHM_HPP
 

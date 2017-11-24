@@ -1,3 +1,8 @@
+/**
+ * \file gpid/options/options_core.hpp
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_FRAMEWORK__OPTIONS__CORE_HPP
 #define GPID_FRAMEWORK__OPTIONS__CORE_HPP
 
@@ -9,11 +14,15 @@
 
 namespace gpid {
 
+    /** \brief Main option structure of the framework. \ingroup gpidcorelib */
     struct CoreOptions {
 
+        /** Options related to abducible hypotheses. */
         AbduciblesOptions abducibles;
+        /** Options related to the implicates generator. */
         EngineOptions engine;
 
+        /** Options related to instrumentation tools. */
         instrument::InstrumentOptions instrument;
 
     };

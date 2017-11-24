@@ -1,3 +1,9 @@
+/**
+ * \file gpid/util/parsers.hpp
+ * \brief Utilities for parsing abducibles files
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_FRAMEWORK__UTIL__PARSERS_HPP
 #define GPID_FRAMEWORK__UTIL__PARSERS_HPP
 
@@ -7,6 +13,7 @@
 
 namespace gpid {
 
+    /** \brief Parser for abducible files. \ingroup gpidcorelib */
     class AbducibleParser {
         std::string source;
         std::ifstream stream;

@@ -1,3 +1,9 @@
+/**
+ * \file gpid/core/engine.hpp
+ * \brief GPiD-Framework Decomposition Engine.
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_FRAMEWORK__CORE__ENGINE_HPP
 #define GPID_FRAMEWORK__CORE__ENGINE_HPP
 
@@ -14,6 +20,7 @@ namespace gpid {
         PID
     };
 
+    /** \brief Implicates generator. \ingroup gpidcorelib */
     template <class SolverT>
     class DecompositionEngine {
 
@@ -46,13 +53,23 @@ namespace gpid {
         void generatePID();
 
     public:
+        /**
+         * \brief Engine creation.
+         * \param o Engine options.
+         * \param s Solver interface for testint hypotheses.
+         * \param p Problem to solve.
+         * \param h Set of hypotheses to try.
+         */
         DecompositionEngine(EngineOptions& o, SolverT& s, typename SolverT::ProblemT& p,
                             HypothesesSet<SolverT>& h)
             : options(o), solver(s), problem(p), available_h(h)
         { }
+        /** \return The total number of implicates generated. */
         inline uint64_t getGeneratedImplicatesCount()      const { return gi_counter;     }
+        /** \return The total number of nodes explored during hypotheses tries. */
         inline uint64_t getExploredNodesCount()            const { return node_counter;   }
 
+        /** \brief Generate implicates for the given problem. */
         void generateImplicates(GenerationAlgorithm algorithm = GenerationAlgorithm::PID);
     };
 

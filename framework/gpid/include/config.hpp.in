@@ -1,3 +1,10 @@
+/**
+ * \file gpid/config.hpp
+ * \brief GPiD-Framework Configuration Header.
+ * \ingroup gpidcorelib
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_FRAMEWORK__CONFIG_HPP
 #define GPID_FRAMEWORK__CONFIG_HPP
 

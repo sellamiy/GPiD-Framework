@@ -1,3 +1,12 @@
+/**
+ * \defgroup gpidcorelib GPiD-Framework Core
+ * \brief Core elements of the (Prime) implicates by decomposition generation framework.
+ * \file gpid/gpid.hpp
+ * \brief GPiD-Framework Core Header.
+ * \ingroup gpidcorelib
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_FRAMEWORK__CORE_HEADER_
 #define GPID_FRAMEWORK__CORE_HEADER_
 

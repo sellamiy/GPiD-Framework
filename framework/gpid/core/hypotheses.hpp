@@ -1,3 +1,9 @@
+/**
+ * \file gpid/core/hypotheses.hpp
+ * \brief GPiD-Framework Hypotheses handling related classes.
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_FRAMEWORK__CORE__HYPOTHESES_HPP
 #define GPID_FRAMEWORK__CORE__HYPOTHESES_HPP
 
@@ -12,6 +18,7 @@
 
 namespace gpid {
 
+    /** \brief Class for deciding on skipping hypotheses. */
     template<class SolverT>
     class HypothesisSkipper {
         SolverT& solver;
@@ -25,12 +32,14 @@ namespace gpid {
         HypothesisSkipper(SolverT& s, SkipperController& ctrler)
             : solver(s), control(ctrler) {}
 
+        /** \brief Decide if an hypothesis can be skipped at a given level. */
         inline bool canBeSkipped(typename SolverT::HypothesisT& h, uint32_t level);
+        /** \brief Decide if an hypothesis is consistent with active ones. */
         inline bool consistent(typename SolverT::HypothesisT& h, uint32_t level);
         inline void storeCounts(std::map<std::string, uint64_t>& target);
     };
 
-    /** Class for handling abducible hypotheses. */
+    /** \brief Class for handling abducible hypotheses. \ingroup gpidcorelib */
     template<class SolverT>
     class HypothesesSet {
     public:
@@ -78,9 +87,17 @@ namespace gpid {
         inline uint32_t getSourceSize();
         inline std::map<std::string, uint64_t>& getSkippedCounts();
 
+        /**
+         * \brief Find the next non tested hypothesis.
+         * \param level Level to look for hypotheses at.
+         * \return true iff there exists a valid non-tested hypothesis at level level.
+         *
+         * If such an hypothesis exists, this method will also position the
+         * internal hypothesis pointer on it, allowing the selected hypothesis
+         * to be accessed/recovered via the \ref getHypothesis method.
+         */
         inline bool nextHypothesis(uint32_t level);
-        /** Recover for usage the next available hypothesis at a given level.
-         * @warning Works as an iterator on the hypotheses at the given level. */
+        /** Recover the hypothesis pointed by the internal pointer. \see nextHypothesis. */
         inline HypothesisT& getHypothesis();
 
         /** Internally selects hypotheses to skip according to a model. */
