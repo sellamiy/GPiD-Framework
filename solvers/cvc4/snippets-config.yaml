@@ -8,24 +8,24 @@ hypothesisClass : CVC4Hypothesis
 problemConstraintType : CVC4::Expr
 
 contextSnippets :
-  - context.spp
+  - context.hpp
 contextSrcSnippets :
-  - string_utils.spp
-  - cvc4_utils.spp
-  - context_src.spp
+  - string_utils.cpp
+  - cvc4_utils.cpp
+  - context_src.cpp
 outputSnippets :
-  - implicate_printer.spp
+  - implicate_printer.hpp
 solverInlineSnippets:
-  - solver.spp
+  - solver.hpp
 problemSrcSnippets:
-  - problem_src.spp
+  - problem_src.cpp
 solverSrcSnippets:
-  - solver_src.spp
+  - solver_src.cpp
 parserSnippets :
-  - parsers.spp
+  - parsers.cpp
 abducibleSnippets :
-  - generator_loader.spp
-  - generator_all_eq.spp
+  - generator_loader.cpp
+  - generator_all_eq.cpp
 
 parsers:
   -

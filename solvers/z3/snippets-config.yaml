@@ -8,23 +8,23 @@ hypothesisClass : Z3Hypothesis
 problemConstraintType : z3::expr
 
 contextSnippets :
-  - context.spp
+  - context.hpp
 contextSrcSnippets :
-  - context_src.spp
+  - context_src.cpp
 outputSnippets :
-  - implicate_printer.spp
+  - implicate_printer.hpp
 solverInlineSnippets:
-  - solver.spp
+  - solver.hpp
 problemSrcSnippets:
-  - problem_src.spp
+  - problem_src.cpp
 solverSrcSnippets:
-  - solver_src.spp
+  - solver_src.cpp
 parserSnippets :
-  - parsers.spp
+  - parsers.cpp
 abducibleSnippets :
-  - generator_loader.spp
-  - generator_const_all_eq.spp
-  - generator_const_all_comp.spp
+  - generator_loader.cpp
+  - generator_const_all_eq.cpp
+  - generator_const_all_comp.cpp
 
 parsers:
   -

@@ -8,23 +8,23 @@ hypothesisClass : MinisatHypothesis
 problemConstraintType : Minisat::vec<Minisat::Lit>&
 
 contextSnippets :
-  - vector_wrappers.spp
-  - context.spp
+  - vector_wrappers.hpp
+  - context.hpp
 contextSrcSnippets : []
 outputSnippets :
-  - minisat_printers.spp
-  - gpid_printers.spp
+  - minisat_printers.hpp
+  - gpid_printers.hpp
 solverInlineSnippets:
-  - solver.spp
+  - solver.hpp
 problemSrcSnippets:
-  - problem_src.spp
+  - problem_src.cpp
 solverSrcSnippets:
-  - solver_src.spp
+  - solver_src.cpp
 parserSnippets :
-  - parsers.spp
+  - parsers.cpp
 abducibleSnippets :
-  - generator_loader.spp
-  - generator_all.spp
+  - generator_loader.cpp
+  - generator_all.cpp
 
 parsers:
   -

@@ -22,8 +22,7 @@ SHORT_NAMES            = NO
 
 INHERIT_DOCS           = YES
 
-FILE_PATTERNS          = *.hpp *.cpp *.spp
-EXTENSION_MAPPING      = hpp=C++ cpp=C++ spp=C++
+EXTENSION_MAPPING      = C++
 
 #---------------------------------------------------------------------------
 # Build related configuration options

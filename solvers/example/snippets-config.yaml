@@ -8,17 +8,17 @@ hypothesisClass : ts__hy
 problemConstraintType : int
 
 contextSnippets :
-  - context.spp
+  - context.hpp
 contextSrcSnippets : []
 outputSnippets : []
 solverInlineSnippets: []
 problemSrcSnippets:
-  - problem_src.spp
+  - problem_src.cpp
 solverSrcSnippets:
-  - solver_src.spp
+  - solver_src.cpp
 parserSnippets : []
 abducibleSnippets :
-  - dloader.spp
+  - dloader.cpp
 
 parsers: []
 
