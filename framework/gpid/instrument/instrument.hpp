@@ -9,10 +9,7 @@
  */
 #ifndef GPID_FRAMEWORK__INSTRUMENT__INSTRUMENT_HPP
 #define GPID_FRAMEWORK__INSTRUMENT__INSTRUMENT_HPP
-#include <gpid/config.hpp>
-#include <gpid/options/options_instrument.hpp>
 #include <gpid/util/instrument_controller.hpp>
-#include <iostream>
 namespace gpid {
 namespace instrument {
     enum analyze_type { stack_push, stack_pop, pre_select, implicate, model_skip, reset, end };

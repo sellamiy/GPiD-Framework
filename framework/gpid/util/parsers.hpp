@@ -8,7 +8,6 @@
 #define GPID_FRAMEWORK__UTIL__PARSERS_HPP
 
 #include <fstream>
-#include <gpid/config.hpp>
 #include <gpid/core/engine.hpp>
 
 namespace gpid {

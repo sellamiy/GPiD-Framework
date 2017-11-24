@@ -1,7 +1,6 @@
 #ifndef GPID_FRAMEWORK__SKIPPER_CONTROLLER__PARSERS_HPP
 #define GPID_FRAMEWORK__SKIPPER_CONTROLLER__PARSERS_HPP
 
-#include <gpid/config.hpp>
 #include <gpid/options/options_core.hpp>
 
 namespace gpid {

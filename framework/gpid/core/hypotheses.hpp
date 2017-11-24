@@ -10,7 +10,6 @@
 #include <map>
 #include <list>
 #include <starray/starray.hpp>
-#include <snlog/snlog.hpp>
 #include <gpid/core/solvers.hpp>
 #include <gpid/util/skipper_controller.hpp>
 

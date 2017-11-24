@@ -7,10 +7,7 @@
 #ifndef GPID_FRAMEWORK__UTIL__GENERATORS_HPP
 #define GPID_FRAMEWORK__UTIL__GENERATORS_HPP
 
-#include <snlog/snlog.hpp>
-#include <starray/starray.hpp>
 #include <gpid/core/hypotheses.hpp>
-#include <gpid/options/options_abducibles.hpp>
 
 namespace gpid {
 

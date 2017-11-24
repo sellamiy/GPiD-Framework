@@ -1,6 +1,5 @@
 #define GPID_<%= @solver.name %>_SOLVER_CPP
 
-#include <gpid/solver-interfaces/<%= @solver.name %>_engine.hpp>
 #include <gpid/solver-interfaces/<%= @solver.name %>_solver.hpp>
 
 <% for @inlined in @solver.solverSrcSnippets %>

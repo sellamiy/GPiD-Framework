@@ -10,11 +10,8 @@
 #ifndef GPID_FRAMEWORK__CORE_HEADER_
 #define GPID_FRAMEWORK__CORE_HEADER_
 
-#include <gpid/config.hpp>
 #include <gpid/version.hpp>
-#include <gpid/options/options_core.hpp>
 
-#include <gpid/core/engine.hpp>
 #include <gpid/util/parsers.hpp>
 
 #ifdef GPID_INSTRUMENTATION

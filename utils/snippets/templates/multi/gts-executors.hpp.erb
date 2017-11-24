@@ -1,8 +1,6 @@
 #ifndef GTS_EXECUTORS_SNIPPET
 #define GTS_EXECUTORS_SNIPPET
 
-#include <snlog/snlog.hpp>
-
 #ifdef SINGLE_SOLVER_ONLY
 <% for @solver in @solvers %>
 #ifdef SINGLE_SOLVER_<%= @solver.name %>

@@ -7,7 +7,6 @@
 #define GPID_FRAMEWORK__INSTRUMENT__SELECTION_GRAPH_HPP
 
 #include <cstdint>
-#include <string>
 #include <stack>
 #include <dot/dotgraph.hpp>
 

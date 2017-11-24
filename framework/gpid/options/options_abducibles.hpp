@@ -1,5 +1,5 @@
 /**
- * \file gpid/options/options_abducilbes.hpp
+ * \file gpid/options/options_abducibles.hpp
  * \author Yanis Sellami
  * \date 2017
  */

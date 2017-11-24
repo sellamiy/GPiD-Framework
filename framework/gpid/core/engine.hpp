@@ -9,10 +9,8 @@
 
 #include <cstdint>
 #include <vector>
-#include <gpid/options/options_engine.hpp>
 #include <gpid/core/system.hpp>
 #include <gpid/core/hypotheses.hpp>
-#include <gpid/core/solvers.hpp>
 
 namespace gpid {
 

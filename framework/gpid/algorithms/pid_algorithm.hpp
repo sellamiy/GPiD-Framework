@@ -7,7 +7,6 @@
 #ifndef GPID_FRAMEWORK__ALGORITHMS__PID_ALGORITHM_HPP
 #define GPID_FRAMEWORK__ALGORITHMS__PID_ALGORITHM_HPP
 
-#include <snlog/snlog.hpp>
 #include <gpid/core/engine.hpp>
 
 using namespace snlog;

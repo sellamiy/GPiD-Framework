@@ -10,9 +10,6 @@
 #ifndef LIB_WITCHW__HEADER
 #define LIB_WITCHW__HEADER
 
-#include <witchw/WitchTime.hpp>
-#include <witchw/WitchPrinters.hpp>
-
 #include <witchw/WitchControl.hpp>
 
 #endif
