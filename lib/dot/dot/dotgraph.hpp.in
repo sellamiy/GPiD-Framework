@@ -1,3 +1,10 @@
+/**
+ * \defgroup dotlib Dot Library
+ * \brief Library dealing with dot graphs for internal representation insights.
+ * \file dot/dotgraph.hpp
+ * \brief Dot graph library header.
+ * \ingroup dotlib
+ */
 #ifndef LIB_DOT__GRAPH_HEADER
 #define LIB_DOT__GRAPH_HEADER
 

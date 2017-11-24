@@ -1,3 +1,8 @@
+/**
+ * \file dot/GraphUtils.hpp
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef LIB_DOT__GRAPH_UTILS_HPP
 #define LIB_DOT__GRAPH_UTILS_HPP
 
@@ -6,6 +11,7 @@
 
 namespace dot {
 
+    /** \brief Enumerative representation of graphviz-dot svg graph colors. */
     enum DotColor {
         dc_aliceblue, dc_antiquewhite, dc_aqua, dc_aquamarine, dc_azure,
         dc_beige, dc_bisque, dc_black, dc_blanchedalmond, dc_blue,
@@ -38,8 +44,11 @@ namespace dot {
         dc_turquoise, dc_violet, dc_wheat, dc_white, dc_whitesmoke,
         dc_yellow, dc_yellowgreen
     };
+
+    /** \brief Converts a dot color to its graphviz-dot textual form. */
     extern std::string dotString(DotColor c);
 
+    /** \brief Enumerative representation of graphviz-dot graph node shapes. */
     enum DotShape {
         ds_box, ds_polygon, ds_ellipse, ds_circle, ds_point,
         ds_egg, ds_triangle, ds_plaintext, ds_diamond,
@@ -51,31 +60,53 @@ namespace dot {
         ds_rect, ds_rectangle, ds_none, ds_note, ds_tab,
         ds_box3d, ds_component
     };
+
+    /** \brief Converts a node shape to its graphviz-dot textual form. */
     extern std::string dotString(DotShape s);
 
+    /** \brief Enumerative representation of graphviz-dot arrow type. */
     enum DotArrowType {
         dat_normal, dat_inv, dat_dot, dat_invdot, dat_odot,
         dat_invodot, dat_none, dat_tee, dat_empty, dat_invempty,
         dat_diamond, dat_odiamond, dat_ediamond, dat_crow,
         dat_box, dat_obox, dat_open, dat_halfopen, dat_vee
     };
+
+    /** \brief Converts an arrow type to its graphviz-dot textual form. */
     extern std::string dotString(DotArrowType t);
 
+    /** \brief Enumerative representation of graphviz-dot arrow direction. */
     enum DotArrowDir { dad_forward, dad_back, dad_both, dad_none };
+    /** \brief Converts an arrow direction to its graphviz-dot textual form. */
     extern std::string dotString(DotArrowDir d);
 
+    /** \brief Enumerative representation of graphviz-dot arrow style. */
     enum DotArrowStyle { das_dashed, das_dotted, das_solid };
+    /** \brief Converts an arrow style to its graphviz-dot textual form. */
     extern std::string dotString(DotArrowStyle s);
 
+    /** \brief Representation of a graphviz-dot node format. */
     class GraphNodeType {
         DotColor gColor, tColor, fColor;
         DotShape shape;
         bool filled, diagonals, rounded;
     public:
+        /** \brief Copy constructor */
         GraphNodeType(const GraphNodeType& t):
             gColor(t.gColor), tColor(t.tColor), fColor(t.fColor), shape(t.shape),
             filled(t.filled), diagonals(t.diagonals), rounded(t.rounded)
         {}
+
+        /**
+         * \brief Node format construction.
+         * \param gColor Color of the node borders.
+         * \param tColor Color of the node label.
+         * \param fColor Background color of the node.
+         * \param shape Shape of the node.
+         * \param filled Use the background color?
+         * \param diagonals Use node diagonals?
+         * \param rounded Use rounded corners for the node?
+         */
         GraphNodeType(DotColor gColor=DotColor::dc_black,
                       DotColor tColor=DotColor::dc_black,
                       DotColor fColor=DotColor::dc_white,
@@ -84,19 +115,36 @@ namespace dot {
             gColor(gColor), tColor(tColor), fColor(fColor), shape(shape),
             filled(filled), diagonals(diagonals), rounded(rounded)
         {}
+
+        /**
+         * \brief Generate graphviz-dot node type for this node.
+         * \param label Label given to this node.
+         * \return A string representing this node type in dot format.
+         */
         std::string operator()(const std::string label);
     };
 
+    /** \brief Representation of a graphviz-dot edge format. */
     class GraphEdgeType {
         DotColor color;
         DotArrowType aHead, aTail;
         DotArrowDir dir;
         DotArrowStyle style;
     public:
+        /** \brief Copy constructor */
         GraphEdgeType(const GraphEdgeType& t):
             color(t.color), aHead(t.aHead), aTail(t.aTail),
             dir(t.dir), style(t.style)
         {}
+
+        /**
+         * \brief Edge format construction.
+         * \param color Color of the edge.
+         * \param aHead Type of the arrow for this edge head.
+         * \param aTail Type of the arrow for this edge tail.
+         * \param dir Direction of the edge.
+         * \param style Style of the edge.
+         */
         GraphEdgeType(DotColor color=DotColor::dc_black,
                       DotArrowType aHead=DotArrowType::dat_normal,
                       DotArrowType aTail=DotArrowType::dat_normal,
@@ -105,12 +153,20 @@ namespace dot {
             color(color), aHead(aHead), aTail(aTail),
             dir(dir), style(style)
         {}
+
+        /**
+         * \brief Generate graphviz-dot edge type for this edge.
+         * \param label Label given to this edge.
+         * \return A string representing this edge type in dot format.
+         */
         std::string operator()(const std::string label);
     };
 
+    /** \brief Write a node declaration in graphviz-dot format. */
     extern void writeNode(std::ostream& stream, int nodeid,
                           const std::string nodelabel, GraphNodeType nodet,
                           int pad=0);
+    /** \brief Write an edge declaration in graphviz-dot format. */
     extern void writeEdge(std::ostream& stream, int srcid, int tgtid,
                           const std::string edgelabel, GraphEdgeType et, int pad=0);
 
