@@ -1,3 +1,8 @@
+/**
+ * \file starray/StaticActivableArray.hpp
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef LIB_STARRAY__STATIC_ACTIVABLE_ARRAY_HPP
 #define LIB_STARRAY__STATIC_ACTIVABLE_ARRAY_HPP
 
