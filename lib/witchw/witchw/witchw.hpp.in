@@ -1,3 +1,12 @@
+/**
+ * \defgroup witchwlib Witch W Library
+ * \brief Library of magic system handlers and printers.
+ * \file witchw/witchw.hpp
+ * \brief Witch W Library header.
+ * \ingroup witchwlib
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef LIB_WITCHW__HEADER
 #define LIB_WITCHW__HEADER
 

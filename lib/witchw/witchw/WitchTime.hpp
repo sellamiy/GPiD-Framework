@@ -1,3 +1,9 @@
+/**
+ * \file witchw/WitchTime.hpp
+ * \brief Magic definitions for handling time measurements.
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef LIB_WITCHW__WITCH_TIME_HPP
 #define LIB_WITCHW__WITCH_TIME_HPP
 
@@ -7,15 +13,23 @@
 
 namespace witchw {
 
+    /** \brief Time measuring magic clock. */
     class wClock {
         std::map<std::string, std::chrono::high_resolution_clock::time_point> registered_cts;
     public:
+        /** \brief Associate current time to a tag. */
         void registerTime(const std::string key);
+        /** \brief Compute the duration (in nanoseconds) between too registered clock times */
         std::string nanoseconds (const std::string origin, const std::string target);
+        /** \brief Compute the duration (in microseconds) between too registered clock times */
         std::string microseconds(const std::string origin, const std::string target);
+        /** \brief Compute the duration (in milliseconds) between too registered clock times */
         std::string milliseconds(const std::string origin, const std::string target);
+        /** \brief Compute the duration (in seconds) between too registered clock times */
         std::string seconds     (const std::string origin, const std::string target);
+        /** \brief Compute the duration (in minutes) between too registered clock times */
         std::string minutes     (const std::string origin, const std::string target);
+        /** \brief Compute the duration (in hours) between too registered clock times */
         std::string hours       (const std::string origin, const std::string target);
     };
 
