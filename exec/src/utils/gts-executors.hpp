@@ -1,7 +1,6 @@
 #ifndef GPID_EXEC__UTILS__GTS_EXECUTORS_HPP
 #define GPID_EXEC__UTILS__GTS_EXECUTORS_HPP
 
-#include <gpid/gpid.hpp>
 #include "gts-options.hpp"
 
 using namespace snlog;

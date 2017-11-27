@@ -1,3 +1,9 @@
+/**
+ * \file gpid/solver-interfaces/<%= @solver.name %>_engine.hpp
+ * \brief <%= @solver.name %> Solver Interface Classes.
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_<%= @solver.name %>_ENGINE_INTERFACE_HPP
 #define GPID_<%= @solver.name %>_ENGINE_INTERFACE_HPP
 
@@ -8,6 +14,10 @@ namespace gpid {
 
     class <%= @solver.solverClass %>Internal;
 
+    /**
+     * \brief Solver Interface for <%= @solver.name %> solver.
+     * \ingroup gpid<%= @solver.name %>lib
+     */
     class <%= @solver.solverClass %> {
         <%= @solver.contextManagerClass %> ctx;
         typedef <%= @solver.solverClass %>Internal Internal;
@@ -17,23 +27,34 @@ namespace gpid {
 
         void accessLevel(uint32_t level);
     public:
+        /** \brief Hypothesis type handled by the solver */
         typedef <%= @solver.hypothesisClass %> HypothesisT;
+        /** \brief Model type handled by the solver */
         typedef <%= @solver.modelClass %> ModelT;
+        /** \brief Problem type handled by the solver */
         typedef <%= @solver.problemClass %> ProblemT;
 
+        /** \brief Display basic information on the solver used */
         inline void printSolverInformations()
         { snlog::l_info("Interface for <%= @solver.name %>"); }
 
+        /** \brief Remove all the hypotheses assigned after a given level */
         void removeHypotheses(uint32_t level);
+        /** \brief Add an abducible hypothesis to the solver */
         void addHypothesis(<%= @solver.hypothesisClass %>& hypothesis, uint32_t level);
+        /** \brief Check if the current set of hypotheses is compatible with the problem */
         gpid::SolverTestStatus testHypotheses(uint32_t level);
+        /** \brief Check if the current set of hypotheses is self-consistent */
         gpid::SolverTestStatus checkConsistency(uint32_t level);
+        /** \brief Check if an hypothesis is known to be redundant */
         bool storageSubsumed(<%= @solver.hypothesisClass %>& additional, uint32_t level);
 
         <%= @solver.modelClass %>& recoverModel();
         inline <%= @solver.contextManagerClass %>& getContextManager() { return ctx; }
 
+        /** \brief Print the negation of the current set of hypotheses */
         void printActiveNegation();
+        /** \brief Remember the current set of hypotheses as an implicate */
         void storeActive();
 
         <%= @solver.solverClass %>();

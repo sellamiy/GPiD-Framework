@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include "utils/gts-options.hpp"
 #include "utils/gts-executors.hpp"
 
 using namespace std;

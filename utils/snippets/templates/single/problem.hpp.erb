@@ -1,3 +1,9 @@
+/**
+ * \file gpid/solver-interfaces/<%= @solver.name %>_problem.hpp
+ * \brief <%= @solver.name %> Problem classes definitions.
+ * \author Yanis Sellami
+ * \date 2017
+ */
 #ifndef GPID_<%= @solver.name %>_PROBLEM_HPP
 #define GPID_<%= @solver.name %>_PROBLEM_HPP
 
@@ -8,8 +14,13 @@ namespace gpid {
 
     class <%= @solver.problemClass %>Internal;
 
+    /**
+     * \brief Problem class for <%= @solver.name %> solver interface.
+     * \ingroup gpid<%= @solver.name %>lib
+     */
     class <%= @solver.problemClass %> {
     public:
+        /** \brief Enum form problem generation mode */
         enum IOMode { IO_READ, IO_WRITE };
     private:
         IOMode mode = IOMode::IO_WRITE;
