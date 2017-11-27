@@ -32,6 +32,13 @@ namespace gpid {
         return <%= @solver.name %>_IG_NONE;
     }
 
+    <% if @solver.abducibleGenerators.empty? %>
+    static inline uint32_t <%= @solver.name %>AbducibleCompt
+    (<%= @solver.name %>InputGenerator, <%= @solver.problemClass %>&) {
+        snlog::l_fatal("No abducible generator available for solver <%= @solver.name %>");
+        return 0;
+    }
+    <% else %>
     static inline uint32_t <%= @solver.name %>AbducibleCompt
     (<%= @solver.name %>InputGenerator g, <%= @solver.problemClass %>& pbl) {
         switch (g) {
@@ -44,6 +51,7 @@ namespace gpid {
             return 0;
         }
     }
+    <% end %>
 
     struct <%= @solver.name %>GeneratorCounter {
         inline uint32_t operator() (std::string gkey, <%= @solver.problemClass %>& pbl)
@@ -59,6 +67,15 @@ namespace gpid {
         { loadAbducibles(filename, ctx, decls, set); }
     };
 
+    <% if @solver.abducibleGenerators.empty? %>
+    static inline void <%= @solver.name %>AbducibleGen
+    (<%= @solver.name %>InputGenerator,
+     <%= @solver.contextManagerClass %>&,
+     <%= @solver.declarationsClass %>&,
+     HypothesesSet<<%= @solver.solverClass %>>&) {
+        snlog::l_fatal("No abducible generator available for solver <%= @solver.name %>");
+    }
+    <% else %>
     static inline void <%= @solver.name %>AbducibleGen
     (<%= @solver.name %>InputGenerator g,
      <%= @solver.contextManagerClass %>& ctx,
@@ -73,6 +90,7 @@ namespace gpid {
         default: l_internal("Unknown minisat abducible generator: " + std::to_string(g));
         }
     }
+    <% end %>
 
     struct <%= @solver.name %>Generator {
         inline void operator()

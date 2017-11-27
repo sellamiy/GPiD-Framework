@@ -8,6 +8,12 @@
 
 namespace gpid {
 
+    <% if @solver.parsers.empty? %>
+    extern void parse_file(std::string, <%= @solver.contextManagerClass %>&,
+                           <%= @solver.problemClass %>&, std::string) {
+        snlog::l_fatal("No parser available for solver <%= @solver.name %>");
+    }
+    <% else %>
     extern void parse_file(std::string filename, <%= @solver.contextManagerClass %>& ctx,
                            <%= @solver.problemClass %>& pbl, std::string language) {
         <% for @parser in @solver.parsers %>
@@ -29,5 +35,6 @@ namespace gpid {
             <% end %>
         }
     }
+    <% end %>
 
 }
