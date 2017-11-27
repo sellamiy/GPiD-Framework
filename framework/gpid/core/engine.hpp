@@ -93,6 +93,8 @@ inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
         solver.printActiveNegation();
     if (options.store_implicates)
         solver.storeActive();
+    if (options.implicate_limit <= gi_counter)
+        des_iflags.internal_flag = true;
     instrument::analyze(NULL, instrument::analyze_type::implicate);
 }
 

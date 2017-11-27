@@ -71,6 +71,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
             ("implicate-size-limit", "Max number of abducibles in implicates", cxxopts::value<uint32_t>())
 
             ("time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
+            ("implicate-limit", "Maximal number of implicates to generate", cxxopts::value<uint64_t>())
             ;
 
 	parser.add_options("Output")
@@ -140,6 +141,8 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 
         if (parser.count("time-limit"))
             opts.engine.time_limit = parser["time-limit"].as<uint64_t>();
+        if (parser.count("implicate-limit"))
+            opts.engine.implicate_limit = parser["implicate-limit"].as<uint64_t>();
 
 	if (parser.count("input")) {
 	    opts.input = parser["input"].as<std::string>();

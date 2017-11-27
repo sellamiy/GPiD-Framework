@@ -11,13 +11,15 @@ namespace gpid {
 
     /** \brief System interruption flag storage. */
     struct SystemInterruptsFlags {
+        /** Engine internal flag. Set to true iff the engine internally decides it. */
+        bool internal_flag = false;
         /** User interruption flag. Set to true iff user interrupted the engine. */
         bool interruption_flag = false;
         /** Timeout flag. Set to true iff computation time exceeded the limit. */
         bool timeout_flag = false;
         /** \return true iff at least one interruption flag is set. */
         inline bool systemInterrupted() {
-            return interruption_flag || timeout_flag;
+            return internal_flag || interruption_flag || timeout_flag;
         }
     };
 

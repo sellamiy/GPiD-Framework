@@ -30,6 +30,9 @@ namespace gpid {
         /** Timeout */
         uint64_t time_limit = 0;
 
+        /** Maximal number of implicates to generate */
+        uint64_t implicate_limit = std::numeric_limits<uint64_t>::max();
+
     };
 
 };
