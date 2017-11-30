@@ -12,25 +12,38 @@ namespace gpid {
         Z3SolverInternal(z3::context& ctx)
             : solver(ctx), csty_solver(ctx), iw_mdl(solver)
         { }
+
+        inline void push() {
+            solver.push();
+            csty_solver.push();
+        }
+
+        inline void pop() {
+            solver.pop();
+            csty_solver.pop();
+        }
+
+        inline void addHypothesis(Z3Hypothesis& hypothesis) {
+            solver.add(hypothesis.expr);
+            csty_solver.add(hypothesis.expr);
+        }
+
     };
 
     inline void Z3Solver::accessLevel(uint32_t level) {
         while (level > c_level) {
-            solvers->solver.push();
-            solvers->csty_solver.push();
+            solvers->push();
             c_level++;
         }
         while (level < c_level) {
-            solvers->solver.pop();
-            solvers->csty_solver.pop();
+            solvers->pop();
             c_level--;
         }
     }
 
     inline void Z3Solver::addHypothesis(Z3Hypothesis& hypothesis, uint32_t level) {
         accessLevel(level);
-        solvers->solver.add(hypothesis.expr);
-        solvers->csty_solver.add(hypothesis.expr);
+        solvers->addHypothesis(hypothesis);
     }
 
     inline void Z3Solver::removeHypotheses(uint32_t level) {

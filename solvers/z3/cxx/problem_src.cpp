@@ -9,6 +9,14 @@ namespace gpid {
     public:
         std::vector<z3::expr> cons_data;
         uint32_t reading_pos = -1;
+
+        inline bool hasMoreConstraints() {
+            return reading_pos < cons_data.size();
+        }
+
+        inline z3::expr nextConstraint() {
+            return cons_data[reading_pos++];
+        }
     };
 
 }
@@ -29,12 +37,12 @@ void Z3Problem::addConstraint(z3::expr cons) {
 
 bool Z3Problem::hasMoreConstraints() {
     t_warn(mode != IOMode::IO_READ, "Reading problem on writing mode");
-    return handler->reading_pos < handler->cons_data.size();
+    return handler->hasMoreConstraints();
 }
 
 z3::expr Z3Problem::nextConstraint() {
     t_warn(mode != IOMode::IO_READ, "Reading problem on writing mode");
-    return handler->cons_data[handler->reading_pos++];
+    return handler->nextConstraint();
 }
 
 void Z3Problem::initCurrentMode() {
