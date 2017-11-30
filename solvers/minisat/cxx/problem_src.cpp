@@ -16,6 +16,21 @@ namespace gpid {
         Minisat::vec<int> read_session_seps;
         Minisat::vec<Minisat::Lit> read_session_data;
         Minisat::vec<Minisat::Lit> read_local_data;
+
+        inline void addConstraint(Minisat::vec<Minisat::Lit>& ps) {
+            cons_sep.push(cons_data.size());
+            for (int i = 0; i < ps.size(); i++)
+                cons_data.push(ps[i]);
+        }
+
+        inline void goToNextConstraint() {
+            read_local_data.clear();
+            while (read_session_data.size() > read_session_seps.last()) {
+                read_local_data.push(read_session_data.last());
+                read_session_data.pop();
+            }
+            read_session_seps.pop();
+        }
     };
 
 }
@@ -30,9 +45,7 @@ void MinisatProblem::addConstraint(Minisat::vec<Minisat::Lit>& ps) {
         // TODO: Raise Error
         l_warn("Writing problem on reading mode!");
     }
-    handler->cons_sep.push(handler->cons_data.size());
-    for (int i = 0; i < ps.size(); i++)
-        handler->cons_data.push(ps[i]);
+    handler->addConstraint(ps);
 }
 
 bool MinisatProblem::hasMoreConstraints() {
@@ -48,12 +61,7 @@ Minisat::vec<Minisat::Lit>& MinisatProblem::nextConstraint() {
         // TODO: Raise Error
         l_warn("Reading problem on writing mode!");
     }
-    handler->read_local_data.clear();
-    while (handler->read_session_data.size() > handler->read_session_seps.last()) {
-        handler->read_local_data.push(handler->read_session_data.last());
-        handler->read_session_data.pop();
-    }
-    handler->read_session_seps.pop();
+    handler->goToNextConstraint();
     return handler->read_local_data;
 }
 
