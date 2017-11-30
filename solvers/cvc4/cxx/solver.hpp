@@ -22,25 +22,38 @@ namespace gpid {
             csty_solver.setOption("produce-models", true);
             csty_solver.setLogic("QF_ALL_SUPPORTED");
         }
+
+        inline void push() {
+            solver.push();
+            csty_solver.push();
+        }
+
+        inline void pop() {
+            solver.pop();
+            csty_solver.pop();
+        }
+
+        inline void addHypothesis(CVC4Hypothesis& hypothesis) {
+            solver.assertFormula(hypothesis.expr);
+            csty_solver.assertFormula(hypothesis.expr);
+        }
+
     };
 
     inline void CVC4Solver::accessLevel(uint32_t level) {
         while (level > c_level) {
-            solvers->solver.push();
-            solvers->csty_solver.push();
+            solvers->push();
             c_level++;
         }
         while (level < c_level) {
-            solvers->solver.pop();
-            solvers->csty_solver.pop();
+            solvers->pop();
             c_level--;
         }
     }
 
     inline void CVC4Solver::addHypothesis(CVC4Hypothesis& hypothesis, uint32_t level) {
         accessLevel(level);
-        solvers->solver.assertFormula(hypothesis.expr);
-        solvers->csty_solver.assertFormula(hypothesis.expr);
+        solvers->addHypothesis(hypothesis);
     }
 
     inline void CVC4Solver::removeHypotheses(uint32_t level) {

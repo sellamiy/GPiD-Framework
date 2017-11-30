@@ -9,6 +9,14 @@ namespace gpid {
     public:
         std::vector<CVC4::Expr> cons_data;
         uint32_t reading_pos = -1;
+
+        inline bool hasMoreConstraints() {
+            return reading_pos < cons_data.size();
+        }
+
+        inline CVC4::Expr nextConstraint() {
+            return cons_data[reading_pos++];
+        }
     };
 
 }
@@ -28,12 +36,12 @@ void CVC4Problem::addConstraint(CVC4::Expr cons) {
 
 bool CVC4Problem::hasMoreConstraints() {
     t_warn(mode != IOMode::IO_READ, "Reading problem on writing mode");
-    return handler->reading_pos < handler->cons_data.size();
+    return handler->hasMoreConstraints();
 }
 
 CVC4::Expr CVC4Problem::nextConstraint() {
     t_warn(mode != IOMode::IO_READ, "Reading problem on writing mode");
-    return handler->cons_data[handler->reading_pos++];
+    return handler->nextConstraint();
 }
 
 void CVC4Problem::initCurrentMode() {
