@@ -14,7 +14,7 @@ namespace gpid {
     struct EngineOptions {
 
         /** Print implicates on terminal when generated */
-        bool print_implicates = true;
+        bool print_implicates = false;
         /** Store generated implicates and skipp storage-subsumed hypotheses */
         bool store_implicates = false;
 
