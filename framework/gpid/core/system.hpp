@@ -11,16 +11,29 @@ namespace gpid {
 
     /** \brief System interruption flag storage. */
     struct SystemInterruptsFlags {
-        /** Engine internal flag. Set to true iff the engine internally decides it. */
-        bool internal_flag = false;
-        /** User interruption flag. Set to true iff user interrupted the engine. */
+        /** Possible reasons for an interruption */
+        enum SystemInterruptsReason {
+            /** No particular reason */
+            SYS_INT_R__,
+            /** Engine internal: the engine internally decides to interrupt */
+            SYS_INT_R__INTERNAL,
+            /** User interruption */
+            SYS_INT_R__USER,
+            /** Timeout */
+            SYS_INT_R__TIMEOUT
+        };
+        /** Reason of the interruption */
+        SystemInterruptsReason reason = SYS_INT_R__;
+        /** Interruption flag. Set to true iff the engine should be interrupted. */
         bool interruption_flag = false;
-        /** Timeout flag. Set to true iff computation time exceeded the limit. */
-        bool timeout_flag = false;
-        /** \return true iff at least one interruption flag is set. */
-        inline bool systemInterrupted() {
-            return internal_flag || interruption_flag || timeout_flag;
+
+        inline void interrupt(SystemInterruptsReason r) {
+            interruption_flag = true;
+            reason = r;
         }
+        /** \return true iff at least one interruption flag is set. */
+        inline bool systemInterrupted() { return interruption_flag; }
+        inline SystemInterruptsReason getReason() { return reason; }
     };
 
     /**

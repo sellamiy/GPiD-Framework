@@ -94,7 +94,7 @@ inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
     if (options.store_implicates)
         solver.storeActive();
     if (options.implicate_limit <= gi_counter)
-        des_iflags.internal_flag = true;
+        des_iflags.interrupt(SystemInterruptsFlags::SYS_INT_R__INTERNAL);
     instrument::analyze(NULL, instrument::analyze_type::implicate);
 }
 
