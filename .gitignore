@@ -2,3 +2,4 @@ build
 *~
 benchmark/devel
 benchmark/ignore
+__pycache__
