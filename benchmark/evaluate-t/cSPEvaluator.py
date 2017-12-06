@@ -25,11 +25,13 @@ class cSPEvaluator(Evaluator):
         return os.path.join(filepath, filename)
 
     def _generate_command__all(self, problem):
-        return [self.executable,
+        return ['timeout', str(self.timeout),
+                self.executable,
                 '-max-depth', '1',
                 '%s' % self._compute_tptp_filename(problem)]
     def _generate_command_size_1(self, problem):
-        return [self.executable,
+        return ['timeout', str(self.timeout),
+                self.executable,
                 '-max-depth', '1',
                 '-max-size', '1',
                 '%s' % self._compute_tptp_filename(problem)]
@@ -44,22 +46,14 @@ class cSPEvaluator(Evaluator):
         command = command_generator(problem)
         results = {}
         try:
-            pursue = False
-            try:
-                proc = Popen(command, stdout=PIPE, stderr=STDOUT)
-                cout, cerr = proc.communicate(timeout=self.timeout)
-            except TimeoutExpired:
-                proc.kill()
-                cout, cerr = proc.communicate(timeout=self.timeout)
-                pursue = True
-            if pursue or proc.returncode == 0:
-                cout = cout.decode(sys.stdout.encoding)
-                results['implicate-count'] = self._parse_result_value(cout, 'number of implicates generated')
-                results['potential-prime-count'] = self._parse_result_value(cout, 'number of potential prime implicates')
-                results['total-time'] = self._parse_result_value(cout, 'execution time')
-                results['status'] = 'Complete'
-            else:
-                results['status'] = 'ExecutionError'
+            proc = Popen(command, stdout=PIPE, stderr=STDOUT)
+            cout, cerr = proc.communicate()
+            cout = cout.decode(sys.stdout.encoding)
+            results['implicate-count'] = self._parse_result_value(cout, 'number of implicates generated')
+            results['potential-prime-count'] = self._parse_result_value(cout, 'number of potential prime implicates')
+            results['total-time'] = self._parse_result_value(cout, 'execution time')
+            results['status'] = 'Complete'
+            results['last-line'] = cout.strip().split('\n')[-1]
         except IndexError:
             results['status'] = 'IndexError'
         return results
