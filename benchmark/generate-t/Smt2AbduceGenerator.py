@@ -10,6 +10,17 @@ from six.moves import cStringIO
 from pysmt.environment import push_env, pop_env
 from pysmt.smtlib.parser import SmtLibParser
 # --------------------------------------
+def log_local_intro(intro):
+    sys.stderr.write('> %s - ' % intro)
+    sys.stderr.flush()
+def log_local_info(info):
+    sys.stderr.write('%s - ' % info)
+    sys.stderr.flush()
+def log_local_success():
+    sys.stderr.write('%sok%s\n' % (Fore.GREEN, Style.RESET_ALL))
+def log_local_failure():
+    sys.stderr.write('%sfailed%s\n' % (Fore.RED, Style.RESET_ALL))
+# --------------------------------------
 class AbduceGenerator:
 
     def __init__(self, problems):
@@ -132,6 +143,8 @@ class AbduceGenerator:
             os.makedirs(filepath)
 
     def _write_abducible_file(self, filename, abducibles):
+        log_local_info(filename)
+        log_local_info(len(abducibles))
         self._prepare_filename_directory(filename)
         target = open(filename, 'w')
         target.write('(size %i)\n' % len(abducibles))
@@ -140,21 +153,28 @@ class AbduceGenerator:
         target.close()
 
     def _generate_abducibles(self, problem):
-        dat = self._read_problem_data(problem)
+        log_local_intro('generate abducibles')
+        log_local_info(problem)
 
         push_env()
+        try:
+            dat = self._read_problem_data(problem)
 
-        decls = self._recover_declarations(dat)
+            decls = self._recover_declarations(dat)
 
-        self._generate_constant_calls_from_functions(decls)
-        self._merge_constant_calls(decls)
+            self._generate_constant_calls_from_functions(decls)
+            self._merge_constant_calls(decls)
 
-        abducibles = []
-        abducibles.extend(self._generate_boolean_abducibles_list(decls))
-        abducibles.extend(self._generate_equalities_abducibles_list(decls))
+            abducibles = []
+            abducibles.extend(self._generate_boolean_abducibles_list(decls))
+            abducibles.extend(self._generate_equalities_abducibles_list(decls))
 
-        self._write_abducible_file(self._compute_abducible_filename(problem), abducibles)
-        
+            self._write_abducible_file(self._compute_abducible_filename(problem), abducibles)
+
+            log_local_success()
+        except:
+            log_local_failure()
+
         pop_env()
 
 # --------------------------------------

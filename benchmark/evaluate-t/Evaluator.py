@@ -8,6 +8,19 @@ import argparse
 from subprocess import check_output, STDOUT, CalledProcessError, TimeoutExpired
 from colorama import Fore, Style
 # --------------------------------------
+def log_local_intro(intro):
+    sys.stderr.write('> %s - ' % intro)
+    sys.stderr.flush()
+def log_local_info(info):
+    sys.stderr.write('%s - ' % info)
+    sys.stderr.flush()
+def log_local_success():
+    sys.stderr.write('%sok%s\n' % (Fore.GREEN, Style.RESET_ALL))
+def log_local_failure():
+    sys.stderr.write('%sfailed%s\n' % (Fore.YELLOW, Style.RESET_ALL))
+def log_local_internal():
+    sys.stderr.write('%sinternal error%s\n' % (Fore.RED, Style.RESET_ALL))
+# --------------------------------------
 class Evaluator:
 
     def __init__(self, executable, timeout, evaluations, problems):
@@ -52,6 +65,15 @@ class Evaluator:
 
     def _check(self, problem):
         for evaluation in self.evaluations:
-            results = self._execute(self._get_generator_function(evaluation), problem)
-            self._log_result(problem, evaluation, results)
+            log_local_intro(evaluation)
+            log_local_info(problem)
+            try:
+                results = self._execute(self._get_generator_function(evaluation), problem)
+                self._log_result(problem, evaluation, results)
+                if results['status'] == 'Complete':
+                    log_local_success()
+                else:
+                    log_local_failure()
+            except:
+                log_local_internal()
 # --------------------------------------
