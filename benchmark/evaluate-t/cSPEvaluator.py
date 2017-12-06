@@ -42,6 +42,12 @@ class cSPEvaluator(Evaluator):
                    'generate-size-one' : self._generate_command_size_1
                }[evaluation]
 
+    def _parse_interruption_time(self, cout):
+        try:
+            return [ l for l in cout.split('\n') if '---' in l ][0].replace('-', '').split('after')[1].strip()
+        except:
+            return None
+
     def _execute(self, command_generator, problem):
         command = command_generator(problem)
         results = {}
@@ -52,9 +58,10 @@ class cSPEvaluator(Evaluator):
             results['implicate-count'] = self._parse_result_value(cout, 'number of implicates generated')
             results['potential-prime-count'] = self._parse_result_value(cout, 'number of potential prime implicates')
             results['total-time'] = self._parse_result_value(cout, 'execution time')
+            results['interruption-time'] = self._parse_interruption_time(cout)
             results['status'] = 'Complete'
             results['last-line'] = cout.strip().split('\n')[-1]
-        except IndexError:
+        except IndexError as e:
             results['status'] = 'IndexError'
         return results
 # --------------------------------------
