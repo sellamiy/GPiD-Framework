@@ -6,6 +6,7 @@ import sys, os
 import ast
 import argparse
 # --------------------------------------
+import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -153,9 +154,15 @@ class MultiGrapher:
         # Build point sequences
         figure, (pl1, pl2) = plt.subplots(1, 2)
         pl1.set_title('%s against %s - implicate count scatter' % (solver1, solver2))
-        pl2.set_title('%s against %s - bar battle results')
+        pl2.set_title('%s against %s - bar battle results' % (solver1, solver2))
 
         pl1.scatter(solver1_ipbl, solver2_ipbl)
+        pl1_lims = [ np.min([pl1.get_xlim(), pl1.get_ylim()]),
+                     np.max([pl1.get_xlim(), pl1.get_ylim()]), ]
+        pl1.plot(pl1_lims, pl1_lims, 'k-', alpha=0.75, zorder=0)
+        pl1.set_aspect('equal')
+        pl1.set_xlim(pl1_lims)
+        pl1.set_ylim(pl1_lims)
         pl1.set_xlabel(solver1)
         pl1.set_ylabel(solver2)
 
