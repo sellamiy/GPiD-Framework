@@ -124,9 +124,11 @@ class MultiGrapher:
 # --------------------------------------
 argparser = argparse.ArgumentParser(description='Example results multiGrapher')
 argparser.add_argument('-i', '--input-problems', dest='problems',
-                       metavar='<example>.smt2', type=str,
-                       nargs='+', required=True,
+                       metavar='<example>.smt2', type=str, nargs='+',
                        help='example to analyze')
+argparser.add_argument('-f', '--input-list', dest='problem_lists',
+                       metavar='<list>.txt', type=str, nargs='+',
+                       help='example list to analyze')
 argparser.add_argument('-s', '--solvers', type=str, nargs='+', required=True,
                        choices=['gpid', 'csp'],
                        help='solvers that evaluated the problem')
@@ -139,8 +141,28 @@ argparser.add_argument('-g', '--graph-targets', dest='graphs',
                        choices=['execution-time-range'],
                        help='graph to generate')
 # --------------------------------------
+def load_problem_lists(lists):
+    problems = []
+    for l in lists:
+        try:
+            pstream = open(l ,'r')
+            for line in pstream:
+                if line.strip() != '':
+                    problems.append(line.strip())
+            pstream.close()
+        except:
+            log_local_intro('loading list')
+            log_local_info(l)
+            log_local_failure()
+    return problems
+# --------------------------------------
 def main(opts):
-    grapher = MultiGrapher(opts.problems, opts.solvers, opts.evaluations)
+    problem_list = []
+    if opts.problems is not None:
+        problem_list.extend(opts.problems)
+    if opts.problem_lists is not None:
+        problem_list.extend(load_problem_lists(opts.problem_lists))
+    grapher = MultiGrapher(problem_list, opts.solvers, opts.evaluations)
     grapher.load()
     grapher.graph(opts.graphs)
 # --------------------------------------
