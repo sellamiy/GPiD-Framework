@@ -75,7 +75,8 @@ class MultiGrapher:
     def _handle_graph(self, graph):
         return {
             'execution-time-range' : self.graph_execution_time_range,
-            'implicate-count-comparison' : self.graph_implicate_count_comparison
+            'implicate-count-comparison' : self.graph_implicate_count_comparison,
+            'valid-implicate-count-comparison' : self.graph_valid_implicate_count_comparison
         }[graph]
 
     def _compute_graphfile_name(self, graph, solver, evaluation):
@@ -125,6 +126,14 @@ class MultiGrapher:
         figure.savefig(self._compute_graphfile_name('execution-time-range', solver, evaluation))
 
     def graph_implicate_count_comparison(self):
+        self._generic_graph_implicate_count_comparison({ 'csp':'potential-prime-count',
+                                                         'gpid':'implicate-count' })
+
+    def graph_valid_implicate_count_comparison(self):
+        self._generic_graph_implicate_count_comparison({ 'csp':'implicate-count',
+                                                         'gpid':'implicate-count' })
+
+    def _generic_graph_implicate_count_comparison(self, count_indexor):
         for evaluation in self.evaluations:
             for solver1 in self.solvers:
                 for solver2 in self.solvers:
@@ -134,28 +143,25 @@ class MultiGrapher:
                         log_local_info(solver1)
                         log_local_info(solver2)
                         try:
-                            self._graph_implicate_count_comparison(evaluation, solver1, solver2)
+                            self._graph_implicate_count_comparison(evaluation, solver1, solver2, count_indexor)
                             log_local_success()
                         except:
                             log_local_failure()
 
-    def _get_solver_implicate_count(self, solver, evaluation, problem_data):
-        count_index = {
-                'csp':'potential-prime-count',
-                'gpid':'implicate-count'
-            }[solver]
+    def _get_solver_implicate_count(self, solver, evaluation, problem_data, count_indexor):
+        count_index = count_indexor[solver]
         try:
             return problem_data.results[solver, evaluation][count_index]
         except:
             return None
 
-    def _graph_implicate_count_comparison(self, evaluation, solver1, solver2):
+    def _graph_implicate_count_comparison(self, evaluation, solver1, solver2, count_indexor):
         # Load implicates points
         solver1_ipbl = []
         solver2_ipbl = []
         for problem, data in self.problems.items():
-            local1 = self._get_solver_implicate_count(solver1, evaluation, data)
-            local2 = self._get_solver_implicate_count(solver2, evaluation, data)
+            local1 = self._get_solver_implicate_count(solver1, evaluation, data, count_indexor)
+            local2 = self._get_solver_implicate_count(solver2, evaluation, data, count_indexor)
             if local1 is not None and local2 is not None:
                 solver1_ipbl.append(int(local1))
                 solver2_ipbl.append(int(local2))
@@ -202,7 +208,7 @@ argparser.add_argument('-e', '--evaluation-type', dest='evaluations',
                        help='type of evaluation performed')
 argparser.add_argument('-g', '--graph-targets', dest='graphs',
                        type=str, nargs='+', required=True,
-                       choices=['execution-time-range', 'implicate-count-comparison'],
+                       choices=['execution-time-range', 'implicate-count-comparison', 'valid-implicate-count-comparison'],
                        help='graph to generate')
 # --------------------------------------
 def load_problem_lists(lists):
