@@ -22,18 +22,21 @@ class GPiDEvaluator(Evaluator):
         return self._switch_filename_extension(problem, 'gpid.%s.log' % evaluation)
 
     def _generate_command__all(self, problem):
-        return [self.executable,
+        return ['timeout', str(self.timeout*2),
+                self.executable,
                 '-i', '%s' % problem,
                 '-l', self._compute_abducible_filename(problem),
                 '--time-limit=%i' % self.timeout]
     def _generate_command_size_1(self, problem):
-        return [self.executable,
+        return ['timeout', str(self.timeout*2),
+                self.executable,
                 '-i', '%s' % problem,
                 '-l', self._compute_abducible_filename(problem),
                 '--time-limit=%i' % self.timeout,
                 '--implicate-size-limit=1']
     def _generate_command_single(self, problem):
-        return [self.executable,
+        return ['timeout', str(self.timeout*2),
+                self.executable,
                 '-i', '%s' % problem,
                 '-l', self._compute_abducible_filename(problem),
                 '--time-limit=%i' % self.timeout,
