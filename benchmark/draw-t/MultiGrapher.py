@@ -126,11 +126,13 @@ class MultiGrapher:
         figure.savefig(self._compute_graphfile_name('execution-time-range', solver, evaluation))
 
     def graph_implicate_count_comparison(self):
-        self._generic_graph_implicate_count_comparison({ 'csp':'potential-prime-count',
+        self._generic_graph_implicate_count_comparison({ '<type>':'any-impl-count-comp',
+                                                         'csp':'potential-prime-count',
                                                          'gpid':'implicate-count' })
 
     def graph_valid_implicate_count_comparison(self):
-        self._generic_graph_implicate_count_comparison({ 'csp':'implicate-count',
+        self._generic_graph_implicate_count_comparison({ '<type>':'valid-impl-count-comp',
+                                                         'csp':'implicate-count',
                                                          'gpid':'implicate-count' })
 
     def _generic_graph_implicate_count_comparison(self, count_indexor):
@@ -189,7 +191,7 @@ class MultiGrapher:
         s2b = pl2.bar(0, (sol2_w,), 0.5, color='g', bottom=(sol1_w,))
         pl2.legend((s1b[0], s2b[0]), (solver1, solver2))
         # Export
-        figure.savefig(self._compute_graphfile_name('implicate-count-comparison', '%s_ag_%s' % (solver1, solver2), evaluation))
+        figure.savefig(self._compute_graphfile_name(count_indexor['<type>'], '%s_ag_%s' % (solver1, solver2), evaluation))
 
 # --------------------------------------
 argparser = argparse.ArgumentParser(description='Example results multiGrapher')
