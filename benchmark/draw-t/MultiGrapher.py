@@ -72,7 +72,8 @@ class MultiGrapher:
 
     def _handle_graph(self, graph):
         return {
-            'execution-time-range' : self.graph_execution_time_range
+            'execution-time-range' : self.graph_execution_time_range,
+            'implicate-count-comparison' : self.graph_implicate_count_comparison
         }[graph]
 
     def _compute_graphfile_name(self, graph, solver, evaluation):
@@ -120,7 +121,46 @@ class MultiGrapher:
         pl2.bar(0, (failcpt,), 1, bottom=(len(nnpoints),), color='r')
         # Export
         figure.savefig(self._compute_graphfile_name('execution-time-range', solver, evaluation))
-        
+
+    def graph_implicate_count_comparison(self):
+        for evaluation in self.evaluations:
+            for solver1 in self.solvers:
+                for solver2 in self.solvers:
+                    if solver1 != solver2:
+                        self._graph_implicate_count_comparison(evaluation, solver1, solver2)
+
+    def _graph_implicate_count_comparison(self, evaluation, solver1, solver2):
+        # Load implicates points
+        solver1_ipbl = []
+        solver2_ipbl = []
+        for problem, data in self.problems.items():
+            local1 = data.results[solver1, evaluation]
+            local2 = data.results[solver2, evaluation]
+            try:
+                if local1['implicate-count'] is not None and local2['implicate-count'] is not None:
+                    solver1_ipbl.append(int(local1['implicate-count']))
+                    solver2_ipbl.append(int(local2['implicate-count']))
+            except:
+                pass
+        # Build point sequences
+        figure, (pl1, pl2) = plt.subplots(1, 2)
+        pl1.set_title('%s against %s - implicate count scatter' % (solver1, solver2))
+        pl2.set_title('%s against %s - bar battle results')
+
+        pl1.scatter(solver1_ipbl, solver2_ipbl)
+        pl1.set_xlabel(solver1)
+        pl1.set_ylabel(solver2)
+
+        sol1_w = len([True for i in range(len(solver1_ipbl)) if solver1_ipbl[i] <  solver2_ipbl[i]])
+        sol2_w = len([True for i in range(len(solver1_ipbl)) if solver1_ipbl[i] >  solver2_ipbl[i]])
+        soln_w = len([True for i in range(len(solver1_ipbl)) if solver1_ipbl[i] == solver2_ipbl[i]])
+        s1b = pl2.bar(0, (sol1_w,), 1, color='y')
+        snb = pl2.bar(0, (soln_w,), 1, color='b', bottom=(sol1_w,))
+        s2b = pl2.bar(0, (sol2_w,), 1, color='g', bottom=(soln_w,))
+        pl2.legend((s1b[0], snb[0], s2b[0]), (solver1, '<identical>', solver2))
+        # Export
+        figure.savefig(self._compute_graphfile_name('implicate-count-comparison', '%s_ag_%s' % (solver1, solver2), evaluation))
+
 # --------------------------------------
 argparser = argparse.ArgumentParser(description='Example results multiGrapher')
 argparser.add_argument('-i', '--input-problems', dest='problems',
@@ -138,7 +178,7 @@ argparser.add_argument('-e', '--evaluation-type', dest='evaluations',
                        help='type of evaluation performed')
 argparser.add_argument('-g', '--graph-targets', dest='graphs',
                        type=str, nargs='+', required=True,
-                       choices=['execution-time-range'],
+                       choices=['execution-time-range', 'implicate-count-comparison'],
                        help='graph to generate')
 # --------------------------------------
 def load_problem_lists(lists):
