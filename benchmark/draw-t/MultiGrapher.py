@@ -139,19 +139,26 @@ class MultiGrapher:
                         except:
                             log_local_failure()
 
+    def _get_solver_implicate_count(self, solver, evaluation, problem_data):
+        count_index = {
+                'csp':'potential-prime-count',
+                'gpid':'implicate-count'
+            }[solver]
+        try:
+            return problem_data.results[solver, evaluation][count_index]
+        except:
+            return None
+
     def _graph_implicate_count_comparison(self, evaluation, solver1, solver2):
         # Load implicates points
         solver1_ipbl = []
         solver2_ipbl = []
         for problem, data in self.problems.items():
-            local1 = data.results[solver1, evaluation]
-            local2 = data.results[solver2, evaluation]
-            try:
-                if local1['implicate-count'] is not None and local2['implicate-count'] is not None:
-                    solver1_ipbl.append(int(local1['implicate-count']))
-                    solver2_ipbl.append(int(local2['implicate-count']))
-            except:
-                pass
+            local1 = self._get_solver_implicate_count(solver1, evaluation, data)
+            local2 = self._get_solver_implicate_count(solver2, evaluation, data)
+            if local1 is not None and local2 is not None:
+                solver1_ipbl.append(int(local1))
+                solver2_ipbl.append(int(local2))
         # Build point sequences
         figure = plt.figure()
         gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])
@@ -170,8 +177,8 @@ class MultiGrapher:
         pl1.set_xlabel(solver1)
         pl1.set_ylabel(solver2)
 
-        sol1_w = len([True for i in range(len(solver1_ipbl)) if solver1_ipbl[i] < solver2_ipbl[i]])
-        sol2_w = len([True for i in range(len(solver1_ipbl)) if solver1_ipbl[i] > solver2_ipbl[i]])
+        sol1_w = len([True for i in range(len(solver1_ipbl)) if solver1_ipbl[i] > solver2_ipbl[i]])
+        sol2_w = len([True for i in range(len(solver1_ipbl)) if solver1_ipbl[i] < solver2_ipbl[i]])
         s1b = pl2.bar(0, (sol1_w,), 0.5, color='y')
         s2b = pl2.bar(0, (sol2_w,), 0.5, color='g', bottom=(sol1_w,))
         pl2.legend((s1b[0], s2b[0]), (solver1, solver2))
