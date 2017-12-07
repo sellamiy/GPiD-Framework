@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib import gridspec
 # --------------------------------------
 from colorama import Fore, Style
 # --------------------------------------
@@ -152,7 +153,10 @@ class MultiGrapher:
             except:
                 pass
         # Build point sequences
-        figure, (pl1, pl2) = plt.subplots(1, 2)
+        figure = plt.figure()
+        gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])
+        pl1 = plt.subplot(gs[0])
+        pl2 = plt.subplot(gs[1])
         pl1.set_title('%s against %s - implicate count scatter' % (solver1, solver2))
         pl2.set_title('%s against %s - bar battle results' % (solver1, solver2))
 
