@@ -127,7 +127,15 @@ class MultiGrapher:
             for solver1 in self.solvers:
                 for solver2 in self.solvers:
                     if solver1 != solver2:
-                        self._graph_implicate_count_comparison(evaluation, solver1, solver2)
+                        log_local_intro('generate implicate count comparison graph')
+                        log_local_info(evaluation)
+                        log_local_info(solver1)
+                        log_local_info(solver2)
+                        try:
+                            self._graph_implicate_count_comparison(evaluation, solver1, solver2)
+                            log_local_success()
+                        except:
+                            log_local_failure()
 
     def _graph_implicate_count_comparison(self, evaluation, solver1, solver2):
         # Load implicates points
