@@ -31,14 +31,14 @@ class ProblemResults:
     def load_results(self, solvers, evaluations):
         for solver in solvers:
             for evaluation in evaluations:
-                log_local_intro('loading log file')
                 try:
                     logfile = self._compute_log_filename(solver, evaluation)
-                    log_local_info(logfile)
                     self.results[solver, evaluation] = self._read_results(logfile)
-                    log_local_success()
                 except:
+                    log_local_intro('loading')
+                    log_local_info(logfile)
                     log_local_failure()
+                    pass
 
     def _read_results(self, logfile):
         logstream = open(logfile, 'r')
