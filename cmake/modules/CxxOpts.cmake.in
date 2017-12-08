@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(cxxopts-download NONE)
+
+include(ExternalProject)
+ExternalProject_Add(cxxopts-library
+  GIT_REPOSITORY    https://github.com/jarro2783/cxxopts.git
+  GIT_TAG           master
+  SOURCE_DIR        "${CMAKE_BINARY_DIR}/cxxopts-sources"
+  BINARY_DIR        "${CMAKE_BINARY_DIR}/cxxopts-build"
+  INSTALL_COMMAND   ""
+  TEST_COMMAND      ""
+  )
