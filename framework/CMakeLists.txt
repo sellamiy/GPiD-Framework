@@ -11,6 +11,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/include/config.hpp.in
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/include/gpid.hpp.in
   ${LOCAL_FRAMEWORK_HEADERS_DIR}/gpid/gpid.hpp)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/include/errors.hpp.in
+  ${LOCAL_FRAMEWORK_HEADERS_DIR}/gpid/errors.hpp)
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config/version.cpp.in
   ${LOCAL_FRAMEWORK_SOURCES_DIR}/config/version.cpp)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/include/version.hpp

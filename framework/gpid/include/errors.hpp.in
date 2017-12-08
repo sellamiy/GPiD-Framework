@@ -1,0 +1,11 @@
+/**
+ * \file gpid/errors.hpp
+ * \brief GPiD-Framework Errors Header.
+ * \ingroup gpidcorelib
+ * \author Yanis Sellami
+ * \date 2017
+ */
+#ifndef GPID_FRAMEWORK__ERRORS_HPP
+#define GPID_FRAMEWORK__ERRORS_HPP
+
+#endif
