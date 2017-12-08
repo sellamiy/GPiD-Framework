@@ -56,6 +56,24 @@ namespace gpid {
         { return <%= @solver.name %>AbducibleCompt(to<%= @solver.name %>InputGenerator(gkey), pbl); }
     };
 
+    static inline void loadAbducibles
+    (std::string filename,
+     <%= @solver.contextManagerClass %>& ctx,
+     <%= @solver.declarationsClass %>& decls,
+     HypothesesSet<<%= @solver.solverClass %>>& set) {
+        alloc_gab<<%= @solver.solverClass %>::HypothesisT>(set.getSourceSize());
+        std::map<int, int> linker;
+
+        AbducibleParser parser(filename);
+        parser.init();
+        for (uint32_t i = 0; i < set.getSourceSize(); i++) {
+            if (!parser.isOk()) {
+                throw ParseError("Error loading from @file:" + filename);
+            }
+            handleAbducible(i, parser.nextAbducible(), ctx, decls, set, linker);
+        }
+    }
+
     struct <%= @solver.name %>Loader {
         inline void operator()
         (std::string filename,
