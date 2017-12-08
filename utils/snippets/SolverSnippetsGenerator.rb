@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# coding: utf-8
 # ======================================================== #
 require 'erb'
 require 'fileutils'
@@ -11,11 +12,11 @@ def prepare_path(filepath)
   end
 end
 # ======================================================== #
-def snippet_file(snippet, snippet_type)
-  File.path("%{local}/templates/%{snippet_type}/%{snippet}.erb" %
-            { :local => File.dirname(__FILE__),
+def snippet_file(templates_dir, snippet, snippet_type)
+  File.path("%{local}/%{snippet_type}/%{snippet}.erb" %
+            { :local        => templates_dir,
               :snippet_type => snippet_type,
-              :snippet => snippet
+              :snippet      => snippet
             })
 end
 # ======================================================== #
@@ -39,13 +40,14 @@ class SolverConfiguration
 end
 # ======================================================== #
 class AbstractSolverSnippet
-  attr_accessor :target, :cfgdir, :snippet, :solvers
+  attr_accessor :target, :template_dir, :cfgdir, :snippet, :solvers
 
-  def initialize(target, cfgdir, snippet, solvers)
-    @target  = target
-    @cfgdir  = cfgdir
-    @snippet = snippet
-    @solvers = solvers.map{ |solver| SolverConfiguration.new(solver, @cfgdir) }
+  def initialize(target, template_dir, cfgdir, snippet, solvers)
+    @target       = target
+    @template_dir = template_dir
+    @cfgdir       = cfgdir
+    @snippet      = snippet
+    @solvers      = solvers.map{ |solver| SolverConfiguration.new(solver, @cfgdir) }
   end
 
   def target_filename
@@ -64,14 +66,14 @@ class AbstractSolverSnippet
   end
 
   def render
-    ERB.new(File.read(snippet_file(@snippet, @snippet_type))).result(binding)
+    ERB.new(File.read(snippet_file(@template_dir, @snippet, @snippet_type))).result(binding)
   end
 
 end
 # ======================================================== #
 class MultiSolverSnippet < AbstractSolverSnippet
-  def initialize(target, cfgdir, snippet, solvers)
-    super(target, cfgdir, snippet, solvers)
+  def initialize(target, template_dir, cfgdir, snippet, solvers)
+    super(target, template_dir, cfgdir, snippet, solvers)
     @snippet_type = "multi"
   end
 
@@ -85,8 +87,8 @@ class MultiSolverSnippet < AbstractSolverSnippet
 end
 # ======================================================== #
 class SingleSolverSnippet < AbstractSolverSnippet
-  def initialize(target, cfgdir, snippet, solvers)
-    super(target, cfgdir, snippet, solvers)
+  def initialize(target, template_dir, cfgdir, snippet, solvers)
+    super(target, template_dir, cfgdir, snippet, solvers)
     @snippet_type = "single"
   end
 
@@ -103,14 +105,15 @@ class SingleSolverSnippet < AbstractSolverSnippet
 end
 # ======================================================== #
 if __FILE__ == $0
-  target  = ARGV[0]
-  cfgdir  = ARGV[1]
-  snippet = ARGV[2]
-  solvers = ARGV.drop(3)
-  if File.file?(snippet_file(snippet, "single"))
-    SingleSolverSnippet.new(target, cfgdir, snippet, solvers).process
-  elsif File.file?(snippet_file(snippet, "multi"))
-    MultiSolverSnippet.new(target, cfgdir, snippet, solvers).process
+  template_dir = ARGV[0]
+  target       = ARGV[1]
+  cfgdir       = ARGV[2]
+  snippet      = ARGV[3]
+  solvers      = ARGV.drop(4)
+  if File.file?(snippet_file(template_dir, snippet, "single"))
+    SingleSolverSnippet.new(target, template_dir, cfgdir, snippet, solvers).process
+  elsif File.file?(snippet_file(template_dir, snippet, "multi"))
+    MultiSolverSnippet.new(target, template_dir, cfgdir, snippet, solvers).process
   else
     raise "Unknown snippet: %{snippet}" % { :snippet => snippet }
   end
