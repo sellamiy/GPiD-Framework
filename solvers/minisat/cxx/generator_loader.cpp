@@ -6,7 +6,7 @@ using namespace Minisat;
 
 namespace gpid {
 
-    static inline void handleAbducible
+    static inline void loadAbducible
     (int idx, const std::string abducible,
      MinisatContextManager&, MinisatDeclarations&,
      HypothesesSet<MinisatSolver>& set, std::map<int,int>& linker) {

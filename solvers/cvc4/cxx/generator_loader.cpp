@@ -6,7 +6,7 @@ using namespace CVC4;
 
 namespace gpid {
 
-    static inline void handleAbducible
+    static inline void loadAbducible
     (int idx, const std::string expr,
      CVC4::ExprManager& em, CVC4Declarations& decls,
      HypothesesSet<CVC4Solver>& set, std::map<int,int>&) {

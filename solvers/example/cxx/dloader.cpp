@@ -3,9 +3,9 @@
 
 namespace gpid {
 
-    static inline void handleAbducible(int, const std::string,
-                                       ts__ctxm&, ts__decls&,
-                                       HypothesesSet<ts__solv>&, std::map<int,int>&)
+    static inline void loadAbducible(int, const std::string,
+                                     ts__ctxm&, ts__decls&,
+                                     HypothesesSet<ts__solv>&, std::map<int,int>&)
     { }
 
 }

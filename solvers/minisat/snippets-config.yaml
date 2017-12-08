@@ -36,3 +36,5 @@ abducibleGenerators:
     name : all
     counter : countAbducibles_all
     generator : generateAbducibles_all
+
+abducibleLoader: loadAbducible

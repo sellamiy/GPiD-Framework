@@ -23,3 +23,5 @@ abducibleSnippets :
 parsers: []
 
 abducibleGenerators: []
+
+abducibleLoader: loadAbducible

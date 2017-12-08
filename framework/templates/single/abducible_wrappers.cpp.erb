@@ -56,31 +56,12 @@ namespace gpid {
         { return <%= @solver.name %>AbducibleCompt(to<%= @solver.name %>InputGenerator(gkey), pbl); }
     };
 
-    static inline void loadAbducibles
-    (std::string filename,
-     <%= @solver.contextManagerClass %>& ctx,
-     <%= @solver.declarationsClass %>& decls,
-     HypothesesSet<<%= @solver.solverClass %>>& set) {
-        alloc_gab<<%= @solver.solverClass %>::HypothesisT>(set.getSourceSize());
-        std::map<int, int> linker;
-
-        AbducibleParser parser(filename);
-        parser.init();
-        for (uint32_t i = 0; i < set.getSourceSize(); i++) {
-            if (!parser.isOk()) {
-                throw ParseError("Error loading from @file:" + filename);
-            }
-            handleAbducible(i, parser.nextAbducible(), ctx, decls, set, linker);
-        }
-    }
-
     struct <%= @solver.name %>Loader {
         inline void operator()
-        (std::string filename,
-         <%= @solver.contextManagerClass %>& ctx,
-         <%= @solver.declarationsClass %>& decls,
-         HypothesesSet<<%= @solver.solverClass %>>& set)
-        { loadAbducibles(filename, ctx, decls, set); }
+        (int idx, const std::string expr,
+         <%= @solver.contextManagerClass %>& ctx, <%= @solver.declarationsClass %>& decls,
+         HypothesesSet<<%= @solver.solverClass %>>& set, std::map<int,int>& linker)
+        { <%= @solver.abducibleLoader %>(idx, expr, ctx, decls, set, linker); }
     };
 
     <% if @solver.abducibleGenerators.empty? %>
@@ -127,10 +108,9 @@ namespace gpid {
      <%= @solver.contextManagerClass %>& ctx,
      <%= @solver.declarationsClass %>& decls,
      HypothesesSet<<%= @solver.solverClass %>>& set) {
-        generateAbducibles<HypothesesSet<<%= @solver.solverClass %>>,
-                           <%= @solver.contextManagerClass %>,
-                           <%= @solver.declarationsClass %>,
-                           <%= @solver.name %>Loader, <%= @solver.name %>Generator>
+        generateAbducibles<<%= @solver.problemClass %>,
+                           HypothesesSet<<%= @solver.solverClass %>>,
+                           <%= @solver.name %>Generator, <%= @solver.name %>Loader>
             (opts, ctx, decls, set);
     }
 

@@ -43,3 +43,5 @@ abducibleGenerators:
     name : allEq
     counter : countAbducibles_allEq
     generator : generateAbducibles_allEq
+
+abducibleLoader: loadAbducible

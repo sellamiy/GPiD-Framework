@@ -47,12 +47,28 @@ namespace gpid {
         }
     }
 
-    template <typename HypothesesSetT, typename ContextT, typename DeclarationsT,
-              typename LoaderT, typename GeneratorT>
+    template <typename ProblemT, typename HypothesesSetT, typename LoaderT>
+    static inline void loadAbducibles
+    (std::string filename, typename ProblemT::ContextManagerT& ctx,
+     typename ProblemT::DeclarationsT& decls, HypothesesSetT& set) {
+        alloc_gab<typename HypothesesSetT::HypothesisT>(set.getSourceSize());
+        std::map<int, int> linker;
+        AbducibleParser parser(filename);
+        parser.init();
+        for (uint32_t i = 0; i < set.getSourceSize(); i++) {
+            if (!parser.isOk()) {
+                throw ParseError("Error loading from @file:" + filename);
+            }
+            LoaderT()(i, parser.nextAbducible(), ctx, decls, set, linker);
+        }
+    }
+
+    template <typename ProblemT, typename HypothesesSetT, typename GeneratorT, typename LoaderT>
     static inline void generateAbducibles
-    (AbduciblesOptions& opts, ContextT& ctx, DeclarationsT& decls, HypothesesSetT& set) {
+    (AbduciblesOptions& opts, typename ProblemT::ContextManagerT& ctx,
+     typename ProblemT::DeclarationsT& decls, HypothesesSetT& set) {
         if (opts.input_type == AbdInputType::ABDIT_FILE) {
-            LoaderT()(opts.input_file, ctx, decls, set);
+            loadAbducibles<ProblemT, HypothesesSetT, LoaderT>(opts.input_file, ctx, decls, set);
         } else if (opts.input_type == AbdInputType::ABDIT_GENERATOR) {
             GeneratorT()(opts.input_generator, ctx, decls, set);
         } else {

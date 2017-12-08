@@ -6,7 +6,7 @@ using namespace z3;
 
 namespace gpid {
 
-    static inline void handleAbducible
+    static inline void loadAbducible
     (int idx, const std::string expr,
      z3::context& ctx, Z3Declarations& decls,
      HypothesesSet<Z3Solver>& set, std::map<int, int>&) {

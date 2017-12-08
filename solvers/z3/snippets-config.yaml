@@ -40,3 +40,5 @@ abducibleGenerators:
     name : constAllComp
     counter : countAbducibles_constAllComp
     generator : generateAbducibles_constAllComp
+
+abducibleLoader: loadAbducible
