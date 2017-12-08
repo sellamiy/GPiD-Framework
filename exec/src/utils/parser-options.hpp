@@ -16,7 +16,8 @@ enum OptionStatus {
 };
 
 static inline OptionStatus parseOptions(ParserOptions& opts, int argc, char** argv);
-static inline OptionStatus handleOptions(ParserOptions& opts, cxxopts::Options& parser);
+static inline OptionStatus handleOptions
+(ParserOptions& opts, cxxopts::Options& parser, cxxopts::ParseResult& results);
 
 /* ===== Parser ===== */
 
@@ -34,9 +35,9 @@ static inline OptionStatus parseOptions(ParserOptions& opts, int argc, char** ar
 	    ("i,input", "Input file", cxxopts::value<std::string>())
 	    ;
 
-	parser.parse(argc, argv);
+	cxxopts::ParseResult results = parser.parse(argc, argv);
 
-	return handleOptions(opts, parser);
+	return handleOptions(opts, parser, results);
 
     } catch (const cxxopts::OptionException& e) {
 	snlog::l_error(e.what());
@@ -46,20 +47,21 @@ static inline OptionStatus parseOptions(ParserOptions& opts, int argc, char** ar
 
 /* ===== Handler ===== */
 
-static inline OptionStatus handleOptions(ParserOptions& opts, cxxopts::Options& parser) {
+static inline OptionStatus handleOptions
+(ParserOptions& opts, cxxopts::Options& parser, cxxopts::ParseResult& results) {
     try {
 
-	if (parser.count("help")) {
+	if (results.count("help")) {
 	    snlog::l_message(parser.help({"", "Input"}));
 	    return OptionStatus::ENDED;
 	}
-	if (parser.count("version")) {
+	if (results.count("version")) {
 	    snlog::l_message(gpid::generate_version_message());
 	    return OptionStatus::ENDED;
 	}
 
-	if (parser.count("input")) {
-	    opts.input = parser["input"].as<std::string>();
+	if (results.count("input")) {
+	    opts.input = results["input"].as<std::string>();
 	} else {
 	    snlog::l_fatal("No input file provided");
 	    snlog::l_info(parser.help({"Input"}));

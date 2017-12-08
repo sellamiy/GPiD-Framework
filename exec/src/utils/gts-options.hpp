@@ -28,8 +28,10 @@ enum OptionStatus {
 };
 
 static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** argv);
-static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& parser);
-static inline OptionStatus detectConflicts(OptionStorage& opts, cxxopts::Options& parser);
+static inline OptionStatus handleOptions
+(OptionStorage& opts, cxxopts::Options& parser, cxxopts::ParseResult& results);
+static inline OptionStatus detectConflicts
+(OptionStorage& opts, cxxopts::Options& parser, cxxopts::ParseResult& results);
 
 /* ===== Parser ===== */
 
@@ -87,10 +89,10 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
              cxxopts::value<std::string>())
             ;
 
-	parser.parse(argc, argv);
+	cxxopts::ParseResult results = parser.parse(argc, argv);
 
-        OptionStatus str = detectConflicts(opts, parser);
-        return str == OptionStatus::OK ? handleOptions(opts, parser) : str;
+        OptionStatus str = detectConflicts(opts, parser, results);
+        return str == OptionStatus::OK ? handleOptions(opts, parser, results) : str;
 
     } catch (const cxxopts::OptionException& e) {
 	snlog::l_error(e.what());
@@ -100,74 +102,75 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, char** ar
 
 /* ===== Handler ===== */
 
-static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& parser) {
+static inline OptionStatus handleOptions
+(OptionStorage& opts, cxxopts::Options& parser, cxxopts::ParseResult& results) {
     try {
 #ifndef SINGLE_SOLVER_ONLY
         std::vector<std::string> help_cats = {"", "Generator", "Input", "Output", "Engine", "Instrument"};
 #else
         std::vector<std::string> help_cats = {"", "Input", "Output", "Engine", "Instrument"};
 #endif
-	if (parser.count("help")) {
+	if (results.count("help")) {
 	    snlog::l_message(parser.help(help_cats));
 	    return OptionStatus::ENDED;
 	}
-	if (parser.count("version")) {
+	if (results.count("version")) {
 	    snlog::l_message(gpid::generate_version_message());
 	    return OptionStatus::ENDED;
 	}
 
-	if (parser.count("print-implicates"))
+	if (results.count("print-implicates"))
 	    opts.engine.print_implicates = true;
-	if (parser.count("dont-print-implicates"))
+	if (results.count("dont-print-implicates"))
 	    opts.engine.print_implicates = false;
 
-        if (parser.count("store-implicates"))
+        if (results.count("store-implicates"))
 	    opts.engine.store_implicates = true;
-	if (parser.count("dont-store-implicates"))
+	if (results.count("dont-store-implicates"))
 	    opts.engine.store_implicates = false;
 
-        if (parser.count("use-models"))
+        if (results.count("use-models"))
 	    opts.engine.use_models = true;
-	if (parser.count("dont-use-models"))
+	if (results.count("dont-use-models"))
 	    opts.engine.use_models = false;
 
-        if (parser.count("allow-inconsistencies"))
+        if (results.count("allow-inconsistencies"))
 	    opts.engine.allow_inconsistencies = true;
-	if (parser.count("dont-allow-inconsistencies"))
+	if (results.count("dont-allow-inconsistencies"))
 	    opts.engine.allow_inconsistencies = false;
 
-        if (parser.count("implicate-size-limit"))
-            opts.engine.max_level = parser["implicate-size-limit"].as<uint32_t>() + 1;
+        if (results.count("implicate-size-limit"))
+            opts.engine.max_level = results["implicate-size-limit"].as<uint32_t>() + 1;
 
-        if (parser.count("time-limit"))
-            opts.engine.time_limit = parser["time-limit"].as<uint64_t>();
-        if (parser.count("implicate-limit"))
-            opts.engine.implicate_limit = parser["implicate-limit"].as<uint64_t>();
+        if (results.count("time-limit"))
+            opts.engine.time_limit = results["time-limit"].as<uint64_t>();
+        if (results.count("implicate-limit"))
+            opts.engine.implicate_limit = results["implicate-limit"].as<uint64_t>();
 
-	if (parser.count("input")) {
-	    opts.input = parser["input"].as<std::string>();
+	if (results.count("input")) {
+	    opts.input = results["input"].as<std::string>();
 	} else {
 	    snlog::l_fatal("No input file provided");
 	    snlog::l_info(parser.help({"Input"}));
 	    return OptionStatus::FAILURE;
 	}
 
-        if (parser.count("input-language")) {
-	    opts.input_lang = parser["input-language"].as<std::string>();
+        if (results.count("input-language")) {
+	    opts.input_lang = results["input-language"].as<std::string>();
 	} else {
             // TODO: Show meaningful info message here
             opts.input_lang = "default";
 	}
 
 #ifndef SINGLE_SOLVER_ONLY
-        if (parser.count("generator")) {
-            opts.generator = toEngineSelection(parser["generator"].as<std::string>());
+        if (results.count("generator")) {
+            opts.generator = toEngineSelection(results["generator"].as<std::string>());
             if (opts.generator == EngineSelection::UNKNOWN_INTERFACE) {
-                snlog::l_fatal("Unknown generator:" + parser["generator"].as<std::string>());
+                snlog::l_fatal("Unknown generator:" + results["generator"].as<std::string>());
                 snlog::l_info(parser.help({"Generator"}));
                 return OptionStatus::FAILURE;
             } else if (opts.generator == EngineSelection::UNCONFIGURED_INTERFACE) {
-                snlog::l_fatal(parser["generator"].as<std::string>() + " interface not configured");
+                snlog::l_fatal(results["generator"].as<std::string>() + " interface not configured");
                 snlog::l_info(parser.help({"Generator"}));
                 return OptionStatus::FAILURE;
             }
@@ -178,23 +181,23 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
         }
 #endif
 
-        if (parser.count("load-abducibles")) {
+        if (results.count("load-abducibles")) {
             opts.abducibles.input_type = gpid::AbdInputType::ABDIT_FILE;
-            opts.abducibles.input_file = parser["load-abducibles"].as<std::string>();
+            opts.abducibles.input_file = results["load-abducibles"].as<std::string>();
         }
 
-        if (parser.count("autogen-abducibles")) {
+        if (results.count("autogen-abducibles")) {
             opts.abducibles.input_type = gpid::AbdInputType::ABDIT_GENERATOR;
-            opts.abducibles.input_generator = parser["autogen-abducibles"].as<std::string>();
+            opts.abducibles.input_generator = results["autogen-abducibles"].as<std::string>();
         }
 
-        if (parser.count("generate-selection-graph")) {
+        if (results.count("generate-selection-graph")) {
             opts.instrument.selection_graph = true;
-            opts.instrument.selection_graph_file = parser["generate-selection-graph"].as<std::string>();
+            opts.instrument.selection_graph_file = results["generate-selection-graph"].as<std::string>();
         }
 
 #ifdef DOT_FOUND
-        if (parser.count("dot-autocompile")) {
+        if (results.count("dot-autocompile")) {
             opts.instrument.autocompile_graphs = true;
         }
 #endif
@@ -209,7 +212,8 @@ static inline OptionStatus handleOptions(OptionStorage& opts, cxxopts::Options& 
 
 /* ===== Detectors ===== */
 
-static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& parser) {
+static inline OptionStatus detectConflicts
+(OptionStorage&, cxxopts::Options&, cxxopts::ParseResult& results) {
     try {
 
         /* Incompatible options */
@@ -225,7 +229,7 @@ static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& par
         for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {
             bool active = true;
             for (uint32_t lc = 0; lc < p_illeg[pc].size(); lc++)
-                if (!parser.count(p_illeg[pc][lc])) active = false;
+                if (!results.count(p_illeg[pc][lc])) active = false;
             if (active) {
                 snlog::l_fatal("Conflictual options detected:");
                 for (uint32_t lc = 0; lc < p_illeg[pc].size(); lc++)
@@ -239,7 +243,7 @@ static inline OptionStatus detectConflicts(OptionStorage&, cxxopts::Options& par
         const std::vector<std::string> instr_opts
         { "generate-selection-graph" };
         for (uint32_t pc = 0; pc < instr_opts.size(); pc++) {
-            if (parser.count(instr_opts[pc])) {
+            if (results.count(instr_opts[pc])) {
                 snlog::l_fatal("Option uses instrumentation but instrumentation is not configured:");
                 snlog::l_info("   @option: " + instr_opts[pc]);
                 return OptionStatus::FAILURE;
