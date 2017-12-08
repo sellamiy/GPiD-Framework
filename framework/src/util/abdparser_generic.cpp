@@ -33,6 +33,7 @@ AbducibleParser::~AbducibleParser() {
 void AbducibleParser::init() {
     t_error(status != AbdParserStatus::ABDP_0, "Abducible parser already initialized");
     openSource();
+    if (status != AbdParserStatus::ABDP_OPENED) return;
     readHeader();
     if (status != AbdParserStatus::ABDP_ERROR) status = AbdParserStatus::ABDP_INIT;
 }
@@ -65,7 +66,8 @@ void AbducibleParser::setOption(std::string oname, std::string ovalue) {
 void AbducibleParser::openSource() {
     t_internal(status != AbdParserStatus::ABDP_0, "Opening already opened abducible parser");
     stream = std::ifstream(source);
-    status = AbdParserStatus::ABDP_OPENED;
+    if (!stream.is_open()) handleError("Could not open source file");
+    if (status != AbdParserStatus::ABDP_ERROR) status = AbdParserStatus::ABDP_OPENED;
 }
 
 void AbducibleParser::closeSource() {
