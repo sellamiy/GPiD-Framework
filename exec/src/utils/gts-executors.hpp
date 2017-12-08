@@ -6,6 +6,8 @@
 using namespace snlog;
 using namespace gpid;
 
+enum gtsExecutionStatus { GTS_SUCCESS, GTS_FAILURE };
+
 template<class Solver>
 static inline void generate(OptionStorage& opts) {
     // TODO: Handle Errors on subcalls
@@ -42,8 +44,8 @@ static inline void generate(OptionStorage& opts) {
 
 #include <gpid/solver-snippets/gts-executors.hpp>
 
-static inline void generate(OptionStorage& opts) {
-    wrap_generate(opts);
+static inline gtsExecutionStatus generate(OptionStorage& opts) {
+    return wrap_generate(opts);
 }
 
 #endif

@@ -6,8 +6,25 @@
 #ifdef SINGLE_SOLVER_<%= @solver.name %>
 #include <gpid/solvers/<%= @solver.name %>_interface.hpp>
 template void generate<<%= @solver.solverClass %>>(OptionStorage& opts);
-static inline void wrap_generate(OptionStorage& opts) {
-    generate<<%= @solver.solverClass %>>(opts);
+static inline gtsExecutionStatus wrap_generate(OptionStorage& opts) {
+    try {
+        generate<<%= @solver.solverClass %>>(opts);
+        return GTS_SUCCESS;
+    }
+
+    catch (gpid::InternalError& e) {
+        snlog::l_internal(e.what());
+        return GTS_FAILURE;
+    }
+    catch (gpid::GPiDError& e) {
+        snlog::l_fatal(e.what());
+        return GTS_FAILURE;
+    }
+    catch (std::exception& e) {
+        snlog::l_internal("Unexpected throwable recovered");
+        snlog::l_fatal(e.what());
+        return GTS_FAILURE;
+    }
 }
 #endif
 <% end %>
@@ -16,15 +33,32 @@ static inline void wrap_generate(OptionStorage& opts) {
 <% for @solver in @solvers %>
 template void generate<<%= @solver.solverClass %>>(OptionStorage& opts);
 <% end %>
-static inline void wrap_generate(OptionStorage& opts) {
+static inline gtsExecutionStatus wrap_generate(OptionStorage& opts) {
     switch (opts.generator) {
     <% for @solver in @solvers %>
     case <%= @solver.name %>_INTERFACE:
-        generate<<%= @solver.solverClass %>>(opts);
-        break;
+        try {
+            generate<<%= @solver.solverClass %>>(opts);
+            return GTS_SUCCESS;
+        }
+
+        catch (gpid::InternalError& e) {
+            snlog::l_internal(e.what());
+            return GTS_FAILURE;
+        }
+        catch (gpid::GPiDError& e) {
+            snlog::l_fatal(e.what());
+            return GTS_FAILURE;
+        }
+        catch (std::exception& e) {
+            snlog::l_internal("Unexpected throwable recovered");
+            snlog::l_fatal(e.what());
+            return GTS_FAILURE;
+        }
     <% end %>
     default:
-        throw InternalError("unknown generator");
+        snlog::l_internal("Asked for unknown gts generator");
+        return GTS_FAILURE;
     }
 }
 #endif

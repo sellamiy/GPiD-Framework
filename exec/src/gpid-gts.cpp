@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     l_message("start implicate generator...");
     opts.control.time.registerTime("start");
 
-    generate(opts);
+    gtsExecutionStatus gStatus = generate(opts);
 
     opts.control.time.registerTime("end");
 
@@ -42,5 +42,6 @@ int main(int argc, char** argv) {
     l_raw(opts.control.stats);
 
     l_message("complete.");
-    return EXIT_SUCCESS;
+    t_error(gStatus != GTS_SUCCESS, "errors occured!");
+    return gStatus == GTS_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
 }
