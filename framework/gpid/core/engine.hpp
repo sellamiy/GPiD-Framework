@@ -120,7 +120,7 @@ inline void gpid::DecompositionEngine<SolverT>
     startTimeout(&des_iflags, options.time_limit);
     switch (algorithm) {
     case PID: generatePID(); break;
-    default: snlog::l_internal("Trying to generate implicates using unknown algorithm!");
+    default: throw InternalError("Unknown generation algorithm");
     }
     stopTimeout();
     restoreInterruptsHandlers();

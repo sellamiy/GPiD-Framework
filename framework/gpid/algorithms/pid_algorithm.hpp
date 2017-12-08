@@ -55,8 +55,7 @@ extern void gpid::DecompositionEngine<SolverT>::generatePID() {
                 activeIsImplicate();
                 popStackLevel();
             } else {
-                // Solver UNKNOWN :: ERROR
-                l_fatal("Solver could not decide query!");
+                throw UndecidableProblemError("Solver could not decide query");
             }
 
         }

@@ -22,7 +22,7 @@ namespace gpid {
     static inline void alloc_gab(uint32_t size) {
         starray::GAB_Status res;
         res = starray::requestContinuousArray(next_gab_tab(), size, sizeof(HypothesisT));
-        snlog::t_error(res != starray::GAB_Status::SUCCESS, "Memory request for abducibles failed!");
+        if (res != starray::GAB_Status::SUCCESS) throw MemoryError("request for abducibles failed");
     }
 
     template <typename HypothesesSetT, typename HypothesisInternalT>
@@ -31,7 +31,7 @@ namespace gpid {
         typename HypothesesSetT::HypothesisT *mloc;
         starray::GAB_Status res;
         res = starray::accessContinuousPointer(last_gab_tab(), pos, (void**)&mloc);
-        snlog::t_error(res != starray::GAB_Status::SUCCESS, "Memory access for abducibles failed!");
+        if (res != starray::GAB_Status::SUCCESS) throw MemoryError("access for abducibles failed");
         new (mloc) typename HypothesesSetT::HypothesisT(cstl);
         set.mapHypothesis(pos, mloc);
     }
@@ -43,8 +43,7 @@ namespace gpid {
         } else if (opts.input_type == AbdInputType::ABDIT_GENERATOR) {
             return GeneratorCounterT()(opts.input_generator, pbl);
         } else {
-            snlog::l_internal("Unknown abducible input type: " + std::to_string(opts.input_type));
-            return 0;
+            throw InternalError("unknown abducible input type: " + std::to_string(opts.input_type));
         }
     }
 
@@ -57,7 +56,7 @@ namespace gpid {
         } else if (opts.input_type == AbdInputType::ABDIT_GENERATOR) {
             GeneratorT()(opts.input_generator, ctx, decls, set);
         } else {
-            snlog::l_internal("Unknown abducible input type: " + std::to_string(opts.input_type));
+            throw InternalError("unknown abducible input type: " + std::to_string(opts.input_type));
         }
     }
 

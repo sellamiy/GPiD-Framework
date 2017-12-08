@@ -12,7 +12,6 @@ extern uint32_t gpid::getAbducibleCount(std::string filename) {
     if (parser.isOk()) {
         return parser.getAbducibleCount();
     } else {
-        l_fatal("Failed to count abducibles in @file:" + filename);
-        return 0;
+        throw ParseError("Failed to count abducibles in @file:" + filename);
     }
 }

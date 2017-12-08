@@ -24,7 +24,7 @@ static inline void wrap_generate(OptionStorage& opts) {
         break;
     <% end %>
     default:
-        snlog::l_internal("Internal access to unknown generator");
+        throw InternalError("unknown generator");
     }
 }
 #endif

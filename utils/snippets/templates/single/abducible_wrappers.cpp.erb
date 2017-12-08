@@ -29,14 +29,13 @@ namespace gpid {
         <% for @generator in @solver.abducibleGenerators %>
         l_info("   -- available: <%= @generator["name"] %>");
         <% end %>
-        return <%= @solver.name %>_IG_NONE;
+        throw UnknownUtilityError("abducible generator");
     }
 
     <% if @solver.abducibleGenerators.empty? %>
     static inline uint32_t <%= @solver.name %>AbducibleCompt
     (<%= @solver.name %>InputGenerator, <%= @solver.problemClass %>&) {
-        snlog::l_fatal("No abducible generator available for solver <%= @solver.name %>");
-        return 0;
+        throw UnknownUtilityError("No abducible generator available for solver <%= @solver.name %>");
     }
     <% else %>
     static inline uint32_t <%= @solver.name %>AbducibleCompt
@@ -47,8 +46,7 @@ namespace gpid {
             return <%= @generator["counter"] %>(pbl.getContextManager(), pbl.getDeclarations());
         <% end %>
         default:
-            l_internal("Unknown <%= @solver.name %> abducible generator: " + std::to_string(g));
-            return 0;
+            throw InternalError("Unknown <%= @solver.name %> abducible generator: " + std::to_string(g));
         }
     }
     <% end %>
@@ -73,7 +71,7 @@ namespace gpid {
      <%= @solver.contextManagerClass %>&,
      <%= @solver.declarationsClass %>&,
      HypothesesSet<<%= @solver.solverClass %>>&) {
-        snlog::l_fatal("No abducible generator available for solver <%= @solver.name %>");
+        throw UnknownUtilityError("No abducible generator available for solver <%= @solver.name %>");
     }
     <% else %>
     static inline void <%= @solver.name %>AbducibleGen
@@ -87,7 +85,8 @@ namespace gpid {
             <%= @generator["generator"] %>(ctx, decls, set);
             break;
         <% end %>
-        default: l_internal("Unknown minisat abducible generator: " + std::to_string(g));
+        default:
+            throw InternalError("Unknown <%= @solver.name %> abducible generator: " + std::to_string(g));
         }
     }
     <% end %>

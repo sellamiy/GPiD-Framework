@@ -10,6 +10,7 @@
 #include <map>
 #include <list>
 #include <starray/starray.hpp>
+#include <gpid/errors.hpp>
 #include <gpid/core/solvers.hpp>
 #include <gpid/util/skipper_controller.hpp>
 
@@ -217,7 +218,7 @@ namespace gpid {
         solver.addHypothesis(h, level+1);
         SolverTestStatus status = solver.checkConsistency(level);
         if (status == SolverTestStatus::SOLVER_UNKNOWN) {
-            snlog::l_fatal("Solver could not decide consistency query!");
+            throw UndecidableProblemError("Solver could not decide consistency query");
         }
         solver.removeHypotheses(level+1);
         return status == SolverTestStatus::SOLVER_SAT;
