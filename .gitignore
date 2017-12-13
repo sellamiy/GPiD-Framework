@@ -1,5 +1,5 @@
 build
 *~
-benchmark/devel
-benchmark/ignore
+legacy/*/devel
+legacy/*/ignore
 __pycache__

@@ -59,6 +59,32 @@ class AbduceGenerator:
                 rtype = type_str.split(')')[1].strip()
                 decls['funs'][symbol] = { 'params' : params, 'rtype' : rtype }
 
+    def _prune_unused_symbols(self, data, decls):
+        # decls { consts { type [] } funs { type [] } }
+        symb_decls = { }
+        funs_decls = { }
+        for ctype, l in decls['consts'].items():
+            symb_decls.update( { str(cname) : [False, ctype, cname] for cname in l } )
+        for cname, d in decls['funs'].items():
+            funs_decls.update( { str(cname) : [False, None, cname] } )
+
+        for command in data:
+            pursuance = list(command.args[0].get_atoms())
+            while pursuance:
+                item = pursuance.pop()
+                if item.is_symbol():
+                    symb_decls[item.symbol_name()][0] = True
+                if item.is_function_application():
+                    funs_decls[str(item.function_name())][0] = True
+                pursuance.extend(item.args())
+
+        for _, data in symb_decls.items():
+            if not data[0]:
+                decls['consts'][data[1]].remove(data[2])
+        for _, data in funs_decls.items():
+            if not data[0]:
+                decls['funs'].pop(data[2])
+
     def _recover_declarations(self, data):
         decls = { 'consts' : {}, 'funs' : {} }
 
@@ -68,6 +94,8 @@ class AbduceGenerator:
         self._recover_declared_symbols(symbol_decls, decls)
         symbol_decls = script.filter_by_command_name('declare-const')
         self._recover_declared_symbols(symbol_decls, decls)
+        asserts = script.filter_by_command_name('assert')
+        self._prune_unused_symbols(asserts, decls)
 
         return decls
 

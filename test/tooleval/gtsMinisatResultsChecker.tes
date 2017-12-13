@@ -1,0 +1,23 @@
+require gtsMinisatTool
+
+@hidden
+def problems(ProblemSet, 1)
+  lines(&1)
+end
+
+@hidden
+def expected(Datamap, 1)
+  load(&1)
+  split_along(' ')
+  convert_elements(int)
+  convert(frozenset)
+  as_set()
+end
+
+def test(Script)
+  problems(&args.arg1)
+  expected(&args.arg2)
+  eval = gtsMinisat(problems, store_implicates(), timeout(5, 10))
+then
+  ensure.equal(&eval.implicates, expected)
+end

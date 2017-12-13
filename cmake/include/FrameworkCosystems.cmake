@@ -8,3 +8,8 @@ endif()
 if (BUILD_DOC)
   find_package(Doxygen REQUIRED)
 endif()
+# ==============================================================================
+if (BUILD_TOOLEVAL)
+  find_package(ToolEvalPython3)
+endif()
+# ==============================================================================

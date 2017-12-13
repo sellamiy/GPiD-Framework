@@ -1,0 +1,10 @@
+(size 8)
+
+(abducible x)
+(abducible y)
+(abducible z)
+(abducible t)
+(abducible (not x))
+(abducible (not y))
+(abducible (not z))
+(abducible (not t))

@@ -1,0 +1,8 @@
+(size 6)
+
+(abduce (= i j))
+(abduce (distinct i j))
+(abduce (> i j))
+(abduce (< i j))
+(abduce (>= i j))
+(abduce (<= i j))

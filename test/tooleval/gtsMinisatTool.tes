@@ -1,0 +1,63 @@
+def gtsMinisat(Tool)
+  executable '../bin/gpid-gts-minisat'
+  format '$0 -i $1 -a all -p $+'
+
+  require &file
+  
+  def timeout(Option, 2)
+    update_format('timeout $&2 $&0')
+    add_option('--time-limit=$&1')
+  end
+  def size_limit(Option, 1)
+    add_option('--implicate-size-limit=$&1')
+  end
+  def implicate_limit(Option, 1)
+    add_option('--implicate-limit=$&1')
+  end
+  def allow_inconsistencies(Option)
+    add_option('--allow-inconsistencies')
+  end
+  def dont_allow_inconsistencies(Option)
+    add_option('--dont-allow-inconsistencies')
+  end
+  def use_models(Option)
+    add_option('--use-models')
+  end
+  def dont_use_models(Option)
+    add_option('--dont-use-models')
+  end
+  def store_implicates(Option)
+    add_option('--store-implicates')
+  end
+  def dont_store_implicates(Option)
+    add_option('--dont-store-implicates')
+  end
+
+  def implicates(Result)
+    parse('> $!')
+    split_along(' ')
+    convert_elements(int)
+    convert(frozenset)
+    as_set()
+  end
+  def count(Result)
+    parse('$* Number of implicates generated : $!')
+    convert(int)
+  end
+  def nodes(Result)
+    parse('$* Number of nodes explored : $!')
+    convert(int)
+  end
+  def gtime(Result)
+    parse('$* Generation time : $! ms')
+    convert(float)
+    scale(0.001)
+  end
+  def ttime(Result)
+    parse('$* Total time : $! ms')
+    convert(float)
+    scale(0.001)
+  end
+
+  evaluate &basic
+end

@@ -4,6 +4,8 @@
 # Targets selection
 # ==============================================================================
 option(BUILD_TESTS "Build tests" ON)
+option(BUILD_TOOLEVAL "Build tooleval scripts" ON)
+option(BUILD_UTILITIES "Build additional tools, notably for benchmarking" ON)
 option(COVERAGE_TOOLS "Configure and compile for code coverage reports" OFF)
 option(GPID_INSTRUMENTATION "Activate gpid instrumentation toolset" OFF)
 option(BUILD_DOC "Build documentation" ON)
