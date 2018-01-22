@@ -216,7 +216,7 @@ namespace gpid {
     template<class SolverT>
     inline bool HypothesisSkipper<SolverT>::consistent(typename SolverT::HypothesisT& h, uint32_t level) {
         solver.addHypothesis(h, level+1);
-        SolverTestStatus status = solver.checkConsistency(level);
+        SolverTestStatus status = solver.checkConsistency(level+1);
         if (status == SolverTestStatus::SOLVER_UNKNOWN) {
             throw UndecidableProblemError("Solver could not decide consistency query");
         }
