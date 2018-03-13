@@ -15,13 +15,13 @@ enum OptionStatus {
     OK, ENDED, FAILURE
 };
 
-static inline OptionStatus parseOptions(ParserOptions& opts, int argc, char** argv);
+static inline OptionStatus parseOptions(ParserOptions& opts, int argc, const char** argv);
 static inline OptionStatus handleOptions
 (ParserOptions& opts, cxxopts::Options& parser, cxxopts::ParseResult& results);
 
 /* ===== Parser ===== */
 
-static inline OptionStatus parseOptions(ParserOptions& opts, int argc, char** argv) {
+static inline OptionStatus parseOptions(ParserOptions& opts, int argc, const char** argv) {
     try {
 
 	cxxopts::Options parser(argv[0], gpid::project_full_name + "--parser");

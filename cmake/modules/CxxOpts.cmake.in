@@ -5,7 +5,7 @@ project(cxxopts-download NONE)
 include(ExternalProject)
 ExternalProject_Add(cxxopts-library
   GIT_REPOSITORY    https://github.com/jarro2783/cxxopts.git
-  GIT_TAG           2416289
+  GIT_TAG           0f819a5cabb611ada4c41a5208c6bf1178f804be
   SOURCE_DIR        "${CMAKE_BINARY_DIR}/cxxopts-sources"
   BINARY_DIR        "${CMAKE_BINARY_DIR}/cxxopts-build"
   INSTALL_COMMAND   ""
