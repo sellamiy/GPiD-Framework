@@ -14,7 +14,7 @@ using namespace snlog;
 /* ========== PID Helpers =========== */
 
 template<class SolverT>
-extern void gpid::DecompositionEngine<SolverT>::selectNextPID() {
+void gpid::DecompositionEngine<SolverT>::selectNextPID() {
     // Recovering next possible hypothesis
     bool has_next = available_h.nextHypothesis(level);
     if (has_next) {
@@ -32,7 +32,7 @@ extern void gpid::DecompositionEngine<SolverT>::selectNextPID() {
 /* ========== PID Algorithm ========== */
 
 template<class SolverT>
-extern void gpid::DecompositionEngine<SolverT>::generatePID() {
+void gpid::DecompositionEngine<SolverT>::generatePID() {
     resetEngine();
 
     while (level > 0 && !des_iflags.systemInterrupted()) {
