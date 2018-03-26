@@ -62,7 +62,7 @@ namespace witchw {
     inline std::ostream& operator<<(std::ostream& out, const wStatisticData& d) {
         if (d.level == 0) return out << std::endl;
         for (uint32_t i = 0; i < d.level; i++) out << " ";
-        return out << "> " << d.key << " : " << d.data << std::endl;
+        return out << "(*) " << d.key << " : " << d.data << std::endl;
     }
 
     inline std::ostream& operator<<(std::ostream& out, const std::list<wStatisticData>& l) {
