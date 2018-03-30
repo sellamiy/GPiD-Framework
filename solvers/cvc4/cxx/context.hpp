@@ -24,6 +24,10 @@ namespace gpid {
         CVC4::Expr expr;
         CVC4Hypothesis(CVC4::Expr e) : expr(e) {}
         CVC4Hypothesis(const CVC4Hypothesis& e) : expr(e.expr) {}
+
+        inline const std::string str() const {
+            std::stringstream result; result << expr; return result.str();
+        }
     };
 
     struct CVC4ModelWrapper {
@@ -35,6 +39,6 @@ namespace gpid {
         }
     };
 
-};
+}
 
 #endif

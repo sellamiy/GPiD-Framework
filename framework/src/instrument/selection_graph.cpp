@@ -1,20 +1,20 @@
-#define GPID_FRAMEWORK__CONFIG__SELECTION_GRAPH_CPP
+#define GPID_FRAMEWORK__INSTRUMENT__SELECTION_GRAPH_CPP
 
 #include <gpid/instrument/selection_graph.hpp>
 
 using namespace gpid;
 
-void instrument::SelectionGrapher::selection(uint32_t id) {
+void instrument::SelectionGrapher::selection(const std::string id) {
     order++;
     temp_node = graph.createNode("", dot::types::ClassicUnshapedNode);
-    std::string label = std::to_string(id) + '(' + std::to_string(order) + ')';
+    std::string label = id + '(' + std::to_string(order) + ')';
     graph.createEdge(nstack.top(), temp_node, label, dot::types::ClassicDottedEdge);
 }
 
-void instrument::SelectionGrapher::skip(uint32_t id, std::string reason) {
+void instrument::SelectionGrapher::skip(const std::string id, std::string reason) {
     order++;
     int node = graph.createNode(reason, dot::types::ClassicUnshapedNode);
-    std::string label = std::to_string(id) + '(' + std::to_string(order) + ')';
+    std::string label = id + '(' + std::to_string(order) + ')';
     graph.createEdge(nstack.top(), node, label, dot::types::ClassicDottedEdge);
 }
 

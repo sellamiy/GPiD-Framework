@@ -12,6 +12,8 @@ struct HSTest_S {
     HSTest_S()            : data(0)      {}
     HSTest_S(int d)       : data(d)      {}
     HSTest_S(HSTest_S& d) : data(d.data) {}
+
+    inline const std::string str() const { return std::to_string(data); }
 };
 
 struct HSTest_MW {};

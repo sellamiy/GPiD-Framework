@@ -87,6 +87,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, const cha
         parser.add_options("Instrument")
             ("generate-selection-graph", "Generate a selection graph via instrumentation",
              cxxopts::value<std::string>())
+            ("generate-webtrace", "Generate a webtrace page via instrumentation",
+             cxxopts::value<std::string>())
             ;
 
 	cxxopts::ParseResult results = parser.parse(argc, argv);
@@ -194,6 +196,10 @@ static inline OptionStatus handleOptions
         if (results.count("generate-selection-graph")) {
             opts.instrument.selection_graph = true;
             opts.instrument.selection_graph_file = results["generate-selection-graph"].as<std::string>();
+        }
+        if (results.count("generate-webtrace")) {
+            opts.instrument.webtrace = true;
+            opts.instrument.webtrace_file = results["generate-webtrace"].as<std::string>();
         }
 
 #ifdef DOT_FOUND

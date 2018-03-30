@@ -28,8 +28,8 @@ namespace instrument {
         SelectionGrapher(std::ostream& target)
             : target(target), graph("selectionGraph") {}
 
-        void selection(uint32_t id);
-        void skip(uint32_t id, std::string reason);
+        void selection(const std::string id);
+        void skip(const std::string id, const std::string reason);
         void confirmSelection();
         void backtrackSelection();
         void implicateDetected();

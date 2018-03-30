@@ -14,11 +14,11 @@ namespace gpid {
     /** \brief Generic Wrapper for Solver test results. \ingroup gpidcorelib */
     enum SolverTestStatus {
         /** The formula is satisfiable */
-        SOLVER_SAT,
+        SOLVER_SAT     = 101,
         /** The formula is unsatisfiable */
-        SOLVER_UNSAT,
+        SOLVER_UNSAT   = 110,
         /** The formula satisfiability status cannot be computed */
-        SOLVER_UNKNOWN
+        SOLVER_UNKNOWN = 111
     };
 
 };

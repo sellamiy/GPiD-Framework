@@ -44,6 +44,9 @@ namespace gpid {
         inline void printSolverInformations()
         { snlog::l_info("Interface for <%= @solver.name %>"); }
 
+        /** \brief String representation of the current hypotheses set */
+        const std::string hypothesesAsString() const;
+
         /** \brief Remove all the hypotheses assigned after a given level */
         void removeHypotheses(uint32_t level);
         /** \brief Add an abducible hypothesis to the solver */

@@ -1,6 +1,8 @@
 #ifndef GPID_MINISAT_SOLVER_SPP
 #define GPID_MINISAT_SOLVER_SPP
 
+#include <sstream>
+
 using namespace snlog;
 
 namespace gpid {
@@ -89,6 +91,12 @@ namespace gpid {
         bool res = solvers->storage.subsets(wrp);
         solvers->assumps.pop();
         return res;
+    }
+
+    inline const std::string MinisatSolver::hypothesesAsString() const {
+        std::stringstream result;
+        result << solvers->assumps;
+        return result.str();
     }
 
 };

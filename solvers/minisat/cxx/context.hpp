@@ -1,7 +1,16 @@
 #ifndef GPID_MINISAT_CONTEXT_SPP
 #define GPID_MINISAT_CONTEXT_SPP
 
+#include <sstream>
 #include <minisat/simp/SimpSolver.h>
+
+#ifdef MERGE_MINISAT_WRAPPERS
+namespace Minisat {
+#else
+namespace gpid {
+#endif
+    extern inline std::ostream& operator<<(std::ostream& out, const Minisat::Lit p);
+}
 
 namespace gpid {
 
@@ -18,6 +27,10 @@ namespace gpid {
         const MinisatInternal lit;
         MinisatHypothesis(MinisatInternal d) : lit(d) {}
         MinisatHypothesis(const MinisatHypothesis& d) : lit(d.lit) {}
+
+        inline const std::string str() const {
+            std::stringstream result; result << lit; return result.str();
+        }
     };
 
     struct MinisatModelWrapper {

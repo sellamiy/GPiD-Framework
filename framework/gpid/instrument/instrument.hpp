@@ -12,15 +12,41 @@
 #include <gpid/util/instrument_controller.hpp>
 namespace gpid {
 namespace instrument {
-    enum analyze_type { stack_push, stack_pop, pre_select, implicate, model_skip, reset, end };
+
+    enum instloc {
+        stack_push, stack_pop,
+        pre_select, implicate, model_skip,
+        ismt_test, ismt_result,
+        reset, end
+    };
+
 #ifdef GPID_INSTRUMENTATION
+
+    class idata {
+        const std::string data;
+    public:
+        const std::string get() const { return data; }
+
+        idata()                    : data("")                {}
+        idata(const idata& other)  : data(other.data)        {}
+        idata(const std::string s) : data(s)                 {}
+        idata(const uint32_t i)    : data(std::to_string(i)) {}
+    };
+
     extern void initialize(InstrumentOptions& opts, InstrumentController& ctrler);
-    extern void analyze(void* data, analyze_type analysis);
+    extern void analyze(const idata data, instloc location);
     extern void finalize(InstrumentOptions& opts, InstrumentController& ctrler);
+
 #else
+
+    static inline bool idata()                  { return true; }
+    static inline bool idata(const std::string) { return true; }
+    static inline bool idata(const uint32_t)    { return true; }
+
     static inline void initialize(InstrumentOptions&, InstrumentController&) {}
-    static inline void analyze(void*, analyze_type)  {}
+    static inline void analyze(bool, instloc)  {}
     static inline void finalize(InstrumentOptions&, InstrumentController&) {}
+
 #endif
 }
 }

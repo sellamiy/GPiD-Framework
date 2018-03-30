@@ -83,7 +83,7 @@ inline void gpid::DecompositionEngine<SolverT>::resetEngine() {
     solver.start();
     level = 1;
     sdir = IStackDirection::STACK_PUSH;
-    instrument::analyze(NULL, instrument::analyze_type::reset);
+    instrument::analyze(instrument::idata(), instrument::instloc::reset);
 }
 
 template<class SolverT>
@@ -95,14 +95,14 @@ inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
         solver.storeActive();
     if (options.implicate_limit <= gi_counter)
         des_iflags.interrupt(SystemInterruptsFlags::SYS_INT_R__INTERNAL);
-    instrument::analyze(NULL, instrument::analyze_type::implicate);
+    instrument::analyze(instrument::idata(), instrument::instloc::implicate);
 }
 
 template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::pushStackLevel() {
     level++;
     sdir = IStackDirection::STACK_PUSH;
-    instrument::analyze(&level, instrument::analyze_type::stack_push);
+    instrument::analyze(instrument::idata(level), instrument::instloc::stack_push);
 }
 
 template<class SolverT>
@@ -110,7 +110,7 @@ inline void gpid::DecompositionEngine<SolverT>::popStackLevel() {
     solver.removeHypotheses(level);
     level--;
     sdir = IStackDirection::STACK_POP;
-    instrument::analyze(&level, instrument::analyze_type::stack_pop);
+    instrument::analyze(instrument::idata(level), instrument::instloc::stack_pop);
 }
 
 template<class SolverT>
@@ -124,7 +124,7 @@ inline void gpid::DecompositionEngine<SolverT>
     }
     stopTimeout();
     restoreInterruptsHandlers();
-    instrument::analyze(NULL, instrument::analyze_type::end);
+    instrument::analyze(instrument::idata(), instrument::instloc::end);
 }
 
 #endif

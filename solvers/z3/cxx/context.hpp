@@ -29,6 +29,10 @@ namespace gpid {
         z3::expr expr;
         Z3Hypothesis(z3::expr e) : expr(e) {}
         Z3Hypothesis(const Z3Hypothesis& e) : expr(e.expr) {}
+
+        inline const std::string str() const {
+            std::stringstream result; result << expr; return result.str();
+        }
     };
 
     struct Z3ModelWrapper {
@@ -40,6 +44,6 @@ namespace gpid {
         }
     };
 
-};
+}
 
 #endif

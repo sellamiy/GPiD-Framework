@@ -53,6 +53,6 @@ target_link_libraries(gpid-core-static starray-static snlog)
 target_link_libraries(gpid-core-shared starray-shared snlog)
 
 if(GPID_INSTRUMENTATION)
-  target_link_libraries(gpid-core-static dot-static)
-  target_link_libraries(gpid-core-shared dot-shared)
+  target_link_libraries(gpid-core-static dot-static pctrace-static)
+  target_link_libraries(gpid-core-shared dot-shared pctrace-shared)
 endif()

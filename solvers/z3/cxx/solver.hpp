@@ -89,6 +89,11 @@ namespace gpid {
         return false;
     }
 
+    inline const std::string Z3Solver::hypothesesAsString() const {
+        snlog::l_warn("Not implemented yet - Z3 Solver hypotheses as string");
+        return "";
+    }
+
 };
 
 #endif

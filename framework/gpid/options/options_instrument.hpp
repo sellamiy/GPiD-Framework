@@ -22,6 +22,11 @@ namespace instrument {
         /** File target of the selection graph if selection_graph == true */
         std::string selection_graph_file;
 
+        /** Generate a webtrace of the execution */
+        bool webtrace = false;
+        /** File target for the webtrace if webtrace == true */
+        std::string webtrace_file;
+
     };
 
 }

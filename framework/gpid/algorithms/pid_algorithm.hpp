@@ -43,7 +43,9 @@ void gpid::DecompositionEngine<SolverT>::generatePID() {
         } else {
             node_counter++;
 
+            instrument::analyze(instrument::idata(solver.hypothesesAsString()), instrument::ismt_test);
             SolverTestStatus status = solver.testHypotheses(level);
+            instrument::analyze(instrument::idata(status), instrument::ismt_result);
 
             if (status == SolverTestStatus::SOLVER_SAT) {
                 if (options.use_models) {

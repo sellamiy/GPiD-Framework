@@ -9,6 +9,7 @@
 
 #include <map>
 #include <list>
+#include <sstream>
 #include <starray/starray.hpp>
 #include <gpid/errors.hpp>
 #include <gpid/core/solvers.hpp>
@@ -74,6 +75,8 @@ namespace gpid {
         inline void deactivateHypothesis(index_t idx, level_t level);
         inline void deactivateSequents(index_t ub, level_t level);
         inline void selectCurrentHypothesis();
+
+        inline HypothesisT& getHypothesis(index_t idx);
     public:
         HypothesesSet(SolverT& solver, SkipperController& ctrler, uint32_t size)
             : skipper(solver, ctrler), hp_active(size), clevel(1)
@@ -249,7 +252,8 @@ namespace gpid {
             index_t next = hp_active.get_downward(pointer[clevel]);
             if (next != pointer[clevel]) {
                 pointer[clevel] = next;
-                instrument::analyze(&next, instrument::analyze_type::pre_select);
+                instrument::analyze(instrument::idata(getHypothesis(next).str()),
+                                    instrument::instloc::pre_select);
                 if (!skipper.canBeSkipped(*hp_mapping[pointer[clevel]], clevel)) {
                     if (!hp_active.is_paused(pointer[clevel])
                         || hp_active.get(pointer[clevel]) != clevel) {
@@ -269,6 +273,11 @@ namespace gpid {
     }
 
     template<class SolverT>
+    inline typename SolverT::HypothesisT& HypothesesSet<SolverT>::getHypothesis(index_t idx) {
+        return *hp_mapping[idx];
+    }
+
+    template<class SolverT>
     inline void HypothesesSet<SolverT>::modelCleanUp(const ModelT& model, uint32_t level) {
         accessLevel(level);
         for (index_t idx : hp_active) {
@@ -278,7 +287,8 @@ namespace gpid {
                 pvalues_map[idx].push_back(hp_active.get(idx));
                 hp_active.set(idx, clevel);
                 selection_map[clevel-1].push_back(idx);
-                instrument::analyze(&idx, instrument::analyze_type::model_skip);
+                instrument::analyze(instrument::idata(getHypothesis(idx).str()),
+                                    instrument::instloc::model_skip);
             }
         }
     }

@@ -95,6 +95,11 @@ namespace gpid {
         return false;
     }
 
+    inline const std::string CVC4Solver::hypothesesAsString() const {
+        snlog::l_warn("Not implemented yet - CVC4 Solver hypotheses as string");
+        return "";
+    }
+
 };
 
 #endif

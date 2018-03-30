@@ -16,6 +16,10 @@ namespace instrument {
         inline std::ostream& getSelectionGraphStream()
         { return *selection_graph_stream; }
 
+        std::ostream* webtrace_stream;
+        inline std::ostream& getWebtraceStream()
+        { return *webtrace_stream; }
+
     };
 
 }

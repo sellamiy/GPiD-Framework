@@ -27,9 +27,14 @@ instrument::InstrumentController::InstrumentController
         selection_graph_stream = new std::ofstream(opts.selection_graph_file);
     else
         selection_graph_stream = &nullstream;
+    if (opts.webtrace)
+        webtrace_stream = new std::ofstream(opts.webtrace_file);
+    else
+        webtrace_stream = &nullstream;
 }
 
 instrument::InstrumentController::InstrumentController
 (const instrument::InstrumentController& ctrler) :
-    selection_graph_stream(ctrler.selection_graph_stream)
+    selection_graph_stream(ctrler.selection_graph_stream),
+    webtrace_stream(ctrler.webtrace_stream)
 { }
