@@ -12,7 +12,6 @@ contextSnippets :
   - context.hpp
 contextSrcSnippets : []
 outputSnippets :
-  - minisat_printers.hpp
   - gpid_printers.hpp
 solverInlineSnippets:
   - solver.hpp
