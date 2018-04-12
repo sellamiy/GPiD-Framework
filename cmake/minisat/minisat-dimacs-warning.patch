@@ -16,7 +16,7 @@ index d5db413..e753fb0 100644
          else if (*in == 'p'){
              if (eagerMatch(in, "p cnf")){
 -                vars    = parseInt(in);
-+                // vars    = parseInt(in);
++                parseInt(in); // parse vars count
                  clauses = parseInt(in);
                  // SATRACE'06 hack
                  // if (clauses > 4000000)
