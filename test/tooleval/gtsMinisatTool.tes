@@ -1,6 +1,6 @@
 def gtsMinisat(Tool)
   executable '../bin/gpid-gts-minisat'
-  format '$0 -i $1 -a all -p $+'
+  format '$0 -i $1 -a all -p --time-unit=extseconds $+'
 
   require &file
   
@@ -49,14 +49,12 @@ def gtsMinisat(Tool)
     convert(int)
   end
   def gtime(Result)
-    parse('$* Generation time : $! ms')
+    parse('$* Generation time : $! s')
     convert(float)
-    scale(0.001)
   end
   def ttime(Result)
-    parse('$* Total time : $! ms')
+    parse('$* Total time : $! s')
     convert(float)
-    scale(0.001)
   end
 
   evaluate &basic

@@ -36,9 +36,9 @@ int main(int argc, const char** argv) {
     l_message("print generation statistics...");
     opts.control.stats.addStatisticGroup();
     opts.control.stats.addStatistic
-        ("Total time", opts.control.time.milliseconds("start", "end"));
+        ("Total time", opts.control.time.duration("start", "end"));
     opts.control.stats.addStatistic
-        ("Generation time", opts.control.time.milliseconds("generation", "generation-end"), 4);
+        ("Generation time", opts.control.time.duration("generation", "generation-end"), 4);
     l_raw(opts.control.stats);
 
     l_message("complete.");

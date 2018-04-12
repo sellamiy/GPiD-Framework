@@ -79,6 +79,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, const cha
 	parser.add_options("Output")
 	    ("p,print-implicates", "Print generated implicates")
 	    ("dont-print-implicates", "Do not print generated implicates")
+            ("time-unit", "Unit for printing time data (truncated)", cxxopts::value<std::string>())
 #ifdef DOT_FOUND
             ("dot-autocompile", "Autocompile dot graphs")
 #endif
@@ -191,6 +192,14 @@ static inline OptionStatus handleOptions
         if (results.count("autogen-abducibles")) {
             opts.abducibles.input_type = gpid::AbdInputType::ABDIT_GENERATOR;
             opts.abducibles.input_generator = results["autogen-abducibles"].as<std::string>();
+        }
+
+        if (results.count("time-unit")) {
+            std::string ru_tunit = results["time-unit"].as<std::string>();
+            if (ru_tunit != opts.control.time.selectDurationUnit(ru_tunit)) {
+                snlog::l_fatal("Unknown time unit: " + ru_tunit);
+                return OptionStatus::FAILURE;
+            }
         }
 
         if (results.count("generate-selection-graph")) {
