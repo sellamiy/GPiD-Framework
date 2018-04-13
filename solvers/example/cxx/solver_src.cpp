@@ -22,6 +22,7 @@ namespace gpid {
     SolverTestStatus ts__solv::checkConsistency   (uint32_t)          { return SOLVER_SAT; }
     ts__mdl&         ts__solv::recoverModel       ()                  { return solvers->sst_mdl; }
     bool             ts__solv::storageSubsumed    (ts__hy&, uint32_t) { return false; }
+    bool             ts__solv::isConsequence      (ts__hy&, uint32_t) { return false; }
     const std::string ts__solv::hypothesesAsString() const            { return ""; }
 
 }

@@ -57,6 +57,8 @@ namespace gpid {
         gpid::SolverTestStatus checkConsistency(uint32_t level);
         /** \brief Check if an hypothesis is known to be redundant */
         bool storageSubsumed(HypothesisT& additional, uint32_t level);
+        /** \brief Check if an hypothesis is already a consequence of the current state */
+        bool isConsequence(HypothesisT& h, uint32_t level);
 
         ModelT& recoverModel();
         inline ContextManagerT& getContextManager() { return ctx; }

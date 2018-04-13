@@ -27,6 +27,7 @@ struct HSTest_SWrapper {
 
     static inline SolverTestStatus checkConsistency(uint32_t) { return SOLVER_SAT; }
     static inline bool storageSubsumed(HSTest_S&, uint32_t)   { return false; }
+    static inline bool isConsequence(HSTest_S&, uint32_t)     { return false; }
     static inline void addHypothesis(HSTest_S&, uint32_t)     { }
     static inline void removeHypotheses(uint32_t)             { }
 };

@@ -89,6 +89,12 @@ namespace gpid {
         return false;
     }
 
+    inline bool Z3Solver::isConsequence(Z3Hypothesis&, uint32_t level) {
+        accessLevel(level);
+        snlog::l_warn("Not implemented yet - Z3 consequence checker");
+        return false;
+    }
+
     inline const std::string Z3Solver::hypothesesAsString() const {
         snlog::l_warn("Not implemented yet - Z3 Solver hypotheses as string");
         return "";

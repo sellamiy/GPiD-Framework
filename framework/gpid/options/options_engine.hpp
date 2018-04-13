@@ -24,6 +24,9 @@ namespace gpid {
         /** Do not skip inconsistent hypotheses sets */
         bool allow_inconsistencies = false;
 
+        /** Skip literals detected as consequences of previous assignments */
+        bool detect_consequences = true;
+
         /** Maximal number of abducible hypotheses in an implicate */
         uint32_t max_level = std::numeric_limits<uint32_t>::max();
 

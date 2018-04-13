@@ -28,6 +28,7 @@ namespace gpid {
             uint64_t storage     = 0;
             uint64_t level_depth = 0;
             uint64_t consistency = 0;
+            uint64_t consequence = 0;
         } counters;
     public:
         HypothesisSkipper(SolverT& s, SkipperController& ctrler)
@@ -123,9 +124,10 @@ namespace gpid {
 
     template<class SolverT>
     inline void HypothesisSkipper<SolverT>::storeCounts(std::map<std::string, uint64_t>& target) {
-        target["storage"]     = counters.storage;
-        target["level depth"] = counters.level_depth;
-        target["consistency"] = counters.consistency;
+        target["storage"]      = counters.storage;
+        target["level depth"]  = counters.level_depth;
+        target["consistency"]  = counters.consistency;
+        target["consequences"] = counters.consequence;
     }
     template<class SolverT>
     inline std::map<std::string, uint64_t>& HypothesesEngine<SolverT>::getSkippedCounts() {
@@ -229,6 +231,10 @@ namespace gpid {
 
     template<class SolverT>
     inline bool HypothesisSkipper<SolverT>::canBeSkipped(typename SolverT::HypothesisT& h, uint32_t level) {
+        if (control.consequences && solver.isConsequence(h, level)) {
+            counters.consequence++;
+            return true;
+        }
         if (control.storage && solver.storageSubsumed(h, level)) {
             counters.storage++;
             return true;

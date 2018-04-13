@@ -70,6 +70,9 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, const cha
             ("allow-inconsistencies", "Let the engine generate inconsistent implicates")
             ("dont-allow-inconsistencies", "Force the engine generate consistent implicates only")
 
+            ("detect-consequences", "Let the engine detect and skip consequences of previous assignments")
+            ("dont-detect-consequences", "Never detect consequences of selected abducibles")
+
             ("implicate-size-limit", "Max number of abducibles in implicates", cxxopts::value<uint32_t>())
 
             ("time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
@@ -141,6 +144,11 @@ static inline OptionStatus handleOptions
 	    opts.engine.allow_inconsistencies = true;
 	if (results.count("dont-allow-inconsistencies"))
 	    opts.engine.allow_inconsistencies = false;
+
+        if (results.count("detect-consequences"))
+            opts.engine.detect_consequences = true;
+        if (results.count("dont-detect-consequences"))
+            opts.engine.detect_consequences = false;
 
         if (results.count("implicate-size-limit"))
             opts.engine.max_level = results["implicate-size-limit"].as<uint32_t>() + 1;
@@ -238,7 +246,8 @@ static inline OptionStatus detectConflicts
             { "print-implicates", "dont-print-implicates"},
             { "store-implicates", "dont-store-implicates"},
             { "use-models", "dont-use-models"},
-            { "allow-inconsistencies", "dont-allow-inconsistencies" }
+            { "allow-inconsistencies", "dont-allow-inconsistencies" },
+            { "detect-consequences", "dont-detect-consequences" }
         };
 
         for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {

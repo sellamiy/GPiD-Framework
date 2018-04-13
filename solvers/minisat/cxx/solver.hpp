@@ -93,6 +93,12 @@ namespace gpid {
         return res;
     }
 
+    inline bool MinisatSolver::isConsequence(MinisatHypothesis&, uint32_t level) {
+        accessLevel(level);
+        snlog::l_warn("Not implemented yet - MiniSAT consequence checker");
+        return false;
+    }
+
     inline const std::string MinisatSolver::hypothesesAsString() const {
         std::stringstream result;
         result << solvers->assumps;

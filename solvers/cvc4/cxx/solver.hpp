@@ -95,6 +95,12 @@ namespace gpid {
         return false;
     }
 
+    inline bool CVC4Solver::isConsequence(CVC4Hypothesis&, uint32_t level) {
+        accessLevel(level);
+        snlog::l_warn("Not implemented yet - CVC4 consequence checker");
+        return false;
+    }
+
     inline const std::string CVC4Solver::hypothesesAsString() const {
         snlog::l_warn("Not implemented yet - CVC4 Solver hypotheses as string");
         return "";
