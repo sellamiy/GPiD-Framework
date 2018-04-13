@@ -42,7 +42,7 @@ namespace gpid {
 
     /** \brief Class for handling abducible hypotheses. \ingroup gpidcorelib */
     template<class SolverT>
-    class HypothesesSet {
+    class HypothesesEngine {
     public:
         typedef typename SolverT::HypothesisT HypothesisT;
         typedef typename SolverT::ModelT ModelT;
@@ -78,7 +78,7 @@ namespace gpid {
 
         inline HypothesisT& getHypothesis(index_t idx);
     public:
-        HypothesesSet(SolverT& solver, SkipperController& ctrler, uint32_t size)
+        HypothesesEngine(SolverT& solver, SkipperController& ctrler, uint32_t size)
             : skipper(solver, ctrler), hp_active(size), clevel(1)
         { limit[1] = 0; pointer[1] = size; }
         /** Map an index of the set to a specific hypothesis. */
@@ -108,16 +108,16 @@ namespace gpid {
     };
 
     template<class SolverT>
-    inline uint32_t HypothesesSet<SolverT>::getSourceSize() {
+    inline uint32_t HypothesesEngine<SolverT>::getSourceSize() {
         return hp_active.get_maximal_size();
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::mapHypothesis(uint32_t idx, HypothesisT* hyp) {
+    inline void HypothesesEngine<SolverT>::mapHypothesis(uint32_t idx, HypothesisT* hyp) {
         hp_mapping[idx] = hyp;
     }
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::mapLink(uint32_t idx, uint32_t tgt_idx) {
+    inline void HypothesesEngine<SolverT>::mapLink(uint32_t idx, uint32_t tgt_idx) {
         hp_links[idx].push_back(tgt_idx);
     }
 
@@ -128,19 +128,19 @@ namespace gpid {
         target["consistency"] = counters.consistency;
     }
     template<class SolverT>
-    inline std::map<std::string, uint64_t>& HypothesesSet<SolverT>::getSkippedCounts() {
+    inline std::map<std::string, uint64_t>& HypothesesEngine<SolverT>::getSkippedCounts() {
         skipper.storeCounts(counts_wrap);
         return counts_wrap;
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::accessLevel(uint32_t level) {
+    inline void HypothesesEngine<SolverT>::accessLevel(uint32_t level) {
         if (level > clevel) increaseLevel(level);
         else                decreaseLevel(level);
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::deactivateHypothesis(index_t idx, level_t level) {
+    inline void HypothesesEngine<SolverT>::deactivateHypothesis(index_t idx, level_t level) {
         if (hp_active.is_active(idx)) {
             selection_map[level].push_back(idx);
         } else if (hp_active.is_paused(idx)) {
@@ -150,7 +150,7 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::increaseLevel(uint32_t target) {
+    inline void HypothesesEngine<SolverT>::increaseLevel(uint32_t target) {
         while (clevel < target) {
             /* TODO: Fixme.
                The hack +1 to is necessary to access the first active when asking
@@ -165,7 +165,7 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::decreaseLevel(uint32_t target) {
+    inline void HypothesesEngine<SolverT>::decreaseLevel(uint32_t target) {
         while (clevel > target) {
             unselectLevel(clevel);
             --clevel;
@@ -173,7 +173,7 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::deactivateSequents(index_t ub, level_t level) {
+    inline void HypothesesEngine<SolverT>::deactivateSequents(index_t ub, level_t level) {
         index_t curr = ub;
         index_t next = hp_active.get_downward(curr);
         while (curr != next) {
@@ -191,7 +191,7 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::selectCurrentHypothesis() {
+    inline void HypothesesEngine<SolverT>::selectCurrentHypothesis() {
         index_t selected = pointer[clevel];
         deactivateHypothesis(selected, clevel);
         for (index_t linked : hp_links[selected]) {
@@ -201,7 +201,7 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::unselectLevel(uint32_t level) {
+    inline void HypothesesEngine<SolverT>::unselectLevel(uint32_t level) {
         for (index_t skipped : selection_map[level]) {
             if (hp_active.is_paused(skipped)) {
                 hp_active.set(skipped, pvalues_map[skipped].back());
@@ -245,7 +245,7 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline bool HypothesesSet<SolverT>::nextHypothesis(uint32_t level) {
+    inline bool HypothesesEngine<SolverT>::nextHypothesis(uint32_t level) {
         accessLevel(level);
         unselectLevel(clevel);
         while (true) {
@@ -267,18 +267,18 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline typename SolverT::HypothesisT& HypothesesSet<SolverT>::getHypothesis() {
+    inline typename SolverT::HypothesisT& HypothesesEngine<SolverT>::getHypothesis() {
         selectCurrentHypothesis();
         return *hp_mapping[pointer[clevel]];
     }
 
     template<class SolverT>
-    inline typename SolverT::HypothesisT& HypothesesSet<SolverT>::getHypothesis(index_t idx) {
+    inline typename SolverT::HypothesisT& HypothesesEngine<SolverT>::getHypothesis(index_t idx) {
         return *hp_mapping[idx];
     }
 
     template<class SolverT>
-    inline void HypothesesSet<SolverT>::modelCleanUp(const ModelT& model, uint32_t level) {
+    inline void HypothesesEngine<SolverT>::modelCleanUp(const ModelT& model, uint32_t level) {
         accessLevel(level);
         for (index_t idx : hp_active) {
             if (!hp_active.is_active(idx)) continue;

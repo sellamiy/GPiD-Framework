@@ -21,7 +21,7 @@ static inline void generate(OptionStorage& opts) {
 
     l_message("generate abducibles...");
     SkipperController SkCtrl(opts);
-    HypothesesSet<Solver> A(S, SkCtrl, countAbducibles(opts.abducibles, P));
+    HypothesesEngine<Solver> A(S, SkCtrl, countAbducibles(opts.abducibles, P));
     generateAbducibles(opts.abducibles, S.getContextManager(), P.getDeclarations(), A);
 
     l_message("create decomposition engine...");

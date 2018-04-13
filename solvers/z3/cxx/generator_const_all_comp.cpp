@@ -12,7 +12,8 @@ namespace gpid {
     }
 
     static inline
-    void generateAbducibles_constAllComp(z3::context&, Z3Declarations& decls, HypothesesSet<Z3Solver>& set) {
+    void generateAbducibles_constAllComp(z3::context&, Z3Declarations& decls,
+                                         HypothesesEngine<Z3Solver>& set) {
         alloc_gab<Z3Hypothesis>(set.getSourceSize());
         uint32_t vCount = decls.getFunDecls().size();
         uint32_t pos = 0;
@@ -22,10 +23,10 @@ namespace gpid {
                 z3::expr cstl_ge = decls.getFunDecls()[i]() >= decls.getFunDecls()[j]();
                 z3::expr cstl_lt = decls.getFunDecls()[i]() <  decls.getFunDecls()[j]();
                 z3::expr cstl_le = decls.getFunDecls()[i]() <= decls.getFunDecls()[j]();
-                store_gab_hyp<HypothesesSet<Z3Solver>, z3::expr>(set, pos, cstl_gt);
-                store_gab_hyp<HypothesesSet<Z3Solver>, z3::expr>(set, pos+1, cstl_ge);
-                store_gab_hyp<HypothesesSet<Z3Solver>, z3::expr>(set, pos+2, cstl_lt);
-                store_gab_hyp<HypothesesSet<Z3Solver>, z3::expr>(set, pos+3, cstl_le);
+                store_gab_hyp<HypothesesEngine<Z3Solver>, z3::expr>(set, pos, cstl_gt);
+                store_gab_hyp<HypothesesEngine<Z3Solver>, z3::expr>(set, pos+1, cstl_ge);
+                store_gab_hyp<HypothesesEngine<Z3Solver>, z3::expr>(set, pos+2, cstl_lt);
+                store_gab_hyp<HypothesesEngine<Z3Solver>, z3::expr>(set, pos+3, cstl_le);
                 set.mapLink(pos, pos+1);
                 set.mapLink(pos, pos+2);
                 set.mapLink(pos, pos+3);

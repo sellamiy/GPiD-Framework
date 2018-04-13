@@ -9,7 +9,7 @@ namespace gpid {
     static inline void loadAbducible
     (int idx, const std::string expr,
      CVC4::ExprManager& em, CVC4Declarations& decls,
-     HypothesesSet<CVC4Solver>& set, std::map<int,int>&) {
+     HypothesesEngine<CVC4Solver>& set, std::map<int,int>&) {
         CVC4::Options opts4;
         l_warn("Fixme: Abducible Parser - input language as an option"); // TODO
         opts4.setInputLanguage(CVC4::language::input::LANG_SMTLIB_V2);
@@ -19,7 +19,7 @@ namespace gpid {
         p->useDeclarationsFrom(decls.getSymbolTable());
         CVC4::Expr cstl = p->nextExpression();
 
-        store_gab_hyp<HypothesesSet<CVC4Solver>, CVC4::Expr>(set, idx, cstl);
+        store_gab_hyp<HypothesesEngine<CVC4Solver>, CVC4::Expr>(set, idx, cstl);
     }
 
 };

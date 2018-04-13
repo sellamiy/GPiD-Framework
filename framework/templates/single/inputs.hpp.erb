@@ -45,12 +45,12 @@ namespace gpid {
      * \param hys Set of hypotheses to popuplate.
      *
      * Generate abducible hypotheses for the given problem and store them
-     * in the given HypothesesSet.
+     * in the given HypothesesEngine.
      */
     extern void generateAbducibles(AbduciblesOptions& opts,
                                    <%= @solver.contextManagerClass %>& ctx,
                                    <%= @solver.declarationsClass %>& decls,
-                                   HypothesesSet<<%= @solver.solverClass %>>& hys);
+                                   HypothesesEngine<<%= @solver.solverClass %>>& hys);
 
 };
 

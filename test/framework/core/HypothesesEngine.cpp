@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gpid/gpid.hpp>
 
-#define HYPOTHESES_SET_TEST
+#define HYPOTHESES_ENGINE_TEST
 
 #define HSET_SIZE 16
 
@@ -40,18 +40,18 @@ static SkipperController HSTest_SkCtrl(HSTest_DefaultOptions);
 /* These tests assumes the hypothesis mapping works as expected. */
 /* This hypothesis mapping should be tested elsewhere */
 
-class HypothesesSetTest : public ::testing::Test {
+class HypothesesEngineTest : public ::testing::Test {
 protected:
-    HypothesesSetTest() {
+    HypothesesEngineTest() {
         srand(time(NULL));
         for (int i = 0; i < HSET_SIZE; i++) new (&(hmemory[i])) HSTest_S(i);
     }
 
     HSTest_SWrapper glob;
-    HypothesesSet<HSTest_SWrapper> *set;
+    HypothesesEngine<HSTest_SWrapper> *set;
 
     virtual void SetUp() {
-        set = new HypothesesSet<HSTest_SWrapper>(glob, HSTest_SkCtrl, HSET_SIZE);
+        set = new HypothesesEngine<HSTest_SWrapper>(glob, HSTest_SkCtrl, HSET_SIZE);
         for (int i = 0; i < HSET_SIZE; i++) set->mapHypothesis(i, &(hmemory[i]));
     }
 
@@ -60,16 +60,16 @@ protected:
     }
 };
 
-TEST_F(HypothesesSetTest, InitNonEmpty) {
+TEST_F(HypothesesEngineTest, InitNonEmpty) {
     ASSERT_TRUE(set->nextHypothesis(1));
 }
 
-TEST_F(HypothesesSetTest, InitSize) {
+TEST_F(HypothesesEngineTest, InitSize) {
     ASSERT_EQ(set->getSourceSize(), (uint32_t)HSET_SIZE);
     // ASSERT_EQ(set->getSize(), (uint32_t)HSET_SIZE);
 }
 
-TEST_F(HypothesesSetTest, RecoverFirstHypothesis) {
+TEST_F(HypothesesEngineTest, RecoverFirstHypothesis) {
     uint32_t ssz = HSET_SIZE;
     set->nextHypothesis(1);
     HSTest_S& dat = set->getHypothesis();
@@ -81,7 +81,7 @@ TEST_F(HypothesesSetTest, RecoverFirstHypothesis) {
     ASSERT_EQ(dat.data + 1, HSET_SIZE);
 }
 
-TEST_F(HypothesesSetTest, RecoverAllHypotheses) {
+TEST_F(HypothesesEngineTest, RecoverAllHypotheses) {
     uint32_t ssz = HSET_SIZE;
     int64_t inds = HSET_SIZE * (HSET_SIZE - 1) / 2;
     for (int i = HSET_SIZE; i > 0; i--) {
@@ -99,7 +99,7 @@ TEST_F(HypothesesSetTest, RecoverAllHypotheses) {
     ASSERT_EQ(inds, 0);
 }
 
-TEST_F(HypothesesSetTest, FirstAndSecondSublevel) {
+TEST_F(HypothesesEngineTest, FirstAndSecondSublevel) {
     bool has_next;
     // First Hyp
     has_next = set->nextHypothesis(1);
