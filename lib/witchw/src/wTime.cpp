@@ -68,8 +68,10 @@ namespace witchw {
         return dcst_duration<chrono::hours>(registered_cts, origin, target) + " h";
     }
     string wClock::extseconds(const string origin, const string target) {
-        return dcst_duration<chrono::seconds>(registered_cts, origin, target) + "."
-            + dcyt_duration<chrono::milliseconds, chrono::seconds>(registered_cts, origin, target) + " s";
+        string d_ms = dcyt_duration<chrono::milliseconds, chrono::seconds>(registered_cts, origin, target);
+        if (d_ms.length() <= 1) d_ms = "00" + d_ms;
+        else if (d_ms.length() <= 2) d_ms = "0" + d_ms;
+        return dcst_duration<chrono::seconds>(registered_cts, origin, target) + "." + d_ms + " s";
     }
     string wClock::extended(const string origin, const string target) {
         string d_h  = dcst_duration<chrono::hours>(registered_cts, origin, target);
@@ -79,8 +81,12 @@ namespace witchw {
         string dstr = "";
         if (d_h  != "0") dstr += d_h  + " h ";
         if (d_m  != "0") dstr += d_m  + " m ";
-        dstr += d_s;
-        if (d_ms != "0") dstr += "." + d_ms + " s ";
+        dstr += d_s + ".";
+        // Should work as strings contain numbers
+        if (d_ms.length() <= 1) dstr += "00" + d_ms;
+        else if (d_ms.length() <= 2) dstr += "0" + d_ms;
+        else dstr += d_ms;
+        dstr += " s";
         return dstr;
     }
     string wClock::duration(const string origin, const string target) {
