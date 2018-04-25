@@ -48,6 +48,7 @@ namespace gpid {
         typedef typename SolverT::HypothesisT HypothesisT;
         typedef typename SolverT::ModelT ModelT;
     private:
+        SolverT& solver;
         HypothesisSkipper<SolverT> skipper;
 
         typedef uint32_t index_t;
@@ -80,7 +81,7 @@ namespace gpid {
         inline HypothesisT& getHypothesis(index_t idx);
     public:
         HypothesesEngine(SolverT& solver, SkipperController& ctrler, uint32_t size)
-            : skipper(solver, ctrler), hp_active(size), clevel(1)
+            : solver(solver), skipper(solver, ctrler), hp_active(size), clevel(1)
         { limit[1] = 0; pointer[1] = size; }
         /** Map an index of the set to a specific hypothesis. */
         inline void mapHypothesis(uint32_t idx, HypothesisT* hyp);

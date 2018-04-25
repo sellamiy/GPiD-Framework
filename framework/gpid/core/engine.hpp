@@ -38,7 +38,7 @@ namespace gpid {
 
         SolverT& solver;
         typename SolverT::ProblemT& problem;
-        HypothesesEngine<SolverT>& available_h;
+        HypothesesEngine<SolverT>& hengine;
 
         void resetEngine();
 
@@ -60,7 +60,7 @@ namespace gpid {
          */
         DecompositionEngine(EngineOptions& o, SolverT& s, typename SolverT::ProblemT& p,
                             HypothesesEngine<SolverT>& h)
-            : options(o), solver(s), problem(p), available_h(h)
+            : options(o), solver(s), problem(p), hengine(h)
         { }
         /** \return The total number of implicates generated. */
         inline uint64_t getGeneratedImplicatesCount()      const { return gi_counter;     }

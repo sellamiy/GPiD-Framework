@@ -16,10 +16,10 @@ using namespace snlog;
 template<class SolverT>
 void gpid::DecompositionEngine<SolverT>::selectNextPID() {
     // Recovering next possible hypothesis
-    bool has_next = available_h.nextHypothesis(level);
+    bool has_next = hengine.nextHypothesis(level);
     if (has_next) {
         solver.removeHypotheses(level);
-        typename SolverT::HypothesisT& sel = available_h.getHypothesis();
+        typename SolverT::HypothesisT& sel = hengine.getHypothesis();
         // Actual possible hypothesis
         solver.addHypothesis(sel, level);
         pushStackLevel();
@@ -49,7 +49,7 @@ void gpid::DecompositionEngine<SolverT>::generatePID() {
 
             if (status == SolverTestStatus::SOLVER_SAT) {
                 if (options.use_models) {
-                    available_h.modelCleanUp(solver.recoverModel(), level);
+                    hengine.modelCleanUp(solver.recoverModel(), level);
                 }
                 selectNextPID();
             } else if (status == SolverTestStatus::SOLVER_UNSAT) {
