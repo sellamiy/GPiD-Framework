@@ -73,7 +73,7 @@ TEST_F(HypothesesEngineTest, InitSize) {
 TEST_F(HypothesesEngineTest, RecoverFirstHypothesis) {
     uint32_t ssz = HSET_SIZE;
     set->nextHypothesis(1);
-    HSTest_S& dat = set->getHypothesis();
+    HSTest_S& dat = set->getCurrentHypothesis();
     /* Set status */
     ASSERT_EQ(set->getSourceSize(), ssz);
     // ASSERT_EQ(set->getSize() + 1, ssz);
@@ -88,7 +88,7 @@ TEST_F(HypothesesEngineTest, RecoverAllHypotheses) {
     for (int i = HSET_SIZE; i > 0; i--) {
         bool has_next = set->nextHypothesis(1);
         ASSERT_TRUE(has_next) << " @loop:" << i;
-        HSTest_S& dat = set->getHypothesis();
+        HSTest_S& dat = set->getCurrentHypothesis();
         /* Set status */
         ASSERT_EQ(set->getSourceSize(), ssz) << " @loop:" << i;
         // ASSERT_EQ(set->getSize() + 1, (unsigned int)i) << " @loop:" << i;
@@ -105,22 +105,26 @@ TEST_F(HypothesesEngineTest, FirstAndSecondSublevel) {
     // First Hyp
     has_next = set->nextHypothesis(1);
     ASSERT_TRUE(has_next);
-    ASSERT_EQ(set->getHypothesis().data + 1, HSET_SIZE);
+    set->selectCurrentHypothesis();
+    ASSERT_EQ(set->getCurrentHypothesis().data + 1, HSET_SIZE);
     // No Hyp
     has_next = set->nextHypothesis(2);
     ASSERT_FALSE(has_next);
     // Second Hyp
     has_next = set->nextHypothesis(1);
     ASSERT_TRUE(has_next);
-    ASSERT_EQ(set->getHypothesis().data + 2, HSET_SIZE);
+    set->selectCurrentHypothesis();
+    ASSERT_EQ(set->getCurrentHypothesis().data + 2, HSET_SIZE);
     // Has 1 Hyp
     has_next = set->nextHypothesis(2);
     ASSERT_TRUE(has_next);
-    ASSERT_EQ(set->getHypothesis().data + 1, HSET_SIZE);
+    set->selectCurrentHypothesis();
+    ASSERT_EQ(set->getCurrentHypothesis().data + 1, HSET_SIZE);
     has_next = set->nextHypothesis(2);
     ASSERT_FALSE(has_next);
     // Pursue
     has_next = set->nextHypothesis(1);
     ASSERT_TRUE(has_next);
-    ASSERT_EQ(set->getHypothesis().data + 3, HSET_SIZE);
+    set->selectCurrentHypothesis();
+    ASSERT_EQ(set->getCurrentHypothesis().data + 3, HSET_SIZE);
 }

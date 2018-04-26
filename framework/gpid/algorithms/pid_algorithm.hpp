@@ -18,10 +18,8 @@ void gpid::DecompositionEngine<SolverT>::selectNextPID() {
     // Recovering next possible hypothesis
     bool has_next = hengine.nextHypothesis(level);
     if (has_next) {
-        solver.removeHypotheses(level);
-        typename SolverT::HypothesisT& sel = hengine.getHypothesis();
-        // Actual possible hypothesis
-        solver.addHypothesis(sel, level);
+        hengine.backtrack(level);
+        hengine.selectCurrentHypothesis();
         pushStackLevel();
     } else {
         // Actually no more hypotheses
@@ -43,13 +41,11 @@ void gpid::DecompositionEngine<SolverT>::generatePID() {
         } else {
             node_counter++;
 
-            instrument::analyze(instrument::idata(solver.hypothesesAsString()), instrument::ismt_test);
-            SolverTestStatus status = solver.testHypotheses(level);
-            instrument::analyze(instrument::idata(status), instrument::ismt_result);
+            SolverTestStatus status = hengine.testHypotheses(level);
 
             if (status == SolverTestStatus::SOLVER_SAT) {
                 if (options.use_models) {
-                    hengine.modelCleanUp(solver.recoverModel(), level);
+                    hengine.modelCleanUp(level);
                 }
                 selectNextPID();
             } else if (status == SolverTestStatus::SOLVER_UNSAT) {

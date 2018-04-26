@@ -61,8 +61,17 @@ namespace gpid {
         accessLevel(level);
     }
 
-    inline void CVC4Solver::printActiveNegation() {
-        p_implicate(std::cout, getContextManager(), solvers->csty_solver.getAssertions(), true);
+    inline const std::string CVC4Solver::hypothesesAsString() const {
+        snlog::l_warn("Not implemented yet - CVC4 Solver hypotheses as string");
+        return "";
+    }
+
+    inline void CVC4Solver::printHypotheses() {
+        snlog::l_warn("Not implemented yet - CVC4 Solver hypotheses printer");
+    }
+
+    inline void CVC4Solver::printHypothesesNegation() {
+        p_implicate(std::cout, ctx, solvers->csty_solver.getAssertions(), true);
     }
 
     inline void CVC4Solver::storeActive() {
@@ -99,11 +108,6 @@ namespace gpid {
         accessLevel(level);
         snlog::l_warn("Not implemented yet - CVC4 consequence checker");
         return false;
-    }
-
-    inline const std::string CVC4Solver::hypothesesAsString() const {
-        snlog::l_warn("Not implemented yet - CVC4 Solver hypotheses as string");
-        return "";
     }
 
 };

@@ -62,7 +62,17 @@ namespace gpid {
         return solvers->iw_mdl;
     }
 
-    inline void MinisatSolver::printActiveNegation() {
+    inline const std::string MinisatSolver::hypothesesAsString() const {
+        std::stringstream result;
+        result << solvers->assumps;
+        return result.str();
+    }
+
+    inline void MinisatSolver::printHypotheses() {
+        snlog::l_warn("Not implemented yet - MiniSat Solver hypotheses printer");
+    }
+
+    inline void MinisatSolver::printHypothesesNegation() {
         p_implicate(std::cout, solvers->assumps, true);
     }
 
@@ -97,12 +107,6 @@ namespace gpid {
         accessLevel(level);
         snlog::l_warn("Not implemented yet - MiniSAT consequence checker");
         return false;
-    }
-
-    inline const std::string MinisatSolver::hypothesesAsString() const {
-        std::stringstream result;
-        result << solvers->assumps;
-        return result.str();
     }
 
 };

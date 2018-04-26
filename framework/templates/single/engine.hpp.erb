@@ -46,6 +46,10 @@ namespace gpid {
 
         /** \brief String representation of the current hypotheses set */
         const std::string hypothesesAsString() const;
+        /** \brief Print the current set of hypotheses */
+        void printHypotheses();
+        /** \brief Print the negation of the current set of hypotheses */
+        void printHypothesesNegation();
 
         /** \brief Remove all the hypotheses assigned after a given level */
         void removeHypotheses(uint32_t level);
@@ -63,8 +67,6 @@ namespace gpid {
         ModelT& recoverModel();
         inline ContextManagerT& getContextManager() { return ctx; }
 
-        /** \brief Print the negation of the current set of hypotheses */
-        void printActiveNegation();
         /** \brief Remember the current set of hypotheses as an implicate */
         void storeActive();
 

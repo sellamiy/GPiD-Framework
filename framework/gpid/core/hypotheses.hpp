@@ -57,7 +57,7 @@ namespace gpid {
         std::map<index_t, HypothesisT*>        hp_mapping;
         std::map<index_t, std::list<index_t> > hp_links;
 
-        std::map<level_t, std::list<index_t> >  selection_map;
+        std::map<level_t, std::list<index_t> > selection_map;
         std::map<level_t, std::list<index_t> > pselection_map;
 
         std::map<index_t, std::list<level_t> > pvalues_map;
@@ -76,9 +76,8 @@ namespace gpid {
 
         inline void deactivateHypothesis(index_t idx, level_t level);
         inline void deactivateSequents(index_t ub, level_t level);
-        inline void selectCurrentHypothesis();
 
-        inline HypothesisT& getHypothesis(index_t idx);
+        inline HypothesisT& getHypothesis(index_t idx);        
     public:
         HypothesesEngine(SolverT& solver, SkipperController& ctrler, uint32_t size)
             : solver(solver), skipper(solver, ctrler), hp_active(size), clevel(1)
@@ -92,6 +91,10 @@ namespace gpid {
         inline uint32_t getSourceSize();
         inline std::map<std::string, uint64_t>& getSkippedCounts();
 
+        inline SolverTestStatus testHypotheses(uint32_t level);
+
+        inline void printCurrentImplicate();
+
         /**
          * \brief Find the next non tested hypothesis.
          * \param level Level to look for hypotheses at.
@@ -102,11 +105,15 @@ namespace gpid {
          * to be accessed/recovered via the \ref getHypothesis method.
          */
         inline bool nextHypothesis(uint32_t level);
-        /** Recover the hypothesis pointed by the internal pointer. \see nextHypothesis. */
-        inline HypothesisT& getHypothesis();
+        inline void selectCurrentHypothesis();
+        inline HypothesisT& getCurrentHypothesis();
+
+        inline void backtrack(uint32_t level);
 
         /** Internally selects hypotheses to skip according to a model. */
-        inline void modelCleanUp(const ModelT& model, uint32_t level);
+        inline void modelCleanUp(uint32_t level);
+
+        inline void storeCurrentImplicate();
     };
 
     template<class SolverT>
@@ -134,6 +141,11 @@ namespace gpid {
     inline std::map<std::string, uint64_t>& HypothesesEngine<SolverT>::getSkippedCounts() {
         skipper.storeCounts(counts_wrap);
         return counts_wrap;
+    }
+
+    template<class SolverT>
+    inline void HypothesesEngine<SolverT>::printCurrentImplicate() {
+        solver.printHypothesesNegation();
     }
 
     template<class SolverT>
@@ -201,6 +213,7 @@ namespace gpid {
             deactivateHypothesis(linked, clevel);
         }
         deactivateSequents(selected, clevel);
+        solver.addHypothesis(getCurrentHypothesis(), clevel);
     }
 
     template<class SolverT>
@@ -252,6 +265,11 @@ namespace gpid {
     }
 
     template<class SolverT>
+    inline void HypothesesEngine<SolverT>::backtrack(uint32_t level) {
+        solver.removeHypotheses(level);
+    }
+
+    template<class SolverT>
     inline bool HypothesesEngine<SolverT>::nextHypothesis(uint32_t level) {
         accessLevel(level);
         unselectLevel(clevel);
@@ -274,19 +292,19 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline typename SolverT::HypothesisT& HypothesesEngine<SolverT>::getHypothesis() {
-        selectCurrentHypothesis();
-        return *hp_mapping[pointer[clevel]];
-    }
-
-    template<class SolverT>
     inline typename SolverT::HypothesisT& HypothesesEngine<SolverT>::getHypothesis(index_t idx) {
         return *hp_mapping[idx];
     }
 
     template<class SolverT>
-    inline void HypothesesEngine<SolverT>::modelCleanUp(const ModelT& model, uint32_t level) {
+    inline typename SolverT::HypothesisT& HypothesesEngine<SolverT>::getCurrentHypothesis() {
+        return getHypothesis(pointer[clevel]);
+    }
+
+    template<class SolverT>
+    inline void HypothesesEngine<SolverT>::modelCleanUp(uint32_t level) {
         accessLevel(level);
+        const ModelT& model = solver.recoverModel();
         for (index_t idx : hp_active) {
             if (!hp_active.is_active(idx)) continue;
             if (model.isSkippable(*hp_mapping[idx])) {
@@ -298,6 +316,20 @@ namespace gpid {
                                     instrument::instloc::model_skip);
             }
         }
+    }
+
+    template<class SolverT>
+    inline void HypothesesEngine<SolverT>::storeCurrentImplicate() {
+        solver.storeActive();
+    }
+
+    template<class SolverT>
+    inline SolverTestStatus HypothesesEngine<SolverT>::testHypotheses(uint32_t level) {
+        accessLevel(level);
+        instrument::analyze(instrument::idata(solver.hypothesesAsString()), instrument::ismt_test);
+        SolverTestStatus status = solver.testHypotheses(level);
+        instrument::analyze(instrument::idata(status), instrument::ismt_result);
+        return status;
     }
 
 };

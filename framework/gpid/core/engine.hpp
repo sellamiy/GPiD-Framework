@@ -18,6 +18,16 @@ namespace gpid {
         PID
     };
 
+    template <class SolverT>
+    class SolverStrictWrapper {
+        SolverT& solver;
+    public:
+        SolverStrictWrapper(SolverT& s) : solver(s) {}
+        inline void setProblem(typename SolverT::ProblemT& problem)
+        { solver.setProblem(problem); }
+        inline void start() { solver.start(); }
+    };
+
     /** \brief Implicates generator. \ingroup gpidcorelib */
     template <class SolverT>
     class DecompositionEngine {
@@ -36,7 +46,7 @@ namespace gpid {
         uint32_t level;
         IStackDirection sdir;
 
-        SolverT& solver;
+        SolverStrictWrapper<SolverT> solver;
         typename SolverT::ProblemT& problem;
         HypothesesEngine<SolverT>& hengine;
 
@@ -90,9 +100,9 @@ template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
     gi_counter++;
     if (options.print_implicates)
-        solver.printActiveNegation();
+        hengine.printCurrentImplicate();
     if (options.store_implicates)
-        solver.storeActive();
+        hengine.storeCurrentImplicate();
     if (options.implicate_limit <= gi_counter)
         des_iflags.interrupt(SystemInterruptsFlags::SYS_INT_R__INTERNAL);
     instrument::analyze(instrument::idata(), instrument::instloc::implicate);
@@ -107,7 +117,7 @@ inline void gpid::DecompositionEngine<SolverT>::pushStackLevel() {
 
 template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::popStackLevel() {
-    solver.removeHypotheses(level);
+    hengine.backtrack(level);
     level--;
     sdir = IStackDirection::STACK_POP;
     instrument::analyze(instrument::idata(level), instrument::instloc::stack_pop);

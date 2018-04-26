@@ -55,7 +55,16 @@ namespace gpid {
         return solvers->iw_mdl;
     }
 
-    inline void Z3Solver::printActiveNegation() {
+    inline const std::string Z3Solver::hypothesesAsString() const {
+        snlog::l_warn("Not implemented yet - Z3 Solver hypotheses as string");
+        return "";
+    }
+
+    inline void Z3Solver::printHypotheses() {
+        snlog::l_warn("Not implemented yet - Z3 Solver hypotheses printer");
+    }
+
+    inline void Z3Solver::printHypothesesNegation() {
         p_implicate(std::cout, ctx, solvers->csty_solver.assertions(), true);
     }
 
@@ -93,11 +102,6 @@ namespace gpid {
         accessLevel(level);
         snlog::l_warn("Not implemented yet - Z3 consequence checker");
         return false;
-    }
-
-    inline const std::string Z3Solver::hypothesesAsString() const {
-        snlog::l_warn("Not implemented yet - Z3 Solver hypotheses as string");
-        return "";
     }
 
 };
