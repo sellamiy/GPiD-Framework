@@ -9,6 +9,7 @@ problemConstraintType : z3::expr
 
 contextSnippets :
   - context.hpp
+  - expr_storage.hpp
 contextSrcSnippets :
   - context_src.cpp
 outputSnippets :

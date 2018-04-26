@@ -44,6 +44,20 @@ namespace gpid {
         }
     };
 
+    inline z3::expr asformula(const z3::expr_vector& v, z3::context& ctx, bool negate=false) {
+        z3::expr f(ctx);
+        bool finit = false;
+        for (unsigned i = 0; i < v.size(); ++i) {
+            if (finit)
+                f = f && v[i];
+            else {
+                f = v[i];
+                finit = true;
+            }
+        }
+        return negate ? !f : f;
+    }
+
 }
 
 #endif
