@@ -224,6 +224,7 @@ namespace gpid {
 
     template<class SolverT>
     inline void HypothesesEngine<SolverT>::unselectLevel(uint32_t level) {
+        solver.removeHypotheses(level);
         for (index_t skipped : selection_map[level]) {
             if (hp_active.is_paused(skipped)) {
                 hp_active.set(skipped, pvalues_map[skipped].back());
