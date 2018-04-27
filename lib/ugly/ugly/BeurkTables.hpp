@@ -32,10 +32,11 @@ namespace ugly {
             for (unsigned int i=0; i < initial_size; i++) freelocs.insert(i);
         }
 
-        template<class InsertionInitializerClass>
-        BeurkTable(InsertionInitializerClass& iie, unsigned int initial_size=1)
-            : refuser(iie), cleaner(iie)
+        template<class ... InsertionInitializerClasses>
+        BeurkTable(InsertionInitializerClasses& ... iie)
+            : refuser(iie...), cleaner(iie...)
         {
+            unsigned int initial_size = 1;
             bdata = (O*)realloc(NULL, initial_size*sizeof(O));
             msize = initial_size;
             for (unsigned int i=0; i < initial_size; i++) freelocs.insert(i);
