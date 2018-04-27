@@ -42,6 +42,12 @@ namespace gpid {
             return res;
         }
 
+        inline std::string hypothesesString() {
+            std::stringstream result;
+            result << asformula(csty_solver.assertions(), ctx);
+            return result.str();
+        }
+
     };
 
     inline void Z3Solver::accessLevel(uint32_t level) {
@@ -70,8 +76,7 @@ namespace gpid {
     }
 
     inline const std::string Z3Solver::hypothesesAsString() const {
-        snlog::l_warn("Not implemented yet - Z3 Solver hypotheses as string");
-        return "";
+        return solvers->hypothesesString();
     }
 
     inline void Z3Solver::printHypotheses() {
