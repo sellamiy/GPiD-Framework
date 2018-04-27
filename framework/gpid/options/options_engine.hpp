@@ -17,6 +17,8 @@ namespace gpid {
         bool print_implicates = false;
         /** Store generated implicates and skipp storage-subsumed hypotheses */
         bool store_implicates = false;
+        /** Print stored implicates after computation */
+        bool print_storage = false;
 
         /** Use models returned by solvers to filter hypotheses */
         bool use_models = true;

@@ -94,6 +94,7 @@ namespace gpid {
         inline SolverTestStatus testHypotheses(uint32_t level);
 
         inline void printCurrentImplicate();
+        inline void printStorage();
 
         /**
          * \brief Find the next non tested hypothesis.
@@ -146,6 +147,11 @@ namespace gpid {
     template<class SolverT>
     inline void HypothesesEngine<SolverT>::printCurrentImplicate() {
         solver.printHypothesesNegation();
+    }
+
+    template<class SolverT>
+    inline void HypothesesEngine<SolverT>::printStorage() {
+        solver.printStoredImplicates();
     }
 
     template<class SolverT>

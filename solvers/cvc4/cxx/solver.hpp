@@ -74,6 +74,10 @@ namespace gpid {
         p_implicate(std::cout, ctx, solvers->csty_solver.getAssertions(), true);
     }
 
+    inline void CVC4Solver::printStoredImplicates() {
+        snlog::l_warn("Not implemented yet - CVC4 storage printer");
+    }
+
     inline void CVC4Solver::storeActive() {
         snlog::l_warn("Not implemented yet - CVC4 active storage");
     }

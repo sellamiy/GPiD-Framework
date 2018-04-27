@@ -18,6 +18,7 @@ namespace gpid {
     void             ts__solv::removeHypotheses       (uint32_t)          { }
     void             ts__solv::printHypotheses        ()                  { }
     void             ts__solv::printHypothesesNegation()                  { }
+    void             ts__solv::printStoredImplicates  ()                  { }
     void             ts__solv::storeActive            ()                  { }
     SolverTestStatus ts__solv::testHypotheses         (uint32_t)          { return SOLVER_UNSAT; }
     SolverTestStatus ts__solv::checkConsistency       (uint32_t)          { return SOLVER_SAT; }

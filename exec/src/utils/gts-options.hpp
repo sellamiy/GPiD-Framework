@@ -82,6 +82,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int argc, const cha
 	parser.add_options("Output")
 	    ("p,print-implicates", "Print generated implicates")
 	    ("dont-print-implicates", "Do not print generated implicates")
+            ("print-storage", "Print only stored implicates after computation")
+	    ("dont-print-storage", "Do not print stored implicates")
             ("time-unit", "Unit for printing time data (truncated)", cxxopts::value<std::string>())
 #ifdef DOT_FOUND
             ("dot-autocompile", "Autocompile dot graphs")
@@ -134,6 +136,11 @@ static inline OptionStatus handleOptions
 	    opts.engine.store_implicates = true;
 	if (results.count("dont-store-implicates"))
 	    opts.engine.store_implicates = false;
+
+        if (results.count("print-storage"))
+	    opts.engine.print_storage = true;
+	if (results.count("dont-print-storage"))
+	    opts.engine.print_storage = false;
 
         if (results.count("use-models"))
 	    opts.engine.use_models = true;
@@ -245,6 +252,8 @@ static inline OptionStatus detectConflicts
             { "load-abducibles", "autogen-abducibles" },
             { "print-implicates", "dont-print-implicates"},
             { "store-implicates", "dont-store-implicates"},
+            { "print-storage", "dont-print-storage"},
+            { "print-storage", "dont-store-implicates"},
             { "use-models", "dont-use-models"},
             { "allow-inconsistencies", "dont-allow-inconsistencies" },
             { "detect-consequences", "dont-detect-consequences" }

@@ -76,6 +76,10 @@ namespace gpid {
         p_implicate(std::cout, solvers->assumps, true);
     }
 
+    inline void MinisatSolver::printStoredImplicates() {
+        snlog::l_warn("Not implemented yet - Minisat storage printer");
+    }
+
     inline void MinisatSolver::storeActive() {
         MinisatVecWrapper<Minisat::Lit> wrp(solvers->assumps);
         solvers->storage.addSet(wrp);
