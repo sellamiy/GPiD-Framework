@@ -88,7 +88,9 @@ namespace gpid {
     }
 
     inline void Z3Solver::printStoredImplicates() {
-        snlog::l_warn("Not implemented yet - Z3 storage printer");
+        for (const z3::expr& implicate : solvers->storage) {
+            p_implicate(std::cout, implicate, false);
+        }
     }
 
     inline gpid::SolverTestStatus Z3Solver::testHypotheses(uint32_t level) {

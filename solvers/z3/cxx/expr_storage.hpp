@@ -52,7 +52,8 @@ namespace gpid {
     };
 
     class Z3Storage {
-        ugly::BeurkTable<z3::expr, Z3StorageRefuser, Z3StorageCleaner> btable;
+        typedef ugly::BeurkTable<z3::expr, Z3StorageRefuser, Z3StorageCleaner> Z3BTable;
+        Z3BTable btable;
     public:
         Z3Storage(z3::context& ctx) : btable(ctx) {}
         inline void insert(z3::expr e) {
@@ -61,6 +62,12 @@ namespace gpid {
         inline bool would_be_inserted(z3::expr e) {
             return btable.dry_insert_refuse(e);
         }
+        typedef Z3BTable::iterator iterator;
+        typedef Z3BTable::const_iterator const_iterator;
+        inline iterator begin() { return btable.begin(); }
+        inline iterator end()   { return btable.end(); }
+        inline const_iterator cbegin() { return btable.cbegin(); }
+        inline const_iterator cend()   { return btable.cend(); }
     };
 
 }
