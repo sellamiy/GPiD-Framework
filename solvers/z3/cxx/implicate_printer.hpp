@@ -22,6 +22,11 @@ namespace gpid {
         out << pfl << std::endl;
     }
 
+    extern inline
+    void p_implicate(std::ostream& out, const z3::expr& f, bool negate) {
+        out << "> " << (negate ? !f : f) << std::endl;
+    }
+
 };
 
 #endif
