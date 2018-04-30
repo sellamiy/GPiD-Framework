@@ -8,6 +8,7 @@
 #define GPID_FRAMEWORK__UTIL__STORAGE_HPP
 
 #include <map>
+#include <snlog/snlog.hpp>
 #include <gpid/core/solvers.hpp>
 
 namespace gpid {
@@ -30,23 +31,26 @@ namespace gpid {
         inline void printLocal(mapindex_t idx, typename ATUtils::FormulaT cformula);
         inline void cleanSubsumedLocal(mapindex_t idx);
 
-        inline void insertLocal(mapindex_t idx, typename ATUtils::LiteralListT& impset,
+        inline void insertLocal(mapindex_t idx, const typename ATUtils::LiteralListT& impset,
                                 uint32_t impset_pos, bool negate);
 
     public:
 
-        AbducibleTree() { subsumptionSolver.push(); }
+        template<class ... ATUtilsInitializers>
+        AbducibleTree(ATUtilsInitializers& ... its)
+            : utils(its...), subsumptionSolver(its...), insertionSolver(its...), formula(its...)
+        { subsumptionSolver.push(); }
 
         inline void print();
         inline bool subsumes(typename ATUtils::FormulaT implicate, bool negate=true);
-        inline void cleanSubsumed(typename ATUtils::FormulaT sourcef);
-        inline void insert(typename ATUtils::LiteralListT& impset, bool negate=true);
+        inline void cleanSubsumed(typename ATUtils::FormulaT sourcef, bool negate=true);
+        inline void insert(const typename ATUtils::LiteralListT& impset, bool negate=true);
     };
 
 
 
     template<class ATUtils>
-    inline void AbducibleTree<ATUtils>::print() { explorePrint(1, utils.emptyFormula()); }
+    inline void AbducibleTree<ATUtils>::print() { printLocal(1, utils.emptyFormula()); }
 
     template<class ATUtils>
     inline void AbducibleTree<ATUtils>::printLocal(mapindex_t idx, typename ATUtils::FormulaT cformula) {
@@ -54,7 +58,7 @@ namespace gpid {
             utils.printImplicate(cformula);
         } else {
             for (auto p : nodes[idx]) {
-                explorePrint(p.second, utils.disjunction(cformula, p.first));
+                printLocal(p.second, utils.disjunction(cformula, utils.toFormula(p.first)));
             }
         }
     }
@@ -72,9 +76,9 @@ namespace gpid {
     }
 
     template<class ATUtils>
-    inline void AbducibleTree<ATUtils>::cleanSubsumed(typename ATUtils::FormulaT sourcef) {
+    inline void AbducibleTree<ATUtils>::cleanSubsumed(typename ATUtils::FormulaT sourcef, bool negate) {
         insertionSolver.push();
-        insertionSolver.addFormula(sourcef);
+        insertionSolver.addFormula(sourcef, negate);
         cleanSubsumedLocal(1);
         insertionSolver.pop();
     }
@@ -89,7 +93,7 @@ namespace gpid {
         if (res == SOLVER_SAT) {
             for (auto p : nodes[idx]) {
                 insertionSolver.push();
-                insertionSolver.addFormula(p.first, true);
+                insertionSolver.addFormula(utils.toFormula(p.first), true);
                 cleanSubsumedLocal(p.second);
                 insertionSolver.pop();
             }
@@ -99,7 +103,7 @@ namespace gpid {
     }
 
     template<class ATUtils>
-    inline void AbducibleTree<ATUtils>::insert(typename ATUtils::LiteralListT& impset, bool negate) {
+    inline void AbducibleTree<ATUtils>::insert(const typename ATUtils::LiteralListT& impset, bool negate) {
         insertLocal(1, impset, 0, negate);
         subsumptionSolver.pop();
         subsumptionSolver.push();
@@ -108,7 +112,8 @@ namespace gpid {
     }
 
     template<class ATUtils>
-    inline void AbducibleTree<ATUtils>::insertLocal(mapindex_t idx, typename ATUtils::LiteralListT& impset,
+    inline void AbducibleTree<ATUtils>::insertLocal(mapindex_t idx,
+                                                    const typename ATUtils::LiteralListT& impset,
                                                     uint32_t impset_pos, bool negate) {
         if (impset_pos == impset.size()) return;
         typename ATUtils::LiteralT lit = negate ?

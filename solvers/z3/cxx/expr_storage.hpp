@@ -1,8 +1,7 @@
 #ifndef GPID_Z3_EXPR_STORAGE_HPP
 #define GPID_Z3_EXPR_STORAGE_HPP
 
-
-#include <ugly/ugly.hpp>
+#include <gpid/util/storage.hpp>
 
 namespace gpid {
 
@@ -16,58 +15,88 @@ namespace gpid {
         }
     };
 
-    class Z3EntailmentChecker {
+    class Z3StorageSolverWrapper {
         z3::solver solver;
-    protected:
-        inline bool entailment_check(z3::expr source, z3::expr target) {
-            solver.push();
-            solver.add(source);
-            solver.add(!target);
+    public:
+        Z3StorageSolverWrapper(z3::context& ctx) : solver(ctx) { }
+
+        inline void push() { solver.push(); }
+        inline void pop() { solver.pop(); }
+
+        inline void addFormula(z3::expr f, bool negate) {
+            solver.add(negate ? !f : f);
+        }
+
+        inline SolverTestStatus check() {
             z3::check_result qres = solver.check();
-            solver.pop();
             switch (qres) {
-            case z3::sat:   return false;
-            case z3::unsat: return true;
-            default:
-                throw LocalZ3ExpressionStorageException("Z3 Entailment test returned Unknown");
-                return false;
+            case z3::sat:   return SolverTestStatus::SOLVER_SAT;
+            case z3::unsat: return SolverTestStatus::SOLVER_UNSAT;
+            default:        return SolverTestStatus::SOLVER_UNKNOWN;
             }
         }
+    };
+
+    class Z3StorageLiteral {
+        static std::map<std::string, uint32_t> ordermap;
+        static uint32_t corder_value;
+        static uint32_t next_ovalue() { return ++corder_value; }
     public:
-        Z3EntailmentChecker(z3::context& ctx) : solver(ctx) {}
+        z3::expr e;
+        Z3StorageLiteral(z3::expr e) : e(e) { }
+        Z3StorageLiteral(const Z3StorageLiteral& o) : e(o.e) { }
+
+        bool operator < (const Z3StorageLiteral& o) const {
+            std::stringstream sselfstr, sostr;
+            std::string selfstr, ostr;
+            sselfstr << e;
+            sostr << o.e;
+            selfstr = sselfstr.str();
+            ostr = sostr.str();
+            if (ordermap.find(selfstr) == ordermap.end())
+                ordermap[selfstr] = next_ovalue();
+            if (ordermap.find(ostr) == ordermap.end())
+                ordermap[ostr] = next_ovalue();
+            return ordermap[selfstr] < ordermap[ostr];
+        }
     };
 
-    struct Z3StorageRefuser : public Z3EntailmentChecker {
-        inline bool operator()(z3::expr insert, z3::expr other) {
-            return entailment_check(other, insert);
-        }
-        Z3StorageRefuser(z3::context& ctx) : Z3EntailmentChecker(ctx) {}
-    };
+    class Z3StorageUtils {
+        z3::context& ctx;
+    public:
+        Z3StorageUtils(z3::context& ctx) : ctx(ctx) { }
 
-    struct Z3StorageCleaner : public Z3EntailmentChecker {
-        inline bool operator()(z3::expr insert, z3::expr other) {
-            return entailment_check(insert, other);
-        }
-        Z3StorageCleaner(z3::context& ctx) : Z3EntailmentChecker(ctx) {}
+        typedef Z3StorageLiteral LiteralT;
+        typedef z3::expr FormulaT;
+        typedef Z3StorageSolverWrapper SolverT;
+        typedef z3::expr_vector LiteralListT;
+
+        inline FormulaT negation(FormulaT e) const { return !e; }
+        inline FormulaT disjunction(FormulaT l, FormulaT r) const
+        /* TODO: Find a cleaner and more efficient way to test if l is null */
+        { return (l.to_string() == "null") ? r : l || r; }
+        inline FormulaT emptyFormula() const { return FormulaT(ctx); }
+        inline FormulaT toFormula(LiteralT l, bool negate=false) const
+        { return negate ? !(l.e) : l.e; }
+        inline FormulaT toFormula(LiteralListT ll, bool negate) const
+        { return asformula(ll, ctx, negate); }
+        inline void printImplicate(FormulaT f) const
+        { p_implicate(std::cout, f, false); }
     };
 
     class Z3Storage {
-        typedef ugly::BeurkTable<z3::expr, Z3StorageRefuser, Z3StorageCleaner> Z3BTable;
-        Z3BTable btable;
+        typedef AbducibleTree<Z3StorageUtils> Z3ATree;
+        Z3ATree atree;
     public:
-        Z3Storage(z3::context& ctx) : btable(ctx) {}
-        inline void insert(z3::expr e) {
-            btable.insert_refuse_clean(e);
+        Z3Storage(z3::context& ctx) : atree(ctx) {}
+        inline void insert(const z3::expr_vector& i, z3::expr e, bool negate) {
+            atree.cleanSubsumed(e, negate);
+            atree.insert(i, negate);
         }
-        inline bool would_be_inserted(z3::expr e) {
-            return btable.dry_insert_refuse(e);
-        }
-        typedef Z3BTable::iterator iterator;
-        typedef Z3BTable::const_iterator const_iterator;
-        inline iterator begin() { return btable.begin(); }
-        inline iterator end()   { return btable.end(); }
-        inline const_iterator cbegin() { return btable.cbegin(); }
-        inline const_iterator cend()   { return btable.cend(); }
+        inline bool would_be_inserted(z3::expr e)
+        { return !atree.subsumes(e); }
+        inline void print()
+        { atree.print(); }
     };
 
 }

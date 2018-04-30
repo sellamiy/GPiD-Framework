@@ -31,7 +31,7 @@ namespace gpid {
         }
 
         inline void storeCurrentSelection() {
-            storage.insert(asformula(csty_solver.assertions(), ctx, true));
+            storage.insert(csty_solver.assertions(), asformula(csty_solver.assertions(), ctx), true);
         }
 
         inline bool wouldAcceptStorage(Z3Hypothesis& additional) {
@@ -88,9 +88,7 @@ namespace gpid {
     }
 
     inline void Z3Solver::printStoredImplicates() {
-        for (const z3::expr& implicate : solvers->storage) {
-            p_implicate(std::cout, implicate, false);
-        }
+        solvers->storage.print();
     }
 
     inline gpid::SolverTestStatus Z3Solver::testHypotheses(uint32_t level) {
