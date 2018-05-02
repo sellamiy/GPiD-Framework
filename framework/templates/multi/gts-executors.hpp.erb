@@ -12,6 +12,13 @@ static inline gtsExecutionStatus wrap_generate(OptionStorage& opts) {
         return GTS_SUCCESS;
     }
 
+  <% for @except in @solver.solverExceptions %>
+    catch (<%= @except["name"] %>& e) {
+        snlog::l_fatal("Solver exception recovered");
+        snlog::l_error(e.<%= @except["messager"] %>());
+        return GTS_FAILURE;
+    }
+  <% end %>
     catch (gpid::InternalError& e) {
         snlog::l_internal(e.what());
         return GTS_FAILURE;
@@ -42,6 +49,13 @@ static inline gtsExecutionStatus wrap_generate(OptionStorage& opts) {
             return GTS_SUCCESS;
         }
 
+      <% for @except in @solver.solverExceptions %>
+        catch (<%= @except["name"] %>& e) {
+            snlog::l_fatal("Solver <%= @solver.name %> exception recovered");
+            snlog::l_error(e.<%= @except["messager"] %>());
+            return GTS_FAILURE;
+        }
+      <% end %>
         catch (gpid::InternalError& e) {
             snlog::l_internal(e.what());
             return GTS_FAILURE;

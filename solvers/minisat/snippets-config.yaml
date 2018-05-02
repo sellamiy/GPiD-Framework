@@ -37,3 +37,5 @@ abducibleGenerators:
     generator : generateAbducibles_all
 
 abducibleLoader: loadAbducible
+
+solverExceptions: []

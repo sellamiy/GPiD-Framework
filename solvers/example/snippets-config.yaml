@@ -25,3 +25,5 @@ parsers: []
 abducibleGenerators: []
 
 abducibleLoader: loadAbducible
+
+solverExceptions: []

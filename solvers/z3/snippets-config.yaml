@@ -43,3 +43,8 @@ abducibleGenerators:
     generator : generateAbducibles_constAllComp
 
 abducibleLoader: loadAbducible
+
+solverExceptions:
+  -
+    name : z3::exception
+    messager : msg

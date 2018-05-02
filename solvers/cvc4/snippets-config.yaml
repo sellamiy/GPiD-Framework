@@ -45,3 +45,5 @@ abducibleGenerators:
     generator : generateAbducibles_allEq
 
 abducibleLoader: loadAbducible
+
+solverExceptions: []
