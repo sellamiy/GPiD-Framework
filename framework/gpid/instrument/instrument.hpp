@@ -34,7 +34,8 @@ namespace instrument {
     };
 
     extern void initialize(InstrumentOptions& opts, InstrumentController& ctrler);
-    extern void analyze(const idata data, instloc location);
+    extern void analyze_data(const idata data, instloc location);
+#define insthandle(data, location) gpid::instrument::analyze_data((data), (location))
     extern void finalize(InstrumentOptions& opts, InstrumentController& ctrler);
 
 #else
@@ -44,7 +45,7 @@ namespace instrument {
     static inline bool idata(const uint32_t)    { return true; }
 
     static inline void initialize(InstrumentOptions&, InstrumentController&) {}
-    static inline void analyze(bool, instloc)  {}
+#define insthandle(data, location)
     static inline void finalize(InstrumentOptions&, InstrumentController&) {}
 
 #endif

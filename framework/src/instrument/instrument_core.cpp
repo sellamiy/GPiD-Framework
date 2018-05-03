@@ -24,7 +24,7 @@ namespace instrument {
     /* Analyses core handler */
     typedef void (*analyzer) (const std::string);
     std::map<instloc, std::list<analyzer> > analyzers;
-    extern void analyze(const idata data, instloc analysis) {
+    extern void analyze_data(const idata data, instloc analysis) {
         for (void (*analyzer)(const std::string) : analyzers[analysis]) {
             analyzer(data.get());
         }

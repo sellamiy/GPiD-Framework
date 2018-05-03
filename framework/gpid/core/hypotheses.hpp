@@ -284,8 +284,8 @@ namespace gpid {
             index_t next = hp_active.get_downward(pointer[clevel]);
             if (next != pointer[clevel]) {
                 pointer[clevel] = next;
-                instrument::analyze(instrument::idata(getHypothesis(next).str()),
-                                    instrument::instloc::pre_select);
+                insthandle(instrument::idata(getHypothesis(next).str()),
+                           instrument::instloc::pre_select);
                 if (!skipper.canBeSkipped(*hp_mapping[pointer[clevel]], clevel)) {
                     if (!hp_active.is_paused(pointer[clevel])
                         || hp_active.get(pointer[clevel]) != clevel) {
@@ -319,8 +319,8 @@ namespace gpid {
                 pvalues_map[idx].push_back(hp_active.get(idx));
                 hp_active.set(idx, clevel);
                 selection_map[clevel-1].push_back(idx);
-                instrument::analyze(instrument::idata(getHypothesis(idx).str()),
-                                    instrument::instloc::model_skip);
+                insthandle(instrument::idata(getHypothesis(idx).str()),
+                           instrument::instloc::model_skip);
             }
         }
     }
@@ -333,9 +333,9 @@ namespace gpid {
     template<class SolverT>
     inline SolverTestStatus HypothesesEngine<SolverT>::testHypotheses(uint32_t level) {
         accessLevel(level);
-        instrument::analyze(instrument::idata(solver.hypothesesAsString()), instrument::ismt_test);
+        insthandle(instrument::idata(solver.hypothesesAsString()), instrument::ismt_test);
         SolverTestStatus status = solver.testHypotheses(level);
-        instrument::analyze(instrument::idata(status), instrument::ismt_result);
+        insthandle(instrument::idata(status), instrument::ismt_result);
         return status;
     }
 
