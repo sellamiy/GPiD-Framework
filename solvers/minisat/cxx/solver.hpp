@@ -80,6 +80,10 @@ namespace gpid {
         snlog::l_warn("Not implemented yet - Minisat storage printer");
     }
 
+    inline void MinisatSolver::exportStoredImplicates() {
+        snlog::l_warn("Not implemented yet - Minisat storage exporter");
+    }
+
     inline void MinisatSolver::storeActive() {
         MinisatVecWrapper<Minisat::Lit> wrp(solvers->assumps);
         solvers->storage.addSet(wrp);

@@ -10,6 +10,7 @@
 #include <map>
 #include <snlog/snlog.hpp>
 #include <gpid/core/solvers.hpp>
+#include <dot/dotgraph.hpp>
 
 namespace gpid {
 
@@ -34,6 +35,7 @@ namespace gpid {
         inline void insertLocal(mapindex_t idx, const typename ATUtils::LiteralListT& impset,
                                 uint32_t impset_pos, bool negate);
 
+        inline int buildGraphLocal(mapindex_t idx, dot::Graph& g);
     public:
 
         template<class ... ATUtilsInitializers>
@@ -45,6 +47,7 @@ namespace gpid {
         inline bool subsumes(typename ATUtils::FormulaT implicate, bool negate=true);
         inline void cleanSubsumed(typename ATUtils::FormulaT sourcef, bool negate=true);
         inline void insert(const typename ATUtils::LiteralListT& impset, bool negate=true);
+        inline void exportGraph(std::ostream& target);
     };
 
 
@@ -121,6 +124,28 @@ namespace gpid {
         if (nodes[idx].find(lit) == nodes[idx].end())
             nodes[idx][lit] = newNode();
         insertLocal(nodes[idx][lit], impset, impset_pos + 1, negate);
+    }
+
+    template<class ATUtils>
+    inline void AbducibleTree<ATUtils>::exportGraph(std::ostream& target) {
+        dot::Graph g("AbdStorage");
+        buildGraphLocal(1, g);
+        target << g;
+    }
+
+    template<class ATUtils>
+    inline int AbducibleTree<ATUtils>::buildGraphLocal(mapindex_t idx, dot::Graph& g) {
+        if (nodes[idx].empty()) {
+            return g.createNode("", dot::types::BlackDiamondNode);
+        } else {
+            int loc, child;
+            loc = g.createNode("", dot::types::ClassicDiamondNode);
+            for (auto p : nodes[idx]) {
+                child = buildGraphLocal(p.second, g);
+                g.createEdge(loc, child, utils.toString(p.first), dot::types::ClassicEdge);
+            }
+            return loc;
+        }
     }
 
 }

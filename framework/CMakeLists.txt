@@ -49,10 +49,10 @@ set_target_properties(gpid-core-shared PROPERTIES
   OUTPUT_NAME gpid-core
   VERSION ${VERSION}
   CLEAN_DIRECT_OUTPUT 1)
-target_link_libraries(gpid-core-static starray-static snlog)
-target_link_libraries(gpid-core-shared starray-shared snlog)
+target_link_libraries(gpid-core-static starray-static dot-static snlog)
+target_link_libraries(gpid-core-shared starray-shared dot-shared snlog)
 
 if(GPID_INSTRUMENTATION)
-  target_link_libraries(gpid-core-static dot-static pctrace-static)
-  target_link_libraries(gpid-core-shared dot-shared pctrace-shared)
+  target_link_libraries(gpid-core-static pctrace-static)
+  target_link_libraries(gpid-core-shared pctrace-shared)
 endif()

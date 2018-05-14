@@ -60,9 +60,8 @@ void gpid::DecompositionEngine<SolverT>::generatePID() {
 
     }
 
-    if (options.print_storage) {
-        hengine.printStorage();
-    }
+    if (options.print_storage)  hengine.printStorage();
+    if (options.export_storage) hengine.exportStorage();
 }
 
 #endif

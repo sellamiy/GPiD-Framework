@@ -18,6 +18,9 @@ extern const GraphNodeType dot::types::RedDiamondNode
 extern const GraphNodeType dot::types::GreenDiamondNode
 = GraphNodeType(DotColor::dc_black, DotColor::dc_black, DotColor::dc_green, DotShape::ds_diamond,
                 true, false, false);
+extern const GraphNodeType dot::types::BlackDiamondNode
+= GraphNodeType(DotColor::dc_black, DotColor::dc_white, DotColor::dc_black, DotShape::ds_diamond,
+                true, false, false);
 
 extern const GraphEdgeType dot::types::ClassicEdge = GraphEdgeType();
 extern const GraphEdgeType dot::types::ClassicDashedEdge

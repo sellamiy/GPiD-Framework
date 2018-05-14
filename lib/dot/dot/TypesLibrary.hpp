@@ -24,6 +24,8 @@ namespace types {
     extern const GraphNodeType RedDiamondNode;
     /** \brief Diamond Node (Black on Green background) */
     extern const GraphNodeType GreenDiamondNode;
+    /** \brief Diamond Node (White on Black background) */
+    extern const GraphNodeType BlackDiamondNode;
 
     /** \brief Black straight edge */
     extern const GraphEdgeType ClassicEdge;

@@ -80,6 +80,8 @@ namespace gpid {
         { return negate ? !(l.e) : l.e; }
         inline FormulaT toFormula(LiteralListT ll, bool negate) const
         { return asformula(ll, ctx, negate); }
+        inline std::string toString(LiteralT l, bool negate=false) const
+        { std::stringstream ss; ss << (negate ? !(l.e) : l.e); return ss.str(); }
         inline void printImplicate(FormulaT f) const
         { p_implicate(std::cout, f, false); }
     };
@@ -97,6 +99,8 @@ namespace gpid {
         { return !atree.subsumes(e); }
         inline void print()
         { atree.print(); }
+        inline void asGraph(std::ostream& tgt)
+        { atree.exportGraph(tgt); }
     };
 
 }

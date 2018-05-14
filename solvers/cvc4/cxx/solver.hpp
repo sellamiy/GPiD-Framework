@@ -78,6 +78,10 @@ namespace gpid {
         snlog::l_warn("Not implemented yet - CVC4 storage printer");
     }
 
+    inline void CVC4Solver::exportStoredImplicates() {
+        snlog::l_warn("Not implemented yet - CVC4 storage exporter");
+    }
+
     inline void CVC4Solver::storeActive() {
         snlog::l_warn("Not implemented yet - CVC4 active storage");
     }

@@ -19,6 +19,8 @@ namespace gpid {
         bool store_implicates = false;
         /** Print stored implicates after computation */
         bool print_storage = false;
+        /** Export stored implicates as graph after computation */
+        bool export_storage = false;
 
         /** Use models returned by solvers to filter hypotheses */
         bool use_models = true;
