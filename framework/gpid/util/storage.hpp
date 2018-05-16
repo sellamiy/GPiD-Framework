@@ -8,6 +8,7 @@
 #define GPID_FRAMEWORK__UTIL__STORAGE_HPP
 
 #include <map>
+#include <set>
 #include <snlog/snlog.hpp>
 #include <gpid/core/solvers.hpp>
 #include <dot/dotgraph.hpp>
@@ -25,6 +26,7 @@ namespace gpid {
         typename ATUtils::SolverT insertionSolver;
 
         std::map<mapindex_t, std::map<typename ATUtils::LiteralT, mapindex_t>> nodes;
+        std::set<mapindex_t> tnodes;
         typename ATUtils::FormulaT formula;
 
         inline mapindex_t newNode() { return ++_cbound; }
@@ -34,6 +36,8 @@ namespace gpid {
 
         inline void insertLocal(mapindex_t idx, const typename ATUtils::LiteralListT& impset,
                                 uint32_t impset_pos, bool negate);
+        inline bool containsLocal(mapindex_t idx, const typename ATUtils::LiteralListT& impset,
+                                  uint32_t impset_pos, bool negate);
 
         inline int buildGraphLocal(mapindex_t idx, dot::Graph& g);
     public:
@@ -47,6 +51,7 @@ namespace gpid {
         inline bool subsumes(typename ATUtils::FormulaT implicate, bool negate=true);
         inline void cleanSubsumed(typename ATUtils::FormulaT sourcef, bool negate=true);
         inline void insert(const typename ATUtils::LiteralListT& impset, bool negate=true);
+        inline bool contains(const typename ATUtils::LiteralListT& impset, bool negate=true);
         inline void exportGraph(std::ostream& target);
     };
 
@@ -57,7 +62,7 @@ namespace gpid {
 
     template<class ATUtils>
     inline void AbducibleTree<ATUtils>::printLocal(mapindex_t idx, typename ATUtils::FormulaT cformula) {
-        if (nodes[idx].empty()) {
+        if (nodes[idx].empty() && (tnodes.find(idx) != tnodes.end())) {
             utils.printImplicate(cformula);
         } else {
             for (auto p : nodes[idx]) {
@@ -118,12 +123,33 @@ namespace gpid {
     inline void AbducibleTree<ATUtils>::insertLocal(mapindex_t idx,
                                                     const typename ATUtils::LiteralListT& impset,
                                                     uint32_t impset_pos, bool negate) {
-        if (impset_pos == impset.size()) return;
+        if (impset_pos == impset.size()) {
+            tnodes.insert(idx);
+            return;
+        }
         typename ATUtils::LiteralT lit = negate ?
             utils.negation(impset[impset_pos]) : impset[impset_pos];
         if (nodes[idx].find(lit) == nodes[idx].end())
             nodes[idx][lit] = newNode();
         insertLocal(nodes[idx][lit], impset, impset_pos + 1, negate);
+    }
+
+    template<class ATUtils>
+    inline bool AbducibleTree<ATUtils>::contains(const typename ATUtils::LiteralListT& impset, bool negate)
+    { return containsLocal(1, impset, 0, negate); }
+
+    template<class ATUtils>
+    inline bool AbducibleTree<ATUtils>::containsLocal(mapindex_t idx,
+                                                      const typename ATUtils::LiteralListT& impset,
+                                                      uint32_t impset_pos, bool negate) {
+        if (impset_pos == impset.size()) {
+            return tnodes.find(idx) != tnodes.end();
+        }
+        typename ATUtils::LiteralT lit = negate ?
+            utils.negation(impset[impset_pos]) : impset[impset_pos];
+        return (nodes[idx].find(lit) != nodes[idx].end()) ?
+            containsLocal(nodes[idx][lit], impset, impset_pos + 1, negate)
+            : false;
     }
 
     template<class ATUtils>
@@ -136,7 +162,11 @@ namespace gpid {
     template<class ATUtils>
     inline int AbducibleTree<ATUtils>::buildGraphLocal(mapindex_t idx, dot::Graph& g) {
         if (nodes[idx].empty()) {
-            return g.createNode("", dot::types::BlackDiamondNode);
+            if (tnodes.find(idx) != tnodes.end()) {
+                return g.createNode("", dot::types::GreenDiamondNode);
+            } else {
+                return g.createNode("", dot::types::RedDiamondNode);
+            }
         } else {
             int loc, child;
             loc = g.createNode("", dot::types::ClassicDiamondNode);
