@@ -9,9 +9,12 @@
 
 #include <map>
 #include <set>
+
 #include <snlog/snlog.hpp>
-#include <gpid/core/solvers.hpp>
 #include <dot/dotgraph.hpp>
+
+#include <gpid/core/solvers.hpp>
+#include <gpid/util/stdutils.hpp>
 
 namespace gpid {
 
@@ -62,7 +65,7 @@ namespace gpid {
 
     template<class ATUtils>
     inline void AbducibleTree<ATUtils>::printLocal(mapindex_t idx, typename ATUtils::FormulaT cformula) {
-        if (nodes[idx].empty() && (tnodes.find(idx) != tnodes.end())) {
+        if (nodes[idx].empty() && gmisc::inset(tnodes, idx)) {
             utils.printImplicate(cformula);
         } else {
             for (auto p : nodes[idx]) {
@@ -129,7 +132,7 @@ namespace gpid {
         }
         typename ATUtils::LiteralT lit = negate ?
             utils.negation(impset[impset_pos]) : impset[impset_pos];
-        if (nodes[idx].find(lit) == nodes[idx].end())
+        if (gmisc::ninmap(nodes[idx], lit))
             nodes[idx][lit] = newNode();
         insertLocal(nodes[idx][lit], impset, impset_pos + 1, negate);
     }
@@ -143,11 +146,11 @@ namespace gpid {
                                                       const typename ATUtils::LiteralListT& impset,
                                                       uint32_t impset_pos, bool negate) {
         if (impset_pos == impset.size()) {
-            return tnodes.find(idx) != tnodes.end();
+            return gmisc::inset(tnodes, idx);
         }
         typename ATUtils::LiteralT lit = negate ?
             utils.negation(impset[impset_pos]) : impset[impset_pos];
-        return (nodes[idx].find(lit) != nodes[idx].end()) ?
+        return gmisc::inmap(nodes[idx], lit) ?
             containsLocal(nodes[idx][lit], impset, impset_pos + 1, negate)
             : false;
     }
@@ -162,7 +165,7 @@ namespace gpid {
     template<class ATUtils>
     inline int AbducibleTree<ATUtils>::buildGraphLocal(mapindex_t idx, dot::Graph& g) {
         if (nodes[idx].empty()) {
-            if (tnodes.find(idx) != tnodes.end()) {
+            if (gmisc::inset(tnodes, idx)) {
                 return g.createNode("", dot::types::GreenDiamondNode);
             } else {
                 return g.createNode("", dot::types::RedDiamondNode);
