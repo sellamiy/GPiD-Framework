@@ -166,13 +166,13 @@ namespace gpid {
     inline int AbducibleTree<ATUtils>::buildGraphLocal(mapindex_t idx, dot::Graph& g) {
         if (nodes[idx].empty()) {
             if (gmisc::inset(tnodes, idx)) {
-                return g.createNode("", dot::types::GreenDiamondNode);
+                return g.createNode(std::to_string(idx), dot::types::GreenDiamondNode);
             } else {
-                return g.createNode("", dot::types::RedDiamondNode);
+                return g.createNode(std::to_string(idx), dot::types::RedDiamondNode);
             }
         } else {
             int loc, child;
-            loc = g.createNode("", dot::types::ClassicDiamondNode);
+            loc = g.createNode(std::to_string(idx), dot::types::ClassicDiamondNode);
             for (auto p : nodes[idx]) {
                 child = buildGraphLocal(p.second, g);
                 g.createEdge(loc, child, utils.toString(p.first), dot::types::ClassicEdge);
