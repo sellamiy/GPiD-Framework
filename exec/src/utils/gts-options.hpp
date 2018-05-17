@@ -279,7 +279,7 @@ static inline OptionStatus detectConflicts
         /* Inactive options */
 #ifndef GPID_INSTRUMENTATION
         const std::vector<std::string> instr_opts
-        { "generate-selection-graph" };
+        { "generate-selection-graph", "generate-webtrace" };
         for (uint32_t pc = 0; pc < instr_opts.size(); pc++) {
             if (results.count(instr_opts[pc])) {
                 snlog::l_fatal("Option uses instrumentation but instrumentation is not configured:");
