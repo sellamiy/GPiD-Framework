@@ -19,6 +19,16 @@
 
 namespace gpid {
 
+    /** \brief Class for mapping indices to literals. */
+    template<class LiteralT>
+    struct LiteralMapper {
+        typedef uint32_t index_t;
+        inline void map(index_t idx, LiteralT* l) { _mapping[idx] = l; }
+        inline LiteralT& get(index_t idx) { return *_mapping[idx]; }
+    private:
+        std::map<index_t, LiteralT*> _mapping;
+    };
+
     /** \brief Class for deciding on skipping literals. */
     template<class SolverT>
     class LiteralSkipper {
@@ -53,9 +63,9 @@ namespace gpid {
 
         typedef uint32_t index_t;
         typedef uint32_t level_t;
-        starray::SequentialActivableArray      hp_active;
-        std::map<index_t, LiteralT*>        hp_mapping;
-        std::map<index_t, std::list<index_t> > hp_links;
+        starray::SequentialActivableArray      l_active;
+        LiteralMapper<LiteralT>                l_mapper;
+        std::map<index_t, std::list<index_t> > l_links;
 
         std::map<level_t, std::list<index_t> > selection_map;
         std::map<level_t, std::list<index_t> > pselection_map;
@@ -80,7 +90,7 @@ namespace gpid {
         inline LiteralT& getLiteral(index_t idx);        
     public:
         LiteralsEngine(SolverT& solver, SkipperController& ctrler, uint32_t size)
-            : solver(solver), skipper(solver, ctrler), hp_active(size), clevel(1)
+            : solver(solver), skipper(solver, ctrler), l_active(size), clevel(1)
         { limit[1] = 0; pointer[1] = size; }
         /** Map an index of the set to a specific literal. */
         inline void mapLiteral(uint32_t idx, LiteralT* hyp);
@@ -120,16 +130,16 @@ namespace gpid {
 
     template<class SolverT>
     inline uint32_t LiteralsEngine<SolverT>::getSourceSize() {
-        return hp_active.get_maximal_size();
+        return l_active.get_maximal_size();
     }
 
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::mapLiteral(uint32_t idx, LiteralT* hyp) {
-        hp_mapping[idx] = hyp;
+        l_mapper.map(idx, hyp);
     }
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::mapLink(uint32_t idx, uint32_t tgt_idx) {
-        hp_links[idx].push_back(tgt_idx);
+        l_links[idx].push_back(tgt_idx);
     }
 
     template<class SolverT>
@@ -168,12 +178,12 @@ namespace gpid {
 
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::deactivateLiteral(index_t idx, level_t level) {
-        if (hp_active.is_active(idx)) {
+        if (l_active.is_active(idx)) {
             selection_map[level].push_back(idx);
-        } else if (hp_active.is_paused(idx)) {
+        } else if (l_active.is_paused(idx)) {
             pselection_map[level].push_back(idx);
         }
-        hp_active.deactivate(idx);
+        l_active.deactivate(idx);
     }
 
     template<class SolverT>
@@ -185,7 +195,7 @@ namespace gpid {
                Which is why we add a min to unsure we do not make oob accesses later.
             */
 #define MIN(a,b) (a) < (b) ? (a) : (b)
-            pointer[clevel + 1] = MIN(hp_active.get_last() + 1, hp_active.get_maximal_size());
+            pointer[clevel + 1] = MIN(l_active.get_last() + 1, l_active.get_maximal_size());
             limit[clevel + 1] = pointer[clevel];
             ++clevel;
         }
@@ -202,18 +212,18 @@ namespace gpid {
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::deactivateSequents(index_t ub, level_t level) {
         index_t curr = ub;
-        index_t next = hp_active.get_downward(curr);
+        index_t next = l_active.get_downward(curr);
         while (curr != next) {
             curr = next;
-            if (hp_active.is_active(curr)) {
-                hp_active.deactivate(curr);
+            if (l_active.is_active(curr)) {
+                l_active.deactivate(curr);
                 selection_map[level].push_back(curr);
             }
-            if (hp_active.is_paused(curr) && hp_active.get(curr) != level) {
-                hp_active.deactivate(curr);
+            if (l_active.is_paused(curr) && l_active.get(curr) != level) {
+                l_active.deactivate(curr);
                 pselection_map[level].push_back(curr);
             }
-            next = hp_active.get_downward(curr);
+            next = l_active.get_downward(curr);
         }
     }
 
@@ -221,7 +231,7 @@ namespace gpid {
     inline void LiteralsEngine<SolverT>::selectCurrentLiteral() {
         index_t selected = pointer[clevel];
         deactivateLiteral(selected, clevel);
-        for (index_t linked : hp_links[selected]) {
+        for (index_t linked : l_links[selected]) {
             deactivateLiteral(linked, clevel);
         }
         deactivateSequents(selected, clevel);
@@ -232,14 +242,14 @@ namespace gpid {
     inline void LiteralsEngine<SolverT>::unselectLevel(uint32_t level) {
         solver.removeLiterals(level);
         for (index_t skipped : selection_map[level]) {
-            if (hp_active.is_paused(skipped)) {
-                hp_active.set(skipped, pvalues_map[skipped].back());
+            if (l_active.is_paused(skipped)) {
+                l_active.set(skipped, pvalues_map[skipped].back());
                 pvalues_map[skipped].pop_back();
             }
-            hp_active.activate(skipped);
+            l_active.activate(skipped);
         }
         for (index_t skipped : pselection_map[level]) {
-            hp_active.pause(skipped);
+            l_active.pause(skipped);
         }
         selection_map[level].clear();
         pselection_map[level].clear();
@@ -287,14 +297,14 @@ namespace gpid {
         accessLevel(level);
         unselectLevel(clevel);
         while (true) {
-            index_t next = hp_active.get_downward(pointer[clevel]);
+            index_t next = l_active.get_downward(pointer[clevel]);
             if (next != pointer[clevel]) {
                 pointer[clevel] = next;
                 insthandle(instrument::idata(getLiteral(next).str()),
                            instrument::instloc::pre_select);
-                if (!skipper.canBeSkipped(*hp_mapping[pointer[clevel]], clevel)) {
-                    if (!hp_active.is_paused(pointer[clevel])
-                        || hp_active.get(pointer[clevel]) != clevel) {
+                if (!skipper.canBeSkipped(getCurrentLiteral(), clevel)) {
+                    if (!l_active.is_paused(pointer[clevel])
+                        || l_active.get(pointer[clevel]) != clevel) {
                         return true;
                     }
                 }
@@ -306,7 +316,7 @@ namespace gpid {
 
     template<class SolverT>
     inline typename SolverT::LiteralT& LiteralsEngine<SolverT>::getLiteral(index_t idx) {
-        return *hp_mapping[idx];
+        return l_mapper.get(idx);
     }
 
     template<class SolverT>
@@ -318,12 +328,12 @@ namespace gpid {
     inline void LiteralsEngine<SolverT>::modelCleanUp(uint32_t level) {
         accessLevel(level);
         const ModelT& model = solver.recoverModel();
-        for (index_t idx : hp_active) {
-            if (!hp_active.is_active(idx)) continue;
-            if (model.isSkippable(*hp_mapping[idx])) {
-                hp_active.pause(idx);
-                pvalues_map[idx].push_back(hp_active.get(idx));
-                hp_active.set(idx, clevel);
+        for (index_t idx : l_active) {
+            if (!l_active.is_active(idx)) continue;
+            if (model.isSkippable(getLiteral(idx))) {
+                l_active.pause(idx);
+                pvalues_map[idx].push_back(l_active.get(idx));
+                l_active.set(idx, clevel);
                 selection_map[clevel-1].push_back(idx);
                 insthandle(instrument::idata(getLiteral(idx).str()),
                            instrument::instloc::model_skip);
