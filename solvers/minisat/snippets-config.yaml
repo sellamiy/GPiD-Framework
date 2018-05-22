@@ -3,7 +3,7 @@ problemClass : MinisatProblem
 declarationsClass : MinisatDeclarations
 modelClass : MinisatModelWrapper
 contextManagerClass : MinisatContextManager
-hypothesisClass : MinisatHypothesis
+literalClass : MinisatLiteral
 
 problemConstraintType : Minisat::vec<Minisat::Lit>&
 

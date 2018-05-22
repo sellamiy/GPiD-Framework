@@ -25,16 +25,16 @@ namespace gpid {
             csty_solver.pop();
         }
 
-        inline void addHypothesis(Z3Hypothesis& hypothesis) {
-            solver.add(hypothesis.expr);
-            csty_solver.add(hypothesis.expr);
+        inline void addLiteral(Z3Literal& literal) {
+            solver.add(literal.expr);
+            csty_solver.add(literal.expr);
         }
 
         inline void storeCurrentSelection() {
             storage.insert(csty_solver.assertions(), asformula(csty_solver.assertions(), ctx), true);
         }
 
-        inline bool wouldAcceptStorage(Z3Hypothesis& additional) {
+        inline bool wouldAcceptStorage(Z3Literal& additional) {
             csty_solver.push();
             csty_solver.add(additional.expr);
             bool res = storage.would_be_inserted(asformula(csty_solver.assertions(), ctx, true));
@@ -42,7 +42,7 @@ namespace gpid {
             return res;
         }
 
-        inline std::string hypothesesString() {
+        inline std::string hypothesisString() {
             std::stringstream result;
             result << asformula(csty_solver.assertions(), ctx);
             return result.str();
@@ -61,12 +61,12 @@ namespace gpid {
         }
     }
 
-    inline void Z3Solver::addHypothesis(Z3Hypothesis& hypothesis, uint32_t level) {
+    inline void Z3Solver::addLiteral(Z3Literal& literal, uint32_t level) {
         accessLevel(level);
-        solvers->addHypothesis(hypothesis);
+        solvers->addLiteral(literal);
     }
 
-    inline void Z3Solver::removeHypotheses(uint32_t level) {
+    inline void Z3Solver::removeLiterals(uint32_t level) {
         accessLevel(level - 1);
         accessLevel(level);
     }
@@ -75,15 +75,15 @@ namespace gpid {
         return solvers->iw_mdl;
     }
 
-    inline const std::string Z3Solver::hypothesesAsString() const {
-        return solvers->hypothesesString();
+    inline const std::string Z3Solver::hypothesisAsString() const {
+        return solvers->hypothesisString();
     }
 
-    inline void Z3Solver::printHypotheses() {
-        snlog::l_warn("Not implemented yet - Z3 Solver hypotheses printer");
+    inline void Z3Solver::printHypothesis() {
+        snlog::l_warn("Not implemented yet - Z3 Solver hypothesis printer");
     }
 
-    inline void Z3Solver::printHypothesesNegation() {
+    inline void Z3Solver::printHypothesisNegation() {
         p_implicate(std::cout, ctx, solvers->csty_solver.assertions(), true);
     }
 
@@ -91,7 +91,7 @@ namespace gpid {
         solvers->storage.print();
     }
 
-    inline gpid::SolverTestStatus Z3Solver::testHypotheses(uint32_t level) {
+    inline gpid::SolverTestStatus Z3Solver::testHypothesis(uint32_t level) {
         accessLevel(level);
         z3::check_result qres = solvers->solver.check();
         switch (qres) {
@@ -115,12 +115,12 @@ namespace gpid {
         solvers->storeCurrentSelection();
     }
 
-    inline bool Z3Solver::storageSubsumed(Z3Hypothesis& additional, uint32_t level) {
+    inline bool Z3Solver::storageSubsumed(Z3Literal& additional, uint32_t level) {
         accessLevel(level);
         return !solvers->wouldAcceptStorage(additional);
     }
 
-    inline bool Z3Solver::isConsequence(Z3Hypothesis&, uint32_t level) {
+    inline bool Z3Solver::isConsequence(Z3Literal&, uint32_t level) {
         accessLevel(level);
         snlog::l_warn("Not implemented yet - Z3 consequence checker");
         return false;

@@ -20,8 +20,8 @@ namespace gpid {
      */
     class <%= @solver.solverClass %> {
     public:
-        /** \brief Hypothesis type handled by the solver */
-        typedef <%= @solver.hypothesisClass %> HypothesisT;
+        /** \brief Literal type handled by the solver */
+        typedef <%= @solver.literalClass %> LiteralT;
         /** \brief Model type handled by the solver */
         typedef <%= @solver.modelClass %> ModelT;
         /** \brief Problem type handled by the solver */
@@ -44,34 +44,34 @@ namespace gpid {
         inline void printSolverInformations()
         { snlog::l_info("Interface for <%= @solver.name %>"); }
 
-        /** \brief String representation of the current hypotheses set */
-        const std::string hypothesesAsString() const;
-        /** \brief Print the current set of hypotheses */
-        void printHypotheses();
-        /** \brief Print the negation of the current set of hypotheses */
-        void printHypothesesNegation();
+        /** \brief String representation of the current literals set */
+        const std::string hypothesisAsString() const;
+        /** \brief Print the current set of literals */
+        void printHypothesis();
+        /** \brief Print the negation of the current set of literals */
+        void printHypothesisNegation();
         /** \brief Print the implicates that have been stored */
         void printStoredImplicates();
         /** \brief Export the implicates that have been stored */
         void exportStoredImplicates();
 
-        /** \brief Remove all the hypotheses assigned after a given level */
-        void removeHypotheses(uint32_t level);
-        /** \brief Add an abducible hypothesis to the solver */
-        void addHypothesis(HypothesisT& hypothesis, uint32_t level);
-        /** \brief Check if the current set of hypotheses is compatible with the problem */
-        gpid::SolverTestStatus testHypotheses(uint32_t level);
-        /** \brief Check if the current set of hypotheses is self-consistent */
+        /** \brief Remove all the literals assigned after a given level */
+        void removeLiterals(uint32_t level);
+        /** \brief Add an abducible literal to the solver */
+        void addLiteral(LiteralT& literal, uint32_t level);
+        /** \brief Check if the current set of literals is compatible with the problem */
+        gpid::SolverTestStatus testHypothesis(uint32_t level);
+        /** \brief Check if the current set of literals is self-consistent */
         gpid::SolverTestStatus checkConsistency(uint32_t level);
-        /** \brief Check if an hypothesis is known to be redundant */
-        bool storageSubsumed(HypothesisT& additional, uint32_t level);
-        /** \brief Check if an hypothesis is already a consequence of the current state */
-        bool isConsequence(HypothesisT& h, uint32_t level);
+        /** \brief Check if an literal is known to be redundant */
+        bool storageSubsumed(LiteralT& additional, uint32_t level);
+        /** \brief Check if an literal is already a consequence of the current state */
+        bool isConsequence(LiteralT& h, uint32_t level);
 
         ModelT& recoverModel();
         inline ContextManagerT& getContextManager() { return ctx; }
 
-        /** \brief Remember the current set of hypotheses as an implicate */
+        /** \brief Remember the current set of literals as an implicate */
         void storeActive();
 
         <%= @solver.solverClass %>();

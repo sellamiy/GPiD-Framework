@@ -13,7 +13,7 @@ namespace gpid {
         MinisatModelWrapper iw_mdl;
         MinisatStorage storage;
         Minisat::vec<Minisat::Lit> assumps;
-        std::vector<MinisatHypothesis> loc_ass;
+        std::vector<MinisatLiteral> loc_ass;
         Minisat::vec<int> lvl_stack;
 
         MinisatSolverInternal() : iw_mdl(solver.model)
@@ -48,13 +48,13 @@ namespace gpid {
         else                 solvers->decreaseLevel(c_level, level);
     }
 
-    inline void MinisatSolver::addHypothesis(MinisatHypothesis& hypothesis, uint32_t level) {
+    inline void MinisatSolver::addLiteral(MinisatLiteral& literal, uint32_t level) {
         accessLevel(level);
-        solvers->loc_ass.push_back(hypothesis);
-        solvers->assumps.push(hypothesis.lit);
+        solvers->loc_ass.push_back(literal);
+        solvers->assumps.push(literal.lit);
     }
 
-    inline void MinisatSolver::removeHypotheses(uint32_t level) {
+    inline void MinisatSolver::removeLiterals(uint32_t level) {
         accessLevel(level);
     }
 
@@ -62,17 +62,17 @@ namespace gpid {
         return solvers->iw_mdl;
     }
 
-    inline const std::string MinisatSolver::hypothesesAsString() const {
+    inline const std::string MinisatSolver::hypothesisAsString() const {
         std::stringstream result;
         result << solvers->assumps;
         return result.str();
     }
 
-    inline void MinisatSolver::printHypotheses() {
-        snlog::l_warn("Not implemented yet - MiniSat Solver hypotheses printer");
+    inline void MinisatSolver::printHypothesis() {
+        snlog::l_warn("Not implemented yet - MiniSat Solver literals printer");
     }
 
-    inline void MinisatSolver::printHypothesesNegation() {
+    inline void MinisatSolver::printHypothesisNegation() {
         p_implicate(std::cout, solvers->assumps, true);
     }
 
@@ -89,7 +89,7 @@ namespace gpid {
         solvers->storage.addSet(wrp);
     }
 
-    inline gpid::SolverTestStatus MinisatSolver::testHypotheses(uint32_t level) {
+    inline gpid::SolverTestStatus MinisatSolver::testHypothesis(uint32_t level) {
         accessLevel(level);
         Minisat::lbool ret = solvers->solver.solveLimited(solvers->assumps);
         if      (ret == Minisat::l_True)  return gpid::SolverTestStatus::SOLVER_SAT;
@@ -98,11 +98,11 @@ namespace gpid {
     }
 
     inline gpid::SolverTestStatus MinisatSolver::checkConsistency(uint32_t) {
-        /* For this engine, consistency is ensured by linked hypotheses */
+        /* For this engine, consistency is ensured by linked literals */
         return SolverTestStatus::SOLVER_SAT;
     }
 
-    inline bool MinisatSolver::storageSubsumed (MinisatHypothesis& additional, uint32_t level) {
+    inline bool MinisatSolver::storageSubsumed (MinisatLiteral& additional, uint32_t level) {
         accessLevel(level);
         solvers->assumps.push(additional.lit);
         MinisatVecWrapper<Minisat::Lit> wrp(solvers->assumps);
@@ -111,7 +111,7 @@ namespace gpid {
         return res;
     }
 
-    inline bool MinisatSolver::isConsequence(MinisatHypothesis&, uint32_t level) {
+    inline bool MinisatSolver::isConsequence(MinisatLiteral&, uint32_t level) {
         accessLevel(level);
         snlog::l_warn("Not implemented yet - MiniSAT consequence checker");
         return false;

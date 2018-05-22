@@ -50,10 +50,10 @@ namespace gpid {
 
     typedef Minisat::Lit MinisatInternal;
 
-    struct MinisatHypothesis {
+    struct MinisatLiteral {
         const MinisatInternal lit;
-        MinisatHypothesis(MinisatInternal d) : lit(d) {}
-        MinisatHypothesis(const MinisatHypothesis& d) : lit(d.lit) {}
+        MinisatLiteral(MinisatInternal d) : lit(d) {}
+        MinisatLiteral(const MinisatLiteral& d) : lit(d.lit) {}
 
         inline const std::string str() const {
             std::stringstream result; result << lit; return result.str();
@@ -63,9 +63,9 @@ namespace gpid {
     struct MinisatModelWrapper {
         const Minisat::vec<Minisat::lbool>& model;
         MinisatModelWrapper(Minisat::vec<Minisat::lbool>& m) : model(m) {}
-        inline bool isSkippable(MinisatHypothesis& hypothesis) const {
-            return model[Minisat::var(hypothesis.lit)] ==
-                (sign(hypothesis.lit) ? Minisat::l_False : Minisat::l_True);
+        inline bool isSkippable(MinisatLiteral& literal) const {
+            return model[Minisat::var(literal.lit)] ==
+                (sign(literal.lit) ? Minisat::l_False : Minisat::l_True);
         }
     };
 

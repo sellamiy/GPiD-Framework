@@ -15,14 +15,14 @@ using namespace snlog;
 
 template<class SolverT>
 void gpid::DecompositionEngine<SolverT>::selectNextPID() {
-    // Recovering next possible hypothesis
-    bool has_next = hengine.nextHypothesis(level);
+    // Recovering next possible literal
+    bool has_next = lengine.nextLiteral(level);
     if (has_next) {
-        hengine.backtrack(level);
-        hengine.selectCurrentHypothesis();
+        lengine.backtrack(level);
+        lengine.selectCurrentLiteral();
         pushStackLevel();
     } else {
-        // Actually no more hypotheses
+        // Actually no more literals
         popStackLevel();
     }
 }
@@ -41,11 +41,11 @@ void gpid::DecompositionEngine<SolverT>::generatePID() {
         } else {
             node_counter++;
 
-            SolverTestStatus status = hengine.testHypotheses(level);
+            SolverTestStatus status = lengine.testHypothesis(level);
 
             if (status == SolverTestStatus::SOLVER_SAT) {
                 if (options.use_models) {
-                    hengine.modelCleanUp(level);
+                    lengine.modelCleanUp(level);
                 }
                 selectNextPID();
             } else if (status == SolverTestStatus::SOLVER_UNSAT) {
@@ -60,8 +60,8 @@ void gpid::DecompositionEngine<SolverT>::generatePID() {
 
     }
 
-    if (options.print_storage)  hengine.printStorage();
-    if (options.export_storage) hengine.exportStorage();
+    if (options.print_storage)  lengine.printStorage();
+    if (options.export_storage) lengine.exportStorage();
 }
 
 #endif

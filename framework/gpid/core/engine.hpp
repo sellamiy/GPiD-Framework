@@ -10,7 +10,7 @@
 #include <cstdint>
 #include <vector>
 #include <gpid/core/system.hpp>
-#include <gpid/core/hypotheses.hpp>
+#include <gpid/core/literals.hpp>
 
 namespace gpid {
 
@@ -48,7 +48,7 @@ namespace gpid {
 
         SolverStrictWrapper<SolverT> solver;
         typename SolverT::ProblemT& problem;
-        HypothesesEngine<SolverT>& hengine;
+        LiteralsEngine<SolverT>& lengine;
 
         void resetEngine();
 
@@ -64,17 +64,17 @@ namespace gpid {
         /**
          * \brief Engine creation.
          * \param o Engine options.
-         * \param s Solver interface for testint hypotheses.
+         * \param s Solver interface for testint literals.
          * \param p Problem to solve.
-         * \param h Set of hypotheses to try.
+         * \param h Set of literals to try.
          */
         DecompositionEngine(EngineOptions& o, SolverT& s, typename SolverT::ProblemT& p,
-                            HypothesesEngine<SolverT>& h)
-            : options(o), solver(s), problem(p), hengine(h)
+                            LiteralsEngine<SolverT>& h)
+            : options(o), solver(s), problem(p), lengine(h)
         { }
         /** \return The total number of implicates generated. */
         inline uint64_t getGeneratedImplicatesCount()      const { return gi_counter;     }
-        /** \return The total number of nodes explored during hypotheses tries. */
+        /** \return The total number of nodes explored during literals tries. */
         inline uint64_t getExploredNodesCount()            const { return node_counter;   }
 
         /** \brief Generate implicates for the given problem. */
@@ -100,9 +100,9 @@ template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
     gi_counter++;
     if (options.print_implicates)
-        hengine.printCurrentImplicate();
+        lengine.printCurrentImplicate();
     if (options.store_implicates)
-        hengine.storeCurrentImplicate();
+        lengine.storeCurrentImplicate();
     if (options.implicate_limit <= gi_counter)
         des_iflags.interrupt(SystemInterruptsFlags::SYS_INT_R__INTERNAL);
     insthandle(instrument::idata(), instrument::instloc::implicate);
@@ -117,7 +117,7 @@ inline void gpid::DecompositionEngine<SolverT>::pushStackLevel() {
 
 template<class SolverT>
 inline void gpid::DecompositionEngine<SolverT>::popStackLevel() {
-    hengine.backtrack(level);
+    lengine.backtrack(level);
     level--;
     sdir = IStackDirection::STACK_POP;
     insthandle(instrument::idata(level), instrument::instloc::stack_pop);

@@ -25,10 +25,10 @@ namespace gpid {
         void collect(z3::context& ctx, z3::expr e);
     };
 
-    struct Z3Hypothesis {
+    struct Z3Literal {
         z3::expr expr;
-        Z3Hypothesis(z3::expr e) : expr(e) {}
-        Z3Hypothesis(const Z3Hypothesis& e) : expr(e.expr) {}
+        Z3Literal(z3::expr e) : expr(e) {}
+        Z3Literal(const Z3Literal& e) : expr(e.expr) {}
 
         inline const std::string str() const {
             std::stringstream result; result << expr; return result.str();
@@ -39,7 +39,7 @@ namespace gpid {
         const z3::solver& source;
         Z3ModelWrapper(const z3::solver& solver) : source(solver) {}
         Z3ModelWrapper(const Z3ModelWrapper& mdw) : source(mdw.source) {}
-        inline bool isSkippable(Z3Hypothesis& h) const {
+        inline bool isSkippable(Z3Literal& h) const {
             return source.get_model().eval(h.expr).bool_value() == Z3_lbool::Z3_L_TRUE;
         }
     };

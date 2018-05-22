@@ -3,7 +3,7 @@ problemClass : CVC4Problem
 declarationsClass : CVC4Declarations
 modelClass : CVC4ModelWrapper
 contextManagerClass : CVC4::ExprManager
-hypothesisClass : CVC4Hypothesis
+literalClass : CVC4Literal
 
 problemConstraintType : CVC4::Expr
 

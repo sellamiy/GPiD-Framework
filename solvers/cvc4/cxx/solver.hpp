@@ -33,9 +33,9 @@ namespace gpid {
             csty_solver.pop();
         }
 
-        inline void addHypothesis(CVC4Hypothesis& hypothesis) {
-            solver.assertFormula(hypothesis.expr);
-            csty_solver.assertFormula(hypothesis.expr);
+        inline void addLiteral(CVC4Literal& literal) {
+            solver.assertFormula(literal.expr);
+            csty_solver.assertFormula(literal.expr);
         }
 
     };
@@ -51,26 +51,26 @@ namespace gpid {
         }
     }
 
-    inline void CVC4Solver::addHypothesis(CVC4Hypothesis& hypothesis, uint32_t level) {
+    inline void CVC4Solver::addLiteral(CVC4Literal& literal, uint32_t level) {
         accessLevel(level);
-        solvers->addHypothesis(hypothesis);
+        solvers->addLiteral(literal);
     }
 
-    inline void CVC4Solver::removeHypotheses(uint32_t level) {
+    inline void CVC4Solver::removeLiterals(uint32_t level) {
         accessLevel(level - 1);
         accessLevel(level);
     }
 
-    inline const std::string CVC4Solver::hypothesesAsString() const {
-        snlog::l_warn("Not implemented yet - CVC4 Solver hypotheses as string");
+    inline const std::string CVC4Solver::hypothesisAsString() const {
+        snlog::l_warn("Not implemented yet - CVC4 Solver literals as string");
         return "";
     }
 
-    inline void CVC4Solver::printHypotheses() {
-        snlog::l_warn("Not implemented yet - CVC4 Solver hypotheses printer");
+    inline void CVC4Solver::printHypothesis() {
+        snlog::l_warn("Not implemented yet - CVC4 Solver literals printer");
     }
 
-    inline void CVC4Solver::printHypothesesNegation() {
+    inline void CVC4Solver::printHypothesisNegation() {
         p_implicate(std::cout, ctx, solvers->csty_solver.getAssertions(), true);
     }
 
@@ -90,7 +90,7 @@ namespace gpid {
         return solvers->iw_mdl;
     }
 
-    inline gpid::SolverTestStatus CVC4Solver::testHypotheses(uint32_t level) {
+    inline gpid::SolverTestStatus CVC4Solver::testHypothesis(uint32_t level) {
         accessLevel(level);
         CVC4::Result qres = solvers->solver.checkSat();
         if      (qres.isSat() == CVC4::Result::SAT)   return SolverTestStatus::SOLVER_SAT;
@@ -106,13 +106,13 @@ namespace gpid {
         else                                          return SolverTestStatus::SOLVER_UNKNOWN;
     }
 
-    inline bool CVC4Solver::storageSubsumed(CVC4Hypothesis&, uint32_t level) {
+    inline bool CVC4Solver::storageSubsumed(CVC4Literal&, uint32_t level) {
         accessLevel(level);
         snlog::l_warn("Not implemented yet - CVC4 storage subsumption");
         return false;
     }
 
-    inline bool CVC4Solver::isConsequence(CVC4Hypothesis&, uint32_t level) {
+    inline bool CVC4Solver::isConsequence(CVC4Literal&, uint32_t level) {
         accessLevel(level);
         snlog::l_warn("Not implemented yet - CVC4 consequence checker");
         return false;

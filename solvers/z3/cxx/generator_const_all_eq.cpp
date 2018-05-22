@@ -13,16 +13,16 @@ namespace gpid {
 
     static inline
     void generateAbducibles_constAllEq(z3::context&, Z3Declarations& decls,
-                                       HypothesesEngine<Z3Solver>& set) {
-        alloc_gab<Z3Hypothesis>(set.getSourceSize());
+                                       LiteralsEngine<Z3Solver>& set) {
+        alloc_gab<Z3Literal>(set.getSourceSize());
         uint32_t vCount = decls.getFunDecls().size();
         uint32_t pos = 0;
         for (uint32_t i = 0; i < vCount; i++) {
             for (uint32_t j = i+1; j < vCount; j++) {
                 z3::expr cstl_eq = decls.getFunDecls()[i]() == decls.getFunDecls()[j]();
                 z3::expr cstl_neq = decls.getFunDecls()[i]() != decls.getFunDecls()[j]();
-                store_gab_hyp<HypothesesEngine<Z3Solver>, z3::expr>(set, pos, cstl_eq);
-                store_gab_hyp<HypothesesEngine<Z3Solver>, z3::expr>(set, pos+1, cstl_neq);
+                store_gab_hyp<LiteralsEngine<Z3Solver>, z3::expr>(set, pos, cstl_eq);
+                store_gab_hyp<LiteralsEngine<Z3Solver>, z3::expr>(set, pos+1, cstl_neq);
                 set.mapLink(pos, pos+1);
                 set.mapLink(pos+1, pos);
                 pos += 2;

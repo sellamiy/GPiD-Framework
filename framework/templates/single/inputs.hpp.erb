@@ -28,29 +28,29 @@ namespace gpid {
                            std::string language);
 
     /**
-     * \brief Obtain the number of abducibles hypotheses.
+     * \brief Obtain the number of abducibles literals.
      * \ingroup gpid<%= @solver.name %>lib
      * \param opts Options defining the way to load/generate abducibles.
      * \param pbl The problem to analyze.
-     * \return The number of abducibles hypotheses for this problem.
+     * \return The number of abducibles literals for this problem.
      */
     extern uint32_t countAbducibles(AbduciblesOptions& opts, <%= @solver.problemClass %>& pbl);
 
     /**
-     * \brief Generate abducible hypotheses for a given problem.
+     * \brief Generate abducible literals for a given problem.
      * \ingroup gpid<%= @solver.name %>lib
      * \param opts Options defining the way to load/generate abducibles.
      * \param ctx Context manager for building formulae representations.
      * \param decls Declared problem symbols to use for building abducibles.
-     * \param hys Set of hypotheses to popuplate.
+     * \param hys Set of literals to popuplate.
      *
-     * Generate abducible hypotheses for the given problem and store them
-     * in the given HypothesesEngine.
+     * Generate abducible literals for the given problem and store them
+     * in the given LiteralsEngine.
      */
     extern void generateAbducibles(AbduciblesOptions& opts,
                                    <%= @solver.contextManagerClass %>& ctx,
                                    <%= @solver.declarationsClass %>& decls,
-                                   HypothesesEngine<<%= @solver.solverClass %>>& hys);
+                                   LiteralsEngine<<%= @solver.solverClass %>>& hys);
 
 };
 

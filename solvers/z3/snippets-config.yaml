@@ -3,7 +3,7 @@ problemClass : Z3Problem
 declarationsClass : Z3Declarations
 modelClass : Z3ModelWrapper
 contextManagerClass : z3::context
-hypothesisClass : Z3Hypothesis
+literalClass : Z3Literal
 
 problemConstraintType : z3::expr
 

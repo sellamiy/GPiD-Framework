@@ -7,7 +7,7 @@
 #ifndef GPID_FRAMEWORK__UTIL__GENERATORS_HPP
 #define GPID_FRAMEWORK__UTIL__GENERATORS_HPP
 
-#include <gpid/core/hypotheses.hpp>
+#include <gpid/core/literals.hpp>
 
 namespace gpid {
 
@@ -18,22 +18,22 @@ namespace gpid {
     static inline std::string last_gab_tab()
     { return gpg_gab_tag + std::to_string(gpg_gab_key); }
 
-    template <typename HypothesisT>
+    template <typename LiteralT>
     static inline void alloc_gab(uint32_t size) {
         starray::GAB_Status res;
-        res = starray::requestContinuousArray(next_gab_tab(), size, sizeof(HypothesisT));
+        res = starray::requestContinuousArray(next_gab_tab(), size, sizeof(LiteralT));
         if (res != starray::GAB_Status::SUCCESS) throw MemoryError("request for abducibles failed");
     }
 
-    template <typename HypothesesSetT, typename HypothesisInternalT>
+    template <typename LiteralSetT, typename LiteralInternalT>
     static inline void store_gab_hyp
-    (HypothesesSetT& set, uint32_t pos, HypothesisInternalT cstl) {
-        typename HypothesesSetT::HypothesisT *mloc;
+    (LiteralSetT& set, uint32_t pos, LiteralInternalT cstl) {
+        typename LiteralSetT::LiteralT *mloc;
         starray::GAB_Status res;
         res = starray::accessContinuousPointer(last_gab_tab(), pos, (void**)&mloc);
         if (res != starray::GAB_Status::SUCCESS) throw MemoryError("access for abducibles failed");
-        new (mloc) typename HypothesesSetT::HypothesisT(cstl);
-        set.mapHypothesis(pos, mloc);
+        new (mloc) typename LiteralSetT::LiteralT(cstl);
+        set.mapLiteral(pos, mloc);
     }
 
     template <typename ProblemT, typename GeneratorCounterT>
@@ -47,11 +47,11 @@ namespace gpid {
         }
     }
 
-    template <typename ProblemT, typename HypothesesSetT, typename LoaderT>
+    template <typename ProblemT, typename LiteralSetT, typename LoaderT>
     static inline void loadAbducibles
     (std::string filename, typename ProblemT::ContextManagerT& ctx,
-     typename ProblemT::DeclarationsT& decls, HypothesesSetT& set) {
-        alloc_gab<typename HypothesesSetT::HypothesisT>(set.getSourceSize());
+     typename ProblemT::DeclarationsT& decls, LiteralSetT& set) {
+        alloc_gab<typename LiteralSetT::LiteralT>(set.getSourceSize());
         std::map<int, int> linker;
         AbducibleParser parser(filename);
         parser.init();
@@ -63,12 +63,12 @@ namespace gpid {
         }
     }
 
-    template <typename ProblemT, typename HypothesesSetT, typename GeneratorT, typename LoaderT>
+    template <typename ProblemT, typename LiteralSetT, typename GeneratorT, typename LoaderT>
     static inline void generateAbducibles
     (AbduciblesOptions& opts, typename ProblemT::ContextManagerT& ctx,
-     typename ProblemT::DeclarationsT& decls, HypothesesSetT& set) {
+     typename ProblemT::DeclarationsT& decls, LiteralSetT& set) {
         if (opts.input_type == AbdInputType::ABDIT_FILE) {
-            loadAbducibles<ProblemT, HypothesesSetT, LoaderT>(opts.input_file, ctx, decls, set);
+            loadAbducibles<ProblemT, LiteralSetT, LoaderT>(opts.input_file, ctx, decls, set);
         } else if (opts.input_type == AbdInputType::ABDIT_GENERATOR) {
             GeneratorT()(opts.input_generator, ctx, decls, set);
         } else {

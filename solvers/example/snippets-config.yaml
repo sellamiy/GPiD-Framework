@@ -3,7 +3,7 @@ problemClass : ts__pbl
 declarationsClass : ts__decls
 modelClass : ts__mdl
 contextManagerClass : ts__ctxm
-hypothesisClass : ts__hy
+literalClass : ts__lit
 
 problemConstraintType : int
 
