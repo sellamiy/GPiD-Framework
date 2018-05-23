@@ -1,6 +1,5 @@
 #define LIB_WITCHW__WTIME_CPP
 
-#include <map>
 #include <sstream>
 #include <iostream>
 

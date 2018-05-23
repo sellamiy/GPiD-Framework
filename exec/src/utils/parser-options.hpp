@@ -1,7 +1,6 @@
 #ifndef GPID_EXEC__UTILS__PARSER_OPTIONS_HPP
 #define GPID_EXEC__UTILS__PARSER_OPTIONS_HPP
 
-#include <vector>
 #include <cxxopts.hpp>
 #include <gpid/gpid.hpp>
 

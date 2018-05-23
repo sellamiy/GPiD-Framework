@@ -1,7 +1,6 @@
 #ifndef GPID_EXEC__UTILS__GTS_OPTIONS_HPP
 #define GPID_EXEC__UTILS__GTS_OPTIONS_HPP
 
-#include <vector>
 #include <cxxopts.hpp>
 #include <dot/dotcommand.hpp>
 #include <witchw/witchw.hpp>

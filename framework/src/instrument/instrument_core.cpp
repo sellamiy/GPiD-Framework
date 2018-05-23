@@ -1,7 +1,5 @@
 #define GPID_FRAMEWORK__INSTRUMENT__CORE_CPP
 
-#include <map>
-#include <list>
 #include <snlog/snlog.hpp>
 #include <dot/dotcommand.hpp>
 #include <gpid/instrument/instrument.hpp>

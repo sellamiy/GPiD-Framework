@@ -1,7 +1,5 @@
 #define GPID_EXEC_GPID_GTS_CPP
 
-#include <iostream>
-
 #include "utils/gts-executors.hpp"
 
 using namespace std;

@@ -8,7 +8,6 @@
 #ifndef LIB_PCTRACE__HEADER
 #define LIB_PCTRACE__HEADER
 
-#include <pctrace/TraceClass.hpp>
 #include <pctrace/TraceCompilers.hpp>
 
 #endif

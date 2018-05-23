@@ -1,7 +1,5 @@
 #define GPID_EXEC_GPID_PARSER_CPP
 
-#include <iostream>
-
 #include "utils/parser-options.hpp"
 
 using namespace std;

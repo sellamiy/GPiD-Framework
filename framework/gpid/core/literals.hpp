@@ -11,7 +11,6 @@
 #include <sstream>
 #include <starray/starray.hpp>
 #include <gpid/errors.hpp>
-#include <gpid/core/wrappers.hpp>
 #include <gpid/core/solvers.hpp>
 #include <gpid/util/skipper_controller.hpp>
 #include <gpid/util/storage.hpp>
