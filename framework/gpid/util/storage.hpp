@@ -7,59 +7,63 @@
 #ifndef GPID_FRAMEWORK__UTIL__STORAGE_HPP
 #define GPID_FRAMEWORK__UTIL__STORAGE_HPP
 
-#include <map>
-#include <set>
-
-#include <snlog/snlog.hpp>
 #include <dot/dotgraph.hpp>
 
-#include <gpid/core/solvers.hpp>
+#include <gpid/core/wrappers.hpp>
 #include <gpid/util/stdutils.hpp>
 
 namespace gpid {
 
-    template<class ATUtils>
+    template<class SolverT>
     class AbducibleTree {
 
-        typedef uint32_t mapindex_t;
-        mapindex_t _cbound = 1;
+        typedef uint32_t anidx_t;
+        anidx_t _nbound = 1;
+        inline anidx_t newNidx() { return ++_nbound; }
 
-        ATUtils utils;
-        typename ATUtils::SolverT subsumptionSolver;
-        typename ATUtils::SolverT insertionSolver;
+        typename SolverT::InterfaceT& solver;
 
-        std::map<mapindex_t, std::map<typename ATUtils::LiteralT, mapindex_t>> nodes;
-        std::set<mapindex_t> tnodes;
-        typename ATUtils::FormulaT formula;
+        typedef typename LiteralMapper<typename SolverT::LiteralT>::index_t LiteralRefT;
+        std::map<anidx_t, std::map<LiteralRefT, anidx_t>> nodes;
+        std::set<anidx_t> _tnodes;
 
-        inline mapindex_t newNode() { return ++_cbound; }
+        inline void insertLocal(anidx_t idx);
+        inline bool containsLocal(anidx_t idx);
 
-        inline void printLocal(mapindex_t idx, typename ATUtils::FormulaT cformula);
-        inline void cleanSubsumedLocal(mapindex_t idx);
+        inline void fwdSubsumesLocal(anidx_t idx);
+        inline void bwdSubsumesRemoveLocal(anidx_t idx);
 
-        inline void insertLocal(mapindex_t idx, const typename ATUtils::LiteralListT& impset,
-                                uint32_t impset_pos, bool negate);
-        inline bool containsLocal(mapindex_t idx, const typename ATUtils::LiteralListT& impset,
-                                  uint32_t impset_pos, bool negate);
+        inline void printLocal(anidx_t idx);
+        inline int buildGraphLocal(anidx_t idx);
 
-        inline int buildGraphLocal(mapindex_t idx, dot::Graph& g);
     public:
 
-        template<class ... ATUtilsInitializers>
-        AbducibleTree(ATUtilsInitializers& ... its)
-            : utils(its...), subsumptionSolver(its...), insertionSolver(its...), formula(its...)
-        { subsumptionSolver.push(); }
+        AbducibleTree(SolverT& solver) : solver(solver.additionalInterface()) { }
+
+        inline void insert();
+        inline bool contains();
+
+        inline bool fwdSubsumes(LiteralRefT l);
+        inline void bwdSubsumesRemove();
 
         inline void print();
-        inline bool subsumes(typename ATUtils::FormulaT implicate, bool negate=true);
-        inline void cleanSubsumed(typename ATUtils::FormulaT sourcef, bool negate=true);
-        inline void insert(const typename ATUtils::LiteralListT& impset, bool negate=true);
-        inline bool contains(const typename ATUtils::LiteralListT& impset, bool negate=true);
         inline void exportGraph(std::ostream& target);
+
     };
 
+    template<class SolverT>
+    inline bool AbducibleTree<SolverT>::fwdSubsumes(LiteralRefT)
+    { snlog::l_warn("Not Implemented Yet: storage::fwdSubsumes"); return false; }
 
+    template<class SolverT>
+    inline void AbducibleTree<SolverT>::print()
+    { snlog::l_warn("Not Implemented Yet: storage::print"); }
 
+    template<class SolverT>
+    inline void AbducibleTree<SolverT>::exportGraph(std::ostream&)
+    { snlog::l_warn("Not Implemented Yet: storage::exportGraph"); }
+
+    /*
     template<class ATUtils>
     inline void AbducibleTree<ATUtils>::print() { printLocal(1, utils.emptyFormula()); }
 
@@ -180,6 +184,7 @@ namespace gpid {
             return loc;
         }
     }
+    */
 
 }
 

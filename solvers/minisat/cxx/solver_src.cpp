@@ -3,22 +3,29 @@
 
 using namespace gpid;
 
-MinisatSolver::MinisatSolver() : solvers(new MinisatSolverInternal()) { }
+MinisatSolverInterface::MinisatSolverInterface(MinisatContextManager& ctx)
+    : AbstractSolverInterface(ctx), _internal(new MinisatSolverInternal()) {}
 
-MinisatSolver::~MinisatSolver() { }
-
-void MinisatSolver::start() {
+void MinisatSolverEngine::start() {
     c_level = 0;
 }
 
-void MinisatSolver::setProblem(MinisatProblem& problem) {
+void MinisatSolverEngine::setProblem(MinisatProblem& problem) {
     problem.setMode(MinisatProblem::IOMode::IO_READ);
-    for (int i = 0; i < problem.getDeclarations().nVars; i++)
-        solvers->solver.newVar();
+    for (int i = 0; i < problem.getDeclarations().nVars; i++) {
+        getInterface(problemInterfaceId)._internal->solver.newVar();
+        getInterface(consistencyInterfaceId)._internal->solver.newVar();
+    }
     while (problem.hasMoreConstraints()) {
         Minisat::vec<Minisat::Lit>& ps = problem.nextConstraint();
-        solvers->solver.addClause_(ps);
+        getInterface(problemInterfaceId)._internal->solver.addClause_(ps);
     }
 }
+
+void MinisatSolverEngine::printInfos() {
+    snlog::l_warn("TODO: Better Info System");
+}
+MinisatSolverEngine::MinisatSolverEngine() { }
+MinisatSolverEngine::~MinisatSolverEngine() { }
 
 #endif

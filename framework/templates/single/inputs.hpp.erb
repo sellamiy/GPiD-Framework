@@ -50,7 +50,7 @@ namespace gpid {
     extern void generateAbducibles(AbduciblesOptions& opts,
                                    <%= @solver.contextManagerClass %>& ctx,
                                    <%= @solver.declarationsClass %>& decls,
-                                   LiteralsEngine<<%= @solver.solverClass %>>& hys);
+                                   LiteralsEngine<<%= @solver.solverClass %>Engine>& hys);
 
 };
 

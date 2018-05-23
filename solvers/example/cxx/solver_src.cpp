@@ -6,27 +6,25 @@ namespace gpid {
     class ts__solvInternal {
     public:
         std::vector<ts__lit> sst_int;
-        ts__solv::ModelT    sst_mdl;
+        ts__solvEngine::ModelT    sst_mdl;
     };
 
-    ts__solv::ts__solv() : solvers(new ts__solvInternal()) { }
-    ts__solv::~ts__solv() { }
+    ts__solvInterface::ts__solvInterface(ts__ctxm& ctxm) : AbstractSolverInterface(ctxm) { }
 
-    void              ts__solv::setProblem             (ts__pbl&)           { }
-    void              ts__solv::start                  ()                   { }
-    void              ts__solv::addLiteral             (ts__lit&, uint32_t) { }
-    void              ts__solv::removeLiterals         (uint32_t)           { }
-    void              ts__solv::printHypothesis        ()                   { }
-    void              ts__solv::printHypothesisNegation()                   { }
-    void              ts__solv::printStoredImplicates  ()                   { }
-    void              ts__solv::exportStoredImplicates ()                   { }
-    void              ts__solv::storeActive            ()                   { }
-    SolverTestStatus  ts__solv::testHypothesis         (uint32_t)           { return SOLVER_UNSAT; }
-    SolverTestStatus  ts__solv::checkConsistency       (uint32_t)           { return SOLVER_SAT; }
-    ts__mdl&          ts__solv::recoverModel           ()                   { return solvers->sst_mdl; }
-    bool              ts__solv::storageSubsumed        (ts__lit&, uint32_t) { return false; }
-    bool              ts__solv::isConsequence          (ts__lit&, uint32_t) { return false; }
-    const std::string ts__solv::hypothesisAsString     () const             { return ""; }
+    ts__solvEngine::ts__solvEngine()  { }
+    ts__solvEngine::~ts__solvEngine() { }
+
+    void ts__solvEngine::printInfos()         { }
+    void ts__solvEngine::setProblem(ts__pbl&) { }
+    void ts__solvEngine::start     ()         { }
+
+    void              ts__solvInterface::push                  ()         { }
+    void              ts__solvInterface::pop                   ()         { }
+    void              ts__solvInterface::printAssertions       (bool)     { }
+    const std::string ts__solvInterface::getPrintableAssertions(bool)     { return ""; }
+    void              ts__solvInterface::addLiteral            (ts__lit&) { }
+    SolverTestStatus  ts__solvInterface::check                 () { return SOLVER_UNKNOWN; }
+    ts__mdl&          ts__solvInterface::getModel              () { return _internal->sst_mdl; }
 
 }
 

@@ -14,70 +14,42 @@ namespace gpid {
 
     class <%= @solver.solverClass %>Internal;
 
+    class <%= @solver.solverClass %>Interface
+        : public AbstractSolverInterface<<%= @solver.contextManagerClass %>,
+                                         <%= @solver.literalClass %>,
+                                         <%= @solver.modelClass %>>
+    {
+        std::unique_ptr<<%= @solver.solverClass %>Internal> _internal;
+    public:
+        virtual void push() override;
+        virtual void pop() override;
+        virtual void addLiteral(LiteralT& lit) override;
+        virtual SolverTestStatus check() override;
+        virtual ModelT& getModel() override;
+
+        virtual void printAssertions(bool negated) override;
+        virtual const std::string getPrintableAssertions(bool negated) override;
+
+        <%= @solver.solverClass %>Interface(<%= @solver.contextManagerClass %>& ctx);
+
+        friend class <%= @solver.solverClass %>Engine;
+    };
+
     /**
      * \brief Solver Interface for <%= @solver.name %> solver.
      * \ingroup gpid<%= @solver.name %>lib
      */
-    class <%= @solver.solverClass %> {
+    class <%= @solver.solverClass %>Engine
+        : public AbstractSolverEngine<<%= @solver.solverClass %>Interface,
+                                      <%= @solver.problemClass %>,
+                                      <%= @solver.declarationsClass %>>
+    {
     public:
-        /** \brief Literal type handled by the solver */
-        typedef <%= @solver.literalClass %> LiteralT;
-        /** \brief Model type handled by the solver */
-        typedef <%= @solver.modelClass %> ModelT;
-        /** \brief Problem type handled by the solver */
-        typedef <%= @solver.problemClass %> ProblemT;
-        /** \brief Context manager type handled by the solver */
-        typedef <%= @solver.contextManagerClass %> ContextManagerT;
-        /** \brief Declarations type handled by the solver */
-        typedef <%= @solver.declarationsClass %> DeclarationsT;
-    private:
-        ContextManagerT ctx;
-        typedef <%= @solver.solverClass %>Internal Internal;
-        std::unique_ptr<Internal> solvers;
-
-        uint32_t c_level;
-
-        void accessLevel(uint32_t level);
-    public:
-
-        /** \brief Display basic information on the solver used */
-        inline void printSolverInformations()
-        { snlog::l_info("Interface for <%= @solver.name %>"); }
-
-        /** \brief String representation of the current literals set */
-        const std::string hypothesisAsString() const;
-        /** \brief Print the current set of literals */
-        void printHypothesis();
-        /** \brief Print the negation of the current set of literals */
-        void printHypothesisNegation();
-        /** \brief Print the implicates that have been stored */
-        void printStoredImplicates();
-        /** \brief Export the implicates that have been stored */
-        void exportStoredImplicates();
-
-        /** \brief Remove all the literals assigned after a given level */
-        void removeLiterals(uint32_t level);
-        /** \brief Add an abducible literal to the solver */
-        void addLiteral(LiteralT& literal, uint32_t level);
-        /** \brief Check if the current set of literals is compatible with the problem */
-        gpid::SolverTestStatus testHypothesis(uint32_t level);
-        /** \brief Check if the current set of literals is self-consistent */
-        gpid::SolverTestStatus checkConsistency(uint32_t level);
-        /** \brief Check if an literal is known to be redundant */
-        bool storageSubsumed(LiteralT& additional, uint32_t level);
-        /** \brief Check if an literal is already a consequence of the current state */
-        bool isConsequence(LiteralT& h, uint32_t level);
-
-        ModelT& recoverModel();
-        inline ContextManagerT& getContextManager() { return ctx; }
-
-        /** \brief Remember the current set of literals as an implicate */
-        void storeActive();
-
-        <%= @solver.solverClass %>();
-        ~<%= @solver.solverClass %>();
-        void setProblem(ProblemT& problem);
-        void start();
+        <%= @solver.solverClass %>Engine();
+        ~<%= @solver.solverClass %>Engine();
+        virtual void printInfos() override;
+        virtual void setProblem(ProblemT& problem) override;
+        virtual void start() override;
     };
 
 };

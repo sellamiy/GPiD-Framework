@@ -11,7 +11,6 @@ namespace gpid {
     public:
         Minisat::SimpSolver solver;
         MinisatModelWrapper iw_mdl;
-        MinisatStorage storage;
         Minisat::vec<Minisat::Lit> assumps;
         std::vector<MinisatLiteral> loc_ass;
         Minisat::vec<int> lvl_stack;
@@ -22,101 +21,49 @@ namespace gpid {
             solver.verbosity = 0;
         }
 
-        inline void increaseLevel(uint32_t& c_level, uint32_t target);
-        inline void decreaseLevel(uint32_t& c_level, uint32_t target);
-    };
-
-    inline void MinisatSolverInternal::increaseLevel(uint32_t& c_level, uint32_t target) {
-        while (c_level < target) {
-            ++c_level;
+        inline void push() {
             lvl_stack.push(assumps.size());
         }
-    }
-    inline void MinisatSolverInternal::decreaseLevel(uint32_t& c_level, uint32_t target) {
-        while (c_level > target) {
-            --c_level;
-            lvl_stack.pop();
+
+        inline void pop() {
             while (assumps.size() > lvl_stack.last()) {
                 assumps.pop();
                 loc_ass.pop_back();
             }
+            lvl_stack.pop(); // TODO: Check that this modification works after storage is reestablished
         }
+    };
+
+    inline void MinisatSolverInterface::push() { _internal->push(); }
+
+    inline void MinisatSolverInterface::pop() { _internal->pop(); }
+
+    inline void MinisatSolverInterface::addLiteral(MinisatLiteral& literal) {
+        _internal->loc_ass.push_back(literal);
+        _internal->assumps.push(literal.lit);
     }
 
-    inline void MinisatSolver::accessLevel(uint32_t level) {
-        if (c_level < level) solvers->increaseLevel(c_level, level);
-        else                 solvers->decreaseLevel(c_level, level);
+    inline MinisatModelWrapper& MinisatSolverInterface::getModel() {
+        return _internal->iw_mdl;
     }
 
-    inline void MinisatSolver::addLiteral(MinisatLiteral& literal, uint32_t level) {
-        accessLevel(level);
-        solvers->loc_ass.push_back(literal);
-        solvers->assumps.push(literal.lit);
+    inline void MinisatSolverInterface::printAssertions(bool negated) {
+        p_implicate(std::cout, _internal->assumps, negated);
     }
 
-    inline void MinisatSolver::removeLiterals(uint32_t level) {
-        accessLevel(level);
-    }
-
-    inline MinisatModelWrapper& MinisatSolver::recoverModel() {
-        return solvers->iw_mdl;
-    }
-
-    inline const std::string MinisatSolver::hypothesisAsString() const {
+    inline const std::string MinisatSolverInterface::getPrintableAssertions(bool) {
         std::stringstream result;
-        result << solvers->assumps;
+        result << _internal->assumps;
         return result.str();
     }
 
-    inline void MinisatSolver::printHypothesis() {
-        snlog::l_warn("Not implemented yet - MiniSat Solver literals printer");
-    }
-
-    inline void MinisatSolver::printHypothesisNegation() {
-        p_implicate(std::cout, solvers->assumps, true);
-    }
-
-    inline void MinisatSolver::printStoredImplicates() {
-        snlog::l_warn("Not implemented yet - Minisat storage printer");
-    }
-
-    inline void MinisatSolver::exportStoredImplicates() {
-        snlog::l_warn("Not implemented yet - Minisat storage exporter");
-    }
-
-    inline void MinisatSolver::storeActive() {
-        MinisatVecWrapper<Minisat::Lit> wrp(solvers->assumps);
-        solvers->storage.addSet(wrp);
-    }
-
-    inline gpid::SolverTestStatus MinisatSolver::testHypothesis(uint32_t level) {
-        accessLevel(level);
-        Minisat::lbool ret = solvers->solver.solveLimited(solvers->assumps);
+    inline gpid::SolverTestStatus MinisatSolverInterface::check() {
+        Minisat::lbool ret = _internal->solver.solveLimited(_internal->assumps);
         if      (ret == Minisat::l_True)  return gpid::SolverTestStatus::SOLVER_SAT;
         else if (ret == Minisat::l_False) return gpid::SolverTestStatus::SOLVER_UNSAT;
         else                              return gpid::SolverTestStatus::SOLVER_UNKNOWN;
     }
 
-    inline gpid::SolverTestStatus MinisatSolver::checkConsistency(uint32_t) {
-        /* For this engine, consistency is ensured by linked literals */
-        return SolverTestStatus::SOLVER_SAT;
-    }
-
-    inline bool MinisatSolver::storageSubsumed (MinisatLiteral& additional, uint32_t level) {
-        accessLevel(level);
-        solvers->assumps.push(additional.lit);
-        MinisatVecWrapper<Minisat::Lit> wrp(solvers->assumps);
-        bool res = solvers->storage.subsets(wrp);
-        solvers->assumps.pop();
-        return res;
-    }
-
-    inline bool MinisatSolver::isConsequence(MinisatLiteral&, uint32_t level) {
-        accessLevel(level);
-        snlog::l_warn("Not implemented yet - MiniSAT consequence checker");
-        return false;
-    }
-
-};
+}
 
 #endif

@@ -10,10 +10,8 @@ problemConstraintType : z3::expr
 contextSnippets :
   - context.hpp
   - implicate_printer.hpp
-  - expr_storage.hpp
 contextSrcSnippets :
   - context_src.cpp
-  - storage_src.cpp
 outputSnippets :
   - implicate_printer.hpp
 solverInlineSnippets:

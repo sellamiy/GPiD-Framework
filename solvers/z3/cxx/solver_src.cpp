@@ -5,26 +5,24 @@
 
 using namespace gpid;
 
-Z3Solver::Z3Solver()
-    : solvers(new Internal(ctx))
-{ }
+Z3SolverInterface::Z3SolverInterface(z3::context& ctx)
+    : AbstractSolverInterface(ctx), _internal(new Z3SolverInternal(ctx)) { }
 
-Z3Solver::~Z3Solver() { }
-
-void Z3Solver::start() {
+void Z3SolverEngine::start() {
     c_level = 0;
 }
 
-void Z3Solver::setProblem(Z3Problem& problem) {
+void Z3SolverEngine::setProblem(Z3Problem& problem) {
     problem.setMode(Z3Problem::IOMode::IO_READ);
     while (problem.hasMoreConstraints()) {
-        solvers->solver.add(problem.nextConstraint());
+        getInterface(problemInterfaceId)._internal->solver.add(problem.nextConstraint());
     }
 }
 
-void Z3Solver::exportStoredImplicates() {
-    std::ofstream target("z3storage.pcc-auto.dot");
-    solvers->storage.asGraph(target);
+void Z3SolverEngine::printInfos() {
+    snlog::l_warn("TODO: Better Info System");
 }
+Z3SolverEngine::Z3SolverEngine() { }
+Z3SolverEngine::~Z3SolverEngine() { }
 
 #endif

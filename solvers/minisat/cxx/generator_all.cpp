@@ -11,12 +11,12 @@ namespace gpid {
     }
 
     static inline void generateAbducibles_all(MinisatContextManager&, MinisatDeclarations&,
-                                              LiteralsEngine<MinisatSolver>& set) {
+                                              LiteralsEngine<MinisatSolverEngine>& set) {
         alloc_gab<MinisatLiteral>(set.getSourceSize());
         for (uint32_t i = 0; i < set.getSourceSize(); i++) {
             Lit cstl;
             cstl.x = i;
-            store_gab_hyp<LiteralsEngine<MinisatSolver>, Lit>(set, i, cstl);
+            store_gab_hyp<LiteralsEngine<MinisatSolverEngine>, Lit>(set, i, cstl);
             set.mapLink(i, i%2 == 0 ? i+1 : i-1);
         }
     }

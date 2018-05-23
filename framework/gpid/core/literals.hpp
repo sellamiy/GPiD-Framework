@@ -7,32 +7,26 @@
 #ifndef GPID_FRAMEWORK__CORE__LITERALS_HPP
 #define GPID_FRAMEWORK__CORE__LITERALS_HPP
 
-#include <map>
 #include <list>
 #include <sstream>
 #include <starray/starray.hpp>
 #include <gpid/errors.hpp>
+#include <gpid/core/wrappers.hpp>
 #include <gpid/core/solvers.hpp>
 #include <gpid/util/skipper_controller.hpp>
+#include <gpid/util/storage.hpp>
 
 #include <gpid/instrument/instrument.hpp>
 
 namespace gpid {
 
-    /** \brief Class for mapping indices to literals. */
-    template<class LiteralT>
-    struct LiteralMapper {
-        typedef uint32_t index_t;
-        inline void map(index_t idx, LiteralT* l) { _mapping[idx] = l; }
-        inline LiteralT& get(index_t idx) { return *_mapping[idx]; }
-    private:
-        std::map<index_t, LiteralT*> _mapping;
-    };
-
     /** \brief Class for deciding on skipping literals. */
     template<class SolverT>
     class LiteralSkipper {
+        typedef typename SolverT::LiteralT LiteralT;
         SolverT& solver;
+        AbducibleTree<SolverT>& storage;
+        LiteralMapper<LiteralT>& mapper;
         SkipperController& control;
         struct {
             uint64_t storage     = 0;
@@ -41,13 +35,15 @@ namespace gpid {
             uint64_t consequence = 0;
         } counters;
     public:
-        LiteralSkipper(SolverT& s, SkipperController& ctrler)
-            : solver(s), control(ctrler) {}
+        LiteralSkipper(SolverT& s, AbducibleTree<SolverT>& st,
+                       LiteralMapper<LiteralT>& m, SkipperController& ctrler)
+            : solver(s), storage(st), mapper(m), control(ctrler) {}
 
+        typedef typename LiteralMapper<typename SolverT::LiteralT>::index_t LiteralRefT;
         /** \brief Decide if an literal can be skipped at a given level. */
-        inline bool canBeSkipped(typename SolverT::LiteralT& h, uint32_t level);
+        inline bool canBeSkipped(LiteralRefT h, uint32_t level);
         /** \brief Decide if an literal is consistent with active ones. */
-        inline bool consistent(typename SolverT::LiteralT& h, uint32_t level);
+        inline bool consistent(LiteralRefT h, uint32_t level);
         inline void storeCounts(std::map<std::string, uint64_t>& target);
     };
 
@@ -59,13 +55,15 @@ namespace gpid {
         typedef typename SolverT::ModelT ModelT;
     private:
         SolverT& solver;
-        LiteralSkipper<SolverT> skipper;
+        AbducibleTree<SolverT> storage;
 
         typedef uint32_t index_t;
         typedef uint32_t level_t;
         starray::SequentialActivableArray      l_active;
         LiteralMapper<LiteralT>                l_mapper;
         std::map<index_t, std::list<index_t> > l_links;
+
+        LiteralSkipper<SolverT> skipper;
 
         std::map<level_t, std::list<index_t> > selection_map;
         std::map<level_t, std::list<index_t> > pselection_map;
@@ -87,10 +85,12 @@ namespace gpid {
         inline void deactivateLiteral(index_t idx, level_t level);
         inline void deactivateSequents(index_t ub, level_t level);
 
-        inline LiteralT& getLiteral(index_t idx);        
+        inline LiteralT& getLiteral(index_t idx);
+        inline index_t getCurrentIndex();
     public:
         LiteralsEngine(SolverT& solver, SkipperController& ctrler, uint32_t size)
-            : solver(solver), skipper(solver, ctrler), l_active(size), clevel(1)
+            : solver(solver), storage(solver), l_active(size),
+              skipper(solver, storage, l_mapper, ctrler), clevel(1)
         { limit[1] = 0; pointer[1] = size; }
         /** Map an index of the set to a specific literal. */
         inline void mapLiteral(uint32_t idx, LiteralT* hyp);
@@ -162,12 +162,13 @@ namespace gpid {
 
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::printStorage() {
-        solver.printStoredImplicates();
+        storage.print();
     }
 
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::exportStorage() {
-        solver.exportStoredImplicates();
+        snlog::l_warn("TODO: Do not write storage graph on stdout but on parametrized file");
+        storage.exportGraph(std::cout);
     }
 
     template<class SolverT>
@@ -196,7 +197,7 @@ namespace gpid {
             */
 #define MIN(a,b) (a) < (b) ? (a) : (b)
             pointer[clevel + 1] = MIN(l_active.get_last() + 1, l_active.get_maximal_size());
-            limit[clevel + 1] = pointer[clevel];
+            limit[clevel + 1] = getCurrentIndex();
             ++clevel;
         }
     }
@@ -229,7 +230,7 @@ namespace gpid {
 
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::selectCurrentLiteral() {
-        index_t selected = pointer[clevel];
+        index_t selected = getCurrentIndex();
         deactivateLiteral(selected, clevel);
         for (index_t linked : l_links[selected]) {
             deactivateLiteral(linked, clevel);
@@ -256,8 +257,8 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline bool LiteralSkipper<SolverT>::consistent(typename SolverT::LiteralT& h, uint32_t level) {
-        solver.addLiteral(h, level+1);
+    inline bool LiteralSkipper<SolverT>::consistent(LiteralRefT h, uint32_t level) {
+        solver.addLiteral(mapper.get(h), level+1);
         SolverTestStatus status = solver.checkConsistency(level+1);
         if (status == SolverTestStatus::SOLVER_UNKNOWN) {
             throw UndecidableProblemError("Solver could not decide consistency query");
@@ -267,12 +268,12 @@ namespace gpid {
     }
 
     template<class SolverT>
-    inline bool LiteralSkipper<SolverT>::canBeSkipped(typename SolverT::LiteralT& h, uint32_t level) {
-        if (control.consequences && solver.isConsequence(h, level)) {
+    inline bool LiteralSkipper<SolverT>::canBeSkipped(LiteralRefT h, uint32_t level) {
+        if (control.consequences && solver.isConsequence(mapper.get(h), level)) {
             counters.consequence++;
             return true;
         }
-        if (control.storage && solver.storageSubsumed(h, level)) {
+        if (control.storage && storage.fwdSubsumes(h)) {
             counters.storage++;
             return true;
         }
@@ -297,14 +298,14 @@ namespace gpid {
         accessLevel(level);
         unselectLevel(clevel);
         while (true) {
-            index_t next = l_active.get_downward(pointer[clevel]);
-            if (next != pointer[clevel]) {
+            index_t next = l_active.get_downward(getCurrentIndex());
+            if (next != getCurrentIndex()) {
                 pointer[clevel] = next;
                 insthandle(instrument::idata(getLiteral(next).str()),
                            instrument::instloc::pre_select);
-                if (!skipper.canBeSkipped(getCurrentLiteral(), clevel)) {
-                    if (!l_active.is_paused(pointer[clevel])
-                        || l_active.get(pointer[clevel]) != clevel) {
+                if (!skipper.canBeSkipped(getCurrentIndex(), clevel)) {
+                    if (!l_active.is_paused(getCurrentIndex())
+                        || l_active.get(getCurrentIndex()) != clevel) {
                         return true;
                     }
                 }
@@ -320,8 +321,13 @@ namespace gpid {
     }
 
     template<class SolverT>
+    inline typename LiteralsEngine<SolverT>::index_t LiteralsEngine<SolverT>::getCurrentIndex() {
+        return pointer[clevel];
+    }
+
+    template<class SolverT>
     inline typename SolverT::LiteralT& LiteralsEngine<SolverT>::getCurrentLiteral() {
-        return getLiteral(pointer[clevel]);
+        return getLiteral(getCurrentIndex());
     }
 
     template<class SolverT>
@@ -343,7 +349,8 @@ namespace gpid {
 
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::storeCurrentImplicate() {
-        solver.storeActive();
+        snlog::l_warn("**indev : Storage");
+        /* TODO: STORAGE */
     }
 
     template<class SolverT>

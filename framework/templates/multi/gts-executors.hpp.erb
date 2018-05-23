@@ -5,10 +5,10 @@
 <% for @solver in @solvers %>
 #ifdef SINGLE_SOLVER_<%= @solver.name %>
 #include <gpid/solvers/<%= @solver.name %>_interface.hpp>
-template void generate<<%= @solver.solverClass %>>(OptionStorage& opts);
+template void generate<<%= @solver.solverClass %>Engine>(OptionStorage& opts);
 static inline gtsExecutionStatus wrap_generate(OptionStorage& opts) {
     try {
-        generate<<%= @solver.solverClass %>>(opts);
+        generate<<%= @solver.solverClass %>Engine>(opts);
         return GTS_SUCCESS;
     }
 
@@ -38,14 +38,14 @@ static inline gtsExecutionStatus wrap_generate(OptionStorage& opts) {
 #else
 #include <gpid/solvers/all.hpp>
 <% for @solver in @solvers %>
-template void generate<<%= @solver.solverClass %>>(OptionStorage& opts);
+template void generate<<%= @solver.solverClass %>Engine>(OptionStorage& opts);
 <% end %>
 static inline gtsExecutionStatus wrap_generate(OptionStorage& opts) {
     switch (opts.generator) {
     <% for @solver in @solvers %>
     case <%= @solver.name %>_INTERFACE:
         try {
-            generate<<%= @solver.solverClass %>>(opts);
+            generate<<%= @solver.solverClass %>Engine>(opts);
             return GTS_SUCCESS;
         }
 

@@ -44,19 +44,19 @@ namespace gpid {
 
     static inline
     void generateAbducibles_allEq(CVC4::ExprManager& ctx,
-                                   CVC4Declarations& decls, LiteralsEngine<CVC4Solver>& set) {
+                                   CVC4Declarations& decls, LiteralsEngine<CVC4SolverEngine>& set) {
         std::vector<CVC4::Expr> knownVars;
         abduciblesUtils_allEq(ctx, decls, knownVars);
 
         /* Building abducibles */
         uint32_t pos = 0;
-        alloc_gab<LiteralsEngine<CVC4Solver>>(set.getSourceSize());
+        alloc_gab<LiteralsEngine<CVC4SolverEngine>>(set.getSourceSize());
         for (uint32_t i = 0; i < knownVars.size(); i++) {
             for (uint32_t j = i + 1; j < knownVars.size(); j++) {
                 CVC4::Expr eq_expr  = ctx.mkExpr(kind::EQUAL, knownVars[i], knownVars[j]);
                 CVC4::Expr neq_expr = ctx.mkExpr(kind::DISTINCT, knownVars[i], knownVars[j]);
-                store_gab_hyp<LiteralsEngine<CVC4Solver>, CVC4::Expr>(set, pos, eq_expr);
-                store_gab_hyp<LiteralsEngine<CVC4Solver>, CVC4::Expr>(set, pos+1, neq_expr);
+                store_gab_hyp<LiteralsEngine<CVC4SolverEngine>, CVC4::Expr>(set, pos, eq_expr);
+                store_gab_hyp<LiteralsEngine<CVC4SolverEngine>, CVC4::Expr>(set, pos+1, neq_expr);
                 set.mapLink(pos, pos+1);
                 set.mapLink(pos+1, pos);
                 pos += 2;

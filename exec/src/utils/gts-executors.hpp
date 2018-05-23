@@ -14,7 +14,7 @@ static inline void generate(OptionStorage& opts) {
     l_message("init engine...");
     Solver S;
     typename Solver::ProblemT P(S.getContextManager());
-    S.printSolverInformations();
+    S.printInfos();
 
     l_message("parse problem...");
     parse_file(opts.input, S.getContextManager(), P, opts.input_lang);

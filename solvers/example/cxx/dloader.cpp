@@ -5,7 +5,7 @@ namespace gpid {
 
     static inline void loadAbducible(int, const std::string,
                                      ts__ctxm&, ts__decls&,
-                                     LiteralsEngine<ts__solv>&, std::map<int,int>&)
+                                     LiteralsEngine<ts__solvEngine>&, std::map<int,int>&)
     { }
 
 }

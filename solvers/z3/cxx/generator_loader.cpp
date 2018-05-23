@@ -9,10 +9,10 @@ namespace gpid {
     static inline void loadAbducible
     (int idx, const std::string expr,
      z3::context& ctx, Z3Declarations& decls,
-     LiteralsEngine<Z3Solver>& set, std::map<int, int>&) {
+     LiteralsEngine<Z3SolverEngine>& set, std::map<int, int>&) {
         std::string smt_assert = "(assert " + expr + ")";
         z3::expr cstl = ctx.parse_string(smt_assert.c_str(), decls.getSortDecls(), decls.getFunDecls());
-        store_gab_hyp<LiteralsEngine<Z3Solver>, z3::expr>(set, idx, cstl);
+        store_gab_hyp<LiteralsEngine<Z3SolverEngine>, z3::expr>(set, idx, cstl);
     }
 
 }

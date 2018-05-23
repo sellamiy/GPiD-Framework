@@ -20,16 +20,21 @@ struct HSTest_MW {};
 
 struct HSTest_SW {};
 
+struct HSTest_IW {};
+static HSTest_IW HSTest_IW_LCINT;
+
 struct HSTest_SWrapper {
     typedef HSTest_S LiteralT;
     typedef HSTest_MW ModelT;
-    typedef HSTest_MW StorageT;
+    typedef HSTest_SW StorageT;
+    typedef HSTest_IW InterfaceT;
 
     static inline SolverTestStatus checkConsistency(uint32_t) { return SOLVER_SAT; }
     static inline bool storageSubsumed(HSTest_S&, uint32_t)   { return false; }
     static inline bool isConsequence(HSTest_S&, uint32_t)     { return false; }
-    static inline void addLiteral(HSTest_S&, uint32_t)     { }
-    static inline void removeLiterals(uint32_t)             { }
+    static inline void addLiteral(HSTest_S&, uint32_t) { }
+    static inline void removeLiterals(uint32_t) { }
+    static inline HSTest_IW& additionalInterface() { return HSTest_IW_LCINT; }
 };
 
 static HSTest_S hmemory[HSET_SIZE];
