@@ -16,8 +16,10 @@ namespace gpid {
     template<class LiteralT>
     struct LiteralMapper {
         typedef uint32_t index_t;
-        inline void map(index_t idx, LiteralT* l) { _mapping[idx] = l; }
-        inline LiteralT& get(index_t idx) { return *_mapping[idx]; }
+
+        inline void map(index_t idx, LiteralT* l);
+        inline LiteralT& get(index_t idx);
+
     private:
         std::map<index_t, LiteralT*> _mapping;
     };
@@ -30,28 +32,45 @@ namespace gpid {
         starray::SequentialActivableArray _array;
         std::map<uint32_t, std::vector<index_t>> _lmapping;
     public:
-        LiteralHypothesis(uint32_t size) : _array(size) {
-            for (uint32_t i = 0; i < size; ++i) _array.deactivate(i);
-        }
+        LiteralHypothesis(uint32_t size) : _array(size)
+        { for (uint32_t i = 0; i < size; ++i) _array.deactivate(i); }
 
-        inline void addLiteral(index_t lidx, uint32_t lkey) {
-            _array.activate(lidx);
-            _lmapping[lkey].push_back(lidx);
-        }
-        inline void removeLiterals(uint32_t lkey) {
-            for (index_t lidx : _lmapping[lkey]) {
-                _array.deactivate(lidx);
-            }
-            _lmapping[lkey].clear();
-        }
+        inline void addLiteral(index_t lidx, uint32_t lkey);
+        inline void removeLiterals(uint32_t lkey);
 
         typedef typename starray::SequentialActivableArray::iterator iterator;
         typedef typename starray::SequentialActivableArray::const_iterator const_iterator;
-        inline iterator begin() { return _array.begin(); }
-        inline iterator end() { return _array.end(); }
+        inline       iterator begin()  { return _array.begin();  }
+        inline       iterator end()    { return _array.end();    }
         inline const_iterator cbegin() { return _array.cbegin(); }
-        inline const_iterator cend() { return _array.cend(); }
+        inline const_iterator cend()   { return _array.cend();   }
     };
+
+    /* *** Implementations *** */
+
+    template<class LiteralT>
+    inline void LiteralMapper<LiteralT>::map(index_t idx, LiteralT* l) {
+        _mapping[idx] = l;
+    }
+
+    template<class LiteralT>
+    inline LiteralT& LiteralMapper<LiteralT>::get(index_t idx) {
+        return *_mapping[idx];
+    }
+
+    template<class LiteralT>
+    inline void LiteralHypothesis<LiteralT>::addLiteral(index_t lidx, uint32_t lkey) {
+        _array.activate(lidx);
+        _lmapping[lkey].push_back(lidx);
+    }
+
+    template<class LiteralT>
+    inline void LiteralHypothesis<LiteralT>::removeLiterals(uint32_t lkey) {
+        for (index_t lidx : _lmapping[lkey]) {
+            _array.deactivate(lidx);
+        }
+        _lmapping[lkey].clear();
+    }
 
 }
 
