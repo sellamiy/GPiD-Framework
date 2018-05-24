@@ -7,6 +7,8 @@
 #ifndef GPID_FRAMEWORK__UTIL__STORAGE_HPP
 #define GPID_FRAMEWORK__UTIL__STORAGE_HPP
 
+#include <limits>
+
 #include <dot/dotgraph.hpp>
 
 #include <gpid/core/wrappers.hpp>
