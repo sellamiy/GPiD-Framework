@@ -22,12 +22,15 @@ namespace gpid {
         inline anidx_t newNidx() { return ++_nbound; }
 
         typename SolverT::InterfaceT& solver;
+        LiteralMapper<typename SolverT::LiteralT>& mapper;
 
         typedef typename LiteralMapper<typename SolverT::LiteralT>::index_t LiteralRefT;
         std::map<anidx_t, std::map<LiteralRefT, anidx_t>> nodes;
         std::set<anidx_t> _tnodes;
 
-        inline void insertLocal(anidx_t idx);
+        typedef LiteralHypothesis<typename SolverT::LiteralT> HypothesisT;
+
+        inline void insertLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it);
         inline bool containsLocal(anidx_t idx);
 
         inline void fwdSubsumesLocal(anidx_t idx);
@@ -38,13 +41,15 @@ namespace gpid {
 
     public:
 
-        AbducibleTree(SolverT& solver) : solver(solver.additionalInterface()) { }
+        AbducibleTree(SolverT& solver, LiteralMapper<typename SolverT::LiteralT>& mapper)
+            : solver(solver.additionalInterface()), mapper(mapper) { }
 
-        inline void insert();
-        inline bool contains();
+        inline void insert(HypothesisT& h);
+        inline bool contains(HypothesisT& h);
 
-        inline bool fwdSubsumes(LiteralRefT l);
-        inline void bwdSubsumesRemove();
+        inline bool fwdSubsumes(HypothesisT& h);
+        inline bool fwdSubsumes(HypothesisT& h, LiteralRefT l_add);
+        inline void bwdSubsumesRemove(HypothesisT& h);
 
         inline void print();
         inline void exportGraph(std::ostream& target);
@@ -52,7 +57,38 @@ namespace gpid {
     };
 
     template<class SolverT>
-    inline bool AbducibleTree<SolverT>::fwdSubsumes(LiteralRefT)
+    inline void AbducibleTree<SolverT>::insert(HypothesisT& h)
+    { typename HypothesisT::iterator it = h.begin(); insertLocal(1, h, it); }
+
+    template<class SolverT>
+    inline void AbducibleTree<SolverT>::insertLocal(anidx_t idx, HypothesisT& h,
+                                                    typename HypothesisT::iterator& it) {
+        if (it == h.end()) {
+            _tnodes.insert(idx);
+            return;
+        }
+        LiteralRefT l_loc = *it;
+        if (gmisc::ninmap(nodes[idx], l_loc))
+            nodes[idx][l_loc] = newNidx();
+        insertLocal(nodes[idx][l_loc], h, ++it);
+    }
+
+    /* * UNCOMPLETE * */
+
+    template<class SolverT>
+    inline void AbducibleTree<SolverT>::bwdSubsumesRemove(HypothesisT&)
+    { snlog::l_warn("Not Implemented Yet: storage::backwardSubsumption"); }
+
+    template<class SolverT>
+    inline bool AbducibleTree<SolverT>::fwdSubsumes(HypothesisT& h, LiteralRefT l_add) {
+        h.addLiteral(l_add, std::numeric_limits<uint32_t>::max());
+        bool res = fwdSubsumes(h);
+        h.removeLiterals(std::numeric_limits<uint32_t>::max());
+        return res;
+    }
+
+    template<class SolverT>
+    inline bool AbducibleTree<SolverT>::fwdSubsumes(HypothesisT&)
     { snlog::l_warn("Not Implemented Yet: storage::fwdSubsumes"); return false; }
 
     template<class SolverT>

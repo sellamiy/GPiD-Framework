@@ -25,6 +25,7 @@ namespace gpid {
         typedef typename SolverT::LiteralT LiteralT;
         SolverT& solver;
         AbducibleTree<SolverT>& storage;
+        LiteralHypothesis<LiteralT>& hypothesis;
         LiteralMapper<LiteralT>& mapper;
         SkipperController& control;
         struct {
@@ -34,9 +35,9 @@ namespace gpid {
             uint64_t consequence = 0;
         } counters;
     public:
-        LiteralSkipper(SolverT& s, AbducibleTree<SolverT>& st,
+        LiteralSkipper(SolverT& s, AbducibleTree<SolverT>& st, LiteralHypothesis<LiteralT>& h,
                        LiteralMapper<LiteralT>& m, SkipperController& ctrler)
-            : solver(s), storage(st), mapper(m), control(ctrler) {}
+            : solver(s), storage(st), hypothesis(h), mapper(m), control(ctrler) {}
 
         typedef typename LiteralMapper<typename SolverT::LiteralT>::index_t LiteralRefT;
         /** \brief Decide if an literal can be skipped at a given level. */
@@ -54,8 +55,6 @@ namespace gpid {
         typedef typename SolverT::ModelT ModelT;
     private:
         SolverT& solver;
-        AbducibleTree<SolverT> storage;
-        LiteralHypothesis<LiteralT> hypothesis;
 
         typedef uint32_t index_t;
         typedef uint32_t level_t;
@@ -63,6 +62,8 @@ namespace gpid {
         LiteralMapper<LiteralT>                l_mapper;
         std::map<index_t, std::list<index_t> > l_links;
 
+        AbducibleTree<SolverT> storage;
+        LiteralHypothesis<LiteralT> hypothesis;
         LiteralSkipper<SolverT> skipper;
 
         std::map<level_t, std::list<index_t> > selection_map;
@@ -89,8 +90,8 @@ namespace gpid {
         inline index_t getCurrentIndex();
     public:
         LiteralsEngine(SolverT& solver, SkipperController& ctrler, uint32_t size)
-            : solver(solver), storage(solver), hypothesis(size), l_active(size),
-              skipper(solver, storage, l_mapper, ctrler), clevel(1)
+            : solver(solver), l_active(size), storage(solver, l_mapper), hypothesis(size),
+              skipper(solver, storage, hypothesis, l_mapper, ctrler), clevel(1)
         { limit[1] = 0; pointer[1] = size; }
         /** Map an index of the set to a specific literal. */
         inline void mapLiteral(uint32_t idx, LiteralT* hyp);
@@ -275,7 +276,7 @@ namespace gpid {
             counters.consequence++;
             return true;
         }
-        if (control.storage && storage.fwdSubsumes(h)) {
+        if (control.storage && storage.fwdSubsumes(hypothesis, h)) {
             counters.storage++;
             return true;
         }
@@ -351,8 +352,8 @@ namespace gpid {
 
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::storeCurrentImplicate() {
-        snlog::l_warn("**indev : Storage");
-        /* TODO: STORAGE */
+        storage.bwdSubsumesRemove(hypothesis);
+        storage.insert(hypothesis);
     }
 
     template<class SolverT>

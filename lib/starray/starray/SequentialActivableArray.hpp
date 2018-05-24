@@ -51,6 +51,8 @@ namespace starray {
                 : tptr(tab), pos(pos), ooa(ooa || pos == ooa_chk) {}
             inline bool operator!=(const SeqAAIterator<Type>& rIt) const
             { return ooa != rIt.ooa || (!ooa && (tptr != rIt.tptr || pos != rIt.pos)); }
+            inline bool operator==(const SeqAAIterator<Type>& rIt) const
+            { return !operator!=(rIt); }
             SeqAAIterator& operator++();
             inline       Type operator*()       { return tptr[pos].index; }
             inline const Type operator*() const { return tptr[pos].index; }
