@@ -1,7 +1,7 @@
 #include <vector>
 #include <gtest/gtest.h>
 #include <gpid/gpid.hpp>
-#include <gpid/util/storage.hpp>
+#include <gpid/core/storage.hpp>
 
 #define ABDUCIBLE_TREE_TEST
 

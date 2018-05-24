@@ -12,8 +12,8 @@
 #include <starray/starray.hpp>
 #include <gpid/errors.hpp>
 #include <gpid/core/solvers.hpp>
+#include <gpid/core/storage.hpp>
 #include <gpid/util/skipper_controller.hpp>
-#include <gpid/util/storage.hpp>
 
 #include <gpid/instrument/instrument.hpp>
 
