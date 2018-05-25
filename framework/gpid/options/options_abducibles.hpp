@@ -10,7 +10,9 @@
 
 namespace gpid {
 
-    enum AbdInputType { ABDIT_FILE, ABDIT_GENERATOR };
+    enum class AbdInputType { ABDIT_FILE, ABDIT_GENERATOR };
+    inline const std::string to_string(const AbdInputType& it)
+    { return it == AbdInputType::ABDIT_FILE ? "Abd?Type:file" : "Abd?Type:generator"; }
 
     /** \brief Options for the abducible hypotheses. \ingroup gpidcorelib */
     struct AbduciblesOptions {

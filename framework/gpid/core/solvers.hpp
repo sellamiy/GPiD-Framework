@@ -12,14 +12,17 @@
 namespace gpid {
 
     /** \brief Generic Wrapper for Solver test results. \ingroup gpidcorelib */
-    enum SolverTestStatus {
+    enum class SolverTestStatus {
         /** The formula is satisfiable */
-        SOLVER_SAT     = 101,
+        SAT,
         /** The formula is unsatisfiable */
-        SOLVER_UNSAT   = 110,
+        UNSAT,
         /** The formula satisfiability status cannot be computed */
-        SOLVER_UNKNOWN = 111
+        UNKNOWN
     };
+    inline std::string to_string(const SolverTestStatus& s)
+    { return s == SolverTestStatus::SAT ?
+            "SAT" : s == SolverTestStatus::UNSAT ? "UNSAT" : "UNKNOWN"; }
 
     template<class CContextManagerT, class CLiteralT, class CModelT>
     class AbstractSolverInterface {

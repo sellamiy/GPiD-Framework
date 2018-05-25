@@ -22,7 +22,7 @@ struct OptionStorage : public gpid::CoreOptions {
     witchw::wController control;
 };
 
-enum OptionStatus {
+enum class OptionStatus {
     OK, ENDED, FAILURE
 };
 

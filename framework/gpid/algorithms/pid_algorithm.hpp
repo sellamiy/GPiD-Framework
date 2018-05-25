@@ -43,12 +43,12 @@ void gpid::DecompositionEngine<SolverT>::generatePID() {
 
             SolverTestStatus status = lengine.testHypothesis(level);
 
-            if (status == SolverTestStatus::SOLVER_SAT) {
+            if (status == SolverTestStatus::SAT) {
                 if (options.use_models) {
                     lengine.modelCleanUp(level);
                 }
                 selectNextPID();
-            } else if (status == SolverTestStatus::SOLVER_UNSAT) {
+            } else if (status == SolverTestStatus::UNSAT) {
                 // We have found an implicate
                 activeIsImplicate();
                 popStackLevel();

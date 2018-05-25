@@ -6,7 +6,7 @@
 using namespace snlog;
 using namespace gpid;
 
-enum gtsExecutionStatus { GTS_SUCCESS, GTS_FAILURE };
+enum class gtsExecutionStatus { SUCCESS, FAILURE };
 
 template<class Solver>
 static inline void generate(OptionStorage& opts) {

@@ -36,9 +36,9 @@ namespace gpid {
     inline gpid::SolverTestStatus Z3SolverInterface::check() {
         z3::check_result qres = _internal->solver.check();
         switch (qres) {
-        case z3::sat:   return SolverTestStatus::SOLVER_SAT;
-        case z3::unsat: return SolverTestStatus::SOLVER_UNSAT;
-        default:        return SolverTestStatus::SOLVER_UNKNOWN;
+        case z3::sat:   return SolverTestStatus::SAT;
+        case z3::unsat: return SolverTestStatus::UNSAT;
+        default:        return SolverTestStatus::UNKNOWN;
         }
     }
 

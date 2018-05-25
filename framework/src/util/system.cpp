@@ -12,7 +12,7 @@ static void systemInterruptHandler(int signum) {
     snlog::l_fatal("Interrupted");
     snlog::l_info(signum);
 
-    sys_flag_loc->interrupt(gpid::SystemInterruptsFlags::SYS_INT_R__USER);
+    sys_flag_loc->interrupt(gpid::SystemInterruptsFlags::Reason::SYS_INT_R__USER);
 }
 
 extern void gpid::registerInterruptsHandlers(SystemInterruptsFlags* flags_addr) {
@@ -42,7 +42,7 @@ class systemTimeoutWaiter {
             duration = std::chrono::duration_cast<std::chrono::seconds>(current_date - origin_date);
         }
         snlog::l_fatal("Timeout");
-        external_flags_addr->interrupt(gpid::SystemInterruptsFlags::SYS_INT_R__TIMEOUT);
+        external_flags_addr->interrupt(gpid::SystemInterruptsFlags::Reason::SYS_INT_R__TIMEOUT);
     }
 
     std::thread* sys_timeout_waiter = NULL;

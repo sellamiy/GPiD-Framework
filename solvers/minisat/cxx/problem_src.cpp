@@ -67,11 +67,11 @@ Minisat::vec<Minisat::Lit>& MinisatProblem::nextConstraint() {
 
 void MinisatProblem::initCurrentMode() {
     switch (mode) {
-    case IO_READ:
+    case IOMode::IO_READ:
         handler->cons_sep.copyTo(handler->read_session_seps);
         handler->cons_data.copyTo(handler->read_session_data);
         break;
-    case IO_WRITE:
+    case IOMode::IO_WRITE:
         handler->read_session_seps.clear();
         handler->read_session_data.clear();
         break;

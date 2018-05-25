@@ -12,17 +12,26 @@ using namespace snlog;
 
 namespace gpid {
 
-    enum <%= @solver.name %>InputGenerator {
+    enum class <%= @solver.name %>InputGenerator {
         <% for @generator in @solver.abducibleGenerators %>
         <%= @solver.name %>_IG_<%= @generator["name"] %>,
         <% end %>
         <%= @solver.name %>_IG_NONE
     };
 
+    inline const std::string to_string(const <%= @solver.name %>InputGenerator& <% if @solver.abducibleGenerators.size > 0 %> ig <% end %>) {
+        <% for @generator in @solver.abducibleGenerators %>
+        if (ig == <%= @solver.name %>InputGenerator::<%= @solver.name %>_IG_<%= @generator["name"] %>) {
+            return "<%= @solver.name %>_IG_<%= @generator["name"] %>";
+        }
+        <% end %>
+        return "<%= @solver.name %>_IG_NONE";
+    }
+
     static inline <%= @solver.name %>InputGenerator to<%= @solver.name %>InputGenerator(std::string key) {
         <% for @generator in @solver.abducibleGenerators %>
         if (key == "<%= @generator["name"] %>") {
-            return <%= @solver.name %>_IG_<%= @generator["name"] %>;
+            return <%= @solver.name %>InputGenerator::<%= @solver.name %>_IG_<%= @generator["name"] %>;
         }
         <% end %>
         l_error("Unknown <%= @solver.name %> abducible generator: " + key);
@@ -42,11 +51,11 @@ namespace gpid {
     (<%= @solver.name %>InputGenerator g, <%= @solver.problemClass %>& pbl) {
         switch (g) {
         <% for @generator in @solver.abducibleGenerators %>
-        case <%= @solver.name %>_IG_<%= @generator["name"] %>:
+        case <%= @solver.name %>InputGenerator::<%= @solver.name %>_IG_<%= @generator["name"] %>:
             return <%= @generator["counter"] %>(pbl.getContextManager(), pbl.getDeclarations());
         <% end %>
         default:
-            throw InternalError("Unknown <%= @solver.name %> abducible generator: " + std::to_string(g));
+            throw InternalError("Unknown <%= @solver.name %> abducible generator: " + to_string(g));
         }
     }
     <% end %>
@@ -80,12 +89,12 @@ namespace gpid {
      LiteralsEngine<<%= @solver.solverClass %>Engine>& set) {
         switch (g) {
         <% for @generator in @solver.abducibleGenerators %>
-        case <%= @solver.name %>_IG_<%= @generator["name"] %>:
+        case <%= @solver.name %>InputGenerator::<%= @solver.name %>_IG_<%= @generator["name"] %>:
             <%= @generator["generator"] %>(ctx, decls, set);
             break;
         <% end %>
         default:
-            throw InternalError("Unknown <%= @solver.name %> abducible generator: " + std::to_string(g));
+            throw InternalError("Unknown <%= @solver.name %> abducible generator: " + to_string(g));
         }
     }
     <% end %>

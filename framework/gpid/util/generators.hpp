@@ -43,7 +43,7 @@ namespace gpid {
         } else if (opts.input_type == AbdInputType::ABDIT_GENERATOR) {
             return GeneratorCounterT()(opts.input_generator, pbl);
         } else {
-            throw InternalError("unknown abducible input type: " + std::to_string(opts.input_type));
+            throw InternalError("unknown abducible input type: " + to_string(opts.input_type));
         }
     }
 
@@ -72,7 +72,7 @@ namespace gpid {
         } else if (opts.input_type == AbdInputType::ABDIT_GENERATOR) {
             GeneratorT()(opts.input_generator, ctx, decls, set);
         } else {
-            throw InternalError("unknown abducible input type: " + std::to_string(opts.input_type));
+            throw InternalError("unknown abducible input type: " + to_string(opts.input_type));
         }
     }
 

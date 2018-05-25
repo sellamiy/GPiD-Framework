@@ -263,11 +263,11 @@ namespace gpid {
     inline bool LiteralSkipper<SolverT>::consistent(LiteralRefT h, uint32_t level) {
         solver.addLiteral(mapper.get(h), level+1);
         SolverTestStatus status = solver.checkConsistency(level+1);
-        if (status == SolverTestStatus::SOLVER_UNKNOWN) {
+        if (status == SolverTestStatus::UNKNOWN) {
             throw UndecidableProblemError("Solver could not decide consistency query");
         }
         solver.removeLiterals(level+1);
-        return status == SolverTestStatus::SOLVER_SAT;
+        return status == SolverTestStatus::SAT;
     }
 
     template<class SolverT>
@@ -359,9 +359,9 @@ namespace gpid {
     template<class SolverT>
     inline SolverTestStatus LiteralsEngine<SolverT>::testHypothesis(uint32_t level) {
         accessLevel(level);
-        insthandle(instrument::idata(solver.hypothesisAsString()), instrument::ismt_test);
+        insthandle(instrument::idata(solver.hypothesisAsString()), instrument::instloc::ismt_test);
         SolverTestStatus status = solver.testHypothesis(level);
-        insthandle(instrument::idata(status), instrument::ismt_result);
+        insthandle(instrument::idata(to_string(status)), instrument::instloc::ismt_result);
         return status;
     }
 

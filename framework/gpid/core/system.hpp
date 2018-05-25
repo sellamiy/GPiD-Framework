@@ -12,7 +12,7 @@ namespace gpid {
     /** \brief System interruption flag storage. */
     struct SystemInterruptsFlags {
         /** Possible reasons for an interruption */
-        enum SystemInterruptsReason {
+        enum class SystemInterruptsReason {
             /** No particular reason */
             SYS_INT_R__,
             /** Engine internal: the engine internally decides to interrupt */
@@ -22,8 +22,9 @@ namespace gpid {
             /** Timeout */
             SYS_INT_R__TIMEOUT
         };
+        typedef SystemInterruptsReason Reason;
         /** Reason of the interruption */
-        SystemInterruptsReason reason = SYS_INT_R__;
+        SystemInterruptsReason reason = Reason::SYS_INT_R__;
         /** Interruption flag. Set to true iff the engine should be interrupted. */
         bool interruption_flag = false;
 

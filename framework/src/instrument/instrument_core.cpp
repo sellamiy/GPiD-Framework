@@ -81,25 +81,25 @@ namespace instrument {
         snlog::l_notif("initialize instruments...");
         if (opts.selection_graph) {
             selectionGrapher = new SelectionGrapher(ctrler.getSelectionGraphStream());
-            analyzers[stack_push].push_back(&selectionGrapher_stack_push);
-            analyzers[stack_pop].push_back(&selectionGrapher_stack_pop);
-            analyzers[pre_select].push_back(&selectionGrapher_pre_select);
-            analyzers[implicate].push_back(&selectionGrapher_implicate);
-            analyzers[model_skip].push_back(&selectionGrapher_model_skip);
-            analyzers[reset].push_back(&selectionGrapher_reset);
+            analyzers[instloc::stack_push].push_back(&selectionGrapher_stack_push);
+            analyzers[instloc::stack_pop].push_back(&selectionGrapher_stack_pop);
+            analyzers[instloc::pre_select].push_back(&selectionGrapher_pre_select);
+            analyzers[instloc::implicate].push_back(&selectionGrapher_implicate);
+            analyzers[instloc::model_skip].push_back(&selectionGrapher_model_skip);
+            analyzers[instloc::reset].push_back(&selectionGrapher_reset);
             finalizers.push_back(&selectionGrapher_finalizer);
         }
         if (opts.webtrace) {
             webtraceInstrument = new WebtraceInstrument(ctrler.getWebtraceStream());
             // TODO: Setup Analyzers and finalizers
-            analyzers[stack_push].push_back(&webtraceInstrument_stack_push);
-            analyzers[stack_pop].push_back(&webtraceInstrument_stack_pop);
-            analyzers[pre_select].push_back(&webtraceInstrument_pre_select);
-            analyzers[implicate].push_back(&webtraceInstrument_implicate);
-            analyzers[model_skip].push_back(&webtraceInstrument_model_skip);
-            analyzers[ismt_test].push_back(&webtraceInstrument_ismt_test);
-            analyzers[ismt_result].push_back(&webtraceInstrument_ismt_result);
-            analyzers[reset].push_back(&webtraceInstrument_reset);
+            analyzers[instloc::stack_push].push_back(&webtraceInstrument_stack_push);
+            analyzers[instloc::stack_pop].push_back(&webtraceInstrument_stack_pop);
+            analyzers[instloc::pre_select].push_back(&webtraceInstrument_pre_select);
+            analyzers[instloc::implicate].push_back(&webtraceInstrument_implicate);
+            analyzers[instloc::model_skip].push_back(&webtraceInstrument_model_skip);
+            analyzers[instloc::ismt_test].push_back(&webtraceInstrument_ismt_test);
+            analyzers[instloc::ismt_result].push_back(&webtraceInstrument_ismt_result);
+            analyzers[instloc::reset].push_back(&webtraceInstrument_reset);
             finalizers.push_back(&webtraceInstrument_finalizer);
         }
     }

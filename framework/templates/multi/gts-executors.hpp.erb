@@ -9,28 +9,28 @@ template void generate<<%= @solver.solverClass %>Engine>(OptionStorage& opts);
 static inline gtsExecutionStatus wrap_generate(OptionStorage& opts) {
     try {
         generate<<%= @solver.solverClass %>Engine>(opts);
-        return GTS_SUCCESS;
+        return gtsExecutionStatus::SUCCESS;
     }
 
   <% for @except in @solver.solverExceptions %>
     catch (<%= @except["name"] %>& e) {
         snlog::l_fatal("Solver exception recovered");
         snlog::l_error(e.<%= @except["messager"] %>());
-        return GTS_FAILURE;
+        return gtsExecutionStatus::FAILURE;
     }
   <% end %>
     catch (gpid::InternalError& e) {
         snlog::l_internal(e.what());
-        return GTS_FAILURE;
+        return gtsExecutionStatus::FAILURE;
     }
     catch (gpid::GPiDError& e) {
         snlog::l_fatal(e.what());
-        return GTS_FAILURE;
+        return gtsExecutionStatus::FAILURE;
     }
     catch (std::exception& e) {
         snlog::l_internal("Unexpected throwable recovered");
         snlog::l_fatal(e.what());
-        return GTS_FAILURE;
+        return gtsExecutionStatus::FAILURE;
     }
 }
 #endif
@@ -43,36 +43,36 @@ template void generate<<%= @solver.solverClass %>Engine>(OptionStorage& opts);
 static inline gtsExecutionStatus wrap_generate(OptionStorage& opts) {
     switch (opts.generator) {
     <% for @solver in @solvers %>
-    case <%= @solver.name %>_INTERFACE:
+    case EngineSelection::<%= @solver.name %>_INTERFACE:
         try {
             generate<<%= @solver.solverClass %>Engine>(opts);
-            return GTS_SUCCESS;
+            return gtsExecutionStatus::SUCCESS;
         }
 
       <% for @except in @solver.solverExceptions %>
         catch (<%= @except["name"] %>& e) {
             snlog::l_fatal("Solver <%= @solver.name %> exception recovered");
             snlog::l_error(e.<%= @except["messager"] %>());
-            return GTS_FAILURE;
+            return gtsExecutionStatus::FAILURE;
         }
       <% end %>
         catch (gpid::InternalError& e) {
             snlog::l_internal(e.what());
-            return GTS_FAILURE;
+            return gtsExecutionStatus::FAILURE;
         }
         catch (gpid::GPiDError& e) {
             snlog::l_fatal(e.what());
-            return GTS_FAILURE;
+            return gtsExecutionStatus::FAILURE;
         }
         catch (std::exception& e) {
             snlog::l_internal("Unexpected throwable recovered");
             snlog::l_fatal(e.what());
-            return GTS_FAILURE;
+            return gtsExecutionStatus::FAILURE;
         }
     <% end %>
     default:
         snlog::l_internal("Asked for unknown gts generator");
-        return GTS_FAILURE;
+        return gtsExecutionStatus::FAILURE;
     }
 }
 #endif

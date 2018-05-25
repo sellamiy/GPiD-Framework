@@ -40,6 +40,6 @@ int main(int argc, const char** argv) {
     l_raw(opts.control.stats);
 
     l_message("complete.");
-    t_error(gStatus != GTS_SUCCESS, "errors occured!");
-    return gStatus == GTS_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
+    t_error(gStatus != gtsExecutionStatus::SUCCESS, "errors occured!");
+    return gStatus == gtsExecutionStatus::SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
 }

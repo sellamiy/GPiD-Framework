@@ -24,7 +24,7 @@ namespace starray {
     class SequentialActivableArray
     {
     private:
-        enum aa_elt_st { ACTIVE, PAUSED, INACTIVE };
+        enum class aa_elt_st { ACTIVE, PAUSED, INACTIVE };
         struct aa_elt {
             aa_elt_st status;
             uint32_t index;

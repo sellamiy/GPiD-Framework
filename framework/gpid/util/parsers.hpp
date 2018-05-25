@@ -21,7 +21,7 @@ namespace gpid {
             inline dw_pstr(int l, int c) : line(l), col(c) {}
         } pos;
 
-        enum AbdParserStatus { ABDP_0, ABDP_OPENED, ABDP_INIT, ABDP_CLOSED, ABDP_ERROR };
+        enum class AbdParserStatus { ABDP_0, ABDP_OPENED, ABDP_INIT, ABDP_CLOSED, ABDP_ERROR };
         AbdParserStatus status;
 
         uint32_t abd_count;
@@ -29,7 +29,7 @@ namespace gpid {
         void openSource();
         void closeSource();
 
-        enum AbdParserTokenType { ABDC_COMMAND, ABDC_EXPR, ABDC_EOF, ABDC_UNKNOWN };
+        enum class AbdParserTokenType { ABDC_COMMAND, ABDC_EXPR, ABDC_EOF, ABDC_UNKNOWN };
         struct AbdParserToken {
             AbdParserTokenType type;
             std::string content;
@@ -38,7 +38,7 @@ namespace gpid {
             inline AbdParserToken(const AbdParserToken& t)
                 : type(t.type), content(t.content) {}
         };
-        enum AbdParserState { COMMAND_IN, COMMAND_OUT };
+        enum class AbdParserState { COMMAND_IN, COMMAND_OUT };
         AbdParserToken lastToken;
         bool lastTokenUse;
         AbdParserToken nextToken(AbdParserState state);

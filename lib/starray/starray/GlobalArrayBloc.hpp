@@ -13,7 +13,7 @@
 namespace starray {
 
     /** \brief Memory operation possible results. */
-    enum GlobalArrayBlocStatus {
+    enum class GlobalArrayBlocStatus {
         /** The operation was successful */
         SUCCESS,
         /** Accessing memory for an unknown location */

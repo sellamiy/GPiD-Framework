@@ -14,7 +14,7 @@
 
 namespace gpid {
 
-    enum GenerationAlgorithm {
+    enum class GenerationAlgorithm {
         PID
     };
 
@@ -38,7 +38,7 @@ namespace gpid {
         uint64_t gi_counter;
         uint64_t node_counter;
 
-        enum IStackDirection {
+        enum class IStackDirection {
             STACK_PUSH,
             STACK_POP
         };
@@ -104,7 +104,7 @@ inline void gpid::DecompositionEngine<SolverT>::activeIsImplicate() {
     if (options.store_implicates)
         lengine.storeCurrentImplicate();
     if (options.implicate_limit <= gi_counter)
-        des_iflags.interrupt(SystemInterruptsFlags::SYS_INT_R__INTERNAL);
+        des_iflags.interrupt(SystemInterruptsFlags::Reason::SYS_INT_R__INTERNAL);
     insthandle(instrument::idata(), instrument::instloc::implicate);
 }
 
@@ -129,7 +129,7 @@ inline void gpid::DecompositionEngine<SolverT>
     registerInterruptsHandlers(&des_iflags);
     startTimeout(&des_iflags, options.time_limit);
     switch (algorithm) {
-    case PID: generatePID(); break;
+    case GenerationAlgorithm::PID: generatePID(); break;
     default: throw InternalError("Unknown generation algorithm");
     }
     stopTimeout();

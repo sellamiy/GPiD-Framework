@@ -13,7 +13,7 @@
 namespace gpid {
 namespace instrument {
 
-    enum instloc {
+    enum class instloc {
         stack_push, stack_pop,
         pre_select, implicate, model_skip,
         ismt_test, ismt_result,

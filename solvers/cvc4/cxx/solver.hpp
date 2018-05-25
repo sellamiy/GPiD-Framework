@@ -39,9 +39,9 @@ namespace gpid {
 
     inline gpid::SolverTestStatus CVC4SolverInterface::check() {
         CVC4::Result qres = _internal->solver.checkSat();
-        if      (qres.isSat() == CVC4::Result::SAT)   return SolverTestStatus::SOLVER_SAT;
-        else if (qres.isSat() == CVC4::Result::UNSAT) return SolverTestStatus::SOLVER_UNSAT;
-        else                                          return SolverTestStatus::SOLVER_UNKNOWN;
+        if      (qres.isSat() == CVC4::Result::SAT)   return SolverTestStatus::SAT;
+        else if (qres.isSat() == CVC4::Result::UNSAT) return SolverTestStatus::UNSAT;
+        else                                          return SolverTestStatus::UNKNOWN;
     }
 
 }

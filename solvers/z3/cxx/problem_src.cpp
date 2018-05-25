@@ -47,10 +47,10 @@ z3::expr Z3Problem::nextConstraint() {
 
 void Z3Problem::initCurrentMode() {
     switch (mode) {
-    case IO_READ:
+    case IOMode::IO_READ:
         handler->reading_pos = 0;
         break;
-    case IO_WRITE:
+    case IOMode::IO_WRITE:
         handler->reading_pos = -1;
         break;
     default:

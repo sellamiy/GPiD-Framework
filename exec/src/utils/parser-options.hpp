@@ -10,7 +10,7 @@ struct ParserOptions {
     std::string input;
 };
 
-enum OptionStatus {
+enum class OptionStatus {
     OK, ENDED, FAILURE
 };
 

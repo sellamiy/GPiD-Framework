@@ -1,7 +1,7 @@
 #ifndef GTS_INTERFACES_SNIPPET
 #define GTS_INTERFACES_SNIPPET
 
-enum EngineSelection {
+enum class EngineSelection {
     <% for @solver in @solvers %>
     <%= @solver.name %>_INTERFACE,
     <% end %>

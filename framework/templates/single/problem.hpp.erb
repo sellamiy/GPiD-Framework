@@ -21,7 +21,7 @@ namespace gpid {
     class <%= @solver.problemClass %> {
     public:
         /** \brief Enum form problem generation mode */
-        enum IOMode { IO_READ, IO_WRITE };
+        enum class IOMode { IO_READ, IO_WRITE };
         /** \brief Context manager type handled by the problem */
         typedef <%= @solver.contextManagerClass %> ContextManagerT;
         /** \brief Declarations type handled by the problem */

@@ -59,9 +59,9 @@ namespace gpid {
 
     inline gpid::SolverTestStatus MinisatSolverInterface::check() {
         Minisat::lbool ret = _internal->solver.solveLimited(_internal->assumps);
-        if      (ret == Minisat::l_True)  return gpid::SolverTestStatus::SOLVER_SAT;
-        else if (ret == Minisat::l_False) return gpid::SolverTestStatus::SOLVER_UNSAT;
-        else                              return gpid::SolverTestStatus::SOLVER_UNKNOWN;
+        if      (ret == Minisat::l_True)  return gpid::SolverTestStatus::SAT;
+        else if (ret == Minisat::l_False) return gpid::SolverTestStatus::UNSAT;
+        else                              return gpid::SolverTestStatus::UNKNOWN;
     }
 
 }

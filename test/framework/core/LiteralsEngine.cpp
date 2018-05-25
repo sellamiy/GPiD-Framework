@@ -29,7 +29,7 @@ struct HSTest_SWrapper {
     typedef HSTest_SW StorageT;
     typedef HSTest_IW InterfaceT;
 
-    static inline SolverTestStatus checkConsistency(uint32_t) { return SOLVER_SAT; }
+    static inline SolverTestStatus checkConsistency(uint32_t) { return SolverTestStatus::SAT; }
     static inline bool storageSubsumed(HSTest_S&, uint32_t)   { return false; }
     static inline bool isConsequence(HSTest_S&, uint32_t)     { return false; }
     static inline void addLiteral(HSTest_S&, uint32_t) { }
