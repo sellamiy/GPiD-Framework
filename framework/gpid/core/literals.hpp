@@ -9,7 +9,7 @@
 
 #include <list>
 #include <sstream>
-#include <starray/starray.hpp>
+#include <snlog/snlog.hpp>
 #include <gpid/errors.hpp>
 #include <gpid/core/solvers.hpp>
 #include <gpid/core/storage.hpp>
