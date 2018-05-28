@@ -20,6 +20,7 @@ namespace gpid {
         inline void map(index_t idx, LiteralT* l);
         inline LiteralT& get(index_t idx);
 
+        inline uint32_t size();
     private:
         std::map<index_t, LiteralT*> _mapping;
     };
@@ -56,6 +57,11 @@ namespace gpid {
     template<class LiteralT>
     inline LiteralT& LiteralMapper<LiteralT>::get(index_t idx) {
         return *_mapping[idx];
+    }
+
+    template<class LiteralT>
+    inline uint32_t LiteralMapper<LiteralT>::size() {
+        return _mapping.size();
     }
 
     template<class LiteralT>

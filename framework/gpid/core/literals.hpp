@@ -158,6 +158,8 @@ namespace gpid {
 
     template<class SolverT>
     inline void LiteralsEngine<SolverT>::printCurrentImplicate() {
+        // TODO: Switch this to HypothesisT printers
+        snlog::l_warn("Deprecated Structure implicate printer");
         solver.printHypothesisNegation();
     }
 
