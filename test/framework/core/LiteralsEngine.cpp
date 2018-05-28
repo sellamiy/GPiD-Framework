@@ -20,7 +20,12 @@ struct HSTest_MW {};
 
 struct HSTest_SW {};
 
-struct HSTest_IW {};
+struct HSTest_IW {
+    inline void push() {}
+    inline void pop()  {}
+    inline void addLiteral(HSTest_S&, bool=false) {}
+    inline SolverTestStatus check() { return SolverTestStatus::UNKNOWN; }
+};
 static HSTest_IW HSTest_IW_LCINT;
 
 struct HSTest_SWrapper {

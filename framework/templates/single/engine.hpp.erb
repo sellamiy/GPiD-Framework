@@ -23,8 +23,8 @@ namespace gpid {
     public:
         virtual void push() override;
         virtual void pop() override;
-        virtual void addLiteral(LiteralT& lit) override;
-        virtual void addClause(HypothesisT& h, LiteralMapper<LiteralT>& mapper) override;
+        virtual void addLiteral(LiteralT& lit, bool negate=false) override;
+        virtual void addClause(HypothesisT& h, LiteralMapper<LiteralT>& mapper, bool negate=false) override;
         virtual SolverTestStatus check() override;
         virtual ModelT& getModel() override;
 

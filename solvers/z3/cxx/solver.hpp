@@ -15,15 +15,19 @@ namespace gpid {
 
     inline void Z3SolverInterface::pop() { _internal->solver.pop(); }
 
-    inline void Z3SolverInterface::addLiteral(Z3Literal& literal) {
-        _internal->solver.add(literal.expr);
+    inline void Z3SolverInterface::addLiteral(Z3Literal& literal, bool negate) {
+        _internal->solver.add(negate ? (!literal.expr) : literal.expr);
     }
 
-    inline void Z3SolverInterface::addClause(HypothesisT& h, LiteralMapper<Z3Literal>& mapper) {
+    inline void Z3SolverInterface::addClause(HypothesisT& h, LiteralMapper<Z3Literal>& mapper,
+                                             bool negate) {
         auto it = h.begin();
         z3::expr cl = mapper.get(*it).expr;
+        if (negate) cl = !cl;
         while (++it != h.end()) {
-            cl = cl || mapper.get(*it).expr;
+            z3::expr ct = mapper.get(*it).expr;
+            if (negate) ct = !ct;
+            cl = cl || ct;
         }
         _internal->solver.add(cl);
     }

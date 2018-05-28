@@ -38,14 +38,18 @@ namespace gpid {
 
     inline void MinisatSolverInterface::pop() { _internal->pop(); }
 
-    inline void MinisatSolverInterface::addLiteral(MinisatLiteral& literal) {
+    inline void MinisatSolverInterface::addLiteral(MinisatLiteral& literal, bool negate) {
         _internal->loc_ass.push_back(literal);
-        _internal->assumps.push(literal.lit);
+        _internal->assumps.push(negate ? ~literal.lit : literal.lit);
     }
 
-    inline void MinisatSolverInterface::addClause(HypothesisT& h, LiteralMapper<MinisatLiteral>& mapper) {
+    inline void MinisatSolverInterface::addClause(HypothesisT& h, LiteralMapper<MinisatLiteral>& mapper,
+                                                  bool negate) {
         Minisat::vec<Minisat::Lit> ps;
-        for (auto ml : h) ps.push(mapper.get(ml).lit);
+        for (auto ml : h) {
+            Minisat::Lit cl = mapper.get(ml).lit;
+            ps.push(negate ? ~cl : cl);
+        }
         _internal->solver.addClause_(ps);
     }
 

@@ -21,15 +21,23 @@ namespace gpid {
 
     inline void CVC4SolverInterface::pop() { _internal->solver.pop(); }
 
-    inline void CVC4SolverInterface::addLiteral(CVC4Literal& literal) {
-        _internal->solver.assertFormula(literal.expr);
+    inline void CVC4SolverInterface::addLiteral(CVC4Literal& literal, bool negate) {
+        if (negate) {
+            _internal->solver.assertFormula(ctx.mkExpr(CVC4::kind::NOT, literal.expr));
+        } else {
+            _internal->solver.assertFormula(literal.expr);
+        }
     }
 
-    inline void CVC4SolverInterface::addClause(HypothesisT& h, LiteralMapper<CVC4Literal>& mapper) {
+    inline void CVC4SolverInterface::addClause(HypothesisT& h, LiteralMapper<CVC4Literal>& mapper,
+                                               bool negate) {
         auto it = h.begin();
         CVC4::Expr cl = mapper.get(*it).expr;
+        if (negate) cl = ctx.mkExpr(CVC4::kind::NOT, cl);
         while (++it != h.end()) {
-            cl = ctx.mkExpr(CVC4::kind::OR, cl, mapper.get(*it).expr);
+            CVC4::Expr ct = mapper.get(*it).expr;
+            if (negate) ct = ctx.mkExpr(CVC4::kind::NOT, ct);
+            cl = ctx.mkExpr(CVC4::kind::OR, cl, ct);
         }
         _internal->solver.assertFormula(cl);
     }

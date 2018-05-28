@@ -35,7 +35,7 @@ namespace gpid {
         inline void insertLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it);
         inline bool containsLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it);
 
-        inline void fwdSubsumesLocal(anidx_t idx);
+        inline bool fwdSubsumesLocal(anidx_t idx);
         inline void bwdSubsumesRemoveLocal(anidx_t idx);
 
         inline void printLocal(anidx_t idx, HypothesisT& cprint, uint32_t clvl);
@@ -93,7 +93,7 @@ namespace gpid {
     template<class SolverT>
     inline void AbducibleTree<SolverT>::bwdSubsumesRemove(HypothesisT& h) {
         solver.push();
-        solver.addClause(h, mapper);
+        solver.addClause(h, mapper, true);
         bwdSubsumesRemoveLocal(1);
         solver.pop();
     }
@@ -115,14 +115,6 @@ namespace gpid {
         } else {
             nodes[idx].clear();
         }
-    }
-
-    template<class SolverT>
-    inline bool AbducibleTree<SolverT>::fwdSubsumes(HypothesisT& h, LiteralRefT l_add) {
-        h.addLiteral(l_add, std::numeric_limits<uint32_t>::max());
-        bool res = fwdSubsumes(h);
-        h.removeLiterals(std::numeric_limits<uint32_t>::max());
-        return res;
     }
 
     template<class SolverT>
@@ -174,26 +166,44 @@ namespace gpid {
         }
     }
 
-    /* * UNCOMPLETE * */
-
     template<class SolverT>
-    inline bool AbducibleTree<SolverT>::fwdSubsumes(HypothesisT&)
-    { snlog::l_warn("Not Implemented Yet: storage::fwdSubsumes"); return false; }
-
-    /*
-    template<class ATUtils>
-    inline bool AbducibleTree<ATUtils>::subsumes(typename ATUtils::FormulaT implicate, bool negate) {
-        subsumptionSolver.push();
-        subsumptionSolver.addFormula(implicate, negate);
-        SolverTestStatus res = subsumptionSolver.check();
-        subsumptionSolver.pop();
-        if (res == SOLVER_UNKNOWN) {
-            snlog::l_error("Subsumption satisfiability test returned unknown");
-        }
-        return res == SOLVER_UNSAT;
+    inline bool AbducibleTree<SolverT>::fwdSubsumes(HypothesisT& h, LiteralRefT l_add) {
+        solver.push();
+        solver.addLiteral(mapper.get(l_add));
+        bool res = fwdSubsumes(h);
+        solver.pop();
+        return res;
     }
 
-    */
+    template<class SolverT>
+    inline bool AbducibleTree<SolverT>::fwdSubsumes(HypothesisT& h) {
+        solver.push();
+        for (anidx_t hl : h) {
+            solver.addLiteral(mapper.get(hl));
+        }
+        bool res = fwdSubsumesLocal(1);
+        solver.pop();
+        return res;
+    }
+
+    template<class SolverT>
+    inline bool AbducibleTree<SolverT>::fwdSubsumesLocal(anidx_t idx) {
+        for (auto p : nodes[idx]) {
+            solver.push();
+            solver.addLiteral(mapper.get(p.first), true);
+            SolverTestStatus res = solver.check();
+            if (res == SolverTestStatus::UNKNOWN) {
+                snlog::l_error("Storage insertion satisfiability test returned unknown");
+            }
+            if (res == SolverTestStatus::UNSAT) {
+                if (fwdSubsumesLocal(p.second)) {
+                    return true;
+                }
+            }
+            solver.pop();
+        }
+        return false;
+    }
 
 }
 

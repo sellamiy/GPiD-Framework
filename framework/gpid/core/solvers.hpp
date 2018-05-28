@@ -34,8 +34,8 @@ namespace gpid {
         typedef LiteralHypothesis<LiteralT> HypothesisT;
         virtual void push() = 0;
         virtual void pop() = 0;
-        virtual void addLiteral(LiteralT& lit) = 0;
-        virtual void addClause(HypothesisT& h, LiteralMapper<LiteralT>& mapper) = 0;
+        virtual void addLiteral(LiteralT& lit, bool negate) = 0;
+        virtual void addClause(HypothesisT& h, LiteralMapper<LiteralT>& mapper, bool negate) = 0;
         virtual SolverTestStatus check() = 0;
         virtual ModelT& getModel() = 0;
 
