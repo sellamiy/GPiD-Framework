@@ -41,12 +41,12 @@ namespace gpid {
 
 namespace gpid {
 
-    struct MinisatContextManager { };
-
-    struct MinisatDeclarations {
+    struct MinisatContextManager {
         int nVars = 0;
         inline void newVar() { ++nVars; }
     };
+
+    struct MinisatDeclarations { };
 
     typedef Minisat::Lit MinisatInternal;
 

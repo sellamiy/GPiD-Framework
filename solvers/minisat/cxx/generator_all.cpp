@@ -6,8 +6,8 @@ using namespace Minisat;
 
 namespace gpid {
 
-    static inline uint32_t countAbducibles_all(MinisatContextManager&, MinisatDeclarations& decls) {
-        return 2*decls.nVars;
+    static inline uint32_t countAbducibles_all(MinisatContextManager& ctxm, MinisatDeclarations&) {
+        return 2*ctxm.nVars;
     }
 
     static inline void generateAbducibles_all(MinisatContextManager&, MinisatDeclarations&,

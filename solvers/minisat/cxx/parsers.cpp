@@ -13,8 +13,8 @@ namespace gpid {
         inline void addClause_(Minisat::vec<Minisat::Lit>& ps)
         { intern.addConstraint(ps); }
 
-        inline int nVars()   { return intern.getDeclarations().nVars; }
-        inline void newVar() { intern.getDeclarations().newVar(); }
+        inline int nVars()   { return intern.getContextManager().nVars; }
+        inline void newVar() { intern.getContextManager().newVar(); }
     };
 
     static void parse_DIMACS(std::string filename, MinisatContextManager&, MinisatProblem& P) {

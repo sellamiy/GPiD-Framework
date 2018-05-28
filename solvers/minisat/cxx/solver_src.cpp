@@ -4,7 +4,11 @@
 using namespace gpid;
 
 MinisatSolverInterface::MinisatSolverInterface(MinisatContextManager& ctx)
-    : AbstractSolverInterface(ctx), _internal(new MinisatSolverInternal()) {}
+    : AbstractSolverInterface(ctx), _internal(new MinisatSolverInternal()) {
+    for (int i = 0; i < ctx.nVars; i++) {
+        _internal->solver.newVar();
+    }
+}
 
 void MinisatSolverEngine::start() {
     c_level = 0;
@@ -12,7 +16,7 @@ void MinisatSolverEngine::start() {
 
 void MinisatSolverEngine::setProblem(MinisatProblem& problem) {
     problem.setMode(MinisatProblem::IOMode::IO_READ);
-    for (int i = 0; i < problem.getDeclarations().nVars; i++) {
+    for (int i = 0; i < problem.getContextManager().nVars; i++) {
         getInterface(problemInterfaceId)._internal->solver.newVar();
         getInterface(consistencyInterfaceId)._internal->solver.newVar();
     }
