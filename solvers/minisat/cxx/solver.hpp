@@ -43,6 +43,12 @@ namespace gpid {
         _internal->assumps.push(literal.lit);
     }
 
+    inline void MinisatSolverInterface::addClause(HypothesisT& h, LiteralMapper<MinisatLiteral>& mapper) {
+        Minisat::vec<Minisat::Lit> ps;
+        for (auto ml : h) ps.push(mapper.get(ml).lit);
+        _internal->solver.addClause_(ps);
+    }
+
     inline MinisatModelWrapper& MinisatSolverInterface::getModel() {
         return _internal->iw_mdl;
     }

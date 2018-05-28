@@ -25,6 +25,15 @@ namespace gpid {
         _internal->solver.assertFormula(literal.expr);
     }
 
+    inline void CVC4SolverInterface::addClause(HypothesisT& h, LiteralMapper<CVC4Literal>& mapper) {
+        auto it = h.begin();
+        CVC4::Expr cl = mapper.get(*it).expr;
+        while (++it != h.end()) {
+            cl = ctx.mkExpr(CVC4::kind::OR, cl, mapper.get(*it).expr);
+        }
+        _internal->solver.assertFormula(cl);
+    }
+
     inline CVC4ModelWrapper& CVC4SolverInterface::getModel() {
         return _internal->iw_mdl;
     }

@@ -23,6 +23,7 @@ namespace gpid {
     void              ts__solvInterface::printAssertions       (bool)     { }
     const std::string ts__solvInterface::getPrintableAssertions(bool)     { return ""; }
     void              ts__solvInterface::addLiteral            (ts__lit&) { }
+    void              ts__solvInterface::addClause             (HypothesisT&, LiteralMapper<LiteralT>&) { }
     SolverTestStatus  ts__solvInterface::check                 () { return SolverTestStatus::UNKNOWN; }
     ts__mdl&          ts__solvInterface::getModel              () { return _internal->sst_mdl; }
 

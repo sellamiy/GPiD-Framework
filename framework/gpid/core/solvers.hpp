@@ -8,6 +8,7 @@
 #define GPID_FRAMEWORK__CORE__SOLVERS_HPP
 
 #include <gpid/config.hpp>
+#include <gpid/core/wrappers.hpp>
 
 namespace gpid {
 
@@ -30,9 +31,11 @@ namespace gpid {
         typedef CContextManagerT ContextManagerT;
         typedef CLiteralT LiteralT;
         typedef CModelT ModelT;
+        typedef LiteralHypothesis<LiteralT> HypothesisT;
         virtual void push() = 0;
         virtual void pop() = 0;
         virtual void addLiteral(LiteralT& lit) = 0;
+        virtual void addClause(HypothesisT& h, LiteralMapper<LiteralT>& mapper) = 0;
         virtual SolverTestStatus check() = 0;
         virtual ModelT& getModel() = 0;
 

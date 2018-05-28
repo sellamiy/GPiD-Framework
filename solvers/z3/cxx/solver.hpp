@@ -19,6 +19,15 @@ namespace gpid {
         _internal->solver.add(literal.expr);
     }
 
+    inline void Z3SolverInterface::addClause(HypothesisT& h, LiteralMapper<Z3Literal>& mapper) {
+        auto it = h.begin();
+        z3::expr cl = mapper.get(*it).expr;
+        while (++it != h.end()) {
+            cl = cl || mapper.get(*it).expr;
+        }
+        _internal->solver.add(cl);
+    }
+
     inline Z3ModelWrapper& Z3SolverInterface::getModel() {
         return _internal->iw_mdl;
     }
