@@ -156,9 +156,8 @@ namespace gpid {
             loc = g.createNode(std::to_string(idx), dot::types::ClassicDiamondNode);
             for (auto p : nodes[idx]) {
                 child = buildGraphLocal(p.second, g);
-                snlog::l_warn("Not Correctly Printed: storage::buildGraphLocal literal edge format");
-                snlog::l_info("Currently prints mapping index and not content");
-                g.createEdge(loc, child, std::to_string(p.first), dot::types::ClassicEdge);
+                // TODO: Edge printer system still anchored in old printing structure
+                g.createEdge(loc, child, mapper.get(p.first).str(), dot::types::ClassicEdge);
             }
             return loc;
         }
@@ -186,10 +185,14 @@ namespace gpid {
 
     template<class SolverT>
     inline bool AbducibleTree<SolverT>::fwdSubsumesLocal(anidx_t idx) {
+        if (nodes[idx].empty()) {
+            return gmisc::inset(tnodes, idx);
+        }
         for (auto p : nodes[idx]) {
             solver.push();
             solver.addLiteral(mapper.get(p.first), true);
             SolverTestStatus res = solver.check();
+            solver.pop();
             if (res == SolverTestStatus::UNKNOWN) {
                 snlog::l_error("Storage insertion satisfiability test returned unknown");
             }
@@ -198,7 +201,6 @@ namespace gpid {
                     return true;
                 }
             }
-            solver.pop();
         }
         return false;
     }

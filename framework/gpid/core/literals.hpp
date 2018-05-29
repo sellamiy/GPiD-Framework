@@ -272,16 +272,16 @@ namespace gpid {
 
     template<class SolverT>
     inline bool LiteralSkipper<SolverT>::canBeSkipped(LiteralRefT h, uint32_t level) {
+        if (control.max_level <= level) {
+            counters.level_depth++;
+            return true;
+        }
         if (control.consequences && solver.isConsequence(mapper.get(h), level)) {
             counters.consequence++;
             return true;
         }
         if (control.storage && storage.fwdSubsumes(hypothesis, h)) {
             counters.storage++;
-            return true;
-        }
-        if (control.max_level <= level) {
-            counters.level_depth++;
             return true;
         }
         if (!control.inconsistencies && !consistent(h, level)) {
