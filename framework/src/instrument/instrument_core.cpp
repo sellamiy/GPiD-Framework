@@ -39,8 +39,9 @@ namespace instrument {
     { selectionGrapher->selection(d); }
     static inline void selectionGrapher_implicate(const std::string)
     { selectionGrapher->implicateDetected(); }
-    static inline void selectionGrapher_model_skip(const std::string d)
-    { selectionGrapher->skip(d, "model"); }
+    static inline void selectionGrapher_skip(const std::string d)
+    // TODO: Split d string @ ':' to separate literal from reason
+    { selectionGrapher->skip(d, ""); }
     static inline void selectionGrapher_reset(const std::string)
     { selectionGrapher->initialize(); }
 
@@ -63,8 +64,9 @@ namespace instrument {
     { webtraceLocalSelect = d; }
     static inline void webtraceInstrument_implicate(const std::string)
     { webtraceInstrument->command("Implicate detected"); }
-    static inline void webtraceInstrument_model_skip(const std::string d)
-    { webtraceInstrument->assign("Skipped via model", d); }
+    static inline void webtraceInstrument_skip(const std::string d)
+    // TODO: Split d string @ ':' to separate literal from reason
+    { webtraceInstrument->assign("Skipped", d); }
     static inline void webtraceInstrument_ismt_test(const std::string d)
     { webtraceSmtTest = d; }
     static inline void webtraceInstrument_ismt_result(const std::string d)
@@ -85,7 +87,7 @@ namespace instrument {
             analyzers[instloc::stack_pop].push_back(&selectionGrapher_stack_pop);
             analyzers[instloc::pre_select].push_back(&selectionGrapher_pre_select);
             analyzers[instloc::implicate].push_back(&selectionGrapher_implicate);
-            analyzers[instloc::model_skip].push_back(&selectionGrapher_model_skip);
+            analyzers[instloc::skip].push_back(&selectionGrapher_skip);
             analyzers[instloc::reset].push_back(&selectionGrapher_reset);
             finalizers.push_back(&selectionGrapher_finalizer);
         }
@@ -96,7 +98,7 @@ namespace instrument {
             analyzers[instloc::stack_pop].push_back(&webtraceInstrument_stack_pop);
             analyzers[instloc::pre_select].push_back(&webtraceInstrument_pre_select);
             analyzers[instloc::implicate].push_back(&webtraceInstrument_implicate);
-            analyzers[instloc::model_skip].push_back(&webtraceInstrument_model_skip);
+            analyzers[instloc::skip].push_back(&webtraceInstrument_skip);
             analyzers[instloc::ismt_test].push_back(&webtraceInstrument_ismt_test);
             analyzers[instloc::ismt_result].push_back(&webtraceInstrument_ismt_result);
             analyzers[instloc::reset].push_back(&webtraceInstrument_reset);

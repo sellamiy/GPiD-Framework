@@ -15,7 +15,7 @@ namespace instrument {
 
     enum class instloc {
         stack_push, stack_pop,
-        pre_select, implicate, model_skip,
+        pre_select, implicate, skip,
         ismt_test, ismt_result,
         reset, end
     };

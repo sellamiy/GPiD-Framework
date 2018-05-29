@@ -274,18 +274,26 @@ namespace gpid {
     inline bool LiteralSkipper<SolverT>::canBeSkipped(LiteralRefT h, uint32_t level) {
         if (control.max_level <= level) {
             counters.level_depth++;
+            insthandle(instrument::idata(mapper.get(h).str() + ":depth"),
+                       instrument::instloc::skip);
             return true;
         }
         if (control.consequences && solver.isConsequence(mapper.get(h), level)) {
             counters.consequence++;
+            insthandle(instrument::idata(mapper.get(h).str() + ":consequence"),
+                       instrument::instloc::skip);
             return true;
         }
         if (control.storage && storage.fwdSubsumes(hypothesis, h)) {
             counters.storage++;
+            insthandle(instrument::idata(mapper.get(h).str() + ":storage"),
+                       instrument::instloc::skip);
             return true;
         }
         if (!control.inconsistencies && !consistent(h, level)) {
             counters.consistency++;
+            insthandle(instrument::idata(mapper.get(h).str() + ":consistency"),
+                       instrument::instloc::skip);
             return true;
         }
         return false;
@@ -344,8 +352,8 @@ namespace gpid {
                 pvalues_map[idx].push_back(l_active.get(idx));
                 l_active.set(idx, clevel);
                 selection_map[clevel-1].push_back(idx);
-                insthandle(instrument::idata(getLiteral(idx).str()),
-                           instrument::instloc::model_skip);
+                insthandle(instrument::idata(getLiteral(idx).str() + ":model"),
+                           instrument::instloc::skip);
             }
         }
     }
