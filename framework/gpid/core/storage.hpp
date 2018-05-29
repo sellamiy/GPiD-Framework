@@ -126,9 +126,7 @@ namespace gpid {
     template<class SolverT>
     inline void AbducibleTree<SolverT>::printLocal(anidx_t idx, HypothesisT& cprint, uint32_t clvl) {
         if (nodes[idx].empty() && gmisc::inset(tnodes, idx)) {
-            // TODO : Actually print
-            snlog::l_warn("Not Implemented Yet: storage::printLocal actual printing");
-            // cprint.printNegation();
+            print_item(implicate(cprint, mapper));
         } else {
             for (auto p : nodes[idx]) {
                 cprint.addLiteral(p.first, clvl);

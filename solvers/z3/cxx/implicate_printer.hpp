@@ -2,6 +2,7 @@
 #define GPID_Z3_IMPLICATE_PRINTER_SPP
 
 #include <iostream>
+#include <gpid/core/wrappers.hpp>
 
 namespace gpid {
 
@@ -25,6 +26,15 @@ namespace gpid {
     extern inline
     void p_implicate(std::ostream& out, const z3::expr& f, bool negate) {
         out << "> " << (negate ? !f : f) << std::endl;
+    }
+
+    inline std::ostream& operator<<(std::ostream& out, const LiteralHypothesisPrinter<Z3Literal>& hlp) {
+        typename LiteralHypothesis<Z3Literal>::iterator it = hlp.hypothesis.begin();
+        z3::expr f = hlp.mapper.get(*it).expr;
+        while (++it != hlp.hypothesis.end()) {
+            f = f && hlp.mapper.get(*it).expr;
+        }
+        return out << (hlp.negate ? !f : f);
     }
 
 };

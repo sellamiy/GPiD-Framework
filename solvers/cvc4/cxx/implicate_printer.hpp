@@ -15,6 +15,16 @@ namespace gpid {
         out << pfl << std::endl;
     }
 
+    inline std::ostream& operator<<(std::ostream& out, const LiteralHypothesisPrinter<CVC4Literal>& hlp) {
+        for (auto lit : hlp.hypothesis) {
+            if (hlp.negate) out << " not(";
+            else out << " ";
+            out << hlp.mapper.get(lit).expr;
+            if (hlp.negate) out << ")";
+        }
+        return out;
+    }
+
 };
 
 #endif

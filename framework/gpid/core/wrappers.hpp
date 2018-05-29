@@ -25,6 +25,8 @@ namespace gpid {
         std::map<index_t, LiteralT*> _mapping;
     };
 
+    template<class LiteralT> class LiteralHypothesisPrinter;
+
     template<class LiteralT>
     class LiteralHypothesis {
     public:
@@ -45,7 +47,26 @@ namespace gpid {
         inline       iterator end()    { return _array.end();    }
         inline const_iterator cbegin() { return _array.cbegin(); }
         inline const_iterator cend()   { return _array.cend();   }
+
+        friend LiteralHypothesisPrinter<LiteralT>;
     };
+
+    template<class LiteralT>
+    class LiteralHypothesisPrinter {
+        LiteralHypothesis<LiteralT>& hypothesis;
+        LiteralMapper<LiteralT>& mapper;
+        bool negate;
+    public:
+        LiteralHypothesisPrinter
+        (LiteralHypothesis<LiteralT>& lh, LiteralMapper<LiteralT>& mp, bool neg=true)
+            : hypothesis(lh), mapper(mp), negate(neg) {}
+        LiteralHypothesisPrinter(const LiteralHypothesisPrinter<LiteralT>& o)
+            : hypothesis(o.hypothesis), mapper(o.mapper), negate(o.negate) {}
+        friend std::ostream& operator<<(std::ostream& os, const LiteralHypothesisPrinter<LiteralT>& hlp);
+    };
+
+    template<class LiteralT>
+    std::ostream& operator<<(std::ostream& os, const LiteralHypothesisPrinter<LiteralT>& hlp);
 
     /* *** Implementations *** */
 
@@ -77,6 +98,20 @@ namespace gpid {
         }
         _lmapping[lkey].clear();
     }
+
+    template<class LiteralT>
+    inline const LiteralHypothesisPrinter<LiteralT> implicate
+    (LiteralHypothesis<LiteralT>& h, LiteralMapper<LiteralT>& mp)
+    { return LiteralHypothesisPrinter<LiteralT>(h, mp, true); }
+
+    template<class LiteralT>
+    inline const LiteralHypothesisPrinter<LiteralT> hypothesis
+    (LiteralHypothesis<LiteralT>& h, LiteralMapper<LiteralT>& mp)
+    { return LiteralHypothesisPrinter<LiteralT>(h, mp, false); }
+
+    template<class Printable>
+    inline void print_item(Printable& p)
+    { std::cout << "> " << p << std::endl; }
 
 }
 

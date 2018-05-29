@@ -18,6 +18,15 @@ namespace gpid {
         out << std::endl;
     }
 
+    inline std::ostream& operator<<
+    (std::ostream& out, const LiteralHypothesisPrinter<MinisatLiteral>& hlp) {
+        for (auto lit : hlp.hypothesis) {
+            Minisat::Lit mlit = hlp.mapper.get(lit).lit;
+            out << " " << (hlp.negate ? ~mlit : mlit);
+        }
+        return out;
+    }
+
 }
 
 #endif
