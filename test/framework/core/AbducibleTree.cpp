@@ -5,10 +5,8 @@
 
 #define ABDUCIBLE_TREE_TEST
 
-#warning To Update
-
 using namespace gpid;
-/*
+
 struct ATAutoIntWr {
     uint32_t v;
     ATAutoIntWr() : v(0) {}
@@ -16,6 +14,9 @@ struct ATAutoIntWr {
     ATAutoIntWr(const uint32_t u) : v(u) {}
     bool operator < (const ATAutoIntWr& o) const { return v < o.v; }
 };
+
+typedef LiteralMapper<ATAutoIntWr> LiteralMapperT;
+typedef LiteralHypothesis<ATAutoIntWr> LiteralHypothesisT;
 
 struct ATAutoIntListWr {
     std::vector<uint32_t> l;
@@ -42,11 +43,13 @@ static bool subsets(ATAutoIntListWr s, ATAutoIntListWr t) {
 
 struct ATSolverZero {
 
+    typedef ATAutoIntWr LiteralT;
+
     unsigned int _lvl = 0;
     std::vector<unsigned int> _lvs;
-    std::vector<ATAutoIntListWr> _data;
+    std::vector<LiteralT> _data;
 
-    void addFormula(ATAutoIntListWr f, bool) { _data.push_back(f); }
+    void addLiteral(LiteralT f, bool) { _data.push_back(f); }
 
     void push() { _lvs.push_back(_data.size()); }
 
@@ -54,13 +57,16 @@ struct ATSolverZero {
 
 };
 
+#warning Incomplete update here!
+
+/*
 struct ATAutoSolver : public ATSolverZero {
 
     SolverTestStatus check() {
         for (unsigned int i=0; i < _lvs.back(); ++i) {
-            if (subsets(_data[i], _data.back())) return SOLVER_UNSAT;
+            if (subsets(_data[i], _data.back())) return SolverTestStatus::UNSAT;
         }
-        return SOLVER_SAT;
+        return SolverTestStatus::SAT;
     }
 
 };
@@ -70,8 +76,8 @@ struct ATRevoSolver : public ATSolverZero {
     SolverTestStatus check() {
         std::vector<unsigned int> _ndata;
         for (unsigned int i=1; i < _data.size(); ++i) _ndata.push_back(_data[i][0].v);
-        if (subsets(_data[0], ATAutoIntListWr(_ndata))) return SOLVER_UNSAT;
-        return SOLVER_SAT;
+        if (subsets(_data[0], ATAutoIntListWr(_ndata))) return SolverTestStatus::UNSAT;
+        return SolverTestStatus::SAT;
     }
 
 };
@@ -89,75 +95,151 @@ struct ATTUtils0 {
     FormulaT toFormula(LiteralT l) const { return FormulaT({l.v}); }
 };
 
-struct ATTUtils_x101 : public ATTUtils0 {
-    typedef ATAutoSolver SolverT;
+struct ATTUtils_x101 : public ATAutoSolver {
+    typedef ATAutoSolver InterfaceT;
 };
 
-struct ATTUtils_x102 : public ATTUtils0 {
-    typedef ATRevoSolver SolverT;
+struct ATTUtils_x102 : public ATRevoSolver {
+    typedef ATRevoSolver InterfaceT;
 };
 
-class SubsumerBasic_101c : public ::testing::Test {
+template <class CInterfaceT>
+struct SolverEngineT {
+    typedef CInterfaceT InterfaceT;
+    typedef typename CInterfaceT::LiteralT LiteralT;
+};
+
+#define MAPPING_MAX_SIZE 256
+
+template <class CSolverEngineT>
+class Subsumer : public::testing::Test {
 protected:
 
-    AbducibleTree<ATTUtils_x101> *tree;
+    CSolverEngineT se;
+    LiteralMapperT mapper;
+    LiteralHypothesisT chyp = LiteralHypothesisT(MAPPING_MAX_SIZE);
+    AbducibleTree<CSolverEngineT> *tree;
 
     virtual void SetUp() {
-        tree = new AbducibleTree<ATTUtils_x101>();
+        tree = new AbducibleTree<CSolverEngineT>(se, mapper);
+        for (int i = 0; i < MAPPING_MAX_SIZE; i++) {
+            mapper.map(i, ATAutoIntWr(i));
+        }
     }
 
     virtual void TearDown() {
         delete tree;
     }
+
+    inline void addLit(int l) { chyp.addLiteral(l, 1); }
+    inline void clearLits() { chyp.removeLiterals(1); }
+
+    inline void executeBasicInsertions() {
+        addLit(1);
+        tree->insert(chyp);
+        clearLits();
+
+        addLit(2);
+        addLit(3);
+        tree->insert(chyp);
+        clearLits();
+
+        addLit(4);
+        addLit(5);
+        addLit(6);
+        tree->insert(chyp);
+        clearLits();
+
+        addLit(1);
+        addLit(2);
+        addLit(3);
+        tree->insert(chyp);
+        clearLits();
+
+        addLit(4);
+        addLit(5);
+        addLit(9);
+        tree->insert(chyp);
+        clearLits();
+    }
 };
 
-class SubsumerCoverer_102a : public ::testing::Test {
-protected:
-
-    AbducibleTree<ATTUtils_x102> *tree;
-
-    virtual void SetUp() {
-        tree = new AbducibleTree<ATTUtils_x102>();
-    }
-
-    virtual void TearDown() {
-        delete tree;
-    }
-};
+typedef Subsumer<SolverEngineT<ATTUtils_x101>> SubsumerBasic_101c;
+typedef Subsumer<SolverEngineT<ATTUtils_x102>> SubsumerCoverer_102a;
 
 TEST_F(SubsumerBasic_101c, Init) { }
 
 TEST_F(SubsumerBasic_101c, BasicInsertion) {
-    tree->insert(ATAutoIntListWr({1}));
-    tree->insert(ATAutoIntListWr({2, 3}));
-    tree->insert(ATAutoIntListWr({4, 5, 6}));
-    tree->insert(ATAutoIntListWr({1, 2, 3}));
-    tree->insert(ATAutoIntListWr({4, 5, 9}));
+    executeBasicInsertions();
 }
 
 TEST_F(SubsumerBasic_101c, InsertionEnsuredByContainment) {
-    tree->insert(ATAutoIntListWr({1}));
-    tree->insert(ATAutoIntListWr({2, 3}));
-    tree->insert(ATAutoIntListWr({4, 5, 6}));
-    tree->insert(ATAutoIntListWr({1, 2, 3}));
-    tree->insert(ATAutoIntListWr({4, 5, 9}));
+    executeBasicInsertions();
 
-    ASSERT_TRUE(tree->contains(ATAutoIntListWr({1})));
-    ASSERT_TRUE(tree->contains(ATAutoIntListWr({2, 3})));
-    ASSERT_TRUE(tree->contains(ATAutoIntListWr({4, 5, 6})));
-    ASSERT_TRUE(tree->contains(ATAutoIntListWr({1, 2, 3})));
-    ASSERT_TRUE(tree->contains(ATAutoIntListWr({4, 5, 9})));
+    addLit(1);
+    ASSERT_TRUE(tree->contains(chyp));
+    clearLits();
 
-    ASSERT_FALSE(tree->contains(ATAutoIntListWr({3})));
-    ASSERT_FALSE(tree->contains(ATAutoIntListWr({2, 3, 4})));
-    ASSERT_FALSE(tree->contains(ATAutoIntListWr({4, 5, 6, 7})));
-    ASSERT_FALSE(tree->contains(ATAutoIntListWr({1, 3, 4})));
-    ASSERT_FALSE(tree->contains(ATAutoIntListWr({4, 5, 10})));
+    addLit(2);
+    addLit(3);
+    ASSERT_TRUE(tree->contains(chyp));
+    clearLits();
+
+    addLit(4);
+    addLit(5);
+    addLit(6);
+    ASSERT_TRUE(tree->contains(chyp));
+    clearLits();
+
+    addLit(1);
+    addLit(2);
+    addLit(3);
+    ASSERT_TRUE(tree->contains(chyp));
+    clearLits();
+
+    addLit(4);
+    addLit(5);
+    addLit(9);
+    ASSERT_TRUE(tree->contains(chyp));
+    clearLits();
+
+    addLit(3);
+    ASSERT_FALSE(tree->contains(chyp));
+    clearLits();
+
+    addLit(2);
+    addLit(3);
+    addLit(4);
+    ASSERT_FALSE(tree->contains(chyp));
+    clearLits();
+
+    addLit(4);
+    addLit(5);
+    addLit(6);
+    addLit(7);
+    ASSERT_FALSE(tree->contains(chyp));
+    clearLits();
+
+    addLit(1);
+    addLit(3);
+    addLit(4);
+    ASSERT_FALSE(tree->contains(chyp));
+    clearLits();
+
+    addLit(4);
+    addLit(5);
+    addLit(10);
+    ASSERT_FALSE(tree->contains(chyp));
+    clearLits();
 }
 
 TEST_F(SubsumerBasic_101c, AutoSubsumes) {
-    tree->insert(ATAutoIntListWr({4, 5, 6}));
-    ASSERT_TRUE(tree->subsumes(ATAutoIntListWr({4, 5, 6})));
+    addLit(4);
+    addLit(5);
+    addLit(6);
+    tree->insert(chyp);
+    ASSERT_TRUE(tree->fwdSubsumes(chyp));
+    clearLits();
 }
 
 TEST_F(SubsumerBasic_101c, Subsets) {
