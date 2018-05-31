@@ -57,6 +57,14 @@ namespace gpid {
         return _internal->iw_mdl;
     }
 
+    inline void MinisatSolverInterface::clearUnsafeClauses() {
+        for (int i = 0; i < _internal->solver.clauses.size(); ++i) {
+            auto ref = _internal->solver.clauses[i];
+            _internal->solver.removeClause(ref);
+        }
+        _internal->solver.clauses.clear();
+    }
+
     inline void MinisatSolverInterface::printAssertions(bool negated) {
         p_implicate(std::cout, _internal->assumps, negated);
     }

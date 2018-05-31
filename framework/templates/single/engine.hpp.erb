@@ -31,6 +31,8 @@ namespace gpid {
         virtual void printAssertions(bool negated) override;
         virtual const std::string getPrintableAssertions(bool negated) override;
 
+        virtual void clearUnsafeClauses() override;
+
         <%= @solver.solverClass %>Interface(<%= @solver.contextManagerClass %>& ctx);
 
         friend class <%= @solver.solverClass %>Engine;

@@ -27,6 +27,8 @@ namespace gpid {
     SolverTestStatus  ts__solvInterface::check                 () { return SolverTestStatus::UNKNOWN; }
     ts__mdl&          ts__solvInterface::getModel              () { return _internal->sst_mdl; }
 
+    void              ts__solvInterface::clearUnsafeClauses    () { }
+
     std::ostream& operator<<(std::ostream& out, const LiteralHypothesisPrinter<ts__lit>&)
     { return out << "A True Solver does not print an implicate!"; }
 

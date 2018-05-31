@@ -95,6 +95,10 @@ namespace gpid {
         solver.push();
         solver.addClause(h, mapper, true);
         bwdSubsumesRemoveLocal(1);
+        /* TODO: Obtain a better way to write the Minisat interface
+           API. Adding a specific method for it in a global framework
+           is not a good one. */
+        solver.clearUnsafeClauses();
         solver.pop();
     }
 

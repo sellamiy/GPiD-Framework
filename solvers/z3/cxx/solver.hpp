@@ -36,6 +36,8 @@ namespace gpid {
         return _internal->iw_mdl;
     }
 
+    inline void Z3SolverInterface::clearUnsafeClauses() { }
+
     inline void Z3SolverInterface::printAssertions(bool negated) {
         p_implicate(std::cout, ctx, _internal->solver.assertions(), negated);
     }

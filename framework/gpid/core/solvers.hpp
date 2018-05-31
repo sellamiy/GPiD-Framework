@@ -39,6 +39,9 @@ namespace gpid {
         virtual SolverTestStatus check() = 0;
         virtual ModelT& getModel() = 0;
 
+        /** \brief Unsafe method for cleaning minisat storage interface. */
+        virtual void clearUnsafeClauses() = 0;
+
         virtual void printAssertions(bool negated=false) = 0;
         virtual const std::string getPrintableAssertions(bool negated=false) = 0;
     protected:
