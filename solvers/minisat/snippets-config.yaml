@@ -8,7 +8,6 @@ literalClass : MinisatLiteral
 problemConstraintType : Minisat::vec<Minisat::Lit>&
 
 contextSnippets :
-  - vector_wrappers.hpp
   - context.hpp
 contextSrcSnippets : []
 outputSnippets :
