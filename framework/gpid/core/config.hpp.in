@@ -1,0 +1,15 @@
+/**
+ * \file gpid/core/config.hpp
+ * \brief GPiD-Framework Configuration Header.
+ * \ingroup gpidcorelib
+ * \author Yanis Sellami
+ * \date 2017
+ */
+#ifndef GPID_FRAMEWORK__CORE__CONFIG_HPP
+#define GPID_FRAMEWORK__CORE__CONFIG_HPP
+
+/* Internal components */
+#cmakedefine DOT_AUTOCOMPILATION
+#cmakedefine GPID_INSTRUMENTATION
+
+#endif

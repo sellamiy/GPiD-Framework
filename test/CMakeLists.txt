@@ -40,7 +40,7 @@ if(BUILD_TESTS)
   # ===== Generating Test Targets =====
 
   # == Unit Targets ==
-  file(GLOB LIB_TEST_FILES "lib/*/*.cpp" "framework/*/*.cpp")
+  file(GLOB LIB_TEST_FILES "lib/*/*.cpp" "framework/*.cpp")
   foreach(filename ${LIB_TEST_FILES})
     get_filename_component(execname "${filename}" NAME_WE)
     add_executable(${execname} "${filename}")

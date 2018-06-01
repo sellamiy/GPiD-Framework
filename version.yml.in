@@ -1,0 +1,17 @@
+GitGetter:
+  priority: primary
+  type: git
+  mode: "@CMAKE_BUILD_TYPE@"
+  timestamp: "@PROJECT_CFG_TIMESTAMP@"
+  instrumentation: "@GPID_INSTRUMENTATION@"
+
+LocalGetter:
+  priority: backup
+  type: raw
+  mode: "@CMAKE_BUILD_TYPE@"
+  timestamp: "@PROJECT_CFG_TIMESTAMP@"
+  instrumentation: "@GPID_INSTRUMENTATION@"
+  major: 0
+  minor: 5
+  patch: 1
+

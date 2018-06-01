@@ -6,56 +6,65 @@ project(gpid-execs LANGUAGES CXX)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 # ==============================================================================
-# Generate Solver code snippets for executables
+# Generate interfaces code for executables
 # ==============================================================================
-include(FrameworkSolverSnippets)
-set(SNIPPET_SOLVERS_GTS "")
-generate_solver_snippet(${LOCAL_SOLVERS_SNIPPETS_DIR}
-  ${LOCAL_SOLVERS_SNIPPETS_CONFIG}
-  gts-interfaces.hpp ${SOLVERS_TARGETS})
-set(SNIPPET_SOLVERS_GTS ${SNIPPET_SOLVERS_GTS}
-  ${CURRENT_SNIPPET_OUTPUT_TARGETS})
-generate_solver_snippet(${LOCAL_SOLVERS_SNIPPETS_DIR}
-  ${LOCAL_SOLVERS_SNIPPETS_CONFIG}
-  gts-executors.hpp  ${SOLVERS_TARGETS})
-set(SNIPPET_SOLVERS_GTS ${SNIPPET_SOLVERS_GTS}
-  ${CURRENT_SNIPPET_OUTPUT_TARGETS})
-add_custom_target(gts-solvers-snippets
-  DEPENDS ${SNIPPET_SOLVERS_GTS})
+include(FrameworkSolverRegistration)
+# ------------------------------------------------------------------------------
+set(EXEC_TEMPLATES_DIR "${CMAKE_SOURCE_DIR}/exec/templates")
+set(IMPGEN_INCLUDE_TEMPLATES "sai/identifiers.hpp" "sai/impgen-executors.hpp")
+set(IMPGEN_SOURCES_TEMPLATES)
+set(IMPGEN_PREPROCESSED_FILES)
+# ------------------------------------------------------------------------------
+foreach(template_name ${IMPGEN_INCLUDE_TEMPLATES})
+  set(template_source "${EXEC_TEMPLATES_DIR}/${template_name}")
+  set(template_target "${LOCAL_EXEC_INCLUDE_DIR}/${template_name}")
+  generate_multi_file("${template_target}" "${template_source}" ${SOLVER_TARGETS})
+  list(APPEND IMPGEN_PREPROCESSED_FILES "${template_target}")
+endforeach()
+foreach(template_name ${IMPGEN_SOURCES_TEMPLATES})
+  set(template_source "${EXEC_TEMPLATES_DIR}/src/${template_name}")
+  set(template_target "${LOCAL_EXEC_SOURCES_DIR}/src/${template_name}")
+  generate_multi_file("${template_target}" "${template_source}" ${SOLVER_TARGETS})
+  list(APPEND IMPGEN_PREPROCESSED_FILES "${template_target}")
+endforeach()
+# ------------------------------------------------------------------------------
+add_custom_target(impgen-preprocessed-files DEPENDS ${IMPGEN_PREPROCESSED_FILES})
 # ==============================================================================
-# GTS - an implicate generator
+# ImpGen - an implicate generator
 # ==============================================================================
-set(GTS_STATIC_LINK_LIBRARIES gpid-core-static witchw-static cxxopts Threads::Threads)
-set(GTS_SHARED_LINK_LIBRARIES gpid-core-shared witchw-shared cxxopts Threads::Threads)
-add_executable(gpid-gts "src/gpid-gts.cpp")
-add_dependencies(gpid-gts gts-solvers-snippets)
+set(IMPGEN_STATIC_LINK_LIBRARIES gpid-core-static witchw-static cxxopts Threads::Threads)
+set(IMPGEN_SHARED_LINK_LIBRARIES gpid-core-shared witchw-shared cxxopts Threads::Threads)
+add_executable(gpid-impgen "src/gpid-impgen.cpp")
+add_dependencies(gpid-impgen impgen-preprocessed-files)
+target_include_directories(gpid-impgen PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
 if(STATIC_EXECUTABLES)
-  target_link_libraries(gpid-gts gpid-solvers-static ${GTS_STATIC_LINK_LIBRARIES})
+  target_link_libraries(gpid-impgen gpid-solver-interfaces-static ${IMPGEN_STATIC_LINK_LIBRARIES})
 else()
-  target_link_libraries(gpid-gts gpid-solvers-shared ${GTS_SHARED_LINK_LIBRARIES})
+  target_link_libraries(gpid-impgen gpid-solver-interfaces-shared ${IMPGEN_SHARED_LINK_LIBRARIES})
 endif()
 # ==============================================================================
-# Split-GTS - single implicate generators linked to specific solver
+# Split-IMPGEN - single implicate generators linked to specific solver
 # ==============================================================================
-function(add_split_gts solver)
-  set(SGTS_EXECUTABLE_NAME gpid-gts-${solver})
-  set(SGTS_SSOLVER_MACRO SINGLE_SOLVER_${solver})
-  set(SGTS_STATIC_LINK gpid-${solver}-static)
-  set(SGTS_SHARED_LINK gpid-${solver}-shared)
-  add_executable(${SGTS_EXECUTABLE_NAME} "src/gpid-gts.cpp")
-  add_dependencies(${SGTS_EXECUTABLE_NAME} gts-solvers-snippets)
-  target_compile_definitions(${SGTS_EXECUTABLE_NAME} PRIVATE
+function(add_split_impgen interface)
+  set(SIMPGEN_EXECUTABLE_NAME gpid-impgen-${interface})
+  set(SIMPGEN_SSOLVER_MACRO SINGLE_SOLVER_${interface})
+  set(SIMPGEN_STATIC_LINK gpid-${interface}-si-static)
+  set(SIMPGEN_SHARED_LINK gpid-${interface}-si-shared)
+  add_executable(${SIMPGEN_EXECUTABLE_NAME} "src/gpid-impgen.cpp")
+  add_dependencies(${SIMPGEN_EXECUTABLE_NAME} impgen-preprocessed-files)
+  target_include_directories(${SIMPGEN_EXECUTABLE_NAME} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
+  target_compile_definitions(${SIMPGEN_EXECUTABLE_NAME} PRIVATE
     SINGLE_SOLVER_ONLY
-    ${SGTS_SSOLVER_MACRO})
+    ${SIMPGEN_SSOLVER_MACRO})
   if(STATIC_EXECUTABLES)
-    target_link_libraries(${SGTS_EXECUTABLE_NAME} ${SGTS_STATIC_LINK} ${GTS_STATIC_LINK_LIBRARIES})
+    target_link_libraries(${SIMPGEN_EXECUTABLE_NAME} ${SIMPGEN_STATIC_LINK} ${IMPGEN_STATIC_LINK_LIBRARIES})
   else()
-    target_link_libraries(${SGTS_EXECUTABLE_NAME} ${SGTS_SHARED_LINK} ${GTS_SHARED_LINK_LIBRARIES})
+    target_link_libraries(${SIMPGEN_EXECUTABLE_NAME} ${SIMPGEN_SHARED_LINK} ${IMPGEN_SHARED_LINK_LIBRARIES})
   endif()
 endfunction()
 
-foreach(solver ${SOLVERS_TARGETS})
-  add_split_gts(${solver})
+foreach(interface ${SOLVER_TARGETS})
+  add_split_impgen(${interface})
 endforeach()
 # ==============================================================================
 # Parser - an abducible files parser

@@ -10,9 +10,9 @@
 namespace gpid {
 
     /** \brief System interruption flag storage. */
-    struct SystemInterruptsFlags {
+    struct SystemInterruptionFlags {
         /** Possible reasons for an interruption */
-        enum class SystemInterruptsReason {
+        enum class SystemInterruptionReason {
             /** No particular reason */
             SYS_INT_R__,
             /** Engine internal: the engine internally decides to interrupt */
@@ -22,35 +22,35 @@ namespace gpid {
             /** Timeout */
             SYS_INT_R__TIMEOUT
         };
-        typedef SystemInterruptsReason Reason;
+        using Reason = SystemInterruptionReason;
         /** Reason of the interruption */
-        SystemInterruptsReason reason = Reason::SYS_INT_R__;
+        SystemInterruptionReason reason = Reason::SYS_INT_R__;
         /** Interruption flag. Set to true iff the engine should be interrupted. */
         bool interruption_flag = false;
 
-        inline void interrupt(SystemInterruptsReason r) {
+        inline void interrupt(SystemInterruptionReason r) {
             interruption_flag = true;
             reason = r;
         }
         /** \return true iff at least one interruption flag is set. */
         inline bool systemInterrupted() { return interruption_flag; }
-        inline SystemInterruptsReason getReason() { return reason; }
+        inline SystemInterruptionReason getReason() { return reason; }
     };
 
     /**
      * \brief Configure the system interruption handler for setting local flags on interruption.
      * \param flags_addr Location of the engine flags.
      */
-    extern void registerInterruptsHandlers(SystemInterruptsFlags* flags_addr);
+    extern void registerInterruptionHandlers(SystemInterruptionFlags* flags_addr);
     /** \brief Restore system default interruption handlers. */
-    extern void restoreInterruptsHandlers();
+    extern void restoreInterruptionHandlers();
 
     /**
      * \brief Start a timeout.
      * \param flags_addr Location of the flags to set on timeout.
      * \param timeout Timeout in seconds.
      */
-    extern void startTimeout(SystemInterruptsFlags* flags_addr, uint64_t timeout);
+    extern void startTimeout(SystemInterruptionFlags* flags_addr, uint64_t timeout);
     /** \brief Stop the current timeout evolution. */
     extern void stopTimeout();
 

@@ -2,6 +2,7 @@
 #define GPID_EXEC__UTILS__PARSER_OPTIONS_HPP
 
 #include <cxxopts.hpp>
+#include <snlog/snlog.hpp>
 #include <gpid/gpid.hpp>
 
 /* ===== Structures ===== */
@@ -55,7 +56,7 @@ static inline OptionStatus handleOptions
 	    return OptionStatus::ENDED;
 	}
 	if (results.count("version")) {
-	    snlog::l_message(gpid::generate_version_message());
+	    snlog::l_message(gpid::version_message);
 	    return OptionStatus::ENDED;
 	}
 

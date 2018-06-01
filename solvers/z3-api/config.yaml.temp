@@ -1,0 +1,54 @@
+SolverInterface:
+  name: z3-api
+
+  additionalCmakeCode: []
+  requiredIncludes:
+    - "${Z3_CXX_INCLUDE_DIRS}"
+  requiredLibraries:
+    - "${Z3_LIBRARIES}"
+
+  literalClass: Z3Literal
+  interfaceClass: Z3SolverInterface
+  modelClass: Z3ModelWrapper
+  contextManagerClass: z3::context
+  engineClass: Z3SolverEngine
+
+  problemLoaderClass: Z3ProblemLoader
+  declarationsClass: Z3Declarations
+  problemConstraintType : z3::expr
+
+  interfaceContent:
+
+    context: []
+    contextSources: []
+
+    interfaceExtension: []
+    engineExtension: []
+
+    InterfaceSources: []
+    EngineSources: []
+
+    loadersExtension : []
+    loadersSources: []
+
+    parsers:
+      -
+        language: smt2
+        parseFunction: parse_Z3_SMT2
+
+    generators:
+      -
+        name: constAllEq
+        countFunction: countAbducibles_constAllEq
+        generateFunction: generateAbducibles_constAllEq
+      -
+        name: constAllComp
+        countFunction: countAbducibles_constAllComp
+        generateFunction: generateAbducibles_constAllComp
+
+    loadFunction: loadAbducible
+
+    additionalExceptions:
+      -
+        name: z3::exception
+        messager: msg

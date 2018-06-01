@@ -1,0 +1,50 @@
+# ==============================================================================
+# {{ data.name }} Solver Interface Targets Configuration
+# *** CMake file generated automatically
+set(SOLVER_INTERFACE_CONFIG_FILE {{ data.sourcefile }})
+set(SOLVER_INTERFACE_NAME {{ data.name }})
+message(STATUS "loading solver interface configuration: {{ data.name }}")
+# ==============================================================================
+# Local cmake code required
+{{ data.additionalCmakeCode }}
+# ==============================================================================
+# Solver registration
+include(FrameworkSolverRegistration)
+# ------------------------------------------------------------------------------
+set(SOLVER_INTERFACE_PREPROCESSED_HEADERS)
+set(SOLVER_INTERFACE_PREPROCESSED_SOURCES)
+
+{% for item in data.targets %}
+
+{% if item.is_header() %}
+set(CURRENT_TARGET_DEST
+  "${LOCAL_SOLVER_INTERFACES_INCLUDE_DIR}/${SOLVER_INTERFACE_NAME}/${ {{ item.template }} }")
+set(SOLVER_INTERFACE_PREPROCESSED_HEADERS
+  ${SOLVER_INTERFACE_PREPROCESSED_HEADERS} ${CURRENT_TARGET_DEST})
+{% else %}
+set(CURRENT_TARGET_DEST
+  "${LOCAL_SOLVER_INTERFACES_SOURCES}/${SOLVER_INTERFACE_NAME}/${ {{ item.template }} }")
+set(SOLVER_INTERFACE_PREPROCESSED_SOURCES
+  ${SOLVER_INTERFACE_PREPROCESSED_SOURCES} ${CURRENT_TARGET_DEST})
+{% endif %}
+
+set(FRAMEWORK_SAL_PREPROCESSOR_TEMPLATE_DIRECTORY "${CMAKE_SOURCE_DIR}/framework/templates/sal/")
+preprocess_sal_template({{ item.template }} ${FRAMEWORK_SAL_PREPROCESSOR_TEMPLATE_DIRECTORY}
+  ${CURRENT_TARGET_DEST} ${SOLVER_INTERFACE_CONFIG_FILE} {{ item.dependencies }})
+
+{% endfor %}
+# ------------------------------------------------------------------------------
+set(SOLVER_INTERFACE_MAIN_HEADER
+  "${LOCAL_SOLVER_INTERFACES_INCLUDE_DIR}/${SOLVER_INTERFACE_NAME}.hpp")
+preprocess_sal_template(main-header.hpp ${SAL_PREPROCESSOR_TEMPLATE_DIRECTORY}
+  ${SOLVER_INTERFACE_MAIN_HEADER} ${SOLVER_INTERFACE_CONFIG_FILE})
+# ------------------------------------------------------------------------------
+register_solver_interface(${SOLVER_INTERFACE_NAME} ${SOLVER_INTERFACE_PREPROCESSED_TARGETS})
+# ------------------------------------------------------------------------------
+{% for item in data.requiredIncludes %}
+solver_interface_target_include_directories(${SOLVER_INTERFACE_NAME} {{ item }})
+{% endfor %}
+{% for item in data.requiredLibraries %}
+solver_interface_target_libraries(${SOLVER_INTERFACE_NAME} {{ item }})
+{% endfor %}
+# ==============================================================================

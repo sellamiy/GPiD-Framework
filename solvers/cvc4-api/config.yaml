@@ -1,0 +1,64 @@
+SolverInterface:
+  name: cvc4-api
+
+  additionalCmakeCode: cmake/loadCVC4.cmake
+  requiredIncludes:
+    - "${CVC4_INCLUDE_DIR}"
+  requiredLibraries:
+    - cvc4
+    - cvc4parser
+
+  literalClass: CVC4Literal
+  interfaceClass: CVC4SolverInterface
+  modelClass: CVC4ModelWrapper
+  contextManagerClass: CVC4::ExprManager
+  engineClass: CVC4SolverEngine
+
+  problemLoaderClass: CVC4ProblemLoader
+  declarationsClass: CVC4Declarations
+  problemConstraintType : CVC4::Expr
+
+  interfaceContent:
+
+    context:
+      - cvc4-api/context.hpp
+      - cvc4-api/printers.hpp
+    contextSources:
+      - src/string_utils.cpp
+      - src/cvc4_utils.cpp
+      - src/context.cpp
+
+    interfaceExtension:
+      - cvc4-api/interface.hpp
+    engineExtension: []
+
+    interfaceSources:
+      - src/interface.cpp
+    engineSources:
+      - src/engine.cpp
+
+    loadersExtension : []
+    loadersSources:
+      - src/problem_loader.cpp
+      - src/parsers.cpp
+      - src/generator_all_eq.cpp
+      - src/generator_loader.cpp
+
+    parsers:
+      -
+        language : smtl2
+        function : parse_CVC4_SMT2
+      -
+        language : tptp
+        function : parse_CVC4_TPTP
+      -
+        language : cvc4
+        function : parse_CVC4_CVC4
+
+    generators:
+      -
+        name : allEq
+        counter : countAbducibles_allEq
+        generator : generateAbducibles_allEq
+
+    loadFunction: loadAbducible

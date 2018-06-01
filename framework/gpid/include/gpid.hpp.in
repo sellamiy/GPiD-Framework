@@ -10,9 +10,12 @@
 #ifndef GPID_FRAMEWORK__CORE_HEADER_
 #define GPID_FRAMEWORK__CORE_HEADER_
 
-#include <gpid/version.hpp>
+#include <gpid/reference/version.hpp>
+#include <gpid/loaders/abdparser.hpp>
 
-#include <gpid/util/parsers.hpp>
+#include <gpid/impgen/advanced_engine.hpp>
+
+#include <gpid/algorithms/impgen.hpp>
 
 #ifdef GPID_INSTRUMENTATION
 #include <gpid/instrument/instrument.hpp>
