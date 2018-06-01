@@ -29,7 +29,8 @@ namespace gpid {
 
     void              ts__solvInterface::clearUnsafeClauses    () { }
 
-    std::ostream& operator<<(std::ostream& out, const LiteralHypothesisPrinter<ts__lit>&)
+    template<> std::ostream& operator<< <ts__lit>
+    (std::ostream& out, const LiteralHypothesisPrinter<ts__lit>&)
     { return out << "A True Solver does not print an implicate!"; }
 
 }

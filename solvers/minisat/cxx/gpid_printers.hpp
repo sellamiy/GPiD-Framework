@@ -18,7 +18,7 @@ namespace gpid {
         out << std::endl;
     }
 
-    inline std::ostream& operator<<
+    template<> inline std::ostream& operator<< <MinisatLiteral>
     (std::ostream& out, const LiteralHypothesisPrinter<MinisatLiteral>& hlp) {
         for (auto lit : hlp.hypothesis) {
             Minisat::Lit mlit = hlp.mapper.get(lit).lit;

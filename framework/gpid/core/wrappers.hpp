@@ -51,6 +51,10 @@ namespace gpid {
         friend LiteralHypothesisPrinter<LiteralT>;
     };
 
+    template<class LiteralT> class LiteralHypothesisPrinter;
+    template<class LiteralT> std::ostream& operator<<
+    (std::ostream& os, const LiteralHypothesisPrinter<LiteralT>& hlp);
+
     template<class LiteralT>
     class LiteralHypothesisPrinter {
         LiteralHypothesis<LiteralT>& hypothesis;
@@ -62,11 +66,10 @@ namespace gpid {
             : hypothesis(lh), mapper(mp), negate(neg) {}
         LiteralHypothesisPrinter(const LiteralHypothesisPrinter<LiteralT>& o)
             : hypothesis(o.hypothesis), mapper(o.mapper), negate(o.negate) {}
-        friend std::ostream& operator<<(std::ostream& os, const LiteralHypothesisPrinter<LiteralT>& hlp);
-    };
 
-    template<class LiteralT>
-    std::ostream& operator<<(std::ostream& os, const LiteralHypothesisPrinter<LiteralT>& hlp);
+        friend std::ostream& operator<< <LiteralT>
+        (std::ostream& os, const LiteralHypothesisPrinter<LiteralT>& hlp);
+    };
 
     /* *** Implementations *** */
 
