@@ -153,7 +153,8 @@ class AbduceGenerator:
         data = []
         for symbol_type in decls['consts']:
             for symbol1 in decls['consts'][symbol_type]:
-                for symbol2 in decls['consts'][symbol_type]:
+                sindex = decls['consts'][symbol_type].index(symbol1)
+                for symbol2 in decls['consts'][symbol_type][sindex:]:
                     if (symbol1 != symbol2):
                         data.append('(= %s %s)' % (symbol1, symbol2))
                         data.append('(distinct %s %s)' % (symbol1, symbol2))
@@ -167,7 +168,7 @@ class AbduceGenerator:
 
     def _prepare_filename_directory(self, filename):
         filepath = os.path.dirname(filename)
-        if not os.path.exists(filepath):
+        if filepath != '' and not os.path.exists(filepath):
             os.makedirs(filepath)
 
     def _write_abducible_file(self, filename, abducibles):
