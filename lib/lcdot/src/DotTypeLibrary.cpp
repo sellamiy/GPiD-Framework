@@ -1,31 +1,31 @@
-#define LIB_DOT__DOT_TYPE_LIBRARY_CPP
+#define LIB_LCDOT__DOT_TYPE_LIBRARY_CPP
 
-#include <dot/TypesLibrary.hpp>
+#include <lcdot/TypesLibrary.hpp>
 
-using namespace dot;
+using namespace lcdot;
 
-extern const GraphNodeType dot::types::ClassicBoxNode = GraphNodeType();
-extern const GraphNodeType dot::types::ClassicUnshapedNode
+extern const GraphNodeType lcdot::types::ClassicBoxNode = GraphNodeType();
+extern const GraphNodeType lcdot::types::ClassicUnshapedNode
 = GraphNodeType(DotColor::dc_black, DotColor::dc_black, DotColor::dc_white, DotShape::ds_plaintext,
                 false, false, false);
 
-extern const GraphNodeType dot::types::ClassicDiamondNode
+extern const GraphNodeType lcdot::types::ClassicDiamondNode
 = GraphNodeType(DotColor::dc_black, DotColor::dc_black, DotColor::dc_white, DotShape::ds_diamond,
                 false, false, false);
-extern const GraphNodeType dot::types::RedDiamondNode
+extern const GraphNodeType lcdot::types::RedDiamondNode
 = GraphNodeType(DotColor::dc_black, DotColor::dc_black, DotColor::dc_red, DotShape::ds_diamond,
                 true, false, false);
-extern const GraphNodeType dot::types::GreenDiamondNode
+extern const GraphNodeType lcdot::types::GreenDiamondNode
 = GraphNodeType(DotColor::dc_black, DotColor::dc_black, DotColor::dc_green, DotShape::ds_diamond,
                 true, false, false);
-extern const GraphNodeType dot::types::BlackDiamondNode
+extern const GraphNodeType lcdot::types::BlackDiamondNode
 = GraphNodeType(DotColor::dc_black, DotColor::dc_white, DotColor::dc_black, DotShape::ds_diamond,
                 true, false, false);
 
-extern const GraphEdgeType dot::types::ClassicEdge = GraphEdgeType();
-extern const GraphEdgeType dot::types::ClassicDashedEdge
+extern const GraphEdgeType lcdot::types::ClassicEdge = GraphEdgeType();
+extern const GraphEdgeType lcdot::types::ClassicDashedEdge
 = GraphEdgeType(DotColor::dc_black, DotArrowType::dat_normal, DotArrowType::dat_normal,
                 DotArrowDir::dad_forward, DotArrowStyle::das_dashed);
-extern const GraphEdgeType dot::types::ClassicDottedEdge
+extern const GraphEdgeType lcdot::types::ClassicDottedEdge
 = GraphEdgeType(DotColor::dc_black, DotArrowType::dat_normal, DotArrowType::dat_normal,
                 DotArrowDir::dad_forward, DotArrowStyle::das_dotted);

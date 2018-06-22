@@ -72,3 +72,5 @@ endif()
 if(BUILD_UTILITIES)
   add_subdirectory(utils)
 endif()
+
+add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_SOURCE_DIR}/cmake/modules/Uninstall.cmake")

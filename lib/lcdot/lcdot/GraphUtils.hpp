@@ -1,15 +1,15 @@
 /**
- * \file dot/GraphUtils.hpp
+ * \file lcdot/GraphUtils.hpp
  * \author Yanis Sellami
  * \date 2017
  */
-#ifndef LIB_DOT__GRAPH_UTILS_HPP
-#define LIB_DOT__GRAPH_UTILS_HPP
+#ifndef LIB_LCDOT__GRAPH_UTILS_HPP
+#define LIB_LCDOT__GRAPH_UTILS_HPP
 
 #include <string>
 #include <iostream>
 
-namespace dot {
+namespace lcdot {
 
     /** \brief Enumerative representation of graphviz-dot svg graph colors. */
     enum DotColor {

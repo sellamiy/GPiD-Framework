@@ -1,15 +1,15 @@
 /**
- * \file dot/Graph.hpp
+ * \file lcdot/Graph.hpp
  * \author Yanis Sellami
  * \date 2017
  */
-#ifndef LIB_DOT__GRAPH_HPP
-#define LIB_DOT__GRAPH_HPP
+#ifndef LIB_LCDOT__GRAPH_HPP
+#define LIB_LCDOT__GRAPH_HPP
 
 #include <map>
-#include <dot/GraphUtils.hpp>
+#include <lcdot/GraphUtils.hpp>
 
-namespace dot {
+namespace lcdot {
 
     /** \brief Representation of graphviz-dot graph. */
     class Graph {

@@ -11,6 +11,7 @@
 #include <string>
 #include <list>
 #include <iostream>
+#include <sstream>
 
 namespace witchw {
 

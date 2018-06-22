@@ -1,7 +1,7 @@
 #define GPID_FRAMEWORK__INSTRUMENT__CONTROL_CPP
 
 #include <snlog/snlog.hpp>
-#include <dot/dotcommand.hpp>
+#include <lcdot/dotcommand.hpp>
 #include <gpid/instrument/instrument.hpp>
 #include <gpid/instrument/selgraph.hpp>
 #include <gpid/instrument/webtrace.hpp>
@@ -50,7 +50,7 @@ namespace instrument {
     {
         selectionGrapher->terminate();
         if (opts.autocompile_graphs)
-            dot::system::autocompile(opts.selection_graph_file, opts.selection_graph_file + ".svg");
+            lcdot::system::autocompile(opts.selection_graph_file, opts.selection_graph_file + ".svg");
     }
 
     static WebtraceInstrument* webtraceInstrument;

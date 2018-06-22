@@ -9,7 +9,7 @@
 
 #include <set>
 
-#include <dot/dotgraph.hpp>
+#include <lcdot/dotgraph.hpp>
 
 #include <gpid/utils/stdutils.hpp>
 
@@ -36,7 +36,7 @@ namespace gpid {
         inline void bwdSubsumesRemoveLocal(anidx_t idx);
 
         inline void printLocal(anidx_t idx, HypothesisT& cprint, uint32_t clvl);
-        inline int buildGraphLocal(anidx_t idx, dot::Graph& g);
+        inline int buildGraphLocal(anidx_t idx, lcdot::Graph& g);
 
     public:
 
@@ -142,26 +142,26 @@ namespace gpid {
 
     template<typename InterfaceT, typename HypothesisT>
     inline void AbducibleTree<InterfaceT, HypothesisT>::exportGraph(std::ostream& target) {
-        dot::Graph g("AbducibleStorageTree");
+        lcdot::Graph g("AbducibleStorageTree");
         buildGraphLocal(1, g);
         target << g;
     }
 
     template<typename InterfaceT, typename HypothesisT>
-    inline int AbducibleTree<InterfaceT, HypothesisT>::buildGraphLocal(anidx_t idx, dot::Graph& g) {
+    inline int AbducibleTree<InterfaceT, HypothesisT>::buildGraphLocal(anidx_t idx, lcdot::Graph& g) {
         if (nodes[idx].empty()) {
             if (gmisc::inset(tnodes, idx)) {
-                return g.createNode(std::to_string(idx), dot::types::GreenDiamondNode);
+                return g.createNode(std::to_string(idx), lcdot::types::GreenDiamondNode);
             } else {
-                return g.createNode(std::to_string(idx), dot::types::RedDiamondNode);
+                return g.createNode(std::to_string(idx), lcdot::types::RedDiamondNode);
             }
         } else {
             int loc, child;
-            loc = g.createNode(std::to_string(idx), dot::types::ClassicDiamondNode);
+            loc = g.createNode(std::to_string(idx), lcdot::types::ClassicDiamondNode);
             for (auto p : nodes[idx]) {
                 child = buildGraphLocal(p.second, g);
                 // TODO: Edge printer system still anchored in old printing structure
-                g.createEdge(loc, child, mapper.get(p.first).str(), dot::types::ClassicEdge);
+                g.createEdge(loc, child, mapper.get(p.first).str(), lcdot::types::ClassicEdge);
             }
             return loc;
         }

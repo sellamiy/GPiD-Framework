@@ -14,6 +14,9 @@
 
 #cmakedefine USE_ANSI_COLORS
 
+#define SNLOG_VERSION_MAJOR 0
+#define SNLOG_VERSION_MINOR 1
+
 namespace snlog {
 
 #ifdef USE_ANSI_COLORS

@@ -1,16 +1,16 @@
 /**
- * \file dot/TypesLibrary.hpp
+ * \file lcdot/TypesLibrary.hpp
  * \author Yanis Sellami
  * \date 2017
  *
  * \brief Definitions of usable nodes and edge types.
  */
-#ifndef LIB_DOT__TYPES_LIBRARY_HPP
-#define LIB_DOT__TYPES_LIBRARY_HPP
+#ifndef LIB_LCDOT__TYPES_LIBRARY_HPP
+#define LIB_LCDOT__TYPES_LIBRARY_HPP
 
-#include <dot/GraphUtils.hpp>
+#include <lcdot/GraphUtils.hpp>
 
-namespace dot {
+namespace lcdot {
 namespace types {
 
     /** \brief Box Node (Black on White) */

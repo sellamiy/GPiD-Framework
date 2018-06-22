@@ -1,8 +1,8 @@
-#define LIB_DOT__DOT_TYPE_TABLES_CPP
+#define LIB_LCDOT__DOT_TYPE_TABLES_CPP
 
-#include <dot/GraphUtils.hpp>
+#include <lcdot/GraphUtils.hpp>
 
-namespace dot {
+namespace lcdot {
 namespace tables {
 
     static std::string dotColorTable[] = {
@@ -63,18 +63,18 @@ namespace tables {
 }
 }
 
-extern std::string dot::dotString(DotColor c) {
+extern std::string lcdot::dotString(DotColor c) {
     return tables::dotColorTable[c];
 }
-extern std::string dot::dotString(DotShape s) {
+extern std::string lcdot::dotString(DotShape s) {
     return tables::dotShapeTable[s];
 }
-extern std::string dot::dotString(DotArrowType t) {
+extern std::string lcdot::dotString(DotArrowType t) {
     return tables::dotArrowTypeTable[t];
 }
-extern std::string dot::dotString(DotArrowDir d) {
+extern std::string lcdot::dotString(DotArrowDir d) {
     return tables::dotArrowDirTable[d];
 }
-extern std::string dot::dotString(DotArrowStyle s) {
+extern std::string lcdot::dotString(DotArrowStyle s) {
     return tables::dotArrowStyleTable[s];
 }

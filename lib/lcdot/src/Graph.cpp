@@ -1,8 +1,8 @@
-#define LIB_DOT__GRAPH_CPP
+#define LIB_LCDOT__GRAPH_CPP
 
-#include <dot/Graph.hpp>
+#include <lcdot/Graph.hpp>
 
-using namespace dot;
+using namespace lcdot;
 
 int Graph::createNode(std::string name, GraphNodeType type) {
     nodes[nextNode] = type;
@@ -32,7 +32,7 @@ void Graph::clear() {
     edge_labels.clear();
 }
 
-extern std::ostream& dot::operator<<(std::ostream& out, Graph& g) {
+extern std::ostream& lcdot::operator<<(std::ostream& out, Graph& g) {
     out << "digraph " << g.name << " {" << std::endl;
     for (std::pair<int, GraphNodeType> p : g.nodes)
         writeNode(out, p.first, g.node_labels[p.first], p.second, 4);

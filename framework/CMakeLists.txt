@@ -54,11 +54,15 @@ set_target_properties(gpid-core-shared PROPERTIES
   VERSION ${VERSION}
   CLEAN_DIRECT_OUTPUT 1)
 
-target_link_libraries(gpid-core-static starray-static dot-static snlog)
-target_link_libraries(gpid-core-shared starray-shared dot-shared snlog)
+target_link_libraries(gpid-core-static starray-static lcdot-static snlog)
+target_link_libraries(gpid-core-shared starray-shared lcdot-shared snlog)
 
 if(GPID_INSTRUMENTATION)
   target_link_libraries(gpid-core-static pctrace-static)
   target_link_libraries(gpid-core-shared pctrace-shared)
 endif()
-
+# ==============================================================================
+# Install framework
+# ==============================================================================
+# TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+# ==============================================================================

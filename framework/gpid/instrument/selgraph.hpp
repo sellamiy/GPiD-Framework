@@ -8,7 +8,7 @@
 
 #include <cstdint>
 #include <stack>
-#include <dot/dotgraph.hpp>
+#include <lcdot/dotgraph.hpp>
 
 namespace gpid {
 namespace instrument {
@@ -20,7 +20,7 @@ namespace instrument {
     class SelectionGrapher {
         
         std::ostream& target;
-        dot::Graph graph;
+        lcdot::Graph graph;
         std::stack<int> nstack;
         int temp_node;
         int order;
