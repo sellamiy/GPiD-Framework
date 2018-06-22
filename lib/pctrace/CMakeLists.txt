@@ -29,8 +29,7 @@ set_target_properties(pctrace-shared PROPERTIES
 
 install(TARGETS pctrace-static pctrace-shared
   ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  PUBLIC_HEADER DESTINATION include/pctrace)
+  LIBRARY DESTINATION lib)
 install(FILES ${LIBPCTRACE_HEADERS}
   ${LOCAL_LIB_HEADERS_DIR}/pctrace/pctrace.hpp
   DESTINATION include/pctrace)

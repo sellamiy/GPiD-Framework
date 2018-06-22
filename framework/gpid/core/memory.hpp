@@ -7,6 +7,8 @@
 #ifndef GPID_FRAMEWORK__CORE__MEMORY_HPP
 #define GPID_FRAMEWORK__CORE__MEMORY_HPP
 
+#include <map>
+
 namespace gpid {
 
     /** \brief Class for mapping indices to objects. */

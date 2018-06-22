@@ -31,8 +31,7 @@ set_target_properties(lcdot-shared PROPERTIES
 
 install(TARGETS lcdot-static lcdot-shared
   ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  PUBLIC_HEADER DESTINATION include/lcdot)
+  LIBRARY DESTINATION lib)
 install(FILES ${LIBLCDOT_HEADERS}
   ${LOCAL_LIB_HEADERS_DIR}/lcdot/dotgraph.hpp
   ${LOCAL_LIB_HEADERS_DIR}/lcdot/dotcommand.hpp

@@ -8,6 +8,7 @@
 #define GPID_FRAMEWORK__IMPGEN__ADVANCED_ENGINE_HPP
 
 #include <list>
+#include <vector>
 
 #include <starray/starray.hpp>
 

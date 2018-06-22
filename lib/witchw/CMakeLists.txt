@@ -27,8 +27,7 @@ set_target_properties(witchw-shared PROPERTIES
 
 install(TARGETS witchw-static witchw-shared
   ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  PUBLIC_HEADER DESTINATION include/witchw)
+  LIBRARY DESTINATION lib)
 install(FILES ${LIBWITCHW_HEADERS}
   ${LOCAL_LIB_HEADERS_DIR}/witchw/witchw.hpp
   DESTINATION include/witchw)

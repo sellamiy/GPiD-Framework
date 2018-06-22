@@ -64,5 +64,13 @@ endif()
 # ==============================================================================
 # Install framework
 # ==============================================================================
-# TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+install(TARGETS gpid-core-static gpid-core-shared
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/gpid
+  DESTINATION include FILES_MATCHING PATTERN "*.hpp")
+install(FILES ${LOCAL_FRAMEWORK_HEADERS_DIR}/gpid/core/config.hpp
+  DESTINATION include/gpid/core)
+install(FILES ${LOCAL_FRAMEWORK_HEADERS_DIR}/gpid/gpid.hpp
+  DESTINATION include/gpid)
 # ==============================================================================

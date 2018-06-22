@@ -29,8 +29,7 @@ set_target_properties(starray-shared PROPERTIES
 
 install(TARGETS starray-static starray-shared
   ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  PUBLIC_HEADER DESTINATION include/starray)
+  LIBRARY DESTINATION lib)
 install(FILES ${LIBSTARRAY_HEADERS}
   ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp
   DESTINATION include/starray)
