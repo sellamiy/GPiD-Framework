@@ -30,7 +30,7 @@ set_target_properties(lcdot-shared PROPERTIES
   CLEAN_DIRECT_OUTPUT 1)
 
 install(TARGETS lcdot-static lcdot-shared
-  ARCHIVE DESTINATION lib/static
+  ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   PUBLIC_HEADER DESTINATION include/lcdot)
 install(FILES ${LIBLCDOT_HEADERS}

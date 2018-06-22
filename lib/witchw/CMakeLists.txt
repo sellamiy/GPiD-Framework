@@ -26,7 +26,7 @@ set_target_properties(witchw-shared PROPERTIES
   CLEAN_DIRECT_OUTPUT 1)
 
 install(TARGETS witchw-static witchw-shared
-  ARCHIVE DESTINATION lib/static
+  ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   PUBLIC_HEADER DESTINATION include/witchw)
 install(FILES ${LIBWITCHW_HEADERS}

@@ -28,7 +28,7 @@ set_target_properties(starray-shared PROPERTIES
   CLEAN_DIRECT_OUTPUT 1)
 
 install(TARGETS starray-static starray-shared
-  ARCHIVE DESTINATION lib/static
+  ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   PUBLIC_HEADER DESTINATION include/starray)
 install(FILES ${LIBSTARRAY_HEADERS}
