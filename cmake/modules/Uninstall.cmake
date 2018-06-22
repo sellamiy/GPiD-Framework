@@ -6,7 +6,7 @@ endif()
 
 file(STRINGS ${MANIFEST} files)
 foreach(file ${files})
-  if(EXISTS ${file})
+  if(EXISTS ${file} OR IS_SYMLINK ${file})
     message(STATUS "Removing file: '${file}'")
 
     exec_program(
