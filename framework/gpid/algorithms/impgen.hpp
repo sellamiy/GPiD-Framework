@@ -15,11 +15,15 @@
 
 namespace gpid {
 
-    template<typename AbdEngineT>
+    template<typename AbdEngineT, typename LiteralGeneratorT>
     class ImpgenAlgorithm : public GPiDAlgorithm {
+    public:
+        using ProblemLoaderT = typename AbdEngineT::ProblemLoaderT;
+    private:
 
         ImpgenOptions& options;
         AbdEngineT lengine;
+        ProblemLoaderT& pbloader;
 
         counter_t impl_counter;
         counter_t node_counter;
@@ -39,46 +43,64 @@ namespace gpid {
         virtual void _execute() override;
 
     public:
-        ImpgenAlgorithm(ImpgenOptions& o);
+        ImpgenAlgorithm(ProblemLoaderT& pbld, LiteralGeneratorT& lgen,
+                        GPiDOptions& opts, ImpgenOptions& iopts);
 
-        using ProblemLoaderT = typename AbdEngineT::ProblemLoaderT;
+        static void printInfos();
 
         /** \return The total number of implicates generated. */
         counter_t getGeneratedImplicatesCount() const;
         /** \return The total number of nodes explored during literals tries. */
         counter_t getExploredNodesCount() const;
+
+        std::map<std::string, counter_t>& getSkippedCounts();
     };
 
     /* *** Implementation *** */
 
-    template<typename AbdEngineT>
-    ImpgenAlgorithm<AbdEngineT>::ImpgenAlgorithm(ImpgenOptions& o)
-        : options(o)
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::
+    ImpgenAlgorithm(ProblemLoaderT& pbld, LiteralGeneratorT& lgen,
+                    GPiDOptions& opts, ImpgenOptions& iopts)
+        : GPiDAlgorithm(opts), options(iopts), lengine(lgen.count(), iopts), pbloader(pbld)
     { }
 
-    template<typename AbdEngineT>
-    inline GPiDAlgorithm::counter_t ImpgenAlgorithm<AbdEngineT>::getGeneratedImplicatesCount() const {
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::printInfos() {
+        snlog::l_warn("TODO: Better info printers");
+    }
+
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    inline GPiDAlgorithm::counter_t
+    ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::getGeneratedImplicatesCount() const {
         return impl_counter;
     }
 
-    template<typename AbdEngineT>
-    inline GPiDAlgorithm::counter_t ImpgenAlgorithm<AbdEngineT>::getExploredNodesCount() const {
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    inline GPiDAlgorithm::counter_t
+    ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::getExploredNodesCount() const {
         return node_counter;
     }
 
-    template<typename AbdEngineT>
-    void ImpgenAlgorithm<AbdEngineT>::reset() {
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    inline std::map<std::string, GPiDAlgorithm::counter_t>&
+    ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::getSkippedCounts() {
+        return lengine.getSkippedCounts();
+    }
+
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::reset() {
         impl_counter = 0;
         node_counter = 0;
         level = 1;
         sdir = StackDirection::PUSH;
-        lengine.setProblem();
-        lengine.start();
+        lengine.initializeSolvers(pbloader);
+        lengine.reinit();
         insthandle(instrument::idata(), instrument::instloc::reset);
     }
 
-    template<typename AbdEngineT>
-    void ImpgenAlgorithm<AbdEngineT>::notifyImplicate() {
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::notifyImplicate() {
         impl_counter++;
         if (options.print_implicates)
             lengine.printCurrentImplicate();
@@ -89,23 +111,23 @@ namespace gpid {
         insthandle(instrument::idata(), instrument::instloc::implicate);
     }
 
-    template<typename AbdEngineT>
-    void ImpgenAlgorithm<AbdEngineT>::push() {
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::push() {
         level++;
         sdir = StackDirection::PUSH;
         insthandle(instrument::idata(level), instrument::instloc::stack_push);
     }
 
-    template<typename AbdEngineT>
-    void ImpgenAlgorithm<AbdEngineT>::pop() {
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::pop() {
         lengine.backtrack(level);
         level--;
         sdir = StackDirection::POP;
         insthandle(instrument::idata(level), instrument::instloc::stack_pop);
     }
 
-    template<typename AbdEngineT>
-    void ImpgenAlgorithm<AbdEngineT>::selectCandidate() {
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::selectCandidate() {
         // Recovering next possible literal
         bool has_next = lengine.searchNextLiteral(level);
         if (has_next) {
@@ -118,13 +140,13 @@ namespace gpid {
         }
     }
 
-    template<typename AbdEngineT>
-    void ImpgenAlgorithm<AbdEngineT>::_execute() {
+    template<typename AbdEngineT, typename LiteralGeneratorT>
+    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::_execute() {
 
         reset();
 
         while (level > 0 && !iflags.systemInterrupted()) {
-            if (sdir == StackDirection::STACK_POP) {
+            if (sdir == StackDirection::POP) {
 
                 selectCandidate();
 

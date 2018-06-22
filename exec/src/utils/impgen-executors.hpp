@@ -8,19 +8,27 @@ using namespace gpid;
 
 enum class impgenExecutionStatus { SUCCESS, FAILURE };
 
-template<class InterfaceT>
+template<class InterfaceT, class LiteralGeneratorT>
 static inline void generate(OptionStorage& opts) {
     // TODO: Handle Errors on subcalls
     l_message("init engine...");
-    ImpgenAlgorithm<AdvancedAbducibleEngine<InterfaceT>>::printInfos();
+    ImpgenAlgorithm<AdvancedAbducibleEngine<InterfaceT>, LiteralGeneratorT>::printInfos();
 
     l_message("load problem...");
-    typename ImpgenAlgorithm<AdvancedAbducibleEngine<InterfaceT>>::ProblemLoaderT Loader;
+    typename ImpgenAlgorithm<AdvancedAbducibleEngine<InterfaceT>, LiteralGeneratorT>::
+        ProblemLoaderT Loader;
     Loader.load(opts.input, opts.input_lang);
-    // TODO: Loader should read problem and generate abducibles
+
+    LiteralGeneratorT LGenerator(Loader);
+    if (opts.impgen.input_type == gpid::AbducibleInputType::FILE) {
+        LGenerator.load(opts.impgen.input_file);
+    } else {
+        LGenerator.generate(opts.impgen.input_generator);
+    }
 
     l_message("create decomposition engine...");
-    ImpgenAlgorithm<AdvancedAbducibleEngine<InterfaceT>> Generator(Loader);
+    ImpgenAlgorithm<AdvancedAbducibleEngine<InterfaceT>, LiteralGeneratorT>
+        Generator(Loader, LGenerator, opts, opts.impgen);
 
     l_message("generate implicates...");
     opts.control.time.registerTime("generation");

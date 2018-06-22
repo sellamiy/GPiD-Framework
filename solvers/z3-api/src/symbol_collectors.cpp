@@ -1,5 +1,6 @@
-#ifndef GPID_Z3_CONTEXT_SRC_SPP
-#define GPID_Z3_CONTEXT_SRC_SPP
+#define Z3_API_INTERFACE_FOR_GPID__SYMBOL_COLLECTORS__CPP
+
+#include <z3-api-context.hpp>
 
 /* Strongly inspired from z3/examples/tptp/tptp5.cpp */
 /* See also:
@@ -62,5 +63,3 @@ void gpid::Z3Declarations::collect(z3::context& ctx, z3::expr e) {
         }
     }
 }
-
-#endif

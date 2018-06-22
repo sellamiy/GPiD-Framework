@@ -8,6 +8,7 @@
 #define GPID_FRAMEWORK__SAI__SAI_TYPES_HPP
 
 #include <map>
+#include <iterator>
 #include <starray/starray.hpp>
 
 namespace gpid {

@@ -1,5 +1,5 @@
-#ifndef GPID_Z3_CONTEXT_SPP
-#define GPID_Z3_CONTEXT_SPP
+#ifndef Z3_API_CONTEXT_FOR_GPID__HPP
+#define Z3_API_CONTEXT_FOR_GPID__HPP
 
 #include <set>
 #include <vector>
@@ -18,6 +18,8 @@ namespace gpid {
         void collect_sort(z3::context& ctx, z3::sort s);
         void collect_fun(z3::context& ctx, z3::func_decl f);
     public:
+        using ContextManagerT = z3::context;
+        using ConstraintT = z3::expr;
         Z3Declarations(z3::context& ctx) : sorts(ctx), funs(ctx) {}
         inline z3::sort_vector& getSortDecls() { return sorts; }
         inline z3::func_decl_vector& getFunDecls() { return funs; }
@@ -39,7 +41,7 @@ namespace gpid {
         const z3::solver& source;
         Z3ModelWrapper(const z3::solver& solver) : source(solver) {}
         Z3ModelWrapper(const Z3ModelWrapper& mdw) : source(mdw.source) {}
-        inline bool isSkippable(Z3Literal& h) const {
+        inline bool implies(Z3Literal& h) const {
             return source.get_model().eval(h.expr).bool_value() == Z3_lbool::Z3_L_TRUE;
         }
     };

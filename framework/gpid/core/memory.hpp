@@ -8,6 +8,8 @@
 #define GPID_FRAMEWORK__CORE__MEMORY_HPP
 
 #include <map>
+#include <gpid/core/errors.hpp>
+#include <starray/starray.hpp>
 
 namespace gpid {
 
@@ -23,6 +25,24 @@ namespace gpid {
     private:
         std::map<index_t, O*> _mapping;
     };
+
+    template<typename O>
+    inline void memoryRangeAllocation(const std::string id, size_t s) {
+        starray::GAB_Status res;
+        res = starray::requestContinuousArray(id, s, sizeof(O));
+        if (res != starray::GAB_Status::SUCCESS) throw MemoryError("request for abducibles failed");
+    }
+
+    template<typename O, typename ... ObjectParameters>
+    inline void memoryObjectAllocation
+    (const std::string id, uint32_t pos, ObjectMapper<O>& mapper, ObjectParameters... opars) {
+        O *mloc;
+        starray::GAB_Status res;
+        res = starray::accessContinuousPointer(id, pos, (void**)&mloc);
+        if (res != starray::GAB_Status::SUCCESS) throw MemoryError("access for abducibles failed");
+        new (mloc) O(opars...);
+        mapper.map(pos, mloc);
+    }
 
     /* *** Implementations *** */
 

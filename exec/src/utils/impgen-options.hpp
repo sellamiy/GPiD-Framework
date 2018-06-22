@@ -2,7 +2,7 @@
 #define GPID_EXEC__UTILS__IMPGEN_OPTIONS_HPP
 
 #include <cxxopts.hpp>
-#include <dot/dotcommand.hpp>
+#include <lcdot/dotcommand.hpp>
 #include <witchw/witchw.hpp>
 #include <gpid/gpid.hpp>
 

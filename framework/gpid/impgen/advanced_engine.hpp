@@ -14,6 +14,7 @@
 
 #include <gpid/core/errors.hpp>
 #include <gpid/core/memory.hpp>
+#include <gpid/core/literals.hpp>
 #include <gpid/sai/saitypes.hpp>
 #include <gpid/storage/atrees.hpp>
 #include <gpid/impgen/skipcontrol.hpp>
@@ -40,28 +41,6 @@ namespace gpid {
         inline       iterator end()    { return _array.end();    }
         inline const_iterator cbegin() { return _array.cbegin(); }
         inline const_iterator cend()   { return _array.cend();   }
-
-        template<typename InterfaceT> friend class LiteralHypothesisPrinter;
-    };
-
-    template<typename InterfaceT> class LiteralHypothesisPrinter;
-    template<typename InterfaceT> std::ostream& operator<<
-    (std::ostream& os, const LiteralHypothesisPrinter<InterfaceT>& hlp);
-
-    template<typename InterfaceT>
-    class LiteralHypothesisPrinter {
-        LiteralHypothesis& hypothesis;
-        ObjectMapper<typename InterfaceT::LiteralT>& mapper;
-        bool negate;
-    public:
-        LiteralHypothesisPrinter
-        (LiteralHypothesis& lh, ObjectMapper<typename InterfaceT::LiteralT>& mp, bool neg=true)
-            : hypothesis(lh), mapper(mp), negate(neg) {}
-        LiteralHypothesisPrinter(const LiteralHypothesisPrinter<InterfaceT>& o)
-            : hypothesis(o.hypothesis), mapper(o.mapper), negate(o.negate) {}
-
-        friend std::ostream& operator<< <InterfaceT>
-        (std::ostream& os, const LiteralHypothesisPrinter<InterfaceT>& hlp);
     };
 
     /** \brief Class for handling abducible literals. \ingroup gpidcorelib */
@@ -70,10 +49,12 @@ namespace gpid {
     public:
         using LiteralT = typename InterfaceT::LiteralT;
         using ModelT = typename InterfaceT::ModelT;
+        using ProblemLoaderT = typename InterfaceT::ProblemLoaderT;
         using counter_t = uint64_t;
     private:
         SolverInterfaceEngine<InterfaceT> interfaceEngine;
-        InterfaceT& solver;
+        InterfaceT& solver_contrads;
+        InterfaceT& solver_consistency;
 
         using index_t = uint32_t;
         using level_t = uint32_t;
@@ -85,7 +66,7 @@ namespace gpid {
         AbducibleTree<InterfaceT, LiteralHypothesis> storage;
         LiteralHypothesis hypothesis;
 
-        SkipController& skipctrl;
+        SkipController skipctrl;
         struct {
             counter_t storage     = 0;
             counter_t level_depth = 0;
@@ -110,6 +91,9 @@ namespace gpid {
 
         inline void unselectLevel(level_t level);
 
+        inline void addSolverLiteral(index_t idx);
+        inline void clearSolversCurrentLevel();
+
         inline void deactivateLiteral(index_t idx, level_t level);
         inline void deactivateSequents(index_t ub, level_t level);
 
@@ -118,12 +102,23 @@ namespace gpid {
         /** \brief Decide if an literal is consistent with active ones. */
         inline bool isConsistent(LiteralReference h, level_t level);
 
+        inline bool isConsequence(LiteralReference h, level_t level);
+
         inline LiteralT& getLiteral(index_t idx);
         inline index_t getCurrentIndex();
     public:
-        AdvancedAbducibleEngine(size_t size)
-            : lactive(size), storage(lmapper), hypothesis(size), clevel(1)
-        { limit[1] = 0; pointer[1] = size; }
+        AdvancedAbducibleEngine(size_t size, ImpgenOptions& iopts)
+            : solver_contrads(interfaceEngine.newInterface()),
+              solver_consistency(interfaceEngine.newInterface()),
+              lactive(size),
+              storage(interfaceEngine.newInterface(), lmapper),
+              hypothesis(size),
+              skipctrl(iopts)
+        { reinit(); }
+
+        inline void reinit();
+        inline void initializeSolvers(ProblemLoaderT& pbld);
+
         /** Map an index of the set to a specific literal. */
         inline void mapLiteral(uint32_t idx, LiteralT* hyp);
         /** Specify incompatible literals. */
@@ -137,7 +132,7 @@ namespace gpid {
 
         inline void printCurrentImplicate();
         inline void printStorage();
-        inline void exportStorage();
+        inline void exportStorage(const std::string filename);
 
         /**
          * \brief Find the next non tested literal.
@@ -175,25 +170,18 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline const LiteralHypothesisPrinter<InterfaceT> implicate
-    (LiteralHypothesis& h, ObjectMapper<typename InterfaceT::LiteralT>& mp) {
-        return LiteralHypothesisPrinter<InterfaceT>(h, mp, true);
+    inline void AdvancedAbducibleEngine<InterfaceT>::reinit() {
+        clevel = 1;
+        limit[1] = 0;
+        pointer[1] = lactive.get_maximal_size();
     }
 
     template<typename InterfaceT>
-    inline const LiteralHypothesisPrinter<InterfaceT> hypothesis
-    (LiteralHypothesis& h, ObjectMapper<typename InterfaceT::LiteralT>& mp) {
-        return LiteralHypothesisPrinter<InterfaceT>(h, mp, false);
-    }
-
-    template<typename InterfaceT> std::ostream& operator<<
-    (std::ostream& os, const LiteralHypothesisPrinter<InterfaceT>& hlp) {
-        return InterfaceT::to_stream(os, hlp.begin());
-    }
-
-    template<typename Printable>
-    inline void print_item(Printable& p) {
-        std::cout << "> " << p << std::endl;
+    inline void AdvancedAbducibleEngine<InterfaceT>::initializeSolvers(ProblemLoaderT& pbld) {
+        pbld.prepareReader();
+        while (pbld.hasConstraint()) {
+            solver_contrads.addConstraint(pbld.nextConstraint());
+        }
     }
 
     template<typename InterfaceT>
@@ -221,7 +209,7 @@ namespace gpid {
 
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::printCurrentImplicate() {
-        print_item(implicate(hypothesis, lmapper));
+        printlh(implicate<InterfaceT>(hypothesis, lmapper));
     }
 
     template<typename InterfaceT>
@@ -230,9 +218,9 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::exportStorage() {
-        snlog::l_warn("TODO: Do not write storage graph on stdout but on parametrized file");
-        storage.exportGraph(std::cout);
+    inline void AdvancedAbducibleEngine<InterfaceT>::exportStorage(const std::string filename) {
+        std::ofstream outstr(filename);
+        storage.exportGraph(outstr);
     }
 
     template<typename InterfaceT>
@@ -262,6 +250,8 @@ namespace gpid {
             */
             pointer[clevel + 1] = MIN(lactive.get_last() + 1, lactive.get_maximal_size());
             limit[clevel + 1] = getCurrentIndex();
+            solver_contrads.push();
+            solver_consistency.push();
             ++clevel;
         }
     }
@@ -271,6 +261,8 @@ namespace gpid {
     inline void AdvancedAbducibleEngine<InterfaceT>::decreaseLevel(uint32_t target) {
         while (clevel > target) {
             unselectLevel(clevel);
+            solver_contrads.pop();
+            solver_consistency.pop();
             --clevel;
         }
     }
@@ -301,14 +293,28 @@ namespace gpid {
             deactivateLiteral(linked, clevel);
         }
         deactivateSequents(selected, clevel);
-        solver.addLiteral(getCurrentLiteral(), clevel);
+        addSolverLiteral(getCurrentIndex());
         hypothesis.addLiteral(getCurrentIndex(), clevel);
+    }
+
+    template<typename InterfaceT>
+    inline void AdvancedAbducibleEngine<InterfaceT>::addSolverLiteral(index_t idx) {
+        solver_contrads.addLiteral(getLiteral(idx));
+        solver_consistency.addLiteral(getLiteral(idx));
+    }
+
+    template<typename InterfaceT>
+    inline void AdvancedAbducibleEngine<InterfaceT>::clearSolversCurrentLevel() {
+        solver_contrads.pop();
+        solver_contrads.push();
+        solver_consistency.pop();
+        solver_consistency.push();
     }
 
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::unselectLevel(uint32_t level) {
         hypothesis.removeLiterals(level);
-        solver.removeLiterals(level);
+        clearSolversCurrentLevel();
         for (index_t skipped : selection_map[level]) {
             if (lactive.is_paused(skipped)) {
                 lactive.set(skipped, pvalues_map[skipped].back());
@@ -325,13 +331,20 @@ namespace gpid {
 
     template<typename InterfaceT>
     inline bool AdvancedAbducibleEngine<InterfaceT>::isConsistent(LiteralReference h, uint32_t level) {
-        solver.addLiteral(lmapper.get(h), level+1);
-        SolverTestStatus status = solver.checkConsistency(level+1);
+        solver_consistency.push();
+        solver_consistency.addLiteral(lmapper.get(h));
+        SolverTestStatus status = solver_consistency.check();
         if (status == SolverTestStatus::UNKNOWN) {
             throw UndecidableProblemError("Solver could not decide consistency query");
         }
-        solver.removeLiterals(level+1);
+        solver_consistency.pop();
         return status == SolverTestStatus::SAT;
+    }
+
+    template<typename InterfaceT>
+    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsequence(LiteralReference h, level_t level) {
+        snlog::l_warn("isConsequence not implemented"); // TODO
+        return false;
     }
 
     template<typename InterfaceT>
@@ -342,7 +355,7 @@ namespace gpid {
                        instrument::instloc::skip);
             return true;
         }
-        if (skipctrl.consequences && solver.isConsequence(lmapper.get(h), level)) {
+        if (skipctrl.consequences && isConsequence(h, level)) {
             skip_counters.consequence++;
             insthandle(instrument::idata(lmapper.get(h).str() + ":consequence"),
                        instrument::instloc::skip);
@@ -354,7 +367,7 @@ namespace gpid {
                        instrument::instloc::skip);
             return true;
         }
-        if (!skipctrl.inconsistencies && !consistent(h, level)) {
+        if (!skipctrl.inconsistencies && !isConsistent(h, level)) {
             skip_counters.consistency++;
             insthandle(instrument::idata(lmapper.get(h).str() + ":consistency"),
                        instrument::instloc::skip);
@@ -365,7 +378,8 @@ namespace gpid {
 
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::backtrack(uint32_t level) {
-        solver.removeLiterals(level);
+        accessLevel(level);
+        clearSolversCurrentLevel();
     }
 
     template<typename InterfaceT>
@@ -411,7 +425,7 @@ namespace gpid {
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::modelCleanUp(uint32_t level) {
         accessLevel(level);
-        const ModelT& model = solver.recoverModel();
+        const ModelT& model = solver_contrads.getModel();
         for (index_t idx : lactive) {
             if (!lactive.is_active(idx)) continue;
             if (model.implies(getLiteral(idx))) {
@@ -434,8 +448,9 @@ namespace gpid {
     template<typename InterfaceT>
     inline SolverTestStatus AdvancedAbducibleEngine<InterfaceT>::testHypothesis(uint32_t level) {
         accessLevel(level);
-        insthandle(instrument::idata(solver.hypothesisAsString()), instrument::instloc::ismt_test);
-        SolverTestStatus status = solver.testHypothesis(level);
+        insthandle(instrument::idata(solver_consistency.getPrintableAssertions(false)),
+                   instrument::instloc::ismt_test);
+        SolverTestStatus status = solver_contrads.check();
         insthandle(instrument::idata(to_string(status)), instrument::instloc::ismt_result);
         return status;
     }

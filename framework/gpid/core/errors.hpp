@@ -8,6 +8,7 @@
 #ifndef GPID_FRAMEWORK__CORE__ERRORS_HPP
 #define GPID_FRAMEWORK__CORE__ERRORS_HPP
 
+#include <string>
 #include <exception>
 
 namespace gpid {

@@ -11,6 +11,7 @@
 
 #include <lcdot/dotgraph.hpp>
 
+#include <gpid/core/literals.hpp>
 #include <gpid/utils/stdutils.hpp>
 
 namespace gpid {
@@ -41,7 +42,7 @@ namespace gpid {
     public:
 
         AbducibleTree(InterfaceT& solver, ObjectMapper<typename InterfaceT::LiteralT>& mapper)
-            : solver(solver.additionalInterface()), mapper(mapper) { }
+            : solver(solver), mapper(mapper) { }
 
         inline void insert(HypothesisT& h);
         inline bool contains(HypothesisT& h);
@@ -130,7 +131,7 @@ namespace gpid {
     inline void AbducibleTree<InterfaceT, HypothesisT>::printLocal(anidx_t idx, HypothesisT& cprint,
                                                                    uint32_t clvl) {
         if (nodes[idx].empty() && gmisc::inset(tnodes, idx)) {
-            print_item(implicate(cprint, mapper));
+            printlh(implicate<InterfaceT>(cprint, mapper));
         } else {
             for (auto p : nodes[idx]) {
                 cprint.addLiteral(p.first, clvl);

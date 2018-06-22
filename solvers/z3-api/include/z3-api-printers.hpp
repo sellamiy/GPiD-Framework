@@ -1,8 +1,8 @@
-#ifndef GPID_Z3_IMPLICATE_PRINTER_SPP
-#define GPID_Z3_IMPLICATE_PRINTER_SPP
+#ifndef Z3_API_PRINTERS_FOR_GPID__HPP
+#define Z3_API_PRINTERS_FOR_GPID__HPP
 
 #include <iostream>
-#include <gpid/core/wrappers.hpp>
+#include <z3++.h>
 
 namespace gpid {
 
@@ -28,6 +28,7 @@ namespace gpid {
         out << "> " << (negate ? !f : f) << std::endl;
     }
 
+    /*
     template<> inline std::ostream& operator<< <Z3Literal>
     (std::ostream& out, const LiteralHypothesisPrinter<Z3Literal>& hlp) {
         typename LiteralHypothesis<Z3Literal>::iterator it = hlp.hypothesis.begin();
@@ -37,6 +38,7 @@ namespace gpid {
         }
         return out << (hlp.negate ? !f : f);
     }
+    */
 
 };
 

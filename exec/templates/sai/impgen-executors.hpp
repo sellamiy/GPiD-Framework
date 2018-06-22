@@ -5,13 +5,13 @@
 
 {% for interface in data.interfaces %}
 #ifdef SINGLE_SOLVER_{{ interface.name }}
-#include "{{ interface.name }}/{{ interface.mainheader }}"
+#include "{{ interface.mainheader }}"
 
-template void generate<{{ interface.classname }}>(OptionStorage& opts);
+template void generate<{{ interface.classname }}, {{ interface.generationclass }}>(OptionStorage& opts);
 
 static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
     try {
-        generate<{{ interface.classname }}>(opts);
+        generate<{{ interface.classname }}, {{ interface.generationclass }}>(opts);
         return impgenExecutionStatus::SUCCESS;
     }
 
@@ -43,8 +43,8 @@ static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
 #else
 
 {% for interface in data.interfaces %}
-#include "{{ interface.name }}/{{ interface.mainheader }}"
-template void generate<{{ interface.classname }}>(OptionStorage& opts);
+#include "{{ interface.mainheader }}"
+template void generate<{{ interface.classname }}, {{ interface.generationclass }}>(OptionStorage& opts);
 {% endfor %}
 
 static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
@@ -52,7 +52,7 @@ static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
     {% for interface in data.interfaces %}
     case interface_id::{{ interface.name }}_INTERFACE:
         try {
-            generate<{{ interface.classname }}>(opts);
+            generate<{{ interface.classname }}, {{ interface.generationclass }}>(opts);
             return impgenExecutionStatus::SUCCESS;
         }
 

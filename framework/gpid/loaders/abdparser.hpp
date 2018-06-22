@@ -4,8 +4,8 @@
  * \author Yanis Sellami
  * \date 2017
  */
-#ifndef GPID_FRAMEWORK__UTIL__PARSERS_HPP
-#define GPID_FRAMEWORK__UTIL__PARSERS_HPP
+#ifndef GPID_FRAMEWORK__LOADERS__ABDPARSER_HPP
+#define GPID_FRAMEWORK__LOADERS__ABDPARSER_HPP
 
 #include <fstream>
 
@@ -60,8 +60,6 @@ namespace gpid {
         inline bool isOk() { return status != AbdParserStatus::ABDP_ERROR; }
     };
 
-    extern uint32_t getAbducibleCount(std::string filename);
-
-};
+}
 
 #endif
