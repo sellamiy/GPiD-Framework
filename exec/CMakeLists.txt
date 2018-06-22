@@ -42,6 +42,7 @@ if(STATIC_EXECUTABLES)
 else()
   target_link_libraries(gpid-impgen gpid-solver-interfaces-shared ${IMPGEN_SHARED_LINK_LIBRARIES})
 endif()
+install(TARGETS gpid-impgen RUNTIME DESTINATION bin)
 # ==============================================================================
 # Split-IMPGEN - single implicate generators linked to specific solver
 # ==============================================================================
@@ -61,6 +62,7 @@ function(add_split_impgen interface)
   else()
     target_link_libraries(${SIMPGEN_EXECUTABLE_NAME} ${SIMPGEN_SHARED_LINK} ${IMPGEN_SHARED_LINK_LIBRARIES})
   endif()
+  install(TARGETS ${SIMPGEN_EXECUTABLE_NAME} RUNTIME DESTINATION bin)
 endfunction()
 
 foreach(interface ${SOLVER_TARGETS})
@@ -75,3 +77,4 @@ if(STATIC_EXECUTABLES)
 else()
   target_link_libraries(gpid-parser gpid-core-shared cxxopts)
 endif()
+install(TARGETS gpid-parser RUNTIME DESTINATION bin)
