@@ -61,7 +61,7 @@ namespace gpid {
         starray::SequentialActivableArray lactive;
         ObjectMapper<LiteralT> lmapper;
         using LiteralReference = typename ObjectMapper<LiteralT>::index_t;
-        std::map<index_t, std::list<index_t> > llinks;
+        std::map<index_t, std::list<index_t>> llinks;
 
         AbducibleTree<InterfaceT, LiteralHypothesis> storage;
         LiteralHypothesis hypothesis;
@@ -107,14 +107,9 @@ namespace gpid {
         inline LiteralT& getLiteral(index_t idx);
         inline index_t getCurrentIndex();
     public:
-        AdvancedAbducibleEngine(size_t size, ImpgenOptions& iopts)
-            : solver_contrads(interfaceEngine.newInterface()),
-              solver_consistency(interfaceEngine.newInterface()),
-              lactive(size),
-              storage(interfaceEngine.newInterface(), lmapper),
-              hypothesis(size),
-              skipctrl(iopts)
-        { reinit(); }
+        AdvancedAbducibleEngine(size_t size, ImpgenOptions& iopts);
+        template<typename AbducibleSource>
+        AdvancedAbducibleEngine(AbducibleSource& source, ImpgenOptions& iopts);
 
         inline void reinit();
         inline void initializeSolvers(ProblemLoaderT& pbld);
@@ -168,6 +163,30 @@ namespace gpid {
         }
         _lmapping[lkey].clear();
     }
+
+    template<typename InterfaceT>
+    AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine(size_t size, ImpgenOptions& iopts)
+        : solver_contrads(interfaceEngine.newInterface()),
+          solver_consistency(interfaceEngine.newInterface()),
+          lactive(size),
+          storage(interfaceEngine.newInterface(), lmapper),
+          hypothesis(size),
+          skipctrl(iopts)
+    { reinit(); }
+
+    template<typename InterfaceT>
+    template<typename AbducibleSource>
+    AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine
+    (AbducibleSource& source, ImpgenOptions& iopts)
+        : solver_contrads(interfaceEngine.newInterface()),
+          solver_consistency(interfaceEngine.newInterface()),
+          lactive(source.count()),
+          lmapper(source.getMapper()),
+          llinks(source.getLinks()),
+          storage(interfaceEngine.newInterface(), lmapper),
+          hypothesis(source.count()),
+          skipctrl(iopts)
+    { reinit(); }
 
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::reinit() {

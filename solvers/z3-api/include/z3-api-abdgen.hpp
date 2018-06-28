@@ -36,6 +36,9 @@ namespace gpid {
         void load(const std::string filename);
 
         size_t count() const;
+
+        inline ObjectMapper<Z3Literal>& getMapper() { return mapper; }
+        inline std::map<uint32_t, std::list<uint32_t>>& getLinks() { return links; }
     };
 
 }

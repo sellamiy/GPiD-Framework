@@ -22,6 +22,9 @@ namespace gpid {
         inline O& get(index_t idx);
         
         inline uint32_t size();
+
+        ObjectMapper();
+        ObjectMapper(ObjectMapper<O>& o);
     private:
         std::map<index_t, O*> _mapping;
     };
@@ -45,6 +48,10 @@ namespace gpid {
     }
 
     /* *** Implementations *** */
+
+    template<typename O> ObjectMapper<O>::ObjectMapper() {}
+    template<typename O> ObjectMapper<O>::ObjectMapper(ObjectMapper<O>& o)
+        : _mapping(o._mapping) {}
 
     template<typename O>
     inline void ObjectMapper<O>::map(index_t idx, O* l) {

@@ -62,7 +62,7 @@ namespace gpid {
     ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::
     ImpgenAlgorithm(ProblemLoaderT& pbld, LiteralGeneratorT& lgen,
                     GPiDOptions& opts, ImpgenOptions& iopts)
-        : GPiDAlgorithm(opts), options(iopts), lengine(lgen.count(), iopts), pbloader(pbld)
+        : GPiDAlgorithm(opts), options(iopts), lengine(lgen, iopts), pbloader(pbld)
     { }
 
     template<typename AbdEngineT, typename LiteralGeneratorT>
