@@ -14,7 +14,8 @@ function(generate_multi_file target_file template_file) # ARGN: interfaces_list
   set(INTERFACE_CONFIG_FILES)
   set(INTERFACE_CLI_OPTIONS)
   foreach(interface_id ${ARGN})
-    list(APPEND INTERFACE_CONFIG_FILES ${interface_id}-config-file)
+    list(APPEND INTERFACE_CONFIG_TARGETS ${interface_id}-config-file)
+    list(APPEND INTERFACE_CONFIG_FILES "${LOCAL_SOLVER_INTERFACES_CONFIGS}/${interface_id}.yml")
     list(APPEND INTERFACE_CLI_OPTIONS "--interface=${LOCAL_SOLVER_INTERFACES_CONFIGS}/${interface_id}.yml")
   endforeach()
   add_custom_command(
@@ -23,9 +24,12 @@ function(generate_multi_file target_file template_file) # ARGN: interfaces_list
     COMMAND "${PYTHON_EXECUTABLE}" "${CODEGEN_MULTI_SCRIPT}"
     "--source=${template_file}" "--output=${target_file}" "--process"
     ${INTERFACE_CLI_OPTIONS})
+  get_filename_component(template_name "${template_file}" NAME_WE)
+  add_custom_target(${template_name}-multi
+    DEPENDS "${target_file}" "${CODEGEN_MULTI_SCRIPT}" "${template_file}" ${INTERFACE_CONFIG_TARGETS})
 endfunction()
 # ------------------------------------------------------------------------------
-function(generate_interface_config_file name header classname generationclass)
+function(generate_interface_config_file name header classname generationclass) # ARGN: additionals
   set(INTERFACE_CONFIG_FILE "${LOCAL_SOLVER_INTERFACES_CONFIGS}/${name}.yml")
   add_custom_command(
     OUTPUT "${INTERFACE_CONFIG_FILE}"
@@ -34,7 +38,7 @@ function(generate_interface_config_file name header classname generationclass)
     "--interface=${name}" "--output=${INTERFACE_CONFIG_FILE}"
     "--mainheader=\"${header}\"" "--classname=${classname}"
     "--generationclass=${generationclass}"
-    "--generate")
+    ${ARGN} "--generate")
   add_custom_target(${name}-config-file
     DEPENDS "${INTERFACE_CONFIG_FILE}" "${CODEGEN_CONFIG_SCRIPT}")
 endfunction()

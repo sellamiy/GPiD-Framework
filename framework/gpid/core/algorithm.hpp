@@ -7,7 +7,6 @@
 #ifndef GPID_FRAMEWORK__CORE__ALGORITHM_HPP
 #define GPID_FRAMEWORK__CORE__ALGORITHM_HPP
 
-#include <cstdint>
 #include <gpid/core/system.hpp>
 #include <gpid/core/options.hpp>
 

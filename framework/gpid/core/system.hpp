@@ -7,6 +7,8 @@
 #ifndef GPID_FRAMEWORK__CORE__SYSTEM_HPP
 #define GPID_FRAMEWORK__CORE__SYSTEM_HPP
 
+#include <cstdint>
+
 namespace gpid {
 
     /** \brief System interruption flag storage. */

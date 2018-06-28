@@ -7,6 +7,7 @@
 #define GPID_FRAMEWORK__IMPGEN__OPTIONS_HPP
 
 #include <string>
+#include <limits>
 
 namespace gpid {
 

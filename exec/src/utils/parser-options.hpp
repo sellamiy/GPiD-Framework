@@ -2,7 +2,6 @@
 #define GPID_EXEC__UTILS__PARSER_OPTIONS_HPP
 
 #include <cxxopts.hpp>
-#include <snlog/snlog.hpp>
 #include <gpid/gpid.hpp>
 
 /* ===== Structures ===== */

@@ -9,8 +9,9 @@
  */
 #ifndef GPID_FRAMEWORK__INSTRUMENT__INSTRUMENT_HPP
 #define GPID_FRAMEWORK__INSTRUMENT__INSTRUMENT_HPP
-#include <gpid/core/config.hpp>
+
 #include <gpid/instrument/controller.hpp>
+
 namespace gpid {
 namespace instrument {
 

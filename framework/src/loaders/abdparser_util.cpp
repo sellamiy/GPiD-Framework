@@ -1,8 +1,6 @@
 #define GPID_FRAMEWORK__UTIL__ABDPARSER_UTIL_CPP
 
-#include <snlog/snlog.hpp>
 #include <gpid/core/memory.hpp>
-#include <gpid/core/errors.hpp>
 #include <gpid/loaders/abdparseutils.hpp>
 
 using namespace snlog;

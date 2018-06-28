@@ -8,6 +8,12 @@ import yaml
 from codegencore import pp_warning, pp_error
 from codegencore import prepare_directory, create_template_env, render_template
 # --------------------------------------
+class ExceptionData:
+
+    def __init__(self, classname, message_method):
+        self.classname = classname
+        self.message_method = message_method
+# --------------------------------------
 class InterfaceData:
 
     def __init__(self, ifilename):
@@ -43,6 +49,9 @@ class InterfaceData:
         self.mainheader = self.data['mainheader']
         self.classname = self.data['classname']
         self.generationclass = self.data['generationclass']
+
+        for excclass in self.data['exceptions']:
+            self.exceptions.append(ExceptionData(excclass['classname'], excclass['message_method']))
 # --------------------------------------
 class MultiInterfaceData:
 

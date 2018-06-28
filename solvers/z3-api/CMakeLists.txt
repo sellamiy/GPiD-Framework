@@ -20,7 +20,9 @@ else()
   target_link_libraries(z3-api-shared ${Z3_LIBRARIES} gpid-core-shared)
   # ----------------------------------------------------------------------------
   include(FrameworkSolverRegistration)
-  generate_interface_config_file(z3-api z3-api-interface.hpp Z3InterfaceAPI Z3AbducibleLiteralsGenerator)
+  generate_interface_config_file(z3-api
+    z3-api-interface.hpp Z3InterfaceAPI Z3AbducibleLiteralsGenerator
+    "--exception=\"z3::exception;msg\"")
   # ----------------------------------------------------------------------------
   set(LOCAL_INTERFACE_NAME z3-api PARENT_SCOPE)
 endif()

@@ -8,6 +8,7 @@
 #define GPID_FRAMEWORK__SAI__SAI_TYPES_HPP
 
 #include <map>
+#include <vector>
 #include <iterator>
 #include <starray/starray.hpp>
 
@@ -39,14 +40,14 @@ namespace gpid {
         using LiteralT = typename InterfaceT::LiteralT;
         using ModelT = typename InterfaceT::ModelT;
     private:
-        ContextManagerT _ctx;
+        ContextManagerT& _ctx;
         using interface_id_t = size_t;
         std::vector<InterfaceT*> _interfaces;
 
         inline interface_id_t createInterface();
         inline InterfaceT& getInterface(interface_id_t id) const;
     public:
-        SolverInterfaceEngine();
+        SolverInterfaceEngine(ContextManagerT& ctx);
         ~SolverInterfaceEngine();
 
         inline InterfaceT& newInterface();
@@ -56,7 +57,8 @@ namespace gpid {
     /* *** Implementations *** */
 
     template<typename CInterfaceT>
-    SolverInterfaceEngine<CInterfaceT>::SolverInterfaceEngine() { }
+    SolverInterfaceEngine<CInterfaceT>::SolverInterfaceEngine(ContextManagerT& ctx)
+        : _ctx(ctx) {}
 
     template<typename CInterfaceT>
     SolverInterfaceEngine<CInterfaceT>::~SolverInterfaceEngine() {

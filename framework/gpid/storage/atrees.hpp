@@ -7,8 +7,6 @@
 #ifndef GPID_FRAMEWORK__STORAGE__ATREES_HPP
 #define GPID_FRAMEWORK__STORAGE__ATREES_HPP
 
-#include <set>
-
 #include <lcdot/dotgraph.hpp>
 
 #include <gpid/core/literals.hpp>

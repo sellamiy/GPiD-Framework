@@ -1,5 +1,6 @@
 #define Z3_API_INTERFACE_FOR_GPID__ABDUCIBLE_GENERATORS__CPP
 
+#include <functional>
 #include <z3-api-abdgen.hpp>
 #include <gpid/core/memory.hpp>
 #include <gpid/loaders/abdparseutils.hpp>
@@ -97,15 +98,12 @@ static inline void abdgen_z3_constAllComp
     }
 }
 
-static std::map<std::string,
-                std::function< void (Z3ProblemLoader&,
-                                     ObjectMapper<Z3Literal>&,
-                                     std::map<uint32_t, std::list<uint32_t>>&)>>
-abg_z3_abdgeneration_table =
-{
-    { "const-all-eq", abdgen_z3_constAllEq },
-    { "const-all-comp", abdgen_z3_constAllComp },
-    { "default", abdgen_z3_constAllEq }
+using AbdgenFunctionT = std::function<void(Z3ProblemLoader&, ObjectMapper<Z3Literal>&,
+                                           std::map<uint32_t, std::list<uint32_t>>&)>;
+static std::map<std::string, AbdgenFunctionT> abg_z3_abdgeneration_table = {
+    { "const-all-eq", AbdgenFunctionT(abdgen_z3_constAllEq) },
+    { "const-all-comp", AbdgenFunctionT(abdgen_z3_constAllComp) },
+    { "default", AbdgenFunctionT(abdgen_z3_constAllEq) }
 };
 
 void Z3AbducibleLiteralsGenerator::generate(const std::string generator) {

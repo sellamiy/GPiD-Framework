@@ -8,13 +8,8 @@
 #define GPID_FRAMEWORK__IMPGEN__ADVANCED_ENGINE_HPP
 
 #include <list>
-#include <vector>
 
-#include <starray/starray.hpp>
-
-#include <gpid/core/errors.hpp>
 #include <gpid/core/memory.hpp>
-#include <gpid/core/literals.hpp>
 #include <gpid/sai/saitypes.hpp>
 #include <gpid/storage/atrees.hpp>
 #include <gpid/impgen/skipcontrol.hpp>
@@ -47,6 +42,7 @@ namespace gpid {
     template<class InterfaceT>
     class AdvancedAbducibleEngine {
     public:
+        using ContextManagerT = typename InterfaceT::ContextManagerT;
         using LiteralT = typename InterfaceT::LiteralT;
         using ModelT = typename InterfaceT::ModelT;
         using ProblemLoaderT = typename InterfaceT::ProblemLoaderT;
@@ -107,9 +103,9 @@ namespace gpid {
         inline LiteralT& getLiteral(index_t idx);
         inline index_t getCurrentIndex();
     public:
-        AdvancedAbducibleEngine(size_t size, ImpgenOptions& iopts);
+        AdvancedAbducibleEngine(size_t size, ContextManagerT& ctx, ImpgenOptions& iopts);
         template<typename AbducibleSource>
-        AdvancedAbducibleEngine(AbducibleSource& source, ImpgenOptions& iopts);
+        AdvancedAbducibleEngine(AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts);
 
         inline void reinit();
         inline void initializeSolvers(ProblemLoaderT& pbld);
@@ -165,8 +161,10 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine(size_t size, ImpgenOptions& iopts)
-        : solver_contrads(interfaceEngine.newInterface()),
+    AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine
+    (size_t size, ContextManagerT& ctx, ImpgenOptions& iopts)
+        : interfaceEngine(ctx),
+          solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
           lactive(size),
           storage(interfaceEngine.newInterface(), lmapper),
@@ -177,8 +175,9 @@ namespace gpid {
     template<typename InterfaceT>
     template<typename AbducibleSource>
     AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine
-    (AbducibleSource& source, ImpgenOptions& iopts)
-        : solver_contrads(interfaceEngine.newInterface()),
+    (AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts)
+        : interfaceEngine(ctx),
+          solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
           lactive(source.count()),
           lmapper(source.getMapper()),
@@ -190,9 +189,9 @@ namespace gpid {
 
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::reinit() {
-        clevel = 1;
-        limit[1] = 0;
-        pointer[1] = lactive.get_maximal_size();
+        clevel = 0;
+        limit[0] = 0;
+        pointer[0] = lactive.get_maximal_size();
     }
 
     template<typename InterfaceT>

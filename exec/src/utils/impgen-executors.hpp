@@ -19,6 +19,7 @@ static inline void generate(OptionStorage& opts) {
         ProblemLoaderT Loader;
     Loader.load(opts.input, opts.input_lang);
 
+    l_message("recovering abducible literals...");
     LiteralGeneratorT LGenerator(Loader);
     if (opts.impgen.input_type == gpid::AbducibleInputType::FILE) {
         LGenerator.load(opts.impgen.input_file);
