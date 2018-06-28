@@ -36,7 +36,7 @@ void Z3AbducibleLiteralsGenerator::load(const std::string filename) {
 #include <map>
 
 static inline void abdgen_z3_constAllEq
-(Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, uint32_t>& links) {
+(Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, std::list<uint32_t>>& links) {
     uint32_t l_gvr = pbld.getDeclarations().getFunDecls().size();
     size_t size = l_gvr > 1 ? l_gvr * (l_gvr - 1) : 0;
     memoryRangeAllocation<Z3Literal>(abducibles_memory_id, size);
@@ -48,15 +48,15 @@ static inline void abdgen_z3_constAllEq
             z3::expr cstl_neq = pbld.getDeclarations().getFunDecls()[i]() != pbld.getDeclarations().getFunDecls()[j]();
             memoryObjectAllocation(abducibles_memory_id, pos, mapper, cstl_eq);
             memoryObjectAllocation(abducibles_memory_id, pos+1, mapper, cstl_neq);
-            links[pos] = pos+1;
-            links[pos+1] = pos;
+            links[pos].push_back(pos+1);
+            links[pos+1].push_back(pos);
             pos += 2;
         }
     }
 }
 
 static inline void abdgen_z3_constAllComp
-(Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, uint32_t>& links) {
+(Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, std::list<uint32_t>>& links) {
     uint32_t l_gvr = pbld.getDeclarations().getFunDecls().size();
     size_t size = l_gvr > 1 ? l_gvr * (l_gvr - 1) * 2 : 0;
     memoryRangeAllocation<Z3Literal>(abducibles_memory_id, size);
@@ -80,18 +80,18 @@ static inline void abdgen_z3_constAllComp
             memoryObjectAllocation(abducibles_memory_id, pos+1, mapper, cstl_ge);
             memoryObjectAllocation(abducibles_memory_id, pos+2, mapper, cstl_lt);
             memoryObjectAllocation(abducibles_memory_id, pos+3, mapper, cstl_le);
-            links[pos] = pos+1;
-            links[pos] = pos+2;
-            links[pos] = pos+3;
-            links[pos+1] = pos+2;
-            links[pos+1] = pos+3;
-            links[pos+2] = pos+3;
-            links[pos+1] = pos;
-            links[pos+2] = pos;
-            links[pos+3] = pos;
-            links[pos+2] = pos+1;
-            links[pos+3] = pos+1;
-            links[pos+3] = pos+2;
+            links[pos].push_back(pos+1);
+            links[pos].push_back(pos+2);
+            links[pos].push_back(pos+3);
+            links[pos+1].push_back(pos+2);
+            links[pos+1].push_back(pos+3);
+            links[pos+2].push_back(pos+3);
+            links[pos+1].push_back(pos);
+            links[pos+2].push_back(pos);
+            links[pos+3].push_back(pos);
+            links[pos+2].push_back(pos+1);
+            links[pos+3].push_back(pos+1);
+            links[pos+3].push_back(pos+2);
             pos += 4;
         }
     }
@@ -100,7 +100,7 @@ static inline void abdgen_z3_constAllComp
 static std::map<std::string,
                 std::function< void (Z3ProblemLoader&,
                                      ObjectMapper<Z3Literal>&,
-                                     std::map<uint32_t, uint32_t>&)>>
+                                     std::map<uint32_t, std::list<uint32_t>>&)>>
 abg_z3_abdgeneration_table =
 {
     { "const-all-eq", abdgen_z3_constAllEq },

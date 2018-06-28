@@ -1,6 +1,7 @@
 #ifndef Z3_API_ABDUCIBLE_GENERATION_FOR_GPID__HPP
 #define Z3_API_ABDUCIBLE_GENERATION_FOR_GPID__HPP
 
+#include <list>
 #include <gpid/core/memory.hpp>
 #include <gpid/loaders/abdparseutils.hpp>
 #include "z3-api-loaders.hpp"
@@ -11,10 +12,11 @@ namespace gpid {
         Z3ProblemLoader& pbld;
         uint32_t _cpt;
         ObjectMapper<Z3Literal>& mapper;
-        std::map<uint32_t, uint32_t>& links;
+        std::map<uint32_t, std::list<uint32_t>>& links;
     public:
         Z3AbducibleHandler
-        (Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, uint32_t>& links)
+        (Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper,
+         std::map<uint32_t, std::list<uint32_t>>& links)
             : pbld(pbld), _cpt(0), mapper(mapper), links(links) {}
         virtual void allocate(const std::string id, size_t size) override;
         virtual void handleAbducible(std::string abd) override;
@@ -25,7 +27,7 @@ namespace gpid {
     class Z3AbducibleLiteralsGenerator {
         Z3ProblemLoader& pbld;
         ObjectMapper<Z3Literal> mapper;
-        std::map<uint32_t, uint32_t> links;
+        std::map<uint32_t, std::list<uint32_t>> links;
         Z3AbducibleHandler handler;
     public:
         Z3AbducibleLiteralsGenerator(Z3ProblemLoader& pbld);
