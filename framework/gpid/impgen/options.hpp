@@ -21,7 +21,7 @@ namespace gpid {
         /** Print implicates on terminal when generated */
         bool print_implicates = false;
         /** Store generated implicates and skipp storage-subsumed hypotheses */
-        bool store_implicates = false;
+        bool store_implicates = true;
         /** Print stored implicates after computation */
         bool print_storage = false;
         /** Export stored implicates as graph after computation */
@@ -36,7 +36,7 @@ namespace gpid {
         bool allow_inconsistencies = false;
 
         /** Skip literals detected as consequences of previous assignments */
-        bool detect_consequences = true;
+        bool detect_consequences = false;
 
         /** Maximal number of abducible hypotheses in an implicate */
         uint32_t max_level = std::numeric_limits<uint32_t>::max();
