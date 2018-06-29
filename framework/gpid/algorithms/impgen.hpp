@@ -160,7 +160,7 @@ namespace gpid {
 
                 if (status == SolverTestStatus::SAT) {
                     if (options.use_models) {
-                        lengine.modelCleanUp(level);
+                        lengine.modelCleanUp();
                     }
                     selectCandidate();
                 } else if (status == SolverTestStatus::UNSAT) {

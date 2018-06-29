@@ -47,13 +47,13 @@ namespace gpid {
         using ModelT = typename InterfaceT::ModelT;
         using ProblemLoaderT = typename InterfaceT::ProblemLoaderT;
         using counter_t = uint64_t;
+        using index_t = uint32_t;
+        using level_t = uint32_t;
     private:
         SolverInterfaceEngine<InterfaceT> interfaceEngine;
         InterfaceT& solver_contrads;
         InterfaceT& solver_consistency;
 
-        using index_t = uint32_t;
-        using level_t = uint32_t;
         starray::SequentialActivableArray lactive;
         ObjectMapper<LiteralT> lmapper;
         using LiteralReference = typename ObjectMapper<LiteralT>::index_t;
@@ -85,20 +85,20 @@ namespace gpid {
         inline void decreaseLevel(level_t target);
         inline void accessLevel(level_t level);
 
-        inline void unselectLevel(level_t level);
+        inline void unselectLevel();
 
         inline void addSolverLiteral(index_t idx);
         inline void clearSolversCurrentLevel();
 
-        inline void deactivateLiteral(index_t idx, level_t level);
-        inline void deactivateSequents(index_t ub, level_t level);
+        inline void deactivateLiteral(index_t idx);
+        inline void deactivateSequents(index_t ub);
 
         /** \brief Decide if an literal can be skipped at a given level. */
-        inline bool canBeSkipped(LiteralReference h, level_t level);
+        inline bool canBeSkipped(LiteralReference h);
         /** \brief Decide if an literal is consistent with active ones. */
-        inline bool isConsistent(LiteralReference h, level_t level);
+        inline bool isConsistent(LiteralReference h);
 
-        inline bool isConsequence(LiteralReference h, level_t level);
+        inline bool isConsequence(LiteralReference h);
 
         inline LiteralT& getLiteral(index_t idx);
         inline index_t getCurrentIndex();
@@ -141,7 +141,7 @@ namespace gpid {
         inline void backtrack(uint32_t level);
 
         /** Internally selects literals to skip according to a model. */
-        inline void modelCleanUp(uint32_t level);
+        inline void modelCleanUp();
 
         inline void storeCurrentImplicate();
     };
@@ -208,11 +208,11 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::mapLiteral(uint32_t idx, LiteralT* hyp) {
+    inline void AdvancedAbducibleEngine<InterfaceT>::mapLiteral(index_t idx, LiteralT* hyp) {
         lmapper.map(idx, hyp);
     }
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::mapLink(uint32_t idx, uint32_t tgt_idx) {
+    inline void AdvancedAbducibleEngine<InterfaceT>::mapLink(index_t idx, index_t tgt_idx) {
         llinks[idx].push_back(tgt_idx);
     }
 
@@ -242,24 +242,24 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::accessLevel(uint32_t level) {
+    inline void AdvancedAbducibleEngine<InterfaceT>::accessLevel(level_t level) {
         if (level > clevel) increaseLevel(level);
         else                decreaseLevel(level);
     }
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::deactivateLiteral(index_t idx, level_t level) {
+    inline void AdvancedAbducibleEngine<InterfaceT>::deactivateLiteral(index_t idx) {
         if (lactive.is_active(idx)) {
-            selection_map[level].push_back(idx);
+            selection_map[clevel].push_back(idx);
         } else if (lactive.is_paused(idx)) {
-            pselection_map[level].push_back(idx);
+            pselection_map[clevel].push_back(idx);
         }
         lactive.deactivate(idx);
     }
 
 #define MIN(a,b) (a) < (b) ? (a) : (b)
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::increaseLevel(uint32_t target) {
+    inline void AdvancedAbducibleEngine<InterfaceT>::increaseLevel(level_t target) {
         while (clevel < target) {
             /* TODO: Fixme.
                The hack +1 to is necessary to access the first active when asking
@@ -276,9 +276,9 @@ namespace gpid {
 #undef MIN
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::decreaseLevel(uint32_t target) {
+    inline void AdvancedAbducibleEngine<InterfaceT>::decreaseLevel(level_t target) {
         while (clevel > target) {
-            unselectLevel(clevel);
+            unselectLevel();
             solver_contrads.pop();
             solver_consistency.pop();
             --clevel;
@@ -286,18 +286,18 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::deactivateSequents(index_t ub, level_t level) {
+    inline void AdvancedAbducibleEngine<InterfaceT>::deactivateSequents(index_t ub) {
         index_t curr = ub;
         index_t next = lactive.get_downward(curr);
         while (curr != next) {
             curr = next;
             if (lactive.is_active(curr)) {
                 lactive.deactivate(curr);
-                selection_map[level].push_back(curr);
+                selection_map[clevel].push_back(curr);
             }
-            if (lactive.is_paused(curr) && lactive.get(curr) != level) {
+            if (lactive.is_paused(curr) && lactive.get(curr) != clevel) {
                 lactive.deactivate(curr);
-                pselection_map[level].push_back(curr);
+                pselection_map[clevel].push_back(curr);
             }
             next = lactive.get_downward(curr);
         }
@@ -306,11 +306,11 @@ namespace gpid {
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::selectCurrentLiteral() {
         index_t selected = getCurrentIndex();
-        deactivateLiteral(selected, clevel);
+        deactivateLiteral(selected);
         for (index_t linked : llinks[selected]) {
-            deactivateLiteral(linked, clevel);
+            deactivateLiteral(linked);
         }
-        deactivateSequents(selected, clevel);
+        deactivateSequents(selected);
         addSolverLiteral(getCurrentIndex());
         hypothesis.addLiteral(getCurrentIndex(), clevel);
     }
@@ -330,25 +330,25 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::unselectLevel(uint32_t level) {
-        hypothesis.removeLiterals(level);
+    inline void AdvancedAbducibleEngine<InterfaceT>::unselectLevel() {
+        hypothesis.removeLiterals(clevel);
         clearSolversCurrentLevel();
-        for (index_t skipped : selection_map[level]) {
+        for (index_t skipped : selection_map[clevel]) {
             if (lactive.is_paused(skipped)) {
                 lactive.set(skipped, pvalues_map[skipped].back());
                 pvalues_map[skipped].pop_back();
             }
             lactive.activate(skipped);
         }
-        for (index_t skipped : pselection_map[level]) {
+        for (index_t skipped : pselection_map[clevel]) {
             lactive.pause(skipped);
         }
-        selection_map[level].clear();
-        pselection_map[level].clear();
+        selection_map[clevel].clear();
+        pselection_map[clevel].clear();
     }
 
     template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsistent(LiteralReference h, uint32_t) {
+    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsistent(LiteralReference h) {
         solver_consistency.push();
         solver_consistency.addLiteral(lmapper.get(h));
         SolverTestStatus status = solver_consistency.check();
@@ -360,20 +360,20 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsequence(LiteralReference, level_t) {
+    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsequence(LiteralReference) {
         snlog::l_warn("isConsequence not implemented"); // TODO
         return false;
     }
 
     template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::canBeSkipped(LiteralReference h, uint32_t level) {
-        if (skipctrl.max_level <= level) {
+    inline bool AdvancedAbducibleEngine<InterfaceT>::canBeSkipped(LiteralReference h) {
+        if (skipctrl.max_level <= clevel) {
             skip_counters.level_depth++;
             insthandle(instrument::idata(lmapper.get(h).str() + ":depth"),
                        instrument::instloc::skip);
             return true;
         }
-        if (skipctrl.consequences && isConsequence(h, level)) {
+        if (skipctrl.consequences && isConsequence(h)) {
             skip_counters.consequence++;
             insthandle(instrument::idata(lmapper.get(h).str() + ":consequence"),
                        instrument::instloc::skip);
@@ -385,7 +385,7 @@ namespace gpid {
                        instrument::instloc::skip);
             return true;
         }
-        if (!skipctrl.inconsistencies && !isConsistent(h, level)) {
+        if (!skipctrl.inconsistencies && !isConsistent(h)) {
             skip_counters.consistency++;
             insthandle(instrument::idata(lmapper.get(h).str() + ":consistency"),
                        instrument::instloc::skip);
@@ -395,22 +395,22 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::backtrack(uint32_t level) {
+    inline void AdvancedAbducibleEngine<InterfaceT>::backtrack(level_t level) {
         accessLevel(level);
         clearSolversCurrentLevel();
     }
 
     template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::searchNextLiteral(uint32_t level) {
+    inline bool AdvancedAbducibleEngine<InterfaceT>::searchNextLiteral(level_t level) {
         accessLevel(level);
-        unselectLevel(clevel);
+        unselectLevel();
         while (true) {
             index_t next = lactive.get_downward(getCurrentIndex());
             if (next != getCurrentIndex()) {
                 pointer[clevel] = next;
                 insthandle(instrument::idata(getLiteral(next).str()),
                            instrument::instloc::pre_select);
-                if (!canBeSkipped(getCurrentIndex(), clevel)) {
+                if (!canBeSkipped(getCurrentIndex())) {
                     if (!lactive.is_paused(getCurrentIndex())
                         || lactive.get(getCurrentIndex()) != clevel) {
                         return true;
@@ -441,8 +441,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::modelCleanUp(uint32_t level) {
-        accessLevel(level);
+    inline void AdvancedAbducibleEngine<InterfaceT>::modelCleanUp() {
         const ModelT& model = solver_contrads.getModel();
         for (index_t idx : lactive) {
             if (!lactive.is_active(idx)) continue;
@@ -464,7 +463,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline SolverTestStatus AdvancedAbducibleEngine<InterfaceT>::testHypothesis(uint32_t level) {
+    inline SolverTestStatus AdvancedAbducibleEngine<InterfaceT>::testHypothesis(level_t level) {
         accessLevel(level);
         insthandle(instrument::idata(solver_consistency.getPrintableAssertions(false)),
                    instrument::instloc::ismt_test);
