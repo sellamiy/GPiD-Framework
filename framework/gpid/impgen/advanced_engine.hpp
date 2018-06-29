@@ -348,7 +348,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsistent(LiteralReference h, uint32_t level) {
+    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsistent(LiteralReference h, uint32_t) {
         solver_consistency.push();
         solver_consistency.addLiteral(lmapper.get(h));
         SolverTestStatus status = solver_consistency.check();
@@ -360,7 +360,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsequence(LiteralReference h, level_t level) {
+    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsequence(LiteralReference, level_t) {
         snlog::l_warn("isConsequence not implemented"); // TODO
         return false;
     }
