@@ -1,5 +1,5 @@
-#ifndef GPID_CVC4_IMPLICATE_PRINTER_SPP
-#define GPID_CVC4_IMPLICATE_PRINTER_SPP
+#ifndef CVC4_API_PRINTERS_FOR_GPID__HPP
+#define CVC4_API_PRINTERS_FOR_GPID__HPP
 
 #include <iostream>
 
@@ -15,17 +15,6 @@ namespace gpid {
         out << pfl << std::endl;
     }
 
-    template<> inline std::ostream& operator<< <CVC4Literal>
-    (std::ostream& out, const LiteralHypothesisPrinter<CVC4Literal>& hlp) {
-        for (auto lit : hlp.hypothesis) {
-            if (hlp.negate) out << " not(";
-            else out << " ";
-            out << hlp.mapper.get(lit).expr;
-            if (hlp.negate) out << ")";
-        }
-        return out;
-    }
-
-};
+}
 
 #endif

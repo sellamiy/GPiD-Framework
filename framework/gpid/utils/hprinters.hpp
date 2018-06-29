@@ -17,16 +17,19 @@ namespace gpid {
     class LiteralHypothesisPrinter {
         HypothesisT& hypothesis;
         ObjectMapper<typename InterfaceT::LiteralT>& mapper;
+        typename InterfaceT::ContextManagerT& ctx;
         bool negate;
     public:
         LiteralHypothesisPrinter
-        (HypothesisT& lh, ObjectMapper<typename InterfaceT::LiteralT>& mp, bool neg=true)
-            : hypothesis(lh), mapper(mp), negate(neg) {}
+        (HypothesisT& lh, ObjectMapper<typename InterfaceT::LiteralT>& mp,
+         typename InterfaceT::ContextManagerT& ctx, bool neg=true)
+            : hypothesis(lh), mapper(mp), ctx(ctx), negate(neg) {}
         LiteralHypothesisPrinter(const LiteralHypothesisPrinter<InterfaceT, HypothesisT>& o)
-            : hypothesis(o.hypothesis), mapper(o.mapper), negate(o.negate) {}
+            : hypothesis(o.hypothesis), mapper(o.mapper), ctx(o.ctx), negate(o.negate) {}
 
         inline HypothesisT& getHypothesis() const { return hypothesis; }
         inline ObjectMapper<typename InterfaceT::LiteralT>& getMapper() const { return mapper; }
+        inline typename InterfaceT::ContextManagerT& getContextManager() const { return ctx; }
         inline bool isNegated() const { return negate; }
 
         friend std::ostream& operator<< <InterfaceT, HypothesisT>
@@ -35,19 +38,22 @@ namespace gpid {
 
     template<typename InterfaceT, typename HypothesisT>
     inline const LiteralHypothesisPrinter<InterfaceT, HypothesisT> implicate
-    (HypothesisT& h, ObjectMapper<typename InterfaceT::LiteralT>& mp) {
-        return LiteralHypothesisPrinter<InterfaceT, HypothesisT>(h, mp, true);
+    (HypothesisT& h, ObjectMapper<typename InterfaceT::LiteralT>& mp,
+     typename InterfaceT::ContextManagerT& ctx) {
+        return LiteralHypothesisPrinter<InterfaceT, HypothesisT>(h, mp, ctx, true);
     }
 
     template<typename InterfaceT, typename HypothesisT>
     inline const LiteralHypothesisPrinter<InterfaceT, HypothesisT> hypothesis
-    (HypothesisT& h, ObjectMapper<typename InterfaceT::LiteralT>& mp) {
-        return LiteralHypothesisPrinter<InterfaceT, HypothesisT>(h, mp, false);
+    (HypothesisT& h, ObjectMapper<typename InterfaceT::LiteralT>& mp,
+     typename InterfaceT::ContextManagerT& ctx) {
+        return LiteralHypothesisPrinter<InterfaceT, HypothesisT>(h, mp, ctx, false);
     }
 
     template<typename InterfaceT, typename HypothesisT> std::ostream& operator<<
     (std::ostream& os, const LiteralHypothesisPrinter<InterfaceT, HypothesisT>& hlp) {
-        return InterfaceT::write(os, hlp.getHypothesis(), hlp.getMapper(), hlp.isNegated());
+        return InterfaceT::write(os, hlp.getContextManager(), hlp.getHypothesis(),
+                                 hlp.getMapper(), hlp.isNegated());
     }
 
     template<typename InterfaceT, typename HypothesisT>

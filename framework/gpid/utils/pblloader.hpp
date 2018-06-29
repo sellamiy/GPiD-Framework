@@ -48,7 +48,6 @@ namespace gpid {
     inline void ProblemConstraintsLoader<DeclarationsT>::addConstraint(ConstraintT cons) {
         snlog::t_warn(mode != IOMode::WRITE, "Writing problem on reading mode");
         cons_data.push_back(cons);
-        decls.collect(ctx, cons);
     }
 
     template<typename DeclarationsT>

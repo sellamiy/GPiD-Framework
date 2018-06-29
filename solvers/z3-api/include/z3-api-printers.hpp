@@ -28,18 +28,6 @@ namespace gpid {
         out << "> " << (negate ? !f : f) << std::endl;
     }
 
-    /*
-    template<> inline std::ostream& operator<< <Z3Literal>
-    (std::ostream& out, const LiteralHypothesisPrinter<Z3Literal>& hlp) {
-        typename LiteralHypothesis<Z3Literal>::iterator it = hlp.hypothesis.begin();
-        z3::expr f = hlp.mapper.get(*it).expr;
-        while (++it != hlp.hypothesis.end()) {
-            f = f && hlp.mapper.get(*it).expr;
-        }
-        return out << (hlp.negate ? !f : f);
-    }
-    */
-
-};
+}
 
 #endif

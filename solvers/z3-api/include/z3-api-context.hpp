@@ -8,6 +8,7 @@
 namespace gpid {
 
     class Z3Declarations {
+        z3::context&          ctx;
         z3::sort_vector       sorts;
         z3::func_decl_vector  funs;
         std::vector<z3::expr> todo;
@@ -20,11 +21,11 @@ namespace gpid {
     public:
         using ContextManagerT = z3::context;
         using ConstraintT = z3::expr;
-        Z3Declarations(z3::context& ctx) : sorts(ctx), funs(ctx) {}
+        Z3Declarations(z3::context& ctx) : ctx(ctx), sorts(ctx), funs(ctx) {}
         inline z3::sort_vector& getSortDecls() { return sorts; }
         inline z3::func_decl_vector& getFunDecls() { return funs; }
 
-        void collect(z3::context& ctx, z3::expr e);
+        void collect(z3::expr e);
     };
 
     struct Z3Literal {

@@ -32,14 +32,18 @@ namespace gpid {
         const std::string getPrintableAssertions(bool negated);
 
         template<typename ConjunctionIteratorGetter> static std::ostream& write
-        (std::ostream& os, ConjunctionIteratorGetter& h, ObjectMapper<Z3Literal>& mapper, bool negate=false);
+        (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
+         ObjectMapper<Z3Literal>& mapper, bool negate=false);
 
         template<typename ClauseIteratorGetter> void addClause
         (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
         void clearUnsafeClauses();
 
         Z3InterfaceAPI(z3::context& ctx);
+        z3::context& getContextManager();
     };
+
+    inline z3::context& Z3InterfaceAPI::getContextManager() { return ctx; }
 
     inline void Z3InterfaceAPI::push() { solver.push(); }
 
@@ -69,7 +73,8 @@ namespace gpid {
 
     template<typename ConjunctionIteratorGetter>
     inline std::ostream& Z3InterfaceAPI::write
-    (std::ostream& os, ConjunctionIteratorGetter& h, ObjectMapper<Z3Literal>& mapper, bool negate) {
+    (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter& h,
+     ObjectMapper<Z3Literal>& mapper, bool negate) {
         auto it = h.begin();
         z3::expr cl = mapper.get(*it).expr;
         while (++it != h.end()) {

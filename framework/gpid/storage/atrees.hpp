@@ -129,7 +129,7 @@ namespace gpid {
     inline void AbducibleTree<InterfaceT, HypothesisT>::printLocal(anidx_t idx, HypothesisT& cprint,
                                                                    uint32_t clvl) {
         if (nodes[idx].empty() && gmisc::inset(tnodes, idx)) {
-            printlh(implicate<InterfaceT>(cprint, mapper));
+            printlh(implicate<InterfaceT>(cprint, mapper, solver.getContextManager()));
         } else {
             for (auto p : nodes[idx]) {
                 cprint.addLiteral(p.first, clvl);

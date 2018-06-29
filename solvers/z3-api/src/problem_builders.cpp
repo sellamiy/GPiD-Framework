@@ -24,14 +24,16 @@ typename Z3ContraintsLoader::ConstraintT Z3ProblemLoader::nextConstraint() {
 /* language loaders */
 
 static void load_z3_smt2_problem
-(const std::string filename, z3::context& ctx, Z3ContraintsLoader& consld) {
+(const std::string filename, Z3ContraintsLoader& consld) {
+    z3::expr cons = consld.getContextManager().parse_file(filename.c_str());
     consld.setMode(Z3ContraintsLoader::IOMode::WRITE);
-    consld.addConstraint(ctx.parse_file(filename.c_str()));
+    consld.addConstraint(cons);
+    consld.getDeclarations().collect(cons);
 }
 
 #include <map>
 
-using LanguageldFunctionT = std::function<void(const std::string, z3::context&, Z3ContraintsLoader&)>;
+using LanguageldFunctionT = std::function<void(const std::string, Z3ContraintsLoader&)>;
 static std::map<std::string, LanguageldFunctionT> pld_z3_language_table = {
     { "smt2", LanguageldFunctionT(load_z3_smt2_problem) },
     { "SMT2", LanguageldFunctionT(load_z3_smt2_problem) },
@@ -40,7 +42,7 @@ static std::map<std::string, LanguageldFunctionT> pld_z3_language_table = {
 
 void Z3ProblemLoader::load(const std::string filename, const std::string language) {
     if (gmisc::inmap(pld_z3_language_table, language)) {
-        pld_z3_language_table[language](filename, ctx, consld);
+        pld_z3_language_table[language](filename, consld);
     } else {
         snlog::l_fatal("Unknown z3 input language: " + language);
     }

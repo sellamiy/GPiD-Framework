@@ -228,7 +228,7 @@ namespace gpid {
 
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::printCurrentImplicate() {
-        printlh(implicate<InterfaceT>(hypothesis, lmapper));
+        printlh(implicate<InterfaceT>(hypothesis, lmapper, interfaceEngine.getContextManager()));
     }
 
     template<typename InterfaceT>

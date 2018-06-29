@@ -32,7 +32,7 @@ inline void gpid::Z3Declarations::collect_fun(z3::context& ctx, z3::func_decl f)
     collect_sort(ctx, f.range());
 }
 
-void gpid::Z3Declarations::collect(z3::context& ctx, z3::expr e) {
+void gpid::Z3Declarations::collect(z3::expr e) {
     todo.push_back(e);
     while (!todo.empty()) {
 
