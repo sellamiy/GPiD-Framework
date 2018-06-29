@@ -1,7 +1,7 @@
 #define GPID_FRAMEWORK__UTIL__ABDPARSER_GENERIC_CPP
 
 #include <snlog/snlog.hpp>
-#include <gpid/loaders/abdparser.hpp>
+#include <gpid/utils/abdparser.hpp>
 
 using namespace snlog;
 using namespace gpid;

@@ -1,11 +1,11 @@
 /**
- * \file gpid/core/literals.hpp
+ * \file gpid/utils/hprinters.hpp
  * \brief GPiD-Framework Literals handlers.
  * \author Yanis Sellami
  * \date 2018
  */
-#ifndef GPID_FRAMEWORK__CORE__LITERALS_HPP
-#define GPID_FRAMEWORK__CORE__LITERALS_HPP
+#ifndef GPID_FRAMEWORK__UTILS__HYPOTHESES_PRINTERS_HPP
+#define GPID_FRAMEWORK__UTILS__HYPOTHESES_PRINTERS_HPP
 
 namespace gpid {
 

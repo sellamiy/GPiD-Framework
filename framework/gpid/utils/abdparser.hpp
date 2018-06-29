@@ -1,11 +1,11 @@
 /**
- * \file gpid/loaders/abdparser.hpp
+ * \file gpid/utils/abdparser.hpp
  * \brief Utilities for parsing abducibles files
  * \author Yanis Sellami
  * \date 2017
  */
-#ifndef GPID_FRAMEWORK__LOADERS__ABDPARSER_HPP
-#define GPID_FRAMEWORK__LOADERS__ABDPARSER_HPP
+#ifndef GPID_FRAMEWORK__UTILS__ABDPARSER_HPP
+#define GPID_FRAMEWORK__UTILS__ABDPARSER_HPP
 
 #include <fstream>
 

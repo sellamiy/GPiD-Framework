@@ -1,15 +1,15 @@
 /**
- * \file gpid/algorithms/impgen.hpp
+ * \file gpid/impgen/algorithm.hpp
  * \brief GPiD-Framework Implicate Generator via Decomposition.
  * \author Yanis Sellami
  * \date 2017
  */
-#ifndef GPID_FRAMEWORK__ALGORITHMS__IMPGEN_HPP
-#define GPID_FRAMEWORK__ALGORITHMS__IMPGEN_HPP
+#ifndef GPID_FRAMEWORK__IMPGEN__ALGORITHM_HPP
+#define GPID_FRAMEWORK__IMPGEN__ALGORITHM_HPP
 
 #include <gpid/core/algorithm.hpp>
 #include <gpid/core/errors.hpp>
-#include <gpid/sai/saitypes.hpp>
+#include <gpid/core/saitypes.hpp>
 #include <gpid/impgen/options.hpp>
 #include <gpid/instrument/instrument.hpp>
 

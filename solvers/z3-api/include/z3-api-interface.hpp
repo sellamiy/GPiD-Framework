@@ -1,8 +1,6 @@
 #ifndef Z3_API_INTERFACE_FOR_GPID__HPP
 #define Z3_API_INTERFACE_FOR_GPID__HPP
 
-#include <gpid/core/memory.hpp>
-#include <gpid/sai/saitypes.hpp>
 #include "z3-api-context.hpp"
 #include "z3-api-loaders.hpp"
 #include "z3-api-printers.hpp"

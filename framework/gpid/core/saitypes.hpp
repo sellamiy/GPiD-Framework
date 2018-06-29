@@ -1,11 +1,11 @@
 /**
- * \file gpid/sai/saitypes.hpp
+ * \file gpid/core/saitypes.hpp
  * \brief GPiD-Framework Solver Abstraction Interface Types.
  * \author Yanis Sellami
- * \date 2017
+ * \date 2018
  */
-#ifndef GPID_FRAMEWORK__SAI__SAI_TYPES_HPP
-#define GPID_FRAMEWORK__SAI__SAI_TYPES_HPP
+#ifndef GPID_FRAMEWORK__CORE__SAI_TYPES_HPP
+#define GPID_FRAMEWORK__CORE__SAI_TYPES_HPP
 
 #include <map>
 #include <vector>

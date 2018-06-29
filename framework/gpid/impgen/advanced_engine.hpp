@@ -8,9 +8,10 @@
 #define GPID_FRAMEWORK__IMPGEN__ADVANCED_ENGINE_HPP
 
 #include <list>
+#include <fstream>
 
 #include <gpid/core/memory.hpp>
-#include <gpid/sai/saitypes.hpp>
+#include <gpid/core/saitypes.hpp>
 #include <gpid/storage/atrees.hpp>
 #include <gpid/impgen/skipcontrol.hpp>
 #include <gpid/instrument/instrument.hpp>

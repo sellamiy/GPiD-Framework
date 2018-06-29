@@ -2,8 +2,6 @@
 #define Z3_API_ABDUCIBLE_GENERATION_FOR_GPID__HPP
 
 #include <list>
-#include <gpid/core/memory.hpp>
-#include <gpid/loaders/abdparseutils.hpp>
 #include "z3-api-loaders.hpp"
 
 namespace gpid {

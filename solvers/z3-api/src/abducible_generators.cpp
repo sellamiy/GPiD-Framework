@@ -2,9 +2,6 @@
 
 #include <functional>
 #include <z3-api-abdgen.hpp>
-#include <gpid/core/memory.hpp>
-#include <gpid/loaders/abdparseutils.hpp>
-#include <gpid/utils/stdutils.hpp>
 
 using namespace gpid;
 

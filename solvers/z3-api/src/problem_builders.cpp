@@ -1,7 +1,6 @@
 #define Z3_API_INTERFACE_FOR_GPID__PROBLEM_BUILDERS__CPP
 
 #include <functional>
-#include <gpid/utils/stdutils.hpp>
 #include <z3-api-loaders.hpp>
 
 using namespace gpid;

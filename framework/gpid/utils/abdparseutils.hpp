@@ -1,7 +1,7 @@
-#ifndef GPID_FRAMEWORK__LOADERS__ABDPARSEUTILS_HPP
-#define GPID_FRAMEWORK__LOADERS__ABDPARSEUTILS_HPP
+#ifndef GPID_FRAMEWORK__UTILS__ABDPARSEUTILS_HPP
+#define GPID_FRAMEWORK__UTILS__ABDPARSEUTILS_HPP
 
-#include <gpid/loaders/abdparser.hpp>
+#include <gpid/utils/abdparser.hpp>
 
 namespace gpid {
 
