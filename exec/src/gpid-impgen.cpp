@@ -6,7 +6,7 @@ using namespace std;
 using namespace snlog;
 using namespace gpid;
 
-int main(int argc, const char** argv) {
+int main(int argc, char** argv) {
     OptionStorage opts;
     OptionStatus status = parseOptions(opts, argc, argv);
     if (status == OptionStatus::FAILURE) {

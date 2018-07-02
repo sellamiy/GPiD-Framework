@@ -29,7 +29,7 @@ enum class OptionStatus {
     OK, ENDED, FAILURE
 };
 
-static inline OptionStatus parseOptions(OptionStorage& opts, int argc, const char** argv);
+static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& argv);
 static inline OptionStatus handleOptions
 (OptionStorage& opts, cxxopts::Options& parser, cxxopts::ParseResult& results);
 static inline OptionStatus detectConflicts
@@ -37,7 +37,7 @@ static inline OptionStatus detectConflicts
 
 /* ===== Parser ===== */
 
-static inline OptionStatus parseOptions(OptionStorage& opts, int argc, const char** argv) {
+static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& argv) {
     try {
 
 	cxxopts::Options parser(argv[0], gpid::project_full_name);
