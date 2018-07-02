@@ -21,9 +21,8 @@ namespace gpid {
     }
 
     extern inline std::ostream& operator<<(std::ostream& out, const Minisat::vec<Minisat::Lit>& c) {
-        out << "< ";
         for (int i = 0; i < c.size(); ++i) out << c[i] << " ";
-        return out << ">";
+        return out;
     }
 
     extern inline
