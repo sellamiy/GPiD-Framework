@@ -1,5 +1,5 @@
-def gtsMinisat(Tool)
-  executable '../bin/gpid-gts-minisat'
+def impgenMinisat(Tool)
+  executable '../bin/gpid-impgen-minisatp'
   format '$0 -i $1 -a all -p --time-unit=extseconds $+'
 
   require &file

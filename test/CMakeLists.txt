@@ -56,7 +56,7 @@ if(BUILD_TESTS)
   file(GLOB DIMACS_TEST_FILES "dimacs/basic/*.dimacs")
   foreach(filename ${DIMACS_TEST_FILES})
     get_filename_component(mfilename "${filename}" NAME)
-    add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-gts-minisat -a all -i "${filename}")
+    add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-impgen-minisatp -a all -i "${filename}")
   endforeach()
 
   # == Abducible Parser Targets ==

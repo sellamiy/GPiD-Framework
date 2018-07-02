@@ -1,4 +1,4 @@
-require gtsMinisatTool
+require impgenMinisatTool
 
 @hidden
 def problems(ProblemSet, 1)
@@ -17,7 +17,7 @@ end
 def test(Script)
   problems(&args.arg1)
   expected(&args.arg2)
-  eval = gtsMinisat(problems, store_implicates(), timeout(5, 10))
+  eval = impgenMinisat(problems, store_implicates(), timeout(5, 10))
 then
   ensure.equal(&eval.implicates, expected)
 end
