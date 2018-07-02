@@ -7,13 +7,13 @@
 namespace gpid {
 
     class CVC4Declarations {
-        CVC4::ExprManager& ctx;
+        // CVC4::ExprManager& ctx;
         std::vector<std::string> nameDefs;
         CVC4::SymbolTable* stable;
     public:
         using ContextManagerT = CVC4::ExprManager;
         using ConstraintT = CVC4::Expr;
-        CVC4Declarations(CVC4::ExprManager& ctx) : ctx(ctx) {}
+        CVC4Declarations(CVC4::ExprManager&) {}
 
         inline CVC4::SymbolTable* getSymbolTable() { return stable; }
         inline std::vector<std::string>::iterator begin() { return nameDefs.begin(); }

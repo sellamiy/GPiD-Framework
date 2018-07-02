@@ -9,16 +9,16 @@
 namespace gpid {
 
     class MinisatAbducibleHandler : public AbducibleHandler {
-        MinisatProblemLoader& pbld;
+        // MinisatProblemLoader& pbld;
         uint32_t _cpt;
         ObjectMapper<MinisatLiteral>& mapper;
         std::map<int,int> linker;
         std::map<uint32_t, std::list<uint32_t>>& links;
     public:
         MinisatAbducibleHandler
-        (MinisatProblemLoader& pbld, ObjectMapper<MinisatLiteral>& mapper,
+        (MinisatProblemLoader&, ObjectMapper<MinisatLiteral>& mapper,
          std::map<uint32_t, std::list<uint32_t>>& links)
-            : pbld(pbld), _cpt(0), mapper(mapper), links(links) {}
+            : _cpt(0), mapper(mapper), links(links) {}
         virtual void allocate(const std::string id, size_t size) override;
         virtual void handleAbducible(std::string abd) override;
 
