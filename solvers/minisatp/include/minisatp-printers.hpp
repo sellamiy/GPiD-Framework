@@ -1,7 +1,9 @@
-#ifndef GPID_MINISAT_GPID_PRINTERS_SPP
-#define GPID_MINISAT_GPID_PRINTERS_SPP
+#ifndef MINISAT_PATCHED_PRINTERS_FOR_GPID__HPP
+#define MINISAT_PATCHED_PRINTERS_FOR_GPID__HPP
 
+#include <vector>
 #include <iostream>
+#include <minisat/simp/SimpSolver.h>
 
 namespace gpid {
 
@@ -16,15 +18,6 @@ namespace gpid {
         out << "> ";
         for (MinisatLiteral hyp : impl) out << (negate ? ~(hyp.lit) : hyp.lit) << " ";
         out << std::endl;
-    }
-
-    template<> inline std::ostream& operator<< <MinisatLiteral>
-    (std::ostream& out, const LiteralHypothesisPrinter<MinisatLiteral>& hlp) {
-        for (auto lit : hlp.hypothesis) {
-            Minisat::Lit mlit = hlp.mapper.get(lit).lit;
-            out << " " << (hlp.negate ? ~mlit : mlit);
-        }
-        return out;
     }
 
 }

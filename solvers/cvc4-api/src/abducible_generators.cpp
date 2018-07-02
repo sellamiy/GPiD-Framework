@@ -67,7 +67,7 @@ static inline void cvc4_abduciblesUtils_allEq
     }
 }
 
-static inline void abdgen_cvc4_allEq
+static inline size_t abdgen_cvc4_allEq
 (CVC4ProblemLoader& pbld, ObjectMapper<CVC4Literal>& mapper,
  std::map<uint32_t, std::list<uint32_t>>& links) {
     CVC4::ExprManager& ctx = pbld.getContextManager();
@@ -89,10 +89,12 @@ static inline void abdgen_cvc4_allEq
             pos += 2;
         }
     }
+
+    return size;
 }
 
-using AbdgenFunctionT = std::function<void(CVC4ProblemLoader&, ObjectMapper<CVC4Literal>&,
-                                           std::map<uint32_t, std::list<uint32_t>>&)>;
+using AbdgenFunctionT = std::function<size_t(CVC4ProblemLoader&, ObjectMapper<CVC4Literal>&,
+                                             std::map<uint32_t, std::list<uint32_t>>&)>;
 static std::map<std::string, AbdgenFunctionT> abg_cvc4_abdgeneration_table = {
     { "all-eq", AbdgenFunctionT(abdgen_cvc4_allEq) },
     { "default", AbdgenFunctionT(abdgen_cvc4_allEq) }
@@ -100,7 +102,7 @@ static std::map<std::string, AbdgenFunctionT> abg_cvc4_abdgeneration_table = {
 
 void CVC4AbducibleLiteralsGenerator::generate(const std::string generator) {
     if (gmisc::inmap(abg_cvc4_abdgeneration_table, generator)) {
-        abg_cvc4_abdgeneration_table[generator](pbld, mapper, links);
+        handler._cpt = abg_cvc4_abdgeneration_table[generator](pbld, mapper, links);
     } else {
         snlog::l_fatal("Unknown cvc4 abducible generator: " + generator);
     }

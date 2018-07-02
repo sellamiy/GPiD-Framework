@@ -33,7 +33,7 @@ void Z3AbducibleLiteralsGenerator::load(const std::string filename) {
 
 #include <map>
 
-static inline void abdgen_z3_constAllEq
+static inline size_t abdgen_z3_constAllEq
 (Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, std::list<uint32_t>>& links) {
     uint32_t l_gvr = pbld.getDeclarations().getFunDecls().size();
     size_t size = l_gvr > 1 ? l_gvr * (l_gvr - 1) : 0;
@@ -51,9 +51,10 @@ static inline void abdgen_z3_constAllEq
             pos += 2;
         }
     }
+    return size;
 }
 
-static inline void abdgen_z3_constAllComp
+static inline size_t abdgen_z3_constAllComp
 (Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, std::list<uint32_t>>& links) {
     uint32_t l_gvr = pbld.getDeclarations().getFunDecls().size();
     size_t size = l_gvr > 1 ? l_gvr * (l_gvr - 1) * 2 : 0;
@@ -93,10 +94,11 @@ static inline void abdgen_z3_constAllComp
             pos += 4;
         }
     }
+    return size;
 }
 
-using AbdgenFunctionT = std::function<void(Z3ProblemLoader&, ObjectMapper<Z3Literal>&,
-                                           std::map<uint32_t, std::list<uint32_t>>&)>;
+using AbdgenFunctionT = std::function<size_t(Z3ProblemLoader&, ObjectMapper<Z3Literal>&,
+                                             std::map<uint32_t, std::list<uint32_t>>&)>;
 static std::map<std::string, AbdgenFunctionT> abg_z3_abdgeneration_table = {
     { "const-all-eq", AbdgenFunctionT(abdgen_z3_constAllEq) },
     { "const-all-comp", AbdgenFunctionT(abdgen_z3_constAllComp) },
@@ -105,7 +107,7 @@ static std::map<std::string, AbdgenFunctionT> abg_z3_abdgeneration_table = {
 
 void Z3AbducibleLiteralsGenerator::generate(const std::string generator) {
     if (gmisc::inmap(abg_z3_abdgeneration_table, generator)) {
-        abg_z3_abdgeneration_table[generator](pbld, mapper, links);
+        handler._cpt = abg_z3_abdgeneration_table[generator](pbld, mapper, links);
     } else {
         snlog::l_fatal("Unknown z3 abducible generator: " + generator);
     }
