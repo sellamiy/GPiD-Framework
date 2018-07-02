@@ -19,7 +19,7 @@ macro(load_version_file version_file)
     ERROR_QUIET
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   if (_LVRESULT)
-    message(WARNING "Failed to obtain version file from handler")
+    message(FATAL_ERROR "Failed to obtain version file from handler")
     set(VERSION "Unrecovered")
   endif()
 endmacro()
