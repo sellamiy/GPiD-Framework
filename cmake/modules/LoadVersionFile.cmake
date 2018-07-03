@@ -16,7 +16,6 @@ macro(load_version_file version_file)
     "--version-file=${version_file}" "--print-version"
     OUTPUT_VARIABLE VERSION
     RESULT_VARIABLE _LVRESULT
-    ERROR_QUIET
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   if (_LVRESULT)
     message(FATAL_ERROR "Failed to obtain version file from handler")

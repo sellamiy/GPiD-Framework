@@ -8,6 +8,11 @@ import yaml
 from codegencore import pp_warning, pp_error
 from codegencore import prepare_directory, create_template_env, render_template
 # --------------------------------------
+try:
+    from git import Repo
+except ImportError as e:
+    pp_warning(str(e))
+# --------------------------------------
 TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates')
 # --------------------------------------
 def version_getter_type_key(tdata):
@@ -41,10 +46,71 @@ class GitVersionAccessor(AbstractAccessor):
 
     def __init__(self, data):
         super().__init__(data)
-        self._check_git()
+        self.repo = self._get_git_repo()
 
-    def _check_git(self):
-        raise NotImplementedError()
+    def _get_git_repo(self):
+        cdgen_dir = os.path.dirname(__file__)
+        utils_dir = os.path.dirname(cdgen_dir)
+        rroot_dir = os.path.dirname(utils_dir)
+        git_repo_dir = os.path.join(rroot_dir, '.git')
+        return Repo(git_repo_dir)
+
+    def get_version(self):
+        head_commit = self.repo.head.reference.commit
+        uptag = self._find_closest_tag()
+        tag_commit = uptag.commit
+
+        version_message = str(uptag)
+        if tag_commit != head_commit:
+            version_message += '-or'
+        if self.repo.is_dirty():
+            version_message += '-d'
+
+        return version_message
+
+    def get_template_data(self):
+        head_commit = self.repo.head.reference.commit
+        uptag = self._find_closest_tag()
+        tag_commit = uptag.commit
+        upbranches = self._find_closest_branch()
+        dd_major = str(uptag).split('.')[0]
+        dd_minor = str(uptag).split('.')[1]
+        dd_patch = str(uptag).split('.')[2]
+        dd_vstate = 'dirty' if self.repo.is_dirty() else 'clean'
+        return {
+            'mode' : self.data['mode'],
+            'timestamp' : self.data['timestamp'],
+            'instrumentation' : 'active' if self.data['instrumentation'] == 'ON' else 'inactive',
+            'version_major' : dd_major,
+            'version_minor' : dd_minor,
+            'version_patch' : dd_patch,
+            'version_devref' : str(head_commit),
+            'version_devloc' : upbranches,
+            'version_state' : dd_vstate,
+        }
+
+    def _find_closest_tag(self):
+        tags = self.repo.tags
+        curr = self.repo.head.commit
+        ok = False
+        while True:
+            for tag in tags:
+                if tag.commit == curr:
+                    return tag
+            curr = curr.parents[0]
+
+    def _find_closest_branch(self):
+        heads = self.repo.heads
+        curr = self.repo.head.commit
+        ok = False
+        blocs = []
+        while True:
+            for head in heads:
+                if head.commit == curr:
+                    blocs.append(str(head))
+            if blocs:
+                return ', '.join(blocs)
+            curr = curr.parents[0]
 # --------------------------------------
 class RawVersionAccessor(AbstractAccessor):
 
@@ -92,6 +158,7 @@ class VersionFile:
                 return
             except Exception as e:
                 loaders = loaders[1:]
+                pp_warning('Version loader failure: {0}'.format(e))
                 errors.append(e)
         raise ValueError('No viable version loader', errors)
 
