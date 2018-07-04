@@ -31,6 +31,8 @@ namespace gpid {
         inline void addLiteral(index_t lidx, uint32_t lkey);
         inline void removeLiterals(uint32_t lkey);
 
+        inline size_t size() { return _array.get_activated_size(); }
+
         typedef typename starray::SequentialActivableArray::iterator iterator;
         typedef typename starray::SequentialActivableArray::const_iterator const_iterator;
         inline       iterator begin()  { return _array.begin();  }

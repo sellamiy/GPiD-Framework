@@ -27,12 +27,13 @@ namespace gpid {
         using LiteralRefT = typename ObjectMapper<typename InterfaceT::LiteralT>::index_t;
         std::map<anidx_t, std::map<LiteralRefT, anidx_t>> nodes;
         std::set<anidx_t> tnodes;
+        std::list<std::pair<anidx_t, LiteralRefT>> rmpending;
 
         inline void insertLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it);
         inline bool containsLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it);
 
         inline bool fwdSubsumesLocal(anidx_t idx);
-        inline void bwdSubsumesRemoveLocal(anidx_t idx);
+        inline void bwdSubsumesRemoveLocal(anidx_t idx, anidx_t pdx, LiteralRefT src);
 
         inline void printLocal(anidx_t idx, HypothesisT& cprint, uint32_t clvl);
         inline int buildGraphLocal(anidx_t idx, lcdot::Graph& g);
@@ -92,7 +93,7 @@ namespace gpid {
     inline void AbducibleTree<InterfaceT, HypothesisT>::bwdSubsumesRemove(HypothesisT& h) {
         solver.push();
         solver.addClause(h, mapper, true);
-        bwdSubsumesRemoveLocal(1);
+        bwdSubsumesRemoveLocal(1, 1, 1 /* Unsafe value */);
         /* TODO: Obtain a better way to write the Minisat interface
            API. Adding a specific method for it in a global framework
            is not a good one. */
@@ -101,8 +102,8 @@ namespace gpid {
     }
 
     template<typename InterfaceT, typename HypothesisT>
-    inline void AbducibleTree<InterfaceT, HypothesisT>::bwdSubsumesRemoveLocal(anidx_t idx) {
-        if (nodes[idx].empty()) return;
+    inline void AbducibleTree<InterfaceT, HypothesisT>::bwdSubsumesRemoveLocal
+    (anidx_t idx, anidx_t pdx, LiteralRefT src) {
         SolverTestStatus res = solver.check();
         if (res == SolverTestStatus::UNKNOWN) {
             snlog::l_error("Storage insertion satisfiability test returned unknown");
@@ -111,11 +112,21 @@ namespace gpid {
             for (auto p : nodes[idx]) {
                 solver.push();
                 solver.addLiteral(mapper.get(p.first));
-                bwdSubsumesRemoveLocal(p.second);
+                bwdSubsumesRemoveLocal(p.second, idx, p.first);
                 solver.pop();
             }
+            for (auto p : rmpending) {
+                nodes[p.first].erase(p.second);
+            }
+            rmpending.clear();
         } else {
-            nodes[idx].clear();
+            if (idx != pdx) {
+                // mark for removal
+                rmpending.push_back(std::pair<anidx_t, LiteralRefT>(pdx, src));
+            } else {
+                // Top level node, meaning problem is unsat.
+                nodes[pdx].clear();
+            }
         }
     }
 
