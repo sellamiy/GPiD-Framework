@@ -24,18 +24,21 @@ namespace gpid {
             /** Timeout */
             SYS_INT_R__TIMEOUT
         };
+        /** Interruption reason type */
         using Reason = SystemInterruptionReason;
         /** Reason of the interruption */
         SystemInterruptionReason reason = Reason::SYS_INT_R__;
         /** Interruption flag. Set to true iff the engine should be interrupted. */
         bool interruption_flag = false;
 
+        /** Signal an interruption request. */
         inline void interrupt(SystemInterruptionReason r) {
             interruption_flag = true;
             reason = r;
         }
         /** \return true iff at least one interruption flag is set. */
         inline bool systemInterrupted() { return interruption_flag; }
+        /** \return The last interruption request's reason. */
         inline SystemInterruptionReason getReason() { return reason; }
     };
 

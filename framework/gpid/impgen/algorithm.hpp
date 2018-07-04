@@ -15,9 +15,19 @@
 
 namespace gpid {
 
+    /**
+     * \brief Implicate generation via decompisition algorithm.
+     *
+     * Algorithmic instance of the implicate generator via decomposition
+     * algorithm described in M. Echenim, N. Peltier, and Y. Sellami.
+     * A generic framework for implicate generation modulo theories.
+     * In Automated Reasoning, International Joint Conference, IJCAR 2018,
+     * Proceedings, 2018.
+     */
     template<typename AbdEngineT, typename LiteralGeneratorT>
     class ImpgenAlgorithm : public GPiDAlgorithm {
     public:
+        /** Problem loader type from the underlying engine. */
         using ProblemLoaderT = typename AbdEngineT::ProblemLoaderT;
     private:
 
@@ -43,9 +53,11 @@ namespace gpid {
         virtual void _execute() override;
 
     public:
+        /** Algorithm initialization */
         ImpgenAlgorithm(ProblemLoaderT& pbld, LiteralGeneratorT& lgen,
                         GPiDOptions& opts, ImpgenOptions& iopts);
 
+        /** Print informations on the algorithm and its parameters. */
         static void printInfos();
 
         /** \return The total number of implicates generated. */
@@ -53,6 +65,7 @@ namespace gpid {
         /** \return The total number of nodes explored during literals tries. */
         counter_t getExploredNodesCount() const;
 
+        /** \return The counts of skipped candidates for various reasons. */
         std::map<std::string, counter_t>& getSkippedCounts();
     };
 

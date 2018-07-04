@@ -11,11 +11,13 @@
 
 namespace gpid {
 
+    /** Method selector for obtaining abducible literals. */
     enum class AbducibleInputType { FILE, GENERATOR };
+    /** String converter for AbducibleInputType. */
     inline const std::string to_string(const AbducibleInputType& it)
     { return it == AbducibleInputType::FILE ? "Abd?Type:file" : "Abd?Type:generator"; }
 
-    /** \brief Options for the implicate generator algorithm. \ingroup gpidcorelib */
+    /** Options for the implicate generator algorithm. */
     struct ImpgenOptions {
 
         /** Print implicates on terminal when generated */

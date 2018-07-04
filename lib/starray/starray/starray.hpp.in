@@ -1,12 +1,3 @@
-/**
- * \defgroup starraylib Static Arrays Library
- * \brief Library of hard static array types.
- * \file starray/starray.hpp
- * \brief Static Arrays Library header.
- * \ingroup starraylib
- * \author Yanis Sellami
- * \date 2017
- */
 #ifndef LIB_STARRAY__HEADER
 #define LIB_STARRAY__HEADER
 

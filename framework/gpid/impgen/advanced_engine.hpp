@@ -18,26 +18,38 @@
 
 namespace gpid {
 
+    /** Literal conjunction representation for the advanced abducible engine. */
     class LiteralHypothesis {
     public:
+        /** Abducible indexing type. */
         typedef uint32_t index_t;
     private:
         starray::SequentialActivableArray _array;
         std::map<uint32_t, std::vector<index_t>> _lmapping;
     public:
+        /** Initialize a literal conjunction of given maximal size. */
         LiteralHypothesis(uint32_t size) : _array(size)
         { for (uint32_t i = 0; i < size; ++i) _array.deactivate(i); }
 
+        /** Add a literal by reference to the conjunction. */
         inline void addLiteral(index_t lidx, uint32_t lkey);
+        /** Remove some literals from the conjunction. */
         inline void removeLiterals(uint32_t lkey);
 
+        /** \return The current number of literals in the conjunction. */
         inline size_t size() { return _array.get_activated_size(); }
 
+        /** Iterator on the literal references of the conjunction. */
         typedef typename starray::SequentialActivableArray::iterator iterator;
+        /** Const Iterator on the literal references of the conjunction. */
         typedef typename starray::SequentialActivableArray::const_iterator const_iterator;
+        /** \return Iterator on the first literal reference of the conjunction. */
         inline       iterator begin()  { return _array.begin();  }
+        /** \return Iterator past the last literal reference of the conjunction. */
         inline       iterator end()    { return _array.end();    }
+        /** \return Const Iterator on the first literal reference of the conjunction. */
         inline const_iterator cbegin() { return _array.cbegin(); }
+        /** \return Const Iterator past the last literal reference of the conjunction. */
         inline const_iterator cend()   { return _array.cend();   }
     };
 
@@ -45,12 +57,19 @@ namespace gpid {
     template<class InterfaceT>
     class AdvancedAbducibleEngine {
     public:
+        /** Context manager type of the underlying interface. */
         using ContextManagerT = typename InterfaceT::ContextManagerT;
+        /** Literal type of the underlying interface. */
         using LiteralT = typename InterfaceT::LiteralT;
+        /** Model type of the underlying interface. */
         using ModelT = typename InterfaceT::ModelT;
+        /** Problem loading type of the underlying interface. */
         using ProblemLoaderT = typename InterfaceT::ProblemLoaderT;
+        /** Element counter type. */
         using counter_t = uint64_t;
+        /** Abducible indexing type. */
         using index_t = uint32_t;
+        /** Internal depth indexing type. */
         using level_t = uint32_t;
     private:
         SolverInterfaceEngine<InterfaceT> interfaceEngine;
@@ -106,11 +125,15 @@ namespace gpid {
         inline LiteralT& getLiteral(index_t idx);
         inline index_t getCurrentIndex();
     public:
+        /** Create an abducible engine. */
         AdvancedAbducibleEngine(size_t size, ContextManagerT& ctx, ImpgenOptions& iopts);
+        /** Create an abducible engine. */
         template<typename AbducibleSource>
         AdvancedAbducibleEngine(AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts);
 
+        /** Reinitialize the abducible engine. */
         inline void reinit();
+        /** Initialize the underlying solver interface with a given problem. */
         inline void initializeSolvers(ProblemLoaderT& pbld);
 
         /** Map an index of the set to a specific literal. */
@@ -120,32 +143,41 @@ namespace gpid {
 
         /** Original size of the set. */
         inline uint32_t getSourceSize();
+        /** Count of skipped candidates for various reasons. */
         inline std::map<std::string, counter_t>& getSkippedCounts();
 
+        /** Check if the current hypothesis is a contradiction to the problem. */
         inline SolverTestStatus testHypothesis(uint32_t level);
 
+        /** Print the current hypothesis in implicate format. */
         inline void printCurrentImplicate();
+        /** Print the current implicate storage structure state. */
         inline void printStorage();
+        /** Export the current implicate storage structure state. */
         inline void exportStorage(const std::string filename);
 
         /**
          * \brief Find the next non tested literal.
-         * \param level Level to look for literals at.
-         * \return true iff there exists a valid non-tested literal at level level.
+         * \param level Depth to look for literals at.
+         * \return true iff there exists a valid non-tested literal at depth level.
          *
          * If such an literal exists, this method will also position the
          * internal literal pointer on it, allowing the selected literal
-         * to be accessed/recovered via the \ref getLiteral method.
+         * to be accessed/recovered via the \ref getCurrentLiteral method.
          */
         inline bool searchNextLiteral(uint32_t level);
+        /** Select the current literal in the hypothesis. */
         inline void selectCurrentLiteral();
+        /** Recover the current literal. */
         inline LiteralT& getCurrentLiteral();
 
+        /** Backtrack literal selections. */
         inline void backtrack(uint32_t level);
 
         /** Internally selects literals to skip according to a model. */
         inline void modelCleanUp();
 
+        /** Insert the current hypothsis as an implicate in the storage structure. */
         inline void storeCurrentImplicate();
     };
 
@@ -260,6 +292,7 @@ namespace gpid {
         lactive.deactivate(idx);
     }
 
+/** Macro stress for the minimum of two things */
 #define MIN(a,b) (a) < (b) ? (a) : (b)
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::increaseLevel(level_t target) {

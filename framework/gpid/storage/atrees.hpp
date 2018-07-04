@@ -1,6 +1,6 @@
 /**
  * \file gpid/storage/atrees.hpp
- * \brief Implicate storage template algorithms
+ * \brief Implicate storage tree template.
  * \author Yanis Sellami
  * \date 2018
  */
@@ -14,6 +14,13 @@
 
 namespace gpid {
 
+    /**
+     * \brief Literal clause storage using Atrees.
+     *
+     * This class stores literal clauses handled by a given solver interface
+     * using abducible trees for a more compact memory usage as well as more
+     * efficient subsumption tests.
+     */
     template<typename InterfaceT, typename HypothesisT>
     class AbducibleTree {
 
@@ -40,17 +47,25 @@ namespace gpid {
 
     public:
 
+        /** Initialize a clause storage tree. */
         AbducibleTree(InterfaceT& solver, ObjectMapper<typename InterfaceT::LiteralT>& mapper)
             : solver(solver), mapper(mapper) { }
 
+        /** Insert a clause in a tree from a literal conjunction. */
         inline void insert(HypothesisT& h);
+        /** Check if a clause (from literal conjunction) is part of the tree. */
         inline bool contains(HypothesisT& h);
 
+        /** Perform a forward subsumption test for a given clause. */
         inline bool fwdSubsumes(HypothesisT& h);
+        /** Perform a forward subsumption test for a given clause. */
         inline bool fwdSubsumes(HypothesisT& h, LiteralRefT l_add);
+        /** Perform a backward subsumption cleaning operation from a clause. */
         inline void bwdSubsumesRemove(HypothesisT& h);
 
+        /** Print all the clauses of the tree. */
         inline void print();
+        /** Export the tree in dot format. */
         inline void exportGraph(std::ostream& target);
 
     };

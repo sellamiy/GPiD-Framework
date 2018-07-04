@@ -10,6 +10,7 @@
 
 namespace pctrace {
 
+    /** Trace compilation backend for bootstrap html pages. */
     class BootstrapWebCompiler : public TraceCompiler {
     public:
         BootstrapWebCompiler(std::ostream& stream) : TraceCompiler(stream) {}

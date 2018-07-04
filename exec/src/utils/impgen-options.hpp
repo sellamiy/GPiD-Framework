@@ -12,6 +12,7 @@
 #include "sai/identifiers.hpp"
 #endif
 
+/** Local option aggregator for implicate generation executables. */
 struct OptionStorage : public gpid::GPiDOptions
 {
     std::string input;

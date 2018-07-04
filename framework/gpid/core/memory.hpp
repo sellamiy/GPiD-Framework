@@ -13,22 +13,35 @@
 
 namespace gpid {
 
-    /** \brief Class for mapping indices to objects. */
+    /** Class for mapping indices to objects. */
     template<typename O>
     struct ObjectMapper {
+        /** Object reference type */
         using index_t = uint32_t;
-        
+
+        /** Map a given reference to a given object in memory. */
         inline void map(index_t idx, O* l);
+        /** Access an object in memory from its refence. */
         inline O& get(index_t idx);
-        
+
+        /** \return The number of mapped objects. */
         inline uint32_t size();
 
+        /** Default constructor */
         ObjectMapper();
+        /** Copy constructor */
         ObjectMapper(ObjectMapper<O>& o);
     private:
         std::map<index_t, O*> _mapping;
     };
 
+    /**
+     * \brief Allocate a named contiguous memory block for storage.
+     *
+     * This only allocates the memory range. If the memory block ends up
+     * containing objects, those should be constructed using the
+     * memoryObjectAllocation function.
+     */
     template<typename O>
     inline void memoryRangeAllocation(const std::string id, size_t s) {
         starray::GAB_Status res;
@@ -36,6 +49,12 @@ namespace gpid {
         if (res != starray::GAB_Status::SUCCESS) throw MemoryError("request for abducibles failed");
     }
 
+    /**
+     * \brief Allocate an object inside a named memory block.
+     *
+     * Used to construct object in a named memory block previously allocated
+     * with the memoryRangeAllocation function.
+     */
     template<typename O, typename ... ObjectParameters>
     inline void memoryObjectAllocation
     (const std::string id, uint32_t pos, ObjectMapper<O>& mapper, ObjectParameters... opars) {

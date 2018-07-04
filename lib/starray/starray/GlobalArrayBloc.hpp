@@ -12,7 +12,7 @@
 
 namespace starray {
 
-    /** \brief Memory operation possible results. */
+    /** Memory operation possible results. */
     enum class GlobalArrayBlocStatus {
         /** The operation was successful */
         SUCCESS,
@@ -31,7 +31,8 @@ namespace starray {
         /** Failed to configure as the memory location does not exist */
         UNALLOCATED_CONF_STORAGE
     };
-    typedef GlobalArrayBlocStatus GAB_Status;
+    /** Memory operation possible results. */
+    using GAB_Status = GlobalArrayBlocStatus;
 
     /**
      * \brief Allocate a continuous memory location.

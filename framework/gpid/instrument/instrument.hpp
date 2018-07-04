@@ -1,9 +1,6 @@
 /**
- * \defgroup gpidinstrumentlib GPiD-Framework Instrumentation Utilities
- * \brief Intrumentation utilities for algorithms analyses.
  * \file gpid/instrument/instrument.hpp
  * \brief GPiD-Framework Core Header.
- * \ingroup gpidinstrumentlib
  * \author Yanis Sellami
  * \date 2017
  */

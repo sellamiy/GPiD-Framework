@@ -1,10 +1,3 @@
-/**
- * \defgroup lcdotlib Dot Library
- * \brief Library dealing with dot graphs for internal representation insights.
- * \file lcdot/dotgraph.hpp
- * \brief Dot graph library header.
- * \ingroup lcdotlib
- */
 #ifndef LIB_LCDOT__GRAPH_HEADER
 #define LIB_LCDOT__GRAPH_HEADER
 

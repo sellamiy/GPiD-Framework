@@ -1,3 +1,9 @@
+/**
+ * \file gpid/utils/pblloader.hpp
+ * \brief GPiD Problem loader generic template.
+ * \author Yanis Sellami
+ * \date 2018
+ */
 #ifndef GPID_FRAMEWORK__UTILS__PBLLOADER_HPP
 #define GPID_FRAMEWORK__UTILS__PBLLOADER_HPP
 
@@ -6,12 +12,15 @@
 
 namespace gpid {
 
+    /** Problem loading utility class using a via constraint design pattern. */
     template<typename DeclarationsT>
     class ProblemConstraintsLoader {
     public:
-        /** \brief Enum form problem generation mode */
+        /** Enum form problem generation mode */
         enum class IOMode { READ, WRITE };
+        /** Underlying interface context manager type */
         using ContextManagerT = typename DeclarationsT::ContextManagerT;
+        /** Handled constraint type */
         using ConstraintT = typename DeclarationsT::ConstraintT;
     private:
         IOMode mode = IOMode::WRITE;
@@ -24,14 +33,21 @@ namespace gpid {
 
         inline void initCurrentMode();
     public:
+        /** Contructor */
         ProblemConstraintsLoader(ContextManagerT& ctx);
         ~ProblemConstraintsLoader();
 
+        /** Set the functionning mode of the constraint loader. */
         inline void setMode(IOMode nmode) { mode = nmode; initCurrentMode(); }
+        /** \return The underlying context manager. */
         inline ContextManagerT& getContextManager() { return ctx; }
+        /** \return The underlying declarations. */
         inline DeclarationsT& getDeclarations() { return decls; }
+        /** If in write mode, adds a loaded constraint. */
         inline void addConstraint(ConstraintT cons);
+        /** If in read mode, check if more constraints have been loaded. */
         inline bool hasMoreConstraints();
+        /** If in read mode, return the next loaded constraint (once). */
         inline ConstraintT nextConstraint();
     };
 

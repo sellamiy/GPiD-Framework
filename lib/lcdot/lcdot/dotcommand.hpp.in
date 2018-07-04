@@ -1,19 +1,21 @@
 /**
  * \file lcdot/dotcommand.hpp
- * \brief Dot graph system library header.
- * \ingroup lcdotlib
+ * \brief LCDot system command-line utilities.
+ * \author Yanis Sellami
+ * \date 2017
  */
 #ifndef LIB_LCDOT__COMMAND_HEADER
 #define LIB_LCDOT__COMMAND_HEADER
 
+/** Availability of the doc executable. */
 #cmakedefine DOT_FOUND
-/** \brief Path to the dot executable. */
+/** Path to the dot executable if \ref DOT_FOUND is set. */
 #define DOT_EXEC_PATH "@DOT_EXEC_PATH@"
 
 namespace lcdot {
     namespace system {
         /**
-         * \brief Compile a dot graph.
+         * Compile a dot graph.
          * \param source Filename of the source graph to compile.
          * \param target Filename of the resulting compiled graph.
          */

@@ -14,7 +14,7 @@
 
 namespace gpid {
 
-    /** \brief Generic Wrapper for Solver test results. \ingroup gpidcorelib */
+    /** Generic Wrapper for Solver test results. */
     enum class SolverTestStatus {
         /** The formula is satisfiable */
         SAT,
@@ -24,6 +24,7 @@ namespace gpid {
         UNKNOWN
     };
 
+    /** String converter for SolverTestStatus. */
     inline std::string to_string(const SolverTestStatus& s) {
         return s == SolverTestStatus::SAT
             ? "SAT"
@@ -32,12 +33,17 @@ namespace gpid {
             : "UNKNOWN";
     }
 
+    /** Manager for handling multiple solver interfaces with a shared context. */
     template<typename CInterfaceT>
     class SolverInterfaceEngine {
     public:
+        /** Interface type handled by the engine. */
         using InterfaceT = CInterfaceT;
+        /** Context manager type of the handled interface type. */
         using ContextManagerT = typename InterfaceT::ContextManagerT;
+        /** Literal type of the handled interface type. */
         using LiteralT = typename InterfaceT::LiteralT;
+        /** Model type of the handled interface type. */
         using ModelT = typename InterfaceT::ModelT;
     private:
         ContextManagerT& _ctx;
@@ -47,10 +53,13 @@ namespace gpid {
         inline interface_id_t createInterface();
         inline InterfaceT& getInterface(interface_id_t id) const;
     public:
+        /** Initialization of the multi-interface handler. */
         SolverInterfaceEngine(ContextManagerT& ctx);
         ~SolverInterfaceEngine();
 
+        /** Initialize a new interface instance. */
         inline InterfaceT& newInterface();
+        /** \return The underlying context manager. */
         inline ContextManagerT& getContextManager() const;
     };
 

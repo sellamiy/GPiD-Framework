@@ -1,9 +1,6 @@
 /**
- * \defgroup snloglib Simple Native Logger Library
- * \brief Library for fast cli logging of C++ objects
  * \file snlog/snlog.hpp
- * \brief Simple Native Logger Library header.
- * \ingroup snloglib
+ * \brief Simple-Nim Logging Library.
  * \author Yanis Sellami
  * \date 2017
  */

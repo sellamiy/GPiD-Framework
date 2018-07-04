@@ -1,7 +1,7 @@
 /**
  * \file starray/SequentialActivableArray.hpp
  * \author Yanis Sellami
- * \date 2017
+ * \date 2015
  */
 #ifndef LIB_STARRAY__SEQUENTIAL_ACTIVABLE_ARRAY_HPP
 #define LIB_STARRAY__SEQUENTIAL_ACTIVABLE_ARRAY_HPP

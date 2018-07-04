@@ -1,6 +1,5 @@
 /**
  * \file ugly/BeurkTables.hpp
- * \author Yanis Sellami
  * \date 2018
  */
 #ifndef LIB_UGLY__BEURK_TABLES_HPP
@@ -10,6 +9,7 @@
 
 namespace ugly {
 
+    /** Element storage system using the infamous Beurktable. */
     template<class O, class InsertionRefuser, class InsertionCleaner>
     class BeurkTable {
         O* bdata;
@@ -97,6 +97,7 @@ namespace ugly {
             insert(elem);
         }
 
+        /** Element iterator for BeurkTables. */
         template <typename Type>
         class BeurkTableIterator {
             const O* bdata;

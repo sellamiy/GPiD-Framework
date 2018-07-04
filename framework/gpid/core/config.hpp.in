@@ -1,7 +1,6 @@
 /**
  * \file gpid/core/config.hpp
  * \brief GPiD-Framework Configuration Header.
- * \ingroup gpidcorelib
  * \author Yanis Sellami
  * \date 2017
  */

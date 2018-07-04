@@ -1,3 +1,9 @@
+/**
+ * \file gpid/instrument/controller.hpp
+ * \brief Intrumentation utilities controller.
+ * \author Yanis Sellami
+ * \date 2018
+ */
 #ifndef GPID_FRAMEWORK__INSTRUMENT__CONTROLLER_HPP
 #define GPID_FRAMEWORK__INSTRUMENT__CONTROLLER_HPP
 
@@ -8,6 +14,7 @@
 namespace gpid {
 namespace instrument {
 
+    /** Utility class controlling the algorithmic intrumentations available. */
     struct InstrumentController {
         InstrumentController(const InstrumentOptions& opts);
         InstrumentController(const InstrumentController& ctrler);

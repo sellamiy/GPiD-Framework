@@ -11,12 +11,15 @@
 
 namespace gpid {
 
+    /** Generic options all algorithms should offer. */
     struct GPiDCoreOptions {
         /** Timeout */
         uint64_t time_limit = 0;
     };
 
+    /** Base class for aggregating framework options. */
     struct GPiDOptions {
+        /** Options every framework part should provide. */
         GPiDCoreOptions core;
     };
 

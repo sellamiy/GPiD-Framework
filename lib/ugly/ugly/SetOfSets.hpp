@@ -1,7 +1,5 @@
 /**
  * \file ugly/SetOfSets.hpp
- * \author Yanis Sellami
- * \date 2017
  */
 #ifndef LIB_UGLY__SET_OF_SETS_HPP
 #define LIB_UGLY__SET_OF_SETS_HPP

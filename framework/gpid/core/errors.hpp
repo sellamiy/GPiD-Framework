@@ -1,7 +1,6 @@
 /**
  * \file gpid/core/errors.hpp
  * \brief GPiD-Framework Errors Header.
- * \ingroup gpidcorelib
  * \author Yanis Sellami
  * \date 2017
  */
@@ -13,66 +12,78 @@
 
 namespace gpid {
 
-    /** \brief Main exception class for the framework related errors */
+    /** Main exception class for the framework related errors */
     class GPiDError : public std::exception {
         std::string reason;
     public:
-        /** \brief Constructor \param reason Cause of the exception */
+        /** Constructor \param reason Cause of the exception */
         GPiDError(std::string reason) : reason(reason) { }
-        /** \brief Obtain error type textual information. */
+        /** Obtain error type textual information. */
         virtual std::string getErrorInfo() const = 0;
+        /** Textual information of the cause of the error. */
         virtual const char* what() const throw () {
             return (getErrorInfo() + " : " + reason).c_str();
         }
     };
 
-    /** \brief Subexception class for errors independent of the problem */
-    class GPiDSystemError : public GPiDError
-    { public: GPiDSystemError(std::string reason) : GPiDError(reason) { } };
+    /** Subexception class for errors independent of the problem */
+    class GPiDSystemError : public GPiDError {
+    public:
+        /** Constructor \param reason Cause of the exception */
+        GPiDSystemError(std::string reason) : GPiDError(reason) { }
+    };
 
-    /** \brief Exception class for internal errors */
+    /** Exception class for internal errors */
     class InternalError : public GPiDSystemError {
     public:
+        /** Constructor \param reason Cause of the exception */
         InternalError(std::string reason) : GPiDSystemError(reason) { }
         virtual std::string getErrorInfo() const {
             return "Framework suffered an internal error";
         }
     };
 
-    /** \brief Exception class for memory errors */
+    /** Exception class for memory errors */
     class MemoryError : public GPiDSystemError {
     public:
+        /** Constructor \param reason Cause of the exception */
         MemoryError(std::string reason) : GPiDSystemError(reason) { }
         virtual std::string getErrorInfo() const {
             return "Failed at a memory operation";
         }
     };
 
-    /** \brief Subexception class for errors dependent of the problem */
-    class GPiDInstanceError : public GPiDError
-    { public: GPiDInstanceError(std::string reason) : GPiDError(reason) { } };
+    /** Subexception class for errors dependent of the problem */
+    class GPiDInstanceError : public GPiDError {
+    public:
+        /** Constructor \param reason Cause of the exception */
+        GPiDInstanceError(std::string reason) : GPiDError(reason) { }
+    };
 
-    /** \brief Exception class for problems solvers can't decide */
+    /** Exception class for problems solvers can't decide */
     class UndecidableProblemError : public GPiDInstanceError {
     public:
+        /** Constructor \param reason Cause of the exception */
         UndecidableProblemError(std::string reason) : GPiDInstanceError(reason) { }
         virtual std::string getErrorInfo() const {
             return "The problem is undecidable";
         }
     };
 
-    /** \brief Exception class for problems that cannot be parsed */
+    /** Exception class for problems that cannot be parsed */
     class ParseError : public GPiDInstanceError {
     public:
+        /** Constructor \param reason Cause of the exception */
         ParseError(std::string reason) : GPiDInstanceError(reason) { }
         virtual std::string getErrorInfo() const {
             return "The parsing failed";
         }
     };
 
-    /** \brief Exception class for requiring unavailable tool or tool element */
+    /** Exception class for requiring unavailable tool or tool element */
     class UnknownUtilityError : public GPiDInstanceError {
     public:
+        /** Constructor \param reason Cause of the exception */
         UnknownUtilityError(std::string reason) : GPiDInstanceError(reason) { }
         virtual std::string getErrorInfo() const {
             return "Failed at utility selection";

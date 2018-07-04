@@ -11,6 +11,7 @@
 
 namespace pctrace {
 
+    /** Abstract base class for trace compilation backends. */
     class TraceCompiler {
     protected:
         std::ostream& stream;
@@ -27,12 +28,14 @@ namespace pctrace {
         virtual void close      ()                         = 0;
     };
 
+    /** Abstract base class representing a part of an execution trace. */
     class TraceElement {
     public:
         virtual ~TraceElement() {}
         virtual void compile(TraceCompiler& compiler) = 0;
     };
 
+    /** Begining of a trace. */
     class TraceStart : public TraceElement {
         const std::string name;
     public:
@@ -44,6 +47,7 @@ namespace pctrace {
         }
     };
 
+    /** Variable assignment in a trace. */
     class TraceVariable : public TraceElement {
         const std::string name;
         const std::string value;
@@ -58,6 +62,7 @@ namespace pctrace {
         }
     };
 
+    /** Instruction in a trace. */
     class TraceInstruction : public TraceElement {
         const std::string inst;
     public:
@@ -69,6 +74,7 @@ namespace pctrace {
         }
     };
 
+    /** Function call in a trace. */
     class TraceCallStart : public TraceElement {
         const std::string name;
         const std::string params;
@@ -83,6 +89,7 @@ namespace pctrace {
         }
     };
 
+    /** Function return in a trace. */
     class TraceCallEnd : public TraceElement {
     public:
         TraceCallEnd()                    {}
@@ -92,6 +99,8 @@ namespace pctrace {
             compiler.decapsulate();
         }
     };
+
+    /** End of a trace. */
     class TraceEnd : public TraceElement {
     public:
         TraceEnd()                {}
@@ -102,6 +111,7 @@ namespace pctrace {
         }
     };
 
+    /** Execution trace representation. */
     class Trace {
         std::list<TraceElement*> sequence;
     public:

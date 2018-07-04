@@ -49,14 +49,21 @@ namespace gpid {
         void readHeader();
         void readOption(std::string oname);
     public:
+        /** Create an abducible file parser. */
         AbducibleParser(std::string filename);
         ~AbducibleParser();
+
+        /** Initialize the parser */
         void init();
+        /** Set a parsing option */
         void setOption(std::string oname, std::string ovalue);
 
+        /** Parse the number of abducibles in the file. */
         uint32_t getAbducibleCount();
+        /** Parse the next abducible literal in the file. */
         std::string nextAbducible();
 
+        /** Check if the parser is in a consistent state. */
         inline bool isOk() { return status != AbdParserStatus::ABDP_ERROR; }
     };
 

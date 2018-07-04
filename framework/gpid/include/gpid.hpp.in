@@ -1,9 +1,6 @@
 /**
- * \defgroup gpidcorelib GPiD-Framework Core
- * \brief Core elements of the (Prime) implicates by decomposition generation framework.
  * \file gpid/gpid.hpp
- * \brief GPiD-Framework Core Header.
- * \ingroup gpidcorelib
+ * \brief GPiD-Framework Core Main Header.
  * \author Yanis Sellami
  * \date 2017
  */

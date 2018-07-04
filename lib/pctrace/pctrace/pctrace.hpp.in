@@ -1,10 +1,3 @@
-/**
- * \defgroup pctracelib Pretty Compilable Traces Library
- * \brief Library for exporting pretty traces in compilable formats
- * \file pctrace/pctrace.hpp
- * \brief Pctrace library header.
- * \ingroup pctracelib
- */
 #ifndef LIB_PCTRACE__HEADER
 #define LIB_PCTRACE__HEADER
 

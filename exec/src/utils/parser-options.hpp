@@ -6,6 +6,7 @@
 
 /* ===== Structures ===== */
 
+/** Local options for the executable. */
 struct ParserOptions {
     std::string input;
 };
