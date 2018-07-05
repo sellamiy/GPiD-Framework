@@ -21,9 +21,12 @@ message(STATUS "Executables target directory: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
 message(STATUS "Tests target directory: ${TESTS_RUNTIME_OUTPUT_DIRECTORY}")
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inline")
+if (WIN32)
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inline")
+  endif()
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
