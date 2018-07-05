@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ae4da00..6c2b524 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,7 +26,6 @@ set(MINISAT_SOVERSION ${MINISAT_SOMAJOR})
+ #--------------------------------------------------------------------------------------------------
+ # Dependencies:
+ 
+-find_package(ZLIB)
+ include_directories(${ZLIB_INCLUDE_DIR})
+ include_directories(${minisat_SOURCE_DIR})
+ 
