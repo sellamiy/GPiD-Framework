@@ -44,7 +44,7 @@ built:
 - ZLib if building the Minisat Interface.
 - CVC4 with its API and parsing library if building the CVC4
 interface.
-- Z3 (min. version 4.6) with its Z3Condig.cmake file if building the Z3 interface.
+- Z3 (min. version 4.6) if building the Z3 interface.
 
 ## Tests ##
 
