@@ -1,33 +1,64 @@
-# GPiD Framework
+# GPiD Framework and tools #
 
 Generic framework for implicate generation modulo theories.
-Uses a decomposition algorithm based on DPLL.
 
-Description up to date for version 0.4.8.
+Description up to date for version 0.6.1.
+
+# Content #
+
+## GPiD Framework ##
+
+The GPiD framework is a generic library one can use to solve abduction
+problems modulo theories.
+
+## Available Solver Interfaces ##
+
+Some sample code binding usual SMT Solvers or SAT Solvers to it are
+also provided. They assume that those solvers are available on the system.
+
+## Utilities ##
+
+The framework provides sample executables for performing
+abduction using [1] with the previously introduced solver interfaces.
+
+It also provide an utility to automatically generate abducible literals files. 
 
 # Dependencies
 
-The framework is dependent on the following:
+## Required ##
 
- - The Minisat SAT-Solver. This will be downloaded and patched at
-   configuration time. Be careful however as Minisat itself requires
-   the zlib library. If it is not available, the Minisat interface can
-   be deactivated by passing the ```-DSKIP_SOLVERS=minisat``` at
-   configuration time.
- - CVC4, SMT-Solver. Needs to be isntalled. The interface can be
-   deactivated through the configuration option ```-DSKIP_SOLVERS=cvc4```.
- - Z3 min. version 4.6, SMT Solver. Needs to be installed with its
-   cmake binder. The interface can be deactivated with the option
-   ```-DSKIP_SOLVERS=z3```. ```LD-LIBRARY-PATH``` may need to be
-   positioned for this to work at runtime.
- - Ruby-dev is required for generating the solvers interfaces.
- - Cxxopts is required for generating executables but will be
- downloaded and patched during configuration.
- - Googletest for tests. Also downloaded and patched during the
-   configuration. Tests can be deactivated with the configuration
-   option ```-D_BUILD_TESTS=OFF```.
- - Tooleval python library for running tests and benchmarking (Not yet
-   available).
+The framework is dependent on the following to be configured and
+built:
+
+- CMake (min. version 3.5).
+- A C++11 compiler handling Threads.
+- A python3 interpreter with the following modules: colorama, pyyaml, jinja2
+
+## Optional ##
+
+- Doxygen for generating the documentation.
+- Graphviz dot for generating insight graphs.
+
+## Solver interfaces ##
+
+- ZLib if building the Minisat Interface.
+- CVC4 with its API and parsing library if building the CVC4
+interface.
+- Z3 (min. version 4.6) with its Z3Condig.cmake file if building the Z3 interface.
+
+## Tests ##
+
+- The ToolEval python3 module for insight tests and benchmarks.
+- Gcov for code coverage analyses. 
+
+## Automatically downloaded and patch ##
+
+The following dependencies are recovered and patched automatically by
+the build tool chain:
+
+- MiniSat (SAT Solver), patched for building its interface.
+- The CxxOpts library for parsing options in sample executables.
+- Google Tests for unit tests.
 
 # Project structure #
 
@@ -39,37 +70,54 @@ The framework is dependent on the following:
  generator.
  - ```exec``` : Code for generating the executables.
 
-# Configuration and build #
+# Configuration, build and usage #
+
+## Configuration ##
 
 The project is built via CMake.
+On Unix-like systems, run ```mkdir build && cd build && cmake ..```
 The CMake configuration accepts the following specific options:
 
- - ```-DBUILD_DOC``` : Generate rules for creating a doxygen documentation.
- - ```-DBUILD_TESTS``` : Generate rules for building and executing tests. Uses the google-test framework.
- - ```-DSKIP_SOLVERS``` : A list of solvers not to generate targets
- for.
- - ```-DBUILD_TOOLEVAL``` : Generate rules for building tool
- evaluation scripts for the project.
- - ```-DBUILD_UTILITIES``` : Generate rules for building additional
- utilities for using the framework.
- - ```-DCOVERAGE_TOOLS``` : Generate rules and compile with code
- coverage instrumentation on unix.
- - ```-DGPID_INSTRUMENTATION``` : Instrument the framework to extract
- more data from executions at the cost of efficency.
- - ```-DSTATIC_EXECUTABLES``` : Use static executables format.
- - ```-DUSE_COLORS``` : Use ANSI Colors for printing on terminal.
- - ```-DDOT_AUTOCOMPILATION``` : Auto compile generated dot graphs.
- - ```-DMERGE_MINISAT_WRAPPERS``` : Merge minisat wrappers into their
-   parent namespace.
+- ```-DSKIP_SOLVER_INTERFACE``` : A list of solvers not to generate targets
+ for. 
+- ```-DGPID_INSTRUMENTATION``` : Instrument the framework to extract
+ more data from executions at the cost of efficency.  (Default OFF)
+- ```-DBUILD_DOC``` : Generate rules for creating a doxygen documentation.  (Default ON)
+- ```-DBUILD_TESTS``` : Generate rules for building and executing
+   tests. Uses the google-test framework. (Default ON)
+- ```-DBUILD_TOOLEVAL``` : Generate rules for building tool
+ evaluation scripts for the project if Tooleval is available.  (Default ON)
+- ```-DBUILD_UTILITIES``` : Generate rules for building additional
+ utilities for using the framework.  (Default ON)
+- ```-DCOVERAGE_TOOLS``` : Generate rules and compile with code
+ coverage instrumentation on unix.  (Default OFF)
+- ```-DSTATIC_EXECUTABLES``` : Use static executables format.  (Default ON)
+- ```-DUSE_COLORS``` : Use ANSI Colors for printing on terminal.  (Default ON)
+- ```-DDOT_AUTOCOMPILATION``` : Generate code allowing internal
+ compilation of dot graphs.  (Default ON)
 
-The project builds a library and a related executable for every
-interface provided as well as a global library and executable
-containing all the configured interfaces.
+## Build ##
 
-# Usage
+The project builds a library (gpid-core) containing the minimal
+framework to generate implicates modulo theories using [1].
+It also builds utilities for generating abducible literals and
+implicate generators for the provided solver interfaces.
+
+## Usage ##
 
 Executables are built in the ```bin``` subdirectory.
+For generating implicates using [1], run the following:
+```gpid-impgen -i <file> -g <interface> [-a <abd-generator> | -l <abd-file>]```
+or 
+```gpid-impgen-<interface> -i <file> [-a <abd-generator> | -l <abd-file>]```.
+Run ```gpid-impgen -h``` for the complete list of options.
 
-```gpid-gts -i <file> -g <generator> [-a <abd-generator> | -l <abd-file>]```
+If you wish to write your own solver interface, you can take a look at
+the examples provided in the ```solvers``` subdirectory as well as the
+documentation (built using Doxygen) of the ```Tisi``` solver, which
+provides informations on all the elements that are required for such
+an interface.
 
-Or run ```gpid-gts -h``` for the complete option list.
+# References #
+
+[1] M. Echenim, N. Peltier, and Y. Sellami. A generic framework for implicate generation modulo theories. In Automated Reasoning, International Joint Conference, IJCAR 2018, Proceedings, 2018.

@@ -16,10 +16,6 @@ option(STATIC_EXECUTABLES "Build executables using static librairies" ON)
 option(USE_COLORS "Configure color print outputs" ON)
 option(DOT_AUTOCOMPILATION "Configure Dot graphs autocompilation" ON)
 # ==============================================================================
-# Code system
-# ==============================================================================
-option(MERGE_MINISAT_WRAPPERS "Merge Minisat wrappers into its original namespace" ON)
-# ==============================================================================
 # Computed options
 # ==============================================================================
 if(USE_COLORS AND NOT WIN32)
