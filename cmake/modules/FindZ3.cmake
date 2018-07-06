@@ -1,11 +1,18 @@
 set(Z3_ROOT "" CACHE PATH "Root of Z3 distribution.")
-find_path(Z3_INCLUDE_DIR NAMES z3.h z3++.h PATHS ${Z3_ROOT}/include NO_DEFAULT_PATH)
-find_library(Z3_LIBRARY NAMES z3 PATHS ${Z3_ROOT}/lib NO_DEFAULT_PATH)
+find_path(Z3_INCLUDE_DIR NAMES z3.h z3++.h PATHS ${Z3_ROOT}/include)
+find_library(Z3_LIBRARY NAMES z3 PATHS ${Z3_ROOT}/lib)
 
-mark_as_advanced(Z3_EXECUTABLE Z3_INCLUDE_DIR Z3_LIBRARY)
+if (Z3_INCLUDE_DIR)
+  set(Z3_INCLUDE_DIRS ${Z3_INCLUDE_DIR})
+endif()
+if (Z3_LIBRARY)
+  set(Z3_LIBRARIES ${Z3_LIBRARY})
+endif()
+mark_as_advanced(Z3_INCLUDE_DIR Z3_LIBRARY Z3_INCLUDE_DIRS Z3_LIBRARIES)
+
 find_program (Z3_EXECUTABLE
   NAMES z3 PATHS ${Z3_ROOT} PATH_SUFFIXES bin 
-  DOC "z3 command line executable" NO_DEFAULT_PATH)
+  DOC "z3 command line executable")
 mark_as_advanced(Z3_EXECUTABLE)
 
 if (Z3_EXECUTABLE)
@@ -21,6 +28,6 @@ mark_as_advanced(Z3_VERSION_STRING)
 
 include (FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Z3
-  REQUIRED_VARS Z3_LIBRARY Z3_INCLUDE_DIR Z3_EXECUTABLE
+  REQUIRED_VARS Z3_LIBRARY Z3_LIBRARIES Z3_INCLUDE_DIR Z3_INCLUDE_DIRS Z3_EXECUTABLE
   VERSION_VAR Z3_VERSION_STRING)
 
