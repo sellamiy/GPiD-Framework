@@ -365,6 +365,8 @@ namespace gpid {
         unselectLevel();
         while (++selection_map[clevel] < msize) {
             if (isUnselected(selection_map[clevel], clevel)) {
+                insthandle(instrument::idata(getCurrentLiteral().str()),
+                           instrument::instloc::pre_select);
                 return true;
             }
         }
