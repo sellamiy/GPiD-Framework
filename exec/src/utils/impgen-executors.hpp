@@ -8,14 +8,14 @@ using namespace gpid;
 
 enum class impgenExecutionStatus { SUCCESS, FAILURE };
 
-template<class InterfaceT, class LiteralGeneratorT>
-static inline void generate(OptionStorage& opts) {
+template<class EngineT, class LiteralGeneratorT>
+static inline void generate_upae_x(OptionStorage& opts) {
     // TODO: Handle Errors on subcalls
     l_message("init engine...");
-    ImpgenAlgorithm<AdvancedAbducibleEngine<InterfaceT>, LiteralGeneratorT>::printInfos();
+    ImpgenAlgorithm<EngineT, LiteralGeneratorT>::printInfos();
 
     l_message("load problem...");
-    typename ImpgenAlgorithm<AdvancedAbducibleEngine<InterfaceT>, LiteralGeneratorT>::
+    typename ImpgenAlgorithm<EngineT, LiteralGeneratorT>::
         ProblemLoaderT Loader;
     Loader.load(opts.input, opts.input_lang);
 
@@ -28,7 +28,7 @@ static inline void generate(OptionStorage& opts) {
     }
 
     l_message("create decomposition engine...");
-    ImpgenAlgorithm<AdvancedAbducibleEngine<InterfaceT>, LiteralGeneratorT>
+    ImpgenAlgorithm<EngineT, LiteralGeneratorT>
         Generator(Loader, LGenerator, opts, opts.impgen);
 
     l_message("generate implicates...");
@@ -45,6 +45,15 @@ static inline void generate(OptionStorage& opts) {
     opts.control.stats.addStatistic("Nodes skipped", "");
     for (std::pair<std::string, GPiDAlgorithm::counter_t> p : Generator.getSkippedCounts()) {
         opts.control.stats.addStatistic(p.first, p.second, 4);
+    }
+}
+
+template<class InterfaceT, class LiteralGeneratorT>
+static inline void generate(OptionStorage& opts) {
+    if (opts.naive) {
+        generate_upae_x<NaiveAbducibleEngine<InterfaceT>, LiteralGeneratorT>(opts);
+    } else {
+        generate_upae_x<AdvancedAbducibleEngine<InterfaceT>, LiteralGeneratorT>(opts);
     }
 }
 

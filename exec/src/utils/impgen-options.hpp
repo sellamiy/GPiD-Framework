@@ -24,6 +24,7 @@ struct OptionStorage : public gpid::GPiDOptions
     gpid::ImpgenOptions impgen;
     gpid::instrument::InstrumentOptions instrument;
     witchw::wController control;
+    bool naive = false;
 };
 
 enum class OptionStatus {
@@ -64,6 +65,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 #endif
 
         parser.add_options("Engine")
+            ("naive", "Generate implicates using the naive engine (trying all)")
+
             ("s,store-implicates", "Allow generated implicate to be stored")
             ("dont-store-implicates", "Allow generated implicate to be stored")
 
@@ -145,6 +148,15 @@ static inline OptionStatus handleOptions
 	    opts.impgen.print_storage = true;
 	if (results.count("dont-print-storage"))
 	    opts.impgen.print_storage = false;
+
+        if (results.count("naive")) {
+	    opts.naive = true;
+            opts.impgen.use_models = false;
+            opts.impgen.store_implicates = false;
+            opts.impgen.detect_consequences = false;
+            opts.impgen.print_storage = false;
+            opts.impgen.export_storage = false;
+        }
 
         if (results.count("export-storage"))
 	    opts.impgen.export_storage = true;
@@ -264,7 +276,12 @@ static inline OptionStatus detectConflicts
             { "export-storage", "dont-store-implicates"},
             { "use-models", "dont-use-models"},
             { "allow-inconsistencies", "dont-allow-inconsistencies" },
-            { "detect-consequences", "dont-detect-consequences" }
+            { "detect-consequences", "dont-detect-consequences" },
+            { "naive", "store-implicates" },
+            { "naive", "use-models" },
+            { "naive", "detect-consequences" },
+            { "naive", "print-storage" },
+            { "naive", "export-storage" }
         };
 
         for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {

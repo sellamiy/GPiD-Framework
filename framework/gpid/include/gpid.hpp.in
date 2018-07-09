@@ -9,6 +9,7 @@
 
 #include <gpid/reference/version.hpp>
 
+#include <gpid/impgen/naive_engine.hpp>
 #include <gpid/impgen/advanced_engine.hpp>
 #include <gpid/impgen/algorithm.hpp>
 
