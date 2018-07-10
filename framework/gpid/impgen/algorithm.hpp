@@ -83,7 +83,7 @@ namespace gpid {
 
     template<typename AbdEngineT, typename LiteralGeneratorT>
     void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::printInfos() {
-        snlog::l_warn("TODO: Better info printers");
+        snlog::l_message("GPiD framework implicate generator " + project_version);
     }
 
     template<typename AbdEngineT, typename LiteralGeneratorT>

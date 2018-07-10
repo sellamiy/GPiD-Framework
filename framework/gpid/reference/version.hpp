@@ -16,6 +16,8 @@ namespace gpid {
     /** Detailed name of the framework */
     extern const std::string project_full_name;
 
+    /** Version of the framework */
+    extern const std::string project_version;
     /** Major version of the framework */
     extern const std::string project_version_major;
     /** Minor version of the framework */

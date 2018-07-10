@@ -6,6 +6,8 @@ extern const std::string gpid::project_name
 extern const std::string gpid::project_full_name
  = "Generic Abduction and Prime Implicate Generator Framework - GPiD";
 
+extern const std::string gpid::project_version
+ = "{{ data.version_major }}.{{ data.version_minor }}.{{ data.version_patch }}";
 extern const std::string gpid::project_version_major
  = "{{ data.version_major }}";
 extern const std::string gpid::project_version_minor
