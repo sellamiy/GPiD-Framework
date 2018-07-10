@@ -185,7 +185,6 @@ namespace gpid {
             loc = g.createNode(std::to_string(idx), lcdot::types::ClassicDiamondNode);
             for (auto p : nodes[idx]) {
                 child = buildGraphLocal(p.second, g);
-                // TODO: Edge printer system still anchored in old printing structure
                 g.createEdge(loc, child, mapper.get(p.first).str(), lcdot::types::ClassicEdge);
             }
             return loc;

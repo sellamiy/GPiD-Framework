@@ -266,11 +266,6 @@ namespace gpid {
     template<typename InterfaceT>
     inline void NaiveAbducibleEngine<InterfaceT>::increaseLevel(level_t target) {
         while (clevel < target) {
-            /* TODO: Fixme.
-               The hack +1 to is necessary to access the first active when asking
-               to get downward. However, this is tragically unsafe.
-               Which is why we add a min to unsure we do not make oob accesses later.
-            */
             selection_map[clevel + 1] = 0;
             solver_contrads.push();
             solver_consistency.push();

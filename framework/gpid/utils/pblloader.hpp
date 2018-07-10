@@ -89,9 +89,8 @@ namespace gpid {
             reading_pos = -1;
             break;
         default:
-            // TODO: Raise Error
             snlog::l_internal("Problem loader ended in an Unknown state!");
-            break;
+            throw InternalError("Problem loader ended in an Unknown state!");
         }
     }
 

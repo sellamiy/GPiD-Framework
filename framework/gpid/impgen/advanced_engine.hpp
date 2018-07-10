@@ -297,11 +297,10 @@ namespace gpid {
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::increaseLevel(level_t target) {
         while (clevel < target) {
-            /* TODO: Fixme.
-               The hack +1 to is necessary to access the first active when asking
-               to get downward. However, this is tragically unsafe.
-               Which is why we add a min to unsure we do not make oob accesses later.
-            */
+            /* The hack +1 to is necessary to access the first active when
+             * asking to get downward. However, this is tragically unsafe.
+             * Which is why we add a min to unsure we do not make oob accesses
+             * later. */
             pointer[clevel + 1] = MIN(lactive.get_last() + 1, lactive.get_maximal_size());
             limit[clevel + 1] = getCurrentIndex();
             solver_contrads.push();
