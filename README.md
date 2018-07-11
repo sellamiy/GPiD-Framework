@@ -2,7 +2,7 @@
 
 Generic framework for implicate generation modulo theories.
 
-Description up to date for version 0.6.1.
+Description up to date for version 0.6.2.
 
 # Content #
 
@@ -117,6 +117,23 @@ the examples provided in the ```solvers``` subdirectory as well as the
 documentation (built using Doxygen) of the ```Tisi``` solver, which
 provides informations on all the elements that are required for such
 an interface.
+
+## Windows ##
+
+The GPiD Framework is known to somehow compile and work on windows.
+Last version compiled on windows: 0.6.2.
+
+# Licence #
+
+## Framework ##
+
+The GPiD framework is <complete>.
+
+## Executables ##
+
+Impgen executables include code from their related solver interfaces and
+are thus also subjet to the license of those.
+Please check the corresponding lincences for details.
 
 # References #
 
