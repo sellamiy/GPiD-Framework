@@ -1,8 +1,7 @@
 /**
- * \file tisi.hpp
- * \brief GPiD Template inactive solver interface for documentation.
+ * \defgroup Tisi Documentation for writing solver interfaces
  * \author Yanis Sellami
- * \date 2017
+ * \date 2018
  */
 #ifndef TISI_W_DOC_FOR_GPID__HPP
 #define TISI_W_DOC_FOR_GPID__HPP
@@ -14,6 +13,7 @@
 namespace gpid {
 
     /**
+     * \ingroup Tisi
      * \brief Constraint class.
      *
      * Can be used by the problem loading utility or replaced by any
@@ -21,7 +21,9 @@ namespace gpid {
      */
     struct TisiConstraint {};
 
-    /** \brief Context Manager class.
+    /**
+     * \ingroup Tisi
+     * \brief Context Manager class.
      *
      * Can be used to handle solver global context operations or
      * replaced by the corresponding structure from the solver API.
@@ -29,6 +31,7 @@ namespace gpid {
     struct TisiManager {};
 
     /**
+     * \ingroup Tisi
      * \brief Base class for solver literals.
      *
      * This class represents what is considered a literal by the problem.
@@ -40,6 +43,7 @@ namespace gpid {
     };
 
     /**
+     * \ingroup Tisi
      * \brief Model wrapper instance for the solver.
      *
      * This class must be provided. If the solver does not provide models,
@@ -58,6 +62,7 @@ namespace gpid {
     };
 
     /**
+     * \ingroup Tisi
      * \brief Input problem loader class.
      *
      * This class implements utilities to load problem instances from files
@@ -117,6 +122,7 @@ namespace gpid {
     };
 
     /**
+     * \ingroup Tisi
      * \brief Literal generator class.
      *
      * This class implements (abducilbe) literals generation tools.
@@ -180,6 +186,7 @@ namespace gpid {
     };
 
     /**
+     * \ingroup Tisi
      * \brief Main solver interface class.
      *
      * This class acts as a wrapper to a solver instance.

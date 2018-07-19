@@ -12,7 +12,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/core/config.hpp.in
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/include/gpid.hpp.in
   ${LOCAL_FRAMEWORK_HEADERS_DIR}/gpid/gpid.hpp)
 
-load_version_file("${CMAKE_BINARY_DIR}/version.yml")
 register_version_generator("${CMAKE_BINARY_DIR}/version.yml" "${LOCAL_FRAMEWORK_SOURCES_DIR}/version.cpp")
 # ==============================================================================
 # Locating and selecting library sources
