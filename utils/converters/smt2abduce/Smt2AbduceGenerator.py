@@ -8,7 +8,7 @@ from colorama import Fore, Style
 # --------------------------------------
 from six.moves import cStringIO
 from pysmt.environment import push_env, pop_env
-from pysmt.smtlib.parser import SmtLibParser
+from pysmt.smtlib.parser import SmtLibParser, SmtLibScript
 # --------------------------------------
 def log_local_intro(intro):
     sys.stderr.write('> %s - ' % intro)
@@ -90,7 +90,15 @@ class AbduceGenerator:
         decls = { 'consts' : {}, 'funs' : {} }
 
         parser = SmtLibParser()
-        script = parser.get_script(cStringIO(data))
+        parser._reset()
+        script = SmtLibScript()
+        try:
+            for cmd in parser.get_command_generator(cStringIO(data)):
+                script.add_command(cmd)
+        except RuntimeError:
+            # Oblivious hack to prevent oop pysmt-related error
+            pass
+        script.annotations = parser.cache.annotations
         symbol_decls = script.filter_by_command_name('declare-fun')
         self._recover_declared_symbols(symbol_decls, decls)
         symbol_decls = script.filter_by_command_name('declare-const')
