@@ -12,11 +12,12 @@ template<class EngineT, class LiteralGeneratorT>
 static inline void generate_upae_x(OptionStorage& opts) {
     // TODO: Handle Errors on subcalls
     l_message("init engine...");
-    ImpgenAlgorithm<EngineT, LiteralGeneratorT>::printInfos();
+    ImpgenAlgorithm<EngineT, LiteralGeneratorT, BasicImplicateHandler<EngineT>>
+        ::printInfos();
 
     l_message("load problem...");
-    typename ImpgenAlgorithm<EngineT, LiteralGeneratorT>::
-        ProblemLoaderT Loader;
+    typename ImpgenAlgorithm<EngineT, LiteralGeneratorT, BasicImplicateHandler<EngineT>>
+        ::ProblemLoaderT Loader;
     Loader.load(opts.input, opts.input_lang);
 
     l_message("recovering abducible literals...");
@@ -28,8 +29,10 @@ static inline void generate_upae_x(OptionStorage& opts) {
     }
 
     l_message("create decomposition engine...");
-    ImpgenAlgorithm<EngineT, LiteralGeneratorT>
-        Generator(Loader, LGenerator, opts, opts.impgen);
+    BasicImplicateHandler<EngineT>
+        ihandler(opts.impgen.print_implicates, opts.impgen.store_implicates);
+    ImpgenAlgorithm<EngineT, LiteralGeneratorT, BasicImplicateHandler<EngineT>>
+        Generator(Loader, LGenerator, ihandler, opts, opts.impgen);
 
     l_message("generate implicates...");
     opts.control.time.registerTime("generation");

@@ -11,6 +11,7 @@
 #include <gpid/core/errors.hpp>
 #include <gpid/core/saitypes.hpp>
 #include <gpid/impgen/options.hpp>
+#include <gpid/impgen/implicates.hpp>
 #include <gpid/instrument/instrument.hpp>
 
 namespace gpid {
@@ -24,16 +25,17 @@ namespace gpid {
      * In Automated Reasoning, International Joint Conference, IJCAR 2018,
      * Proceedings, 2018.
      */
-    template<typename AbdEngineT, typename LiteralGeneratorT>
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
     class ImpgenAlgorithm : public GPiDAlgorithm {
     public:
         /** Problem loader type from the underlying engine. */
-        using ProblemLoaderT = typename AbdEngineT::ProblemLoaderT;
+        using ProblemLoaderT = typename EngineT::ProblemLoaderT;
     private:
 
         ImpgenOptions& options;
-        AbdEngineT lengine;
+        EngineT lengine;
         ProblemLoaderT& pbloader;
+        IHandlerT& imphandler;
 
         counter_t impl_counter;
         counter_t node_counter;
@@ -54,7 +56,7 @@ namespace gpid {
 
     public:
         /** Algorithm initialization */
-        ImpgenAlgorithm(ProblemLoaderT& pbld, LiteralGeneratorT& lgen,
+        ImpgenAlgorithm(ProblemLoaderT& pbld, LitGenT& lgen, IHandlerT& ihdl,
                         GPiDOptions& opts, ImpgenOptions& iopts);
 
         /** Print informations on the algorithm and its parameters. */
@@ -71,41 +73,42 @@ namespace gpid {
 
     /* *** Implementation *** */
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
-    ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::
-    ImpgenAlgorithm(ProblemLoaderT& pbld, LiteralGeneratorT& lgen,
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::
+    ImpgenAlgorithm(ProblemLoaderT& pbld, LitGenT& lgen, IHandlerT& ihdl,
                     GPiDOptions& opts, ImpgenOptions& iopts)
         : GPiDAlgorithm(opts),
           options(iopts),
           lengine(lgen, pbld.getContextManager(), iopts),
-          pbloader(pbld)
+          pbloader(pbld),
+          imphandler(ihdl)
     {}
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
-    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::printInfos() {
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    void ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::printInfos() {
         snlog::l_message("GPiD framework implicate generator " + project_version);
     }
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
     inline GPiDAlgorithm::counter_t
-    ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::getGeneratedImplicatesCount() const {
+    ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::getGeneratedImplicatesCount() const {
         return impl_counter;
     }
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
     inline GPiDAlgorithm::counter_t
-    ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::getExploredNodesCount() const {
+    ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::getExploredNodesCount() const {
         return node_counter;
     }
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
     inline std::map<std::string, GPiDAlgorithm::counter_t>&
-    ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::getSkippedCounts() {
+    ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::getSkippedCounts() {
         return lengine.getSkippedCounts();
     }
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
-    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::reset() {
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    void ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::reset() {
         impl_counter = 0;
         node_counter = 0;
         level = 1;
@@ -115,35 +118,32 @@ namespace gpid {
         insthandle(instrument::idata(), instrument::instloc::reset);
     }
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
-    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::notifyImplicate() {
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    void ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::notifyImplicate() {
         impl_counter++;
-        if (options.print_implicates)
-            lengine.printCurrentImplicate();
-        if (options.store_implicates)
-            lengine.storeCurrentImplicate();
+        imphandler(lengine);
         if (options.implicate_limit <= impl_counter)
             iflags.interrupt(SystemInterruptionFlags::Reason::SYS_INT_R__INTERNAL);
         insthandle(instrument::idata(), instrument::instloc::implicate);
     }
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
-    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::push() {
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    void ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::push() {
         level++;
         sdir = StackDirection::PUSH;
         insthandle(instrument::idata(level), instrument::instloc::stack_push);
     }
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
-    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::pop() {
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    void ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::pop() {
         lengine.backtrack(level);
         level--;
         sdir = StackDirection::POP;
         insthandle(instrument::idata(level), instrument::instloc::stack_pop);
     }
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
-    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::selectCandidate() {
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    void ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::selectCandidate() {
         // Recovering next possible literal
         bool has_next = lengine.searchNextLiteral(level);
         if (has_next) {
@@ -156,8 +156,8 @@ namespace gpid {
         }
     }
 
-    template<typename AbdEngineT, typename LiteralGeneratorT>
-    void ImpgenAlgorithm<AbdEngineT, LiteralGeneratorT>::_execute() {
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    void ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::_execute() {
 
         reset();
 
