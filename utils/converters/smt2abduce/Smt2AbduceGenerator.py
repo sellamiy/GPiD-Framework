@@ -2,7 +2,7 @@
 # --------------------------------------
 # Generate abducible files for SMTL2 problems
 # --------------------------------------
-import sys, os
+import sys, os, traceback
 # --------------------------------------
 from colorama import Fore, Style
 # --------------------------------------
@@ -18,13 +18,14 @@ def log_local_info(info):
     sys.stderr.flush()
 def log_local_success():
     sys.stderr.write('%sok%s\n' % (Fore.GREEN, Style.RESET_ALL))
-def log_local_failure():
-    sys.stderr.write('%sfailed%s\n' % (Fore.RED, Style.RESET_ALL))
+def log_local_failure(reason):
+    sys.stderr.write('%sfailed (%s)%s\n' % (Fore.RED, reason, Style.RESET_ALL))
 # --------------------------------------
 class AbduceGenerator:
 
-    def __init__(self, problems):
+    def __init__(self, problems, verbose):
         self.problems = problems
+        self.verbose = verbose
 
     def add_problem(self, problem):
         self.problems.append(problem)
@@ -201,16 +202,32 @@ class AbduceGenerator:
             self._write_abducible_file(self._compute_abducible_filename(problem), abducibles)
 
             log_local_success()
-        except:
-            log_local_failure()
+        except Exception as e:
+            if not self.verbose:
+                log_local_failure(str(e))
+            else:
+                log_local_failure(str(e))
+                sys.stderr.write(Fore.RED)
+                traceback.print_exc(file=sys.stderr)
+                sys.stderr.write(Style.RESET_ALL)
 
         pop_env()
 
 # --------------------------------------
 def main(problems):
-    generator = AbduceGenerator(problems)
+    generator = AbduceGenerator(args.problems, args.verbose)
     generator.generate_abducibles()
 # --------------------------------------
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    from argparse import ArgumentParser
+    ap = ArgumentParser(description='SMTLib2 Abducible files generator')
+
+    ap.add_argument('-v', '--verbose', action='store_true',
+                    help='print detailed information')
+
+    ap.add_argument('problems', metavar='<problem>.smt2', type=str, nargs='+',
+                    help='input problem file')
+
+    args = ap.parse_args()
+    main(args)
 # --------------------------------------
