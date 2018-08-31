@@ -10,8 +10,8 @@ void MinisatAbducibleHandler::allocate(const std::string id, size_t size) {
     memoryRangeAllocation<MinisatLiteral>(id, size);
 }
 
-void MinisatAbducibleHandler::handleAbducible(std::string abd) {
-    int lit_data = std::stoi(abd);
+void MinisatAbducibleHandler::handleAbducible(const std::shared_ptr<std::string>& abd) {
+    int lit_data = std::stoi(*abd);
     int lit_var = abs(lit_data)-1;
     Lit cstl = lit_data > 0 ? mkLit(lit_var) : ~mkLit(lit_var);
     memoryObjectAllocation(abducibles_memory_id, _cpt, mapper, cstl);

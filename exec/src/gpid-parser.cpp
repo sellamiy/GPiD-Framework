@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 
     AbducibleParser parser(opts.input);
     parser.init();
-    t_fatal(!parser.isOk(), "Parser in broken state; please stop!");
+    t_fatal(!parser.isValid(), "Parser in broken state; please stop!");
 
     l_notif("number of abducibles", parser.getAbducibleCount());
 
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
         l_notif("abducible", parser.nextAbducible());
     }
 
-    if (parser.isOk()) {
+    if (parser.isValid()) {
         l_message("complete.");
         return EXIT_SUCCESS;
     } else {

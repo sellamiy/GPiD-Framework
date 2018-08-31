@@ -9,14 +9,14 @@ void CVC4AbducibleHandler::allocate(const std::string id, size_t size) {
     memoryRangeAllocation<CVC4Literal>(id, size);
 }
 
-void CVC4AbducibleHandler::handleAbducible(std::string abd) {
+void CVC4AbducibleHandler::handleAbducible(const std::shared_ptr<std::string>& abd) {
     CVC4::Options opts4;
     snlog::l_warn("Fixme: Abducible Parser - input language as an option"); // TODO
     opts4.setInputLanguage(CVC4::language::input::LANG_SMTLIB_V2);
 
     CVC4::ExprManager& em = pbld.getContextManager();
     CVC4::parser::ParserBuilder pb(&em, "<internal>", opts4);
-    CVC4::parser::Parser* p = pb.withStringInput(abd).build();
+    CVC4::parser::Parser* p = pb.withStringInput(*abd).build();
     p->useDeclarationsFrom(pbld.getDeclarations().getSymbolTable());
     CVC4::Expr cstl = p->nextExpression();
 

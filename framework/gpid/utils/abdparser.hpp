@@ -7,64 +7,52 @@
 #ifndef GPID_FRAMEWORK__UTILS__ABDPARSER_HPP
 #define GPID_FRAMEWORK__UTILS__ABDPARSER_HPP
 
+#include <list>
 #include <fstream>
+#include <smtlib2utils/smtlib2utils.hpp>
 
 namespace gpid {
 
-    /** \brief Parser for abducible files. \ingroup gpidcorelib */
+    /** \brief SMTlib 2 abducible files command handlers */
+    class AbducibleParserCommandHandler : public smtlib2utils::SMTl2CommandHandler {
+        uint32_t size;
+
+        std::list<std::shared_ptr<std::string>> abddata;
+        typename std::list<std::shared_ptr<std::string>>::iterator abdit;
+        bool it_init = false;
+
+        bool handleSize(const smtlib2utils::SMTl2Command& cmd);
+        bool handleAbducible(const smtlib2utils::SMTl2Command& cmd);
+        bool handleNothing(const smtlib2utils::SMTl2Command&);
+    public:
+        /** Handler constructor */
+        AbducibleParserCommandHandler();
+
+        /** \return The number of abducible literals after parsing */
+        uint32_t getSize();
+        /** \return The next abducible parsed (after parsing, one time iteration) */
+        const std::shared_ptr<std::string>& nextAbducible();
+    };
+
+    /** \brief Parser for abducible files. */
     class AbducibleParser {
-        std::string source;
-        std::ifstream stream;
-        struct dw_pstr {
-            int line, col;
-            inline dw_pstr(int l, int c) : line(l), col(c) {}
-        } pos;
-
-        enum class AbdParserStatus { ABDP_0, ABDP_OPENED, ABDP_INIT, ABDP_CLOSED, ABDP_ERROR };
-        AbdParserStatus status;
-
-        uint32_t abd_count;
-
-        void openSource();
-        void closeSource();
-
-        enum class AbdParserTokenType { ABDC_COMMAND, ABDC_EXPR, ABDC_EOF, ABDC_UNKNOWN };
-        struct AbdParserToken {
-            AbdParserTokenType type;
-            std::string content;
-            inline AbdParserToken(const AbdParserTokenType t, const std::string c)
-                : type(t), content(c) {}
-            inline AbdParserToken(const AbdParserToken& t)
-                : type(t.type), content(t.content) {}
-        };
-        enum class AbdParserState { COMMAND_IN, COMMAND_OUT };
-        AbdParserToken lastToken;
-        bool lastTokenUse;
-        AbdParserToken nextToken(AbdParserState state);
-        void skipComment();
-        void updateFilePosition(char c);
-
-        void handleError(std::string msg);
-
-        void readHeader();
-        void readOption(std::string oname);
+        smtlib2utils::SMTl2StringMemory smem;
+        smtlib2utils::SMTl2CommandParser cparser;
+        AbducibleParserCommandHandler chandler;
     public:
         /** Create an abducible file parser. */
         AbducibleParser(std::string filename);
-        ~AbducibleParser();
 
         /** Initialize the parser */
         void init();
-        /** Set a parsing option */
-        void setOption(std::string oname, std::string ovalue);
 
         /** Parse the number of abducibles in the file. */
         uint32_t getAbducibleCount();
         /** Parse the next abducible literal in the file. */
-        std::string nextAbducible();
+        const std::shared_ptr<std::string>& nextAbducible();
 
         /** Check if the parser is in a consistent state. */
-        inline bool isOk() { return status != AbdParserStatus::ABDP_ERROR; }
+        bool isValid();
     };
 
 }

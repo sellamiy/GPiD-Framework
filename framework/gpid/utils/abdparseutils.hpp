@@ -19,7 +19,7 @@ namespace gpid {
         /** Allocates a space in memory for storing abducibles. */
         virtual void allocate(const std::string id, size_t size) = 0;
         /** Store an abducible in memory. */
-        virtual void handleAbducible(std::string abd) = 0;
+        virtual void handleAbducible(const std::shared_ptr<std::string>& abd) = 0;
     };
 
     /** Load abducible literals from a file. */

@@ -11,7 +11,7 @@ extern const std::string gpid::abducibles_memory_id = "Abducibles";
 extern uint32_t gpid::getAbducibleCount(std::string filename) {
     AbducibleParser parser(filename);
     parser.init();
-    if (parser.isOk()) {
+    if (parser.isValid()) {
         return parser.getAbducibleCount();
     } else {
         throw ParseError("Failed to count abducibles in @file:" + filename);
@@ -25,7 +25,7 @@ extern void gpid::loadAbducibles(std::string filename, AbducibleHandler& handler
     AbducibleParser parser(filename);
     parser.init();
     for (uint32_t i = 0; i < size; i++) {
-        if (!parser.isOk()) {
+        if (!parser.isValid()) {
             throw ParseError("Error loading from @file:" + filename);
         }
         handler.handleAbducible(parser.nextAbducible());
