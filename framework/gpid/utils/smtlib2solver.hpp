@@ -27,6 +27,7 @@ namespace gpid {
 
     struct SMTl2SolverManager {
         smtlib2utils::SMTl2StringMemory memory;
+        std::list<smtlib2utils::SMTl2Command> opts;
         std::list<smtlib2utils::SMTl2Command> decls;
     };
 
