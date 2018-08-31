@@ -16,6 +16,7 @@
 #include <gpid/utils/pblloader.hpp>
 #include <gpid/utils/abdparser.hpp>
 #include <gpid/utils/abdparseutils.hpp>
+#include <gpid/utils/smtlib2solver.hpp>
 
 #ifdef GPID_INSTRUMENTATION
 #include <gpid/instrument/instrument.hpp>
