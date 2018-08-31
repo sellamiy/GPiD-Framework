@@ -1,0 +1,17 @@
+#ifndef Z3_SMTLIB2_CLI_INTERFACE_FOR_GPID__HPP
+#define Z3_SMTLIB2_CLI_INTERFACE_FOR_GPID__HPP
+
+#include <gpid/gpid.hpp>
+
+#cmakedefine Z3_EXECUTABLE "@Z3_EXECUTABLE@"
+
+namespace gpid {
+
+    struct Z3InterfaceSMTl2CLI : public SMTl2SolverInterface {
+        Z3InterfaceSMTl2CLI(SMTl2SolverManager& manager)
+            : SMTl2SolverInterface(Z3_EXECUTABLE, manager) {}
+    };
+
+}
+
+#endif
