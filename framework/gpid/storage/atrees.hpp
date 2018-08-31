@@ -121,7 +121,7 @@ namespace gpid {
     (anidx_t idx, anidx_t pdx, LiteralRefT src) {
         SolverTestStatus res = solver.check();
         if (res == SolverTestStatus::UNKNOWN) {
-            snlog::l_error("Storage insertion satisfiability test returned unknown");
+            throw UndecidableProblemError("Storage insertion satisfiability test returned unknown");
         }
         if (res == SolverTestStatus::SAT) {
             for (auto p : nodes[idx]) {
@@ -222,7 +222,7 @@ namespace gpid {
             SolverTestStatus res = solver.check();
             solver.pop();
             if (res == SolverTestStatus::UNKNOWN) {
-                snlog::l_error("Storage insertion satisfiability test returned unknown");
+                throw UndecidableProblemError("Storage insertion satisfiability test returned unknown");
             }
             if (res == SolverTestStatus::UNSAT) {
                 if (fwdSubsumesLocal(p.second)) {
