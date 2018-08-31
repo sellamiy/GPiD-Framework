@@ -6,7 +6,10 @@
 find_path(CVC4_INCLUDE_DIR NAMES "cvc4/cvc4.h")
 find_library(CVC4_LIBRARIES NAMES cvc4 libcvc4)
 
+find_program (CVC4_EXECUTABLE NAMES cvc4)
+
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(CVC4 DEFAULT_MSG CVC4_INCLUDE_DIR CVC4_LIBRARIES)
+find_package_handle_standard_args(CVC4 DEFAULT_MSG CVC4_INCLUDE_DIR CVC4_LIBRARIES CVC4_EXECUTABLE)
 
 mark_as_advanced(CVC4_INCLUDE_DIR CVC4_LIBRARIES)
+mark_as_advanced(CVC4_EXECUTABLE)
