@@ -7,6 +7,7 @@
 #ifndef GPID_FRAMEWORK__CORE__ALGORITHM_HPP
 #define GPID_FRAMEWORK__CORE__ALGORITHM_HPP
 
+#include <thread>
 #include <gpid/core/system.hpp>
 #include <gpid/core/options.hpp>
 
@@ -14,6 +15,8 @@ namespace gpid {
 
     /** Base class for algorithmic utilities. */
     class GPiDAlgorithm {
+        std::unique_ptr<std::thread> execution_thread;
+        void _terminate_execution();
     protected:
         /** Options of the algorithm */
         GPiDOptions& options;
@@ -24,13 +27,19 @@ namespace gpid {
         virtual void _execute() = 0;
 
         /** Algorithm construction and parametrization. */
-        GPiDAlgorithm(GPiDOptions& o) : options(o) {}
+        GPiDAlgorithm(GPiDOptions& o) : execution_thread(nullptr), options(o) {}
     public:
         /** Counter type for compting things. */
         using counter_t = uint64_t;
 
         /** Main wrapper method for executing the algorithm. */
-        void execute();
+        void execute(bool in_thread=false);
+
+        /** Thread interruption signaler */
+        void interrupt();
+
+        /** Thread joiner */
+        void join();
     };
 
 }
