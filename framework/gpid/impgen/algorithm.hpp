@@ -123,7 +123,7 @@ namespace gpid {
         impl_counter++;
         imphandler(lengine);
         if (options.implicate_limit <= impl_counter)
-            iflags.interrupt(SystemInterruptionFlags::Reason::SYS_INT_R__INTERNAL);
+            iflags.interrupt(SystemInterruptionFlags::Reason::__INTERNAL);
         insthandle(instrument::idata(), instrument::instloc::implicate);
     }
 

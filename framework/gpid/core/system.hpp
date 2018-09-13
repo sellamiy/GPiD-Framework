@@ -16,18 +16,20 @@ namespace gpid {
         /** Possible reasons for an interruption */
         enum class SystemInterruptionReason {
             /** No particular reason */
-            SYS_INT_R__,
+            __,
             /** Engine internal: the engine internally decides to interrupt */
-            SYS_INT_R__INTERNAL,
+            __INTERNAL,
             /** User interruption */
-            SYS_INT_R__USER,
+            __USER,
             /** Timeout */
-            SYS_INT_R__TIMEOUT
+            __TIMEOUT,
+            /** Interrupted by parent caller */
+            __PARENT
         };
         /** Interruption reason type */
         using Reason = SystemInterruptionReason;
         /** Reason of the interruption */
-        SystemInterruptionReason reason = Reason::SYS_INT_R__;
+        SystemInterruptionReason reason = Reason::__;
         /** Interruption flag. Set to true iff the engine should be interrupted. */
         bool interruption_flag = false;
 
