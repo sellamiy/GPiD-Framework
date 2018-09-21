@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     l_notif("number of abducibles", parser.getAbducibleCount());
 
     for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
-        l_notif("abducible", parser.nextAbducible());
+        l_notif("abducible", *parser.nextAbducible());
     }
 
     if (parser.isValid()) {
