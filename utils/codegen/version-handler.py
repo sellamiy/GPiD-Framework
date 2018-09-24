@@ -16,11 +16,11 @@ except ImportError as e:
 TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates')
 # --------------------------------------
 def version_getter_type_key(tdata):
-    if tdata['type'] == 'primary':
+    if tdata['priority'] == 'primary':
         return 0
-    if tdata['type'] == 'secondary':
+    if tdata['priority'] == 'secondary':
         return 1
-    if tdata['type'] == 'backup':
+    if tdata['priority'] == 'backup':
         return 2
     return 3
 # --------------------------------------

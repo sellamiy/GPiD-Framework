@@ -23,12 +23,13 @@ macro(load_version_file version_file)
   endif()
 endmacro()
 # ==============================================================================
-macro(register_version_generator version_file target_file)
+macro(register_version_generator version_file_target version_file target_file)
   add_custom_command(
     OUTPUT "${target_file}"
     DEPENDS "${PY_VERSION_HANDLER}" "${PY_VERSION_TEMPLATE}" "${version_file}"
     COMMAND "${PYTHON_EXECUTABLE}" "${PY_VERSION_HANDLER}"
     "--version-file=${version_file}" "--output=${target_file}" "--generate-source"
     "--template-directory=${CMAKE_SOURCE_DIR}/framework/templates/src")
+  add_custom_target(${version_file_target} DEPENDS "${target_file}" "${version_file}")
 endmacro()
 # ==============================================================================

@@ -12,7 +12,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/core/config.hpp.in
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gpid/include/gpid.hpp.in
   ${LOCAL_FRAMEWORK_HEADERS_DIR}/gpid/gpid.hpp)
 
-register_version_generator("${CMAKE_BINARY_DIR}/version.yml" "${LOCAL_FRAMEWORK_SOURCES_DIR}/version.cpp")
+register_version_generator(version-sources "${CMAKE_BINARY_DIR}/version.yml"
+  "${LOCAL_FRAMEWORK_SOURCES_DIR}/version.cpp")
 # ==============================================================================
 # Locating and selecting library sources
 # ==============================================================================
@@ -36,6 +37,9 @@ else()
   add_library(gpid-core-static STATIC ${SRC_GPID_CORE})
   add_library(gpid-core-shared SHARED ${SRC_GPID_CORE})
 endif()
+
+add_dependencies(gpid-core-static version-sources)
+add_dependencies(gpid-core-static version-sources)
 
 target_include_directories(gpid-core-static
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${LOCAL_FRAMEWORK_HEADERS_DIR}"
