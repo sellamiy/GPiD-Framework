@@ -17,21 +17,26 @@ int main(int argc, char** argv) {
 
     l_message("start abducible parser...");
 
-    AbducibleParser parser(opts.input);
-    parser.init();
-    t_fatal(!parser.isValid(), "Parser in broken state; please stop!");
+    try {
+        AbducibleParser parser(opts.input);
+        parser.init();
+        t_fatal(!parser.isValid(), "Parser in broken state; please stop!");
 
-    l_notif("number of abducibles", parser.getAbducibleCount());
+        l_notif("number of abducibles", parser.getAbducibleCount());
 
-    for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
-        l_notif("abducible", *parser.nextAbducible());
-    }
+        for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
+            l_notif("abducible", *parser.nextAbducible());
+        }
 
-    if (parser.isValid()) {
-        l_message("complete.");
-        return EXIT_SUCCESS;
-    } else {
-        l_fatal("errors were raised.");
+        if (parser.isValid()) {
+            l_message("complete.");
+            return EXIT_SUCCESS;
+        } else {
+            l_fatal("errors were raised.");
+            return EXIT_FAILURE;
+        }
+    } catch (gpid::GPiDError& e) {
+        snlog::l_fatal(e.what());
         return EXIT_FAILURE;
     }
 }
