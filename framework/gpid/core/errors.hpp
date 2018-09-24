@@ -90,6 +90,16 @@ namespace gpid {
         }
     };
 
+    /** Exception class for accessing non-existing or forbidden instance data */
+    class IllegalAccessError : public GPiDInstanceError {
+    public:
+        /** Constructor \param reason Cause of the exception */
+        IllegalAccessError(std::string reason) : GPiDInstanceError(reason) { }
+        virtual std::string getErrorInfo() const {
+            return "Illegal access to instance data";
+        }
+    };
+
 }
 
 #endif

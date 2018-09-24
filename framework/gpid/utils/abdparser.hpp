@@ -15,7 +15,8 @@ namespace gpid {
 
     /** \brief SMTlib 2 abducible files command handlers */
     class AbducibleParserCommandHandler : public smtlib2utils::SMTl2CommandHandler {
-        uint32_t size;
+        uint32_t size = 0;
+        bool auto_size = false;
 
         std::list<std::shared_ptr<std::string>> abddata;
         typename std::list<std::shared_ptr<std::string>>::iterator abdit;

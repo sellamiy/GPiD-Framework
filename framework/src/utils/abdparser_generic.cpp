@@ -2,6 +2,7 @@
 
 #include <string>
 #include <snlog/snlog.hpp>
+#include <gpid/core/errors.hpp>
 #include <gpid/utils/abdparser.hpp>
 
 using namespace snlog;
@@ -11,6 +12,9 @@ using namespace gpid;
 
 AbducibleParserCommandHandler::AbducibleParserCommandHandler() {
     handlers["size"] =
+        std::bind(&AbducibleParserCommandHandler::handleSize,
+                  this, std::placeholders::_1);
+    handlers["autosize"] =
         std::bind(&AbducibleParserCommandHandler::handleSize,
                   this, std::placeholders::_1);
     handlers["abduce"] =
@@ -25,8 +29,12 @@ bool AbducibleParserCommandHandler::handleNothing(const smtlib2utils::SMTl2Comma
 { return true; }
 
 bool AbducibleParserCommandHandler::handleSize(const smtlib2utils::SMTl2Command& cmd) {
-    size = std::stoi(cmd.getData());
-    return size > 0;
+    if (cmd.getData() == "auto") {
+        return auto_size = true; // p.n.: assignment required
+    } else {
+        size = std::stoi(cmd.getData());
+        return size > 0;
+    }
 }
 
 bool AbducibleParserCommandHandler::handleAbducible(const smtlib2utils::SMTl2Command& cmd) {
@@ -35,13 +43,18 @@ bool AbducibleParserCommandHandler::handleAbducible(const smtlib2utils::SMTl2Com
 }
 
 uint32_t AbducibleParserCommandHandler::getSize() {
-    return size;
+    return auto_size ? abddata.size() : size;
 }
 
 const std::shared_ptr<std::string>& AbducibleParserCommandHandler::nextAbducible() {
     if (!it_init) {
         abdit = abddata.begin();
         it_init = true;
+    }
+    if (abdit == abddata.end()) {
+        snlog::l_info("The following may be triggered by wrong size information in abducible file");
+        snlog::l_info("The following may be an internal error");
+        throw IllegalAccessError("No more abducible literal");
     }
     const std::shared_ptr<std::string>& res = *abdit;
     ++abdit;
