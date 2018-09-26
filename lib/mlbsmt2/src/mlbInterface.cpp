@@ -118,6 +118,10 @@ MagicLiteralBuilder::MagicLiteralBuilder()
       data(new MagicLiteralData())
 {}
 
+MagicLiteralBuilder::~MagicLiteralBuilder() {
+    data.release();
+}
+
 void MagicLiteralBuilder::loadSMTlib2File(const std::string filename) {
     PyObject* pLoadFunction = mlbPythonGlobals.get_loadfile_function();
     PyObject* pFileLoc = PyUnicode_DecodeFSDefault(filename.c_str());

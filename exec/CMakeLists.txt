@@ -80,3 +80,13 @@ else()
   target_link_libraries(gpid-parser gpid-core-shared cxxopts)
 endif()
 install(TARGETS gpid-parser RUNTIME DESTINATION bin)
+# ==============================================================================
+# Masmalig - a magically smart literal generator in SMTlibv2 format
+# ==============================================================================
+add_executable(gpid-masmalig "src/gpid-masmalig.cpp")
+if(STATIC_EXECUTABLES)
+  target_link_libraries(gpid-masmalig gpid-core-static cxxopts)
+else()
+  target_link_libraries(gpid-masmalig gpid-core-shared cxxopts)
+endif()
+install(TARGETS gpid-masmalig RUNTIME DESTINATION bin)

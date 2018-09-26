@@ -47,6 +47,7 @@ namespace mlbsmt2 {
         bool exploitData(DataExploitation e);
     public:
         MagicLiteralBuilder();
+        ~MagicLiteralBuilder();
 
         MagicLiteralBuilder& uses(MagicProductionRulePtr& rule);
 
