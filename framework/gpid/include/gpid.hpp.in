@@ -13,6 +13,8 @@
 #include <gpid/impgen/advanced_engine.hpp>
 #include <gpid/impgen/algorithm.hpp>
 
+#include <gpid/masmalig/algorithm.hpp>
+
 #include <gpid/utils/pblloader.hpp>
 #include <gpid/utils/abdparser.hpp>
 #include <gpid/utils/abdparseutils.hpp>
