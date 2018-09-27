@@ -38,6 +38,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 # ------------------------------------------------------------------------------
 set(LOCAL_LIB_HEADERS_DIR "${CMAKE_BINARY_DIR}/local/lib/include")
+set(LOCAL_LIB_SOURCES_DIR "${CMAKE_BINARY_DIR}/local/lib/cxx")
 
 set(LOCAL_SOLVER_INTERFACES_CONFIGS "${CMAKE_BINARY_DIR}/local/solver-interfaces/configs")
 set(LOCAL_SOLVER_INTERFACES_INCLUDE "${CMAKE_BINARY_DIR}/local/solver-interfaces/include")

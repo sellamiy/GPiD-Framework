@@ -56,7 +56,11 @@ inline void MLBPythonGlobals::load_pysmt_module() {
 }
 
 inline void MLBPythonGlobals::load_local_module() {
-    PyObject* mname = PyUnicode_DecodeFSDefault(MLBSMT2_LOCAL_MODULE);
+    for (const std::string& script : mlb_Py_LoadableScriptTable) {
+        if (PyRun_SimpleString(script.c_str()) != 0)
+            throw mlbsmt2::PythonChannelError("(internal) mlbsmt2 script error");
+    }
+    PyObject* mname = PyUnicode_DecodeFSDefault("__main__");
     localModule = PyImport_Import(mname);
     Py_DECREF(mname);
     if (localModule == nullptr)
