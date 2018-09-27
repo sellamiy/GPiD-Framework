@@ -28,6 +28,9 @@ int main(int argc, char** argv) {
         MasmaligAlgorithm<LiteralPrinter> generator(printer, opts, opts.mopts);
         generator.execute();
         l_message("complete.");
+    } catch (mlbsmt2::MLB2Error& e) {
+        snlog::l_fatal(e.what());
+        return EXIT_FAILURE;
     } catch (gpid::GPiDError& e) {
         snlog::l_fatal(e.what());
         return EXIT_FAILURE;

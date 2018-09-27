@@ -2,6 +2,7 @@
 #define LIB_MAGIC_LITERAL_BUILDER_f_SMTLIB2__HEADER
 
 #include <mlbsmt2/mlbconfig.hpp>
+#include <mlbsmt2/mlberrors.hpp>
 
 #include <mlbsmt2/mlbInterface.hpp>
 

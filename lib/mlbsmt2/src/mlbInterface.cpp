@@ -42,7 +42,8 @@ inline void MLBPythonGlobals::finalize() {
     if (--initialized == 0) {
         release_functions();
         unload_modules();
-        if (Py_FinalizeEx() < 0) { /* TODO: notify Error */ }
+        if (Py_FinalizeEx() < 0)
+            throw mlbsmt2::PythonChannelError("FinalizeEx");
     }
 }
 
@@ -50,14 +51,16 @@ inline void MLBPythonGlobals::load_pysmt_module() {
     PyObject* mname = PyUnicode_DecodeFSDefault("pysmt");
     pysmtModule = PyImport_Import(mname);
     Py_DECREF(mname);
-    if (pysmtModule == nullptr) { /* TODO: notify Error */ }
+    if (pysmtModule == nullptr)
+        throw mlbsmt2::PythonChannelError("pysmtModule is nullptr");
 }
 
 inline void MLBPythonGlobals::load_local_module() {
     PyObject* mname = PyUnicode_DecodeFSDefault(MLBSMT2_LOCAL_MODULE);
     localModule = PyImport_Import(mname);
     Py_DECREF(mname);
-    if (localModule == nullptr) { /* TODO: notify Error */ }
+    if (localModule == nullptr)
+        throw mlbsmt2::PythonChannelError("localModule is nullptr");
 }
 
 inline void MLBPythonGlobals::unload_modules() {
@@ -75,8 +78,10 @@ inline void MLBPythonGlobals::release_functions() {
 
 inline PyObject* MLBPythonGlobals::extract_local_function(const std::string name) {
     PyObject* func = PyObject_GetAttrString(localModule, name.c_str());
-    if (func == nullptr) { /* TODO: notify Error */ }
-    if (!PyCallable_Check(func)) { /* TODO: notify Error */ }
+    if (func == nullptr)
+        throw mlbsmt2::PythonChannelError("local function not found: " + name);
+    if (!PyCallable_Check(func))
+        throw mlbsmt2::PythonChannelError("local object found but not callable: " + name);
     return func;
 }
 
@@ -125,7 +130,8 @@ MagicLiteralBuilder::~MagicLiteralBuilder() {
 void MagicLiteralBuilder::loadSMTlib2File(const std::string filename) {
     PyObject* pLoadFunction = mlbPythonGlobals.get_loadfile_function();
     PyObject* pFileLoc = PyUnicode_DecodeFSDefault(filename.c_str());
-    if (pFileLoc == nullptr) { /* TODO : Handle Error */ }
+    if (pFileLoc == nullptr)
+        throw PythonChannelError("(internal) pFileLoc is nullptr");
     PyObject* pArgs = PyTuple_New(2);
     PyTuple_SetItem(pArgs, 0, data->getPyInstance());
     PyTuple_SetItem(pArgs, 1, pFileLoc);

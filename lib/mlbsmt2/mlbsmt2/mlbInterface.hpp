@@ -6,6 +6,8 @@
 #include <string>
 #include <memory>
 
+#include <mlbsmt2/mlberrors.hpp>
+
 namespace mlbsmt2 {
 
     enum class DataExploitation {
@@ -79,7 +81,8 @@ namespace mlbsmt2 {
     }
 
     inline void MagicLiteralBuilder::exploitData() {
-        if (!exploitable()) { /* TODO: Raise Error */ }
+        if (!exploitable())
+            throw BuilderStatusError("Illegal builder state for data exploitation");
         for (auto rule : rules) {
             for (auto exploitation : rule->getRequirements()) {
                 if (!exploitations[exploitation])
@@ -92,7 +95,8 @@ namespace mlbsmt2 {
     }
 
     inline std::string MagicLiteralBuilder::buildLiteral() {
-        if (!buildable()) { /* TODO: Raise Error */ }
+        if (!buildable())
+            throw BuilderStatusError("Illegal builder state for literal build");
         if (state == BuilderState::Exploited)
             state = BuilderState::Building;
         typename MagicProductionRule::ProductionData& data = rules.front()->next();
