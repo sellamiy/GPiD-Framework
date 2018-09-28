@@ -16,14 +16,6 @@ namespace mlbsmt2 {
         }
     };
 
-    class PythonChannelError : public MLB2Error {
-    public:
-        PythonChannelError(std::string reason) : MLB2Error(reason) { }
-        virtual std::string getErrorInfo() const {
-            return "Error in Python-C++ data transfer";
-        }
-    };
-
     class BuilderStatusError : public MLB2Error {
     public:
         BuilderStatusError(std::string reason) : MLB2Error(reason) { }

@@ -4,31 +4,16 @@
 project(libmlbsmt2 LANGUAGES CXX)
 set(LIBMLBSMT2_VERSION "0.1")
 # ------------------------------------------------------------------------------
-include(PythonUtils)
-find_package(PythonLibs 3 REQUIRED)
-find_python_module(pysmt)
-# ------------------------------------------------------------------------------
-include(FrameworkScriptAbsorbtion)
-# ------------------------------------------------------------------------------
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mlbsmt2/mlbsmt2.hpp.in
   ${LOCAL_LIB_HEADERS_DIR}/mlbsmt2/mlbsmt2.hpp)
 
 file(GLOB LIBMLBSMT2_HEADERS "mlbsmt2/*.hpp")
 file(GLOB LIBMLBSMT2_SOURCES "src/*.cpp")
-file(GLOB LIBMLBSMT2_PYTHON_SOURCES "python/*.py")
-set(LIBMLBSMT2_PYCPP_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/templates/src/mlbPythonData.cpp")
-set(LIBMLBSMT2_PYCPP_SOURCE "${LOCAL_LIB_SOURCES_DIR}/mlbsmt2/mlbPythonData.cpp")
-list(APPEND LIBMLBSMT2_SOURCES "${LIBMLBSMT2_PYCPP_SOURCE}")
-# ------------------------------------------------------------------------------
-generate_absorbtion_file(mlbsmt2-absorbed-python
-  "${LIBMLBSMT2_PYCPP_SOURCE}" "${LIBMLBSMT2_PYCPP_TEMPLATE}" ${LIBMLBSMT2_PYTHON_SOURCES})
 # ------------------------------------------------------------------------------
 add_library(mlbsmt2-static STATIC ${LIBMLBSMT2_SOURCES})
 add_library(mlbsmt2-shared SHARED ${LIBMLBSMT2_SOURCES})
-add_dependencies(mlbsmt2-static mlbsmt2-absorbed-python)
-add_dependencies(mlbsmt2-shared mlbsmt2-absorbed-python)
-target_link_libraries(mlbsmt2-static snlog ${PYTHON_LIBRARIES})
-target_link_libraries(mlbsmt2-shared snlog ${PYTHON_LIBRARIES})
+target_link_libraries(mlbsmt2-static snlog smtlib2utils-static)
+target_link_libraries(mlbsmt2-shared snlog smtlib2utils-shared)
 target_include_directories(mlbsmt2-static PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}" "${LOCAL_LIB_HEADERS_DIR}" ${PYTHON_INCLUDE_DIRS})
 target_include_directories(mlbsmt2-shared PUBLIC

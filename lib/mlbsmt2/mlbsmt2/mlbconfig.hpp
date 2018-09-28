@@ -4,8 +4,4 @@
 #include <string>
 #include <vector>
 
-extern const std::vector<std::string> mlb_Py_LoadableScriptTable;
-
-#define MLBSMT2_FUNC_LOAD_FILE "TODO" // TODO Config
-
 #endif
