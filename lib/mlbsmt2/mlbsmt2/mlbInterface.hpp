@@ -91,7 +91,7 @@ namespace mlbsmt2 {
                     state = BuilderState::Error;
             }
         }
-        state = BuilderState::Exploited;
+        state = rules.empty() ? BuilderState::Complete : BuilderState::Exploited;
     }
 
     inline std::string MagicLiteralBuilder::buildLiteral() {
