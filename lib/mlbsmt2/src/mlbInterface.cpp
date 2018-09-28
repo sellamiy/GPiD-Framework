@@ -1,11 +1,15 @@
 #define MAGIC_LITERAL_BUILDER_f_SMTLIB2__INTERFACE_CPP
 
+#include <list>
+#include <unordered_set>
 #include <snlog/snlog.hpp>
 #include <smtlib2utils/smtlib2utils.hpp>
 #include <mlbsmt2/mlbconfig.hpp>
 #include <mlbsmt2/mlbInterface.hpp>
 
 using strptr = std::shared_ptr<std::string>;
+using string_set = std::unordered_set<std::string>;
+using string_list = std::list<std::string>;
 
 namespace mlbsmt2 {
 
@@ -25,19 +29,34 @@ namespace mlbsmt2 {
         bool storeConstDeclaration(const smtlib2utils::SMTl2Command& cmd);
     public:
         MagicParsingHandler();
+
+        friend MagicLiteralData;
     };
 
     class MagicLiteralData {
         MagicParsingHandler handler;
         smtlib2utils::SMTl2StringMemory smem;
+
+        std::map<std::string, string_set> consts_type_in;
+        std::map<std::string, std::string> consts_name_in;
+
+        std::map<std::string, string_set> funs_type_in;
+        std::map<std::string, std::pair<string_list, std::string>> funs_name_in;
+
+        void storeConst(const std::string name, const std::string type);
+        void storeFun(const std::string name, const string_list& params, const std::string rtype);
     public:
         inline MagicParsingHandler& getHandler() { return handler; }
         inline smtlib2utils::SMTl2StringMemory& getMemory() { return smem; }
+
+        void extractConsts();
+        void extractFuns();
     };
 
 }
 
 using namespace mlbsmt2;
+using namespace smtlib2utils;
 
 inline bool MagicParsingHandler::storeAsUsage(const smtlib2utils::SMTl2Command& cmd) {
     usage.push_back(cmd.getDataPtr());
@@ -83,13 +102,13 @@ MagicParsingHandler::MagicParsingHandler() {
     handlers["declare-sort"] =
         std::bind(&MagicParsingHandler::storeSortDeclaration, this, std::placeholders::_1);
     handlers["define-fun"] =
-        std::bind(&MagicParsingHandler::storeFunDeclaration, this, std::placeholders::_1);
+        std::bind(&MagicParsingHandler::ignore, this, std::placeholders::_1);
     handlers["define-fun-rec"] =
-        std::bind(&MagicParsingHandler::storeFunDeclaration, this, std::placeholders::_1);
+        std::bind(&MagicParsingHandler::ignore, this, std::placeholders::_1);
     handlers["define-funs-rec"] =
-        std::bind(&MagicParsingHandler::storeFunDeclaration, this, std::placeholders::_1);
+        std::bind(&MagicParsingHandler::ignore, this, std::placeholders::_1);
     handlers["define-sort"] =
-        std::bind(&MagicParsingHandler::storeSortDeclaration, this, std::placeholders::_1);
+        std::bind(&MagicParsingHandler::ignore, this, std::placeholders::_1);
 
     handlers["echo"] = std::bind(&MagicParsingHandler::ignore, this, std::placeholders::_1);
     handlers["exit"] = std::bind(&MagicParsingHandler::ignore, this, std::placeholders::_1);
@@ -125,6 +144,36 @@ MagicParsingHandler::MagicParsingHandler() {
 
 /*>---------------------------------------<*/
 
+void MagicLiteralData::storeConst(const std::string name, const std::string type) {
+    consts_type_in[type].insert(name);
+    consts_name_in[name] = type;
+}
+
+void MagicLiteralData::storeFun(const std::string name, const string_list& params,
+                                const std::string rtype) {
+    funs_type_in[rtype].insert(name);
+    funs_name_in[name] = std::pair<string_list, std::string>(params, rtype);
+}
+
+void MagicLiteralData::extractConsts() {
+    for (strptr const_data : handler.consts) {
+        SMTlib2TokenResult symbol = nextSymbol(*const_data);
+        SMTlib2TokenResult stype = nextSort(symbol);
+        storeConst(symbol.value(), stype.value());
+    }
+}
+
+void MagicLiteralData::extractFuns() {
+    for (strptr const_data : handler.funs) {
+        SMTlib2TokenResult symbol = nextSymbol(*const_data);
+        SMTlib2TokenList plist = nextParameterList__unof(symbol);
+        SMTlib2TokenResult rtype = nextSort(*const_data, plist.end);
+        storeFun(symbol.value(), plist.value(), rtype.value());
+    }
+}
+
+/*>---------------------------------------<*/
+
 MagicLiteralBuilder::MagicLiteralBuilder()
     : state(BuilderState::Initialized),
       data(new MagicLiteralData())
@@ -135,12 +184,21 @@ MagicLiteralBuilder::~MagicLiteralBuilder() {
 }
 
 void MagicLiteralBuilder::loadSMTlib2File(const std::string filename) {
-    smtlib2utils::SMTl2CommandParser parser(filename, data->getMemory());
+    SMTl2CommandParser parser(filename, data->getMemory());
     parser.initialize();
     parser.parse(data->getHandler());
 }
 
 bool MagicLiteralBuilder::exploitData(DataExploitation e) {
-    snlog::l_warn("Not implemented yet %£2");
-    return false;
+    switch (e) {
+    case DataExploitation::ExtractConsts:
+        data->extractConsts();
+        break;
+    case DataExploitation::ExtractFuns:
+        data->extractFuns();
+        break;
+    default:
+        return false;
+    }
+    return true;
 }

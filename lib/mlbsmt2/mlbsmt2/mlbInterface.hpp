@@ -11,7 +11,7 @@
 namespace mlbsmt2 {
 
     enum class DataExploitation {
-
+        ExtractConsts, ExtractFuns
     };
 
     class MagicProductionRule {
