@@ -1,57 +1,103 @@
 #ifndef MAGIC_LITERAL_BUILDER_f_SMTLIB2__INTERFACE_HPP
 #define MAGIC_LITERAL_BUILDER_f_SMTLIB2__INTERFACE_HPP
 
-#include <list>
 #include <map>
+#include <list>
 #include <string>
 #include <memory>
-
+#include <unordered_set>
+#include <smtlib2utils/smtlib2utils.hpp>
 #include <mlbsmt2/mlberrors.hpp>
 
 namespace mlbsmt2 {
 
+    using strptr = std::shared_ptr<std::string>;
+    using string_set = std::unordered_set<std::string>;
+    using string_list = std::list<std::string>;
+
     enum class DataExploitation {
         ExtractConsts, ExtractFuns
     };
+
+    class MagicLiteralData;
 
     class MagicProductionRule {
         std::list<DataExploitation> requirements;
     public:
 
         struct ProductionData {
-            const std::string value;
+            std::string value;
             bool valid;
+            ProductionData() : value(""), valid(false) {}
             ProductionData(const std::string value, bool valid=true)
                 : value(value), valid(valid) {}
+            ProductionData(const ProductionData& o)
+                : value(o.value), valid(o.valid) {}
+            ProductionData& operator= (const ProductionData& o) {
+                value = o.value;
+                valid = o.valid;
+                return *this;
+            }
         };
 
         MagicProductionRule& requires(DataExploitation e);
         inline const std::list<DataExploitation>& getRequirements() const
         { return requirements; }
 
-        virtual bool hasNext() = 0;
-        virtual ProductionData& next() = 0;
+        virtual bool hasNext(const MagicLiteralData& data) = 0;
+        virtual ProductionData& next(const MagicLiteralData& data) = 0;
     };
 
     using MagicProductionRulePtr = std::shared_ptr<MagicProductionRule>;
 
-    class MagicLiteralData;
+    class MagicParsingHandler;
+
+    class MagicLiteralData {
+        std::unique_ptr<MagicParsingHandler> handler;
+        smtlib2utils::SMTl2StringMemory smem;
+
+        std::map<std::string, string_set> consts_type_in;
+        std::map<std::string, std::string> consts_name_in;
+
+        std::map<std::string, string_set> funs_type_in;
+        std::map<std::string, std::pair<string_list, std::string>> funs_name_in;
+
+        void storeConst(const std::string name, const std::string type);
+        void storeFun(const std::string name, const string_list& params, const std::string rtype);
+    public:
+        inline typename std::map<std::string, std::string>::const_iterator consts_iterator() const
+        { return consts_name_in.begin(); }
+        inline typename std::map<std::string, std::string>::const_iterator consts_iterator_end() const
+        { return consts_name_in.end(); }
+        inline typename std::map<std::string, std::pair<string_list, std::string>>
+        ::const_iterator funs_iterator() const
+        { return funs_name_in.begin(); }
+        inline typename std::map<std::string, std::pair<string_list, std::string>>
+        ::const_iterator funs_iterator_end() const
+        { return funs_name_in.end(); }
+    public:
+        MagicLiteralData();
+        ~MagicLiteralData();
+
+        inline MagicParsingHandler& getHandler() { return *handler; }
+        inline smtlib2utils::SMTl2StringMemory& getMemory() { return smem; }
+
+        void extractConsts();
+        void extractFuns();
+    };
 
     class MagicLiteralBuilder {
         enum class BuilderState { Initialized, Exploited, Building, Complete, Error };
-        BuilderState state;
+        BuilderState state = BuilderState::Initialized;
 
         std::list<MagicProductionRulePtr> rules;
         std::map<DataExploitation, bool> exploitations;
 
-        std::unique_ptr<MagicLiteralData> data;
+        MagicLiteralData data;
 
         bool exploitData(DataExploitation e);
     public:
-        MagicLiteralBuilder();
-        ~MagicLiteralBuilder();
-
-        MagicLiteralBuilder& uses(MagicProductionRulePtr& rule);
+        MagicLiteralBuilder& uses(const MagicProductionRulePtr& rule);
 
         void loadSMTlib2File(const std::string filename);
 
@@ -75,7 +121,7 @@ namespace mlbsmt2 {
         return *this;
     }
 
-    inline MagicLiteralBuilder& MagicLiteralBuilder::uses(MagicProductionRulePtr& rule) {
+    inline MagicLiteralBuilder& MagicLiteralBuilder::uses(const MagicProductionRulePtr& rule) {
         rules.push_back(rule);
         return *this;
     }
@@ -99,14 +145,14 @@ namespace mlbsmt2 {
             throw BuilderStatusError("Illegal builder state for literal build");
         if (state == BuilderState::Exploited)
             state = BuilderState::Building;
-        typename MagicProductionRule::ProductionData& data = rules.front()->next();
-        if (!rules.front()->hasNext())
+        typename MagicProductionRule::ProductionData& pdata = rules.front()->next(data);
+        if (!rules.front()->hasNext(data))
             rules.pop_front();
         if (rules.empty())
             state = BuilderState::Complete;
-        if (!data.valid)
+        if (!pdata.valid)
             state = BuilderState::Error;
-        return data.value;
+        return pdata.value;
     }
 
 }

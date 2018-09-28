@@ -5,5 +5,6 @@
 #include <mlbsmt2/mlberrors.hpp>
 
 #include <mlbsmt2/mlbInterface.hpp>
+#include <mlbsmt2/mlbprules.hpp>
 
 #endif
