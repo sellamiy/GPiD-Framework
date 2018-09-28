@@ -5,7 +5,7 @@
 
 namespace smtlib2utils {
 
-    static std::unordered_set<std::string> ReservedKeywordsTable = {
+    static std::unordered_set<std::string> ReservedWordsTable = {
         "Bool", "continued-execution", "error", "false", "immediate-exit",
         "incomplete", "logic", "memout", "sat", "success", "theory", "true",
         "unknown", "unsupported", "unsat", ":all-statistics",
@@ -29,8 +29,8 @@ namespace smtlib2utils {
         "reset", "reset-assertions", "set-info", "set-logic", "set-option"
     };
 
-    bool isReservedKeyword(const std::string word) {
-        return ReservedKeywordsTable.find(word) != ReservedKeywordsTable.end();
+    bool isReserved(const std::string word) {
+        return ReservedWordsTable.find(word) != ReservedWordsTable.end();
     }
 
 }
