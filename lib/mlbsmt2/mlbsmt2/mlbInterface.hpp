@@ -137,6 +137,10 @@ namespace mlbsmt2 {
                     state = BuilderState::Error;
             }
         }
+        while(!rules.empty() && !rules.front()->hasNext(data)) {
+            // Remove already completed rule
+            rules.pop_front();
+        }
         state = rules.empty() ? BuilderState::Complete : BuilderState::Exploited;
     }
 
@@ -146,7 +150,8 @@ namespace mlbsmt2 {
         if (state == BuilderState::Exploited)
             state = BuilderState::Building;
         typename MagicProductionRule::ProductionData& pdata = rules.front()->next(data);
-        if (!rules.front()->hasNext(data))
+        while(!rules.empty() && !rules.front()->hasNext(data))
+            // Remove already completed rule
             rules.pop_front();
         if (rules.empty())
             state = BuilderState::Complete;
