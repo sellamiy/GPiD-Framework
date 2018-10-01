@@ -76,3 +76,15 @@ extern const MagicProductionRulePtr mlbsmt2::produceDeclaredConsts =
 
 extern const MagicProductionRulePtr mlbsmt2::produceDeclaredFuns =
     MagicProductionRulePtr(new DeclaredFunsProductionRule());
+
+extern const std::map<std::string, MagicProductionRulePtr> mlbsmt2::productionTable =
+    {
+        { "declared-consts", produceDeclaredConsts },
+        { "declared-funs", produceDeclaredFuns }
+    };
+
+extern const std::map<std::string, std::string> mlbsmt2::productionDescriptions =
+    {
+        { "declared-consts", "All declared constants" },
+        { "declared-funs", "All declared functions w/ generic pvars" }
+    };

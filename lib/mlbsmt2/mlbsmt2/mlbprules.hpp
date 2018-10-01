@@ -8,6 +8,9 @@ namespace mlbsmt2 {
     extern const MagicProductionRulePtr produceDeclaredConsts;
     extern const MagicProductionRulePtr produceDeclaredFuns;
 
+    extern const std::map<std::string, MagicProductionRulePtr> productionTable;
+    extern const std::map<std::string, std::string> productionDescriptions;
+
 }
 
 #endif

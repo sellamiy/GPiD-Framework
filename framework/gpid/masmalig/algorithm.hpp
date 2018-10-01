@@ -54,8 +54,13 @@ namespace gpid {
     template<typename LiteralHandlerT>
     void MasmaligAlgorithm<LiteralHandlerT>::_execute() {
 
-        snlog::l_warn("Not fully implemented yet (_execute masmalig)");
-        // builder.uses(); // TODO : Production Rules
+        for (std::string& target : options.targets) {
+            try {
+                builder.uses(mlbsmt2::productionTable.at(target));
+            } catch (std::out_of_range& e) {
+                throw UnknownUtilityError("Unknown production rule: " + target);
+            }
+        }
 
         if (!builder.valid()) {
             throw InternalError("Invalidly initialized Masmalig builder");

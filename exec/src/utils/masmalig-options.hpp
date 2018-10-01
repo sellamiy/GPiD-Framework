@@ -40,6 +40,9 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 
         parser.add_options("Engine")
             ("time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
+            ("p,production-rule", "Production rule identifier for literal generation",
+             cxxopts::value<std::vector<std::string>>(opts.mopts.targets))
+            ("list-production-rules", "List the production rules available", cxxopts::value<bool>())
             ;
 
 	cxxopts::ParseResult results = parser.parse(argc, argv);
@@ -67,6 +70,13 @@ static inline OptionStatus handleOptions
 	    snlog::l_message(gpid::version_message);
 	    return OptionStatus::ENDED;
 	}
+
+        if (results.count("list-production-rules")) {
+            snlog::l_info("Masmalig production rules");
+            for (auto r : mlbsmt2::productionDescriptions)
+                snlog::l_notif(r.first, r.second);
+            return OptionStatus::ENDED;
+        }
 
         // opts.source_files automatically filled
 
