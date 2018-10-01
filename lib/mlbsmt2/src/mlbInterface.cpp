@@ -147,7 +147,13 @@ void MagicLiteralData::addFunToConsts(std::map<std::string, std::string>& newCon
         paramsit_begins.push_back(consts_type_in.at(paramt).begin());
         paramsit_ends.push_back(consts_type_in.at(paramt).end());
     }
-    bool complete = false;
+    bool complete = paramsit.size() == 0;
+    if (complete) {
+        // function w/o parameters
+        std::stringstream ss;
+        ss << "(" << funname << ")";
+        newConsts[ss.str()] = rtype;
+    }
     while (!complete) {
         std::stringstream ss;
         ss << "(" << funname;
