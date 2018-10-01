@@ -80,6 +80,14 @@ namespace mlbsmt2 {
         }
     };
 
+    class DeclaredEqualitiesProductionRule : public DeclaredConstsProductionRule {
+    public:
+        DeclaredEqualitiesProductionRule():
+            DeclaredConstsProductionRule() {
+            requires(DataExploitation::ApplyEquality);
+        }
+    };
+
 }
 
 using namespace mlbsmt2;
@@ -93,16 +101,21 @@ extern const MagicProductionRulePtr mlbsmt2::produceDeclaredFuns =
 extern const MagicProductionRulePtr mlbsmt2::produceDeclaredAF_D1 =
     MagicProductionRulePtr(new DeclaredAppliedFunsProductionRule(1));
 
+extern const MagicProductionRulePtr mlbsmt2::produceDeclaredEqualities =
+    MagicProductionRulePtr(new DeclaredEqualitiesProductionRule());
+
 extern const std::map<std::string, MagicProductionRulePtr> mlbsmt2::productionTable =
     {
         { "declared-consts", produceDeclaredConsts },
         { "declared-funs", produceDeclaredFuns },
-        { "applied-funs", produceDeclaredAF_D1 }
+        { "applied-funs", produceDeclaredAF_D1 },
+        { "applied-equality", produceDeclaredEqualities }
     };
 
 extern const std::map<std::string, std::string> mlbsmt2::productionDescriptions =
     {
         { "declared-consts", "All declared constants" },
         { "declared-funs", "All declared functions w/ generic pvars" },
-        { "applied-funs", "All declared constants and functions applied up to depth 1" }
+        { "applied-funs", "All declared constants and functions applied up to depth 1" },
+        { "applied-equality", "Equalities on all declared constants" }
     };

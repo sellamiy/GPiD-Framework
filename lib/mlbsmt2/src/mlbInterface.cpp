@@ -174,6 +174,24 @@ void MagicLiteralData::addFunToConsts(std::map<std::string, std::string>& newCon
     }
 }
 
+void MagicLiteralData::addSymetricFunToConsts
+(std::map<std::string, std::string>& newConsts,
+ const std::string& funname, const std::string& ptype, const std::string& rtype) {
+
+    string_set::iterator it_left = consts_type_in.at(ptype).begin();
+    while (it_left != consts_type_in.at(ptype).end()) {
+        string_set::iterator it_right = it_left;
+        while (it_right != consts_type_in.at(ptype).end()) {
+            std::stringstream ss;
+            ss << "(" << funname << " " << *it_left << " " << *it_right << ")";
+            newConsts[ss.str()] = rtype;
+            ++it_right;
+        }
+        ++it_left;
+    }
+
+}
+
 void MagicLiteralData::extractConsts() {
     for (strptr const_data : handler->consts) {
         SMTlib2TokenResult symbol = nextSymbol(*const_data);
@@ -195,14 +213,25 @@ void MagicLiteralData::extractFuns() {
     }
 }
 
+void MagicLiteralData::updateConsts(const std::map<std::string, std::string>& toAdd) {
+    for (const std::pair<std::string, std::string>& nconst : toAdd) {
+        consts_type_in[nconst.second].insert(nconst.first);
+        consts_name_in[nconst.first] = nconst.second;
+    }
+}
+
 void MagicLiteralData::applyFuns() {
     std::map<std::string, std::string> toAdd;
     for (std::pair<const std::string, std::pair<string_list, std::string>>& fun : funs_name_in)
         addFunToConsts(toAdd, fun.first, fun.second);
-    for (std::pair<std::string, std::string> nconst : toAdd) {
-        consts_type_in[nconst.second].insert(nconst.first);
-        consts_name_in[nconst.first] = nconst.second;
-    }
+    updateConsts(toAdd);
+}
+
+void MagicLiteralData::applyEquality() {
+    std::map<std::string, std::string> toAdd;
+    for (std::pair<const std::string, string_set>& ctype : consts_type_in)
+        addSymetricFunToConsts(toAdd, "=", ctype.first, "Bool");
+    updateConsts(toAdd);
 }
 
 /*>---------------------------------------<*/
@@ -223,6 +252,9 @@ bool MagicLiteralBuilder::exploitData(DataExploitation e) {
         break;
     case DataExploitation::ApplyFuns:
         data.applyFuns();
+        break;
+    case DataExploitation::ApplyEquality:
+        data.applyEquality();
         break;
     default:
         return false;
