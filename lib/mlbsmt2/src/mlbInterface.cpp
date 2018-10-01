@@ -135,6 +135,39 @@ void MagicLiteralData::storeFun(const std::string name, const string_list& param
     funs_name_in[name] = std::pair<string_list, std::string>(params, rtype);
 }
 
+void MagicLiteralData::addFunToConsts(std::map<std::string, std::string>& newConsts,
+                                      const std::string& funname,
+                                      const std::pair<string_list, std::string>& fun) {
+    std::vector<string_set::iterator> paramsit;
+    std::vector<string_set::iterator> paramsit_begins;
+    std::vector<string_set::iterator> paramsit_ends;
+    const std::string& rtype = fun.second;
+    for (std::string paramt : fun.first) {
+        paramsit.push_back(consts_type_in.at(paramt).begin());
+        paramsit_begins.push_back(consts_type_in.at(paramt).begin());
+        paramsit_ends.push_back(consts_type_in.at(paramt).end());
+    }
+    bool complete = false;
+    while (!complete) {
+        std::stringstream ss;
+        ss << "(" << funname;
+        for (auto pit : paramsit)
+            ss << " " << *pit;
+        ss << ")";
+        newConsts[ss.str()] = rtype;
+        size_t udt_it = 0;
+        paramsit[udt_it]++;
+        while (paramsit[udt_it] == paramsit_ends[udt_it]) {
+            paramsit[udt_it] = paramsit_begins[udt_it];
+            if (++udt_it == paramsit.size()) {
+                complete = true;
+                break;
+            }
+            paramsit[udt_it]++;
+        }
+    }
+}
+
 void MagicLiteralData::extractConsts() {
     for (strptr const_data : handler->consts) {
         SMTlib2TokenResult symbol = nextSymbol(*const_data);
@@ -149,6 +182,16 @@ void MagicLiteralData::extractFuns() {
         SMTlib2TokenList plist = nextParameterList__unof(symbol);
         SMTlib2TokenResult rtype = nextSort(*const_data, plist.end);
         storeFun(symbol.value(), plist.value(), rtype.value());
+    }
+}
+
+void MagicLiteralData::applyFuns() {
+    std::map<std::string, std::string> toAdd;
+    for (std::pair<const std::string, std::pair<string_list, std::string>>& fun : funs_name_in)
+        addFunToConsts(toAdd, fun.first, fun.second);
+    for (std::pair<std::string, std::string> nconst : toAdd) {
+        consts_type_in[nconst.second].insert(nconst.first);
+        consts_name_in[nconst.first] = nconst.second;
     }
 }
 
@@ -167,6 +210,9 @@ bool MagicLiteralBuilder::exploitData(DataExploitation e) {
         break;
     case DataExploitation::ExtractFuns:
         data.extractFuns();
+        break;
+    case DataExploitation::ApplyFuns:
+        data.applyFuns();
         break;
     default:
         return false;

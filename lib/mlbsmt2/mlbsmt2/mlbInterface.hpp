@@ -16,7 +16,7 @@ namespace mlbsmt2 {
     using string_list = std::list<std::string>;
 
     enum class DataExploitation {
-        ExtractConsts, ExtractFuns
+        ExtractConsts, ExtractFuns, ApplyFuns
     };
 
     class MagicLiteralData;
@@ -64,6 +64,10 @@ namespace mlbsmt2 {
 
         void storeConst(const std::string name, const std::string type);
         void storeFun(const std::string name, const string_list& params, const std::string rtype);
+
+        void addFunToConsts(std::map<std::string, std::string>& newConsts,
+                            const std::string& funname,
+                            const std::pair<string_list, std::string>& fun);
     public:
         inline typename std::map<std::string, std::string>::const_iterator consts_iterator() const
         { return consts_name_in.begin(); }
@@ -84,6 +88,7 @@ namespace mlbsmt2 {
 
         void extractConsts();
         void extractFuns();
+        void applyFuns();
     };
 
     class MagicLiteralBuilder {

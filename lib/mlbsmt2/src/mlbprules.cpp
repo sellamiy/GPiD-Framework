@@ -67,6 +67,19 @@ namespace mlbsmt2 {
         }
     };
 
+    class DeclaredAppliedFunsProductionRule : public DeclaredConstsProductionRule {
+    public:
+        DeclaredAppliedFunsProductionRule(size_t depth):
+            DeclaredConstsProductionRule() {
+            if (depth > 0) {
+                requires(DataExploitation::ExtractFuns);
+            }
+            for (size_t c = 0; c < depth; c++) {
+                requires(DataExploitation::ApplyFuns);
+            }
+        }
+    };
+
 }
 
 using namespace mlbsmt2;
@@ -77,14 +90,19 @@ extern const MagicProductionRulePtr mlbsmt2::produceDeclaredConsts =
 extern const MagicProductionRulePtr mlbsmt2::produceDeclaredFuns =
     MagicProductionRulePtr(new DeclaredFunsProductionRule());
 
+extern const MagicProductionRulePtr mlbsmt2::produceDeclaredAF_D1 =
+    MagicProductionRulePtr(new DeclaredAppliedFunsProductionRule(1));
+
 extern const std::map<std::string, MagicProductionRulePtr> mlbsmt2::productionTable =
     {
         { "declared-consts", produceDeclaredConsts },
-        { "declared-funs", produceDeclaredFuns }
+        { "declared-funs", produceDeclaredFuns },
+        { "applied-funs", produceDeclaredAF_D1 }
     };
 
 extern const std::map<std::string, std::string> mlbsmt2::productionDescriptions =
     {
         { "declared-consts", "All declared constants" },
-        { "declared-funs", "All declared functions w/ generic pvars" }
+        { "declared-funs", "All declared functions w/ generic pvars" },
+        { "applied-funs", "All declared constants and functions applied up to depth 1" }
     };
