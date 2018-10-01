@@ -187,7 +187,11 @@ void MagicLiteralData::extractFuns() {
         SMTlib2TokenResult symbol = nextSymbol(*const_data);
         SMTlib2TokenList plist = nextParameterList__unof(symbol);
         SMTlib2TokenResult rtype = nextSort(*const_data, plist.end);
-        storeFun(symbol.value(), plist.value(), rtype.value());
+        if (plist.size() > 0)
+            storeFun(symbol.value(), plist.value(), rtype.value());
+        else
+            // no-params declared funs are consts
+            storeConst(symbol.value(), rtype.value());
     }
 }
 
