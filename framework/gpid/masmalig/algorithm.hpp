@@ -70,10 +70,12 @@ namespace gpid {
         }
         builder.exploitData();
 
-        while (builder.buildable()) {
+        while (builder.buildable() && !iflags.systemInterrupted()) {
             lhandler.handle(builder.buildLiteral());
         }
-        if (!builder.complete()) {
+        if (iflags.systemInterrupted()) {
+            snlog::l_warn("Generation incomplete after interruption");
+        } else if (!builder.complete()) {
             snlog::l_warn("The following may be due to improper input");
             throw InternalError("Masmalig generation failure");
         }
