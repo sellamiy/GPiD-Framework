@@ -132,12 +132,12 @@ void MagicLiteralData::storeConst(const std::string name, const std::string type
 void MagicLiteralData::storeFun(const std::string name, const string_list& params,
                                 const std::string rtype) {
     funs_type_in[rtype].insert(name);
-    funs_name_in[name] = std::pair<string_list, std::string>(params, rtype);
+    funs_name_in[name] = function_abst_type(params, rtype);
 }
 
-void MagicLiteralData::addFunToConsts(std::map<std::string, std::string>& newConsts,
+void MagicLiteralData::addFunToConsts(name_storage& newConsts,
                                       const std::string& funname,
-                                      const std::pair<string_list, std::string>& fun) {
+                                      const function_abst_type& fun) {
     std::vector<string_set::iterator> paramsit;
     std::vector<string_set::iterator> paramsit_begins;
     std::vector<string_set::iterator> paramsit_ends;
@@ -175,7 +175,7 @@ void MagicLiteralData::addFunToConsts(std::map<std::string, std::string>& newCon
 }
 
 void MagicLiteralData::addSymetricFunToConsts
-(std::map<std::string, std::string>& newConsts,
+(name_storage& newConsts,
  const std::string& funname, const std::string& ptype, const std::string& rtype) {
 
     string_set::iterator it_left = consts_type_in.at(ptype).begin();
@@ -213,7 +213,7 @@ void MagicLiteralData::extractFuns() {
     }
 }
 
-void MagicLiteralData::updateConsts(const std::map<std::string, std::string>& toAdd) {
+void MagicLiteralData::updateConsts(const name_storage& toAdd) {
     for (const std::pair<std::string, std::string>& nconst : toAdd) {
         consts_type_in[nconst.second].insert(nconst.first);
         consts_name_in[nconst.first] = nconst.second;
@@ -221,14 +221,14 @@ void MagicLiteralData::updateConsts(const std::map<std::string, std::string>& to
 }
 
 void MagicLiteralData::applyFuns() {
-    std::map<std::string, std::string> toAdd;
-    for (std::pair<const std::string, std::pair<string_list, std::string>>& fun : funs_name_in)
+    name_storage toAdd;
+    for (std::pair<const std::string, function_abst_type>& fun : funs_name_in)
         addFunToConsts(toAdd, fun.first, fun.second);
     updateConsts(toAdd);
 }
 
 void MagicLiteralData::applyEquality() {
-    std::map<std::string, std::string> toAdd;
+    name_storage toAdd;
     for (std::pair<const std::string, string_set>& ctype : consts_type_in)
         addSymetricFunToConsts(toAdd, "=", ctype.first, "Bool");
     updateConsts(toAdd);

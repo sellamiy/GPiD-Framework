@@ -1,19 +1,11 @@
 #ifndef MAGIC_LITERAL_BUILDER_f_SMTLIB2__INTERFACE_HPP
 #define MAGIC_LITERAL_BUILDER_f_SMTLIB2__INTERFACE_HPP
 
-#include <map>
-#include <list>
-#include <string>
-#include <memory>
-#include <unordered_set>
 #include <smtlib2utils/smtlib2utils.hpp>
 #include <mlbsmt2/mlberrors.hpp>
+#include <mlbsmt2/mlbconfig.hpp>
 
 namespace mlbsmt2 {
-
-    using strptr = std::shared_ptr<std::string>;
-    using string_set = std::unordered_set<std::string>;
-    using string_list = std::list<std::string>;
 
     enum class DataExploitation {
         ExtractConsts, ExtractFuns, ApplyFuns, ApplyEquality
@@ -56,33 +48,30 @@ namespace mlbsmt2 {
         std::unique_ptr<MagicParsingHandler> handler;
         smtlib2utils::SMTl2StringMemory smem;
 
-        std::map<std::string, string_set> consts_type_in;
-        std::map<std::string, std::string> consts_name_in;
+        type_to_name_storage consts_type_in;
+        name_storage consts_name_in;
 
-        std::map<std::string, string_set> funs_type_in;
-        std::map<std::string, std::pair<string_list, std::string>> funs_name_in;
+        type_to_name_storage funs_type_in;
+        function_storage funs_name_in;
 
-        void updateConsts(const std::map<std::string, std::string>& toAdd);
+        void updateConsts(const name_storage& toAdd);
 
         void storeConst(const std::string name, const std::string type);
         void storeFun(const std::string name, const string_list& params, const std::string rtype);
 
-        void addFunToConsts(std::map<std::string, std::string>& newConsts,
-                            const std::string& funname,
-                            const std::pair<string_list, std::string>& fun);
+        void addFunToConsts(name_storage& newConsts, const std::string& funname,
+                            const function_abst_type& fun);
         void addSymetricFunToConsts
-        (std::map<std::string, std::string>& newConsts,
+        (name_storage& newConsts,
          const std::string& funname, const std::string& ptype, const std::string& rtype);
     public:
-        inline typename std::map<std::string, std::string>::const_iterator consts_iterator() const
+        inline typename name_storage::const_iterator consts_iterator() const
         { return consts_name_in.begin(); }
-        inline typename std::map<std::string, std::string>::const_iterator consts_iterator_end() const
+        inline typename name_storage::const_iterator consts_iterator_end() const
         { return consts_name_in.end(); }
-        inline typename std::map<std::string, std::pair<string_list, std::string>>
-        ::const_iterator funs_iterator() const
+        inline typename function_storage::const_iterator funs_iterator() const
         { return funs_name_in.begin(); }
-        inline typename std::map<std::string, std::pair<string_list, std::string>>
-        ::const_iterator funs_iterator_end() const
+        inline typename function_storage::const_iterator funs_iterator_end() const
         { return funs_name_in.end(); }
     public:
         MagicLiteralData();

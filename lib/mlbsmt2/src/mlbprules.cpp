@@ -10,7 +10,7 @@ namespace mlbsmt2 {
 
     class DeclaredConstsProductionRule : public MagicProductionRule {
         ProductionData last = ProductionData();
-        std::map<std::string, std::string>::const_iterator iter;
+        name_storage::const_iterator iter;
         bool iter_inited = false;
 
         void ensure_iter_inited(const MagicLiteralData& data) {
@@ -36,7 +36,7 @@ namespace mlbsmt2 {
 
     class DeclaredFunsProductionRule : public MagicProductionRule {
         ProductionData last = ProductionData();
-        std::map<std::string, std::pair<string_list, std::string>>::const_iterator iter;
+        function_storage::const_iterator iter;
         bool iter_inited = false;
 
         void ensure_iter_inited(const MagicLiteralData& data) {
