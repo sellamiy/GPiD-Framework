@@ -90,6 +90,11 @@ namespace smtlib2utils {
         return nextParameterList__unof(tk.source, tk.end);
     }
 
+    SMTlib2TokenList nextParameterListNoPar__unof(const std::string& source, uint32_t start=0);
+    inline SMTlib2TokenList nextParameterListNoPar__unof(const SMTlib2TokenResult& tk) {
+        return nextParameterListNoPar__unof(tk.source, tk.end);
+    }
+
 }
 
 #endif

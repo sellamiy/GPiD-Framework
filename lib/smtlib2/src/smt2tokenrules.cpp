@@ -180,4 +180,16 @@ namespace smtlib2utils {
         return SMTlib2TokenList(plist, nstart, pos+1);
     }
 
+    SMTlib2TokenList nextParameterListNoPar__unof(const std::string& source, uint32_t start) {
+        if (source.empty()) return SMTlib2TokenList({}, start, start);
+        uint32_t nstart = skipWhitespaces(source, start);
+        uint32_t pos = nstart;
+        std::list<SMTlib2TokenResult> plist;
+        while (source[pos] != ')') {
+            plist.push_back(nextSort(source, pos));
+            pos = skipWhitespaces(source, plist.back().end);
+        }
+        return SMTlib2TokenList(plist, nstart, pos);
+    }
+
 }
