@@ -36,6 +36,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 	parser.add_options("Input")
 	    ("s,source", "SMTLibv2 File Source",
              cxxopts::value<std::vector<std::string>>(opts.mopts.source_files))
+            ("m,script", "Mlb script source",
+             cxxopts::value<std::vector<std::string>>(opts.mopts.script_files))
 	    ;
 
         parser.add_options("Engine")
@@ -78,7 +80,7 @@ static inline OptionStatus handleOptions
             return OptionStatus::ENDED;
         }
 
-        // opts.source_files automatically filled
+        // opts.source_files and opts.script_files automatically filled
 
         if (results.count("time-limit"))
             opts.core.time_limit = results["time-limit"].as<uint64_t>();

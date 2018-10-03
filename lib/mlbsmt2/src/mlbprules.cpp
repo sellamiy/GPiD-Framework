@@ -5,11 +5,13 @@
 #include <snlog/snlog.hpp>
 #include <mlbsmt2/mlbconfig.hpp>
 #include <mlbsmt2/mlbprules.hpp>
+#include <mlbsmt2/mlbscript.hpp>
 
 namespace mlbsmt2 {
 
     class DeclaredConstsProductionRule : public MagicProductionRule {
         ProductionData last = ProductionData();
+    protected:
         name_storage::const_iterator iter;
         bool iter_inited = false;
 
@@ -31,6 +33,19 @@ namespace mlbsmt2 {
             ensure_iter_inited(data);
             last = ProductionData(iter++->first);
             return last;
+        }
+    };
+
+    class TypedConstsProductionRule : public DeclaredConstsProductionRule {
+        std::string target_type;
+    public:
+        TypedConstsProductionRule(const std::string type)
+            : DeclaredConstsProductionRule(), target_type(type) {}
+
+        virtual bool hasNext(const MagicLiteralData& data) override {
+            ensure_iter_inited(data);
+            while (iter != data.consts_iterator_end() && iter->second != target_type) ++iter;
+            return iter != data.consts_iterator_end();
         }
     };
 
@@ -67,6 +82,51 @@ namespace mlbsmt2 {
         }
     };
 
+    class EncapsulatedProductionRules : public MagicProductionRule {
+        ProductionData last = ProductionData();
+
+        using MprList = std::list<MagicProductionRulePtr>;
+        MprList subrules;
+        MprList::iterator iter;
+        bool iter_inited = false;
+
+        void ensure_iter_inited() {
+            if (!iter_inited) {
+                iter = subrules.begin();
+                iter_inited = true;
+            }
+        }
+    public:
+        EncapsulatedProductionRules() {}
+        EncapsulatedProductionRules(const MprList& ilist, bool forwardReqs=true)
+            : subrules(ilist)
+        {
+            if (forwardReqs)
+                for (auto rule : subrules)
+                    for (auto req : rule->getRequirements())
+                        requires(req);
+        }
+
+        inline void addRule(const MagicProductionRulePtr& rule, bool forwardReqs=true) {
+            if (iter_inited) throw InternalError("Trying to add rule on iteration");
+            subrules.push_back(rule);
+            if (forwardReqs)
+                for (auto req : rule->getRequirements())
+                    requires(req);
+        }
+
+        virtual bool hasNext(const MagicLiteralData&) override {
+            ensure_iter_inited();
+            return iter != subrules.end();
+        }
+        virtual ProductionData& next(const MagicLiteralData& data) override {
+            ensure_iter_inited();
+            last = (*iter)->next(data);
+            while(iter != subrules.end() && !(*iter)->hasNext(data)) ++iter;
+            return last;
+        }
+    };
+
     class DeclaredAppliedFunsProductionRule : public DeclaredConstsProductionRule {
     public:
         DeclaredAppliedFunsProductionRule(size_t depth):
@@ -95,6 +155,9 @@ using namespace mlbsmt2;
 extern const MagicProductionRulePtr mlbsmt2::produceDeclaredConsts =
     MagicProductionRulePtr(new DeclaredConstsProductionRule());
 
+extern const MagicProductionRulePtr mlbsmt2::produceBooleanConsts =
+    MagicProductionRulePtr(new TypedConstsProductionRule("Bool"));
+
 extern const MagicProductionRulePtr mlbsmt2::produceDeclaredFuns =
     MagicProductionRulePtr(new DeclaredFunsProductionRule());
 
@@ -107,6 +170,7 @@ extern const MagicProductionRulePtr mlbsmt2::produceDeclaredEqualities =
 extern const std::map<std::string, MagicProductionRulePtr> mlbsmt2::productionTable =
     {
         { "declared-consts", produceDeclaredConsts },
+        { "boolean-consts", produceBooleanConsts },
         { "declared-funs", produceDeclaredFuns },
         { "applied-funs", produceDeclaredAF_D1 },
         { "applied-equality", produceDeclaredEqualities }
@@ -115,7 +179,23 @@ extern const std::map<std::string, MagicProductionRulePtr> mlbsmt2::productionTa
 extern const std::map<std::string, std::string> mlbsmt2::productionDescriptions =
     {
         { "declared-consts", "All declared constants" },
+        { "boolean-consts", "All boolean constants" },
         { "declared-funs", "All declared functions w/ generic pvars" },
         { "applied-funs", "All declared constants and functions applied up to depth 1" },
         { "applied-equality", "Equalities on all declared constants" }
     };
+
+extern const MagicProductionRulePtr mlbsmt2::
+produceFromScript(const std::string filename, MagicLiteralData& data) {
+    MlbScriptParser parser(filename);
+    parser.parse();
+    const MlbScriptCHandler& datah = parser.getHandler();
+    data.updateConsts(datah.getLoadedConsts());
+    data.updateFuns(datah.getLoadedFuns());
+    /* TODO: This is never explicitly deleted, check that it is dynamically */
+    std::shared_ptr<EncapsulatedProductionRules> capsule(new EncapsulatedProductionRules());
+    data.updateApps(datah.getApplications());
+    capsule->requires(DataExploitation::ApplyScript);
+    capsule->addRule(produceBooleanConsts);
+    return capsule;
+}

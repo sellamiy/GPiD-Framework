@@ -17,6 +17,8 @@ namespace gpid {
 
         /* List of smtlibv2 source files to load */
         std::vector<std::string> source_files;
+        /* List of mlb script files to load */
+        std::vector<std::string> script_files;
 
         /* List of production rules for generation */
         std::vector<std::string> targets;

@@ -1,8 +1,8 @@
 #define MAGIC_LITERAL_BUILDER_f_SMTLIB2__INTERFACE_CPP
 
 #include <snlog/snlog.hpp>
-#include <mlbsmt2/mlbconfig.hpp>
-#include <mlbsmt2/mlbInterface.hpp>
+#include <mlbsmt2/mlbprules.hpp>
+#include <mlbsmt2/mlbscript.hpp>
 
 using namespace smtlib2utils;
 
@@ -220,6 +220,17 @@ void MagicLiteralData::updateConsts(const name_storage& toAdd) {
     }
 }
 
+void MagicLiteralData::updateFuns(const function_storage& toAdd) {
+    for (const std::pair<std::string, function_abst_type>& nfun : toAdd) {
+        funs_type_in[nfun.second.second].insert(nfun.first);
+        funs_name_in[nfun.first] = nfun.second;
+    }
+}
+
+void MagicLiteralData::updateApps(const std::list<MlbApplication>& toAdd) {
+    script_appl_list.insert(toAdd.begin(), toAdd.begin(), toAdd.end());
+}
+
 void MagicLiteralData::applyFuns() {
     name_storage toAdd;
     for (std::pair<const std::string, function_abst_type>& fun : funs_name_in)
@@ -234,12 +245,38 @@ void MagicLiteralData::applyEquality() {
     updateConsts(toAdd);
 }
 
+void MagicLiteralData::applyScript() {
+    for (auto appli : script_appl_list) {
+        name_storage toAdd;
+        if (appli.type == MlbApplicationType::Function) {
+            function_abst_type& fun = funs_name_in[appli.fname];
+            addFunToConsts(toAdd, appli.fname, fun);
+        } else if (appli.type == MlbApplicationType::Equality ||
+                   appli.type == MlbApplicationType::Comparison) {
+            if (appli.all) {
+                for (std::pair<const std::string, string_set>& ctype : consts_type_in)
+                    addSymetricFunToConsts(toAdd, appli.fname, ctype.first, "Bool");
+            } else {
+                for (const std::string& ctype : appli.ptypes)
+                    addSymetricFunToConsts(toAdd, appli.fname, ctype, "Bool");
+            }
+        } else {
+            throw InternalError("Unhandled MlbApplicationType value");
+        }
+        updateConsts(toAdd);
+    }
+}
+
 /*>---------------------------------------<*/
 
 void MagicLiteralBuilder::loadSMTlib2File(const std::string filename) {
     SMTl2CommandParser parser(filename, data.getMemory());
     parser.initialize();
     parser.parse(data.getHandler());
+}
+
+void MagicLiteralBuilder::loadMlbScript(const std::string filename) {
+    uses(produceFromScript(filename, data));
 }
 
 bool MagicLiteralBuilder::exploitData(DataExploitation e) {
@@ -256,6 +293,8 @@ bool MagicLiteralBuilder::exploitData(DataExploitation e) {
     case DataExploitation::ApplyEquality:
         data.applyEquality();
         break;
+    case DataExploitation::ApplyScript:
+        data.applyScript();
     default:
         return false;
     }

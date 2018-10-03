@@ -4,11 +4,12 @@
 #include <smtlib2utils/smtlib2utils.hpp>
 #include <mlbsmt2/mlberrors.hpp>
 #include <mlbsmt2/mlbconfig.hpp>
+#include <mlbsmt2/mlbscript.hpp>
 
 namespace mlbsmt2 {
 
     enum class DataExploitation {
-        ExtractConsts, ExtractFuns, ApplyFuns, ApplyEquality
+        ExtractConsts, ExtractFuns, ApplyFuns, ApplyEquality, ApplyScript
     };
 
     class MagicLiteralData;
@@ -54,7 +55,7 @@ namespace mlbsmt2 {
         type_to_name_storage funs_type_in;
         function_storage funs_name_in;
 
-        void updateConsts(const name_storage& toAdd);
+        std::list<MlbApplication> script_appl_list;
 
         void storeConst(const std::string name, const std::string type);
         void storeFun(const std::string name, const string_list& params, const std::string rtype);
@@ -80,10 +81,16 @@ namespace mlbsmt2 {
         inline MagicParsingHandler& getHandler() { return *handler; }
         inline smtlib2utils::SMTl2StringMemory& getMemory() { return smem; }
 
+        void updateConsts(const name_storage& toAdd);
+        void updateFuns(const function_storage& toAdd);
+        void updateApps(const std::list<MlbApplication>& toAdd);
+
         void extractConsts();
         void extractFuns();
         void applyFuns();
         void applyEquality();
+
+        void applyScript();
     };
 
     class MagicLiteralBuilder {
@@ -100,6 +107,7 @@ namespace mlbsmt2 {
         MagicLiteralBuilder& uses(const MagicProductionRulePtr& rule);
 
         void loadSMTlib2File(const std::string filename);
+        void loadMlbScript(const std::string filename);
 
         void exploitData();
 

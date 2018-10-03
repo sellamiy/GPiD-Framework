@@ -16,6 +16,14 @@ namespace mlbsmt2 {
         }
     };
 
+    class InternalError : public MLB2Error {
+    public:
+        InternalError(std::string reason) : MLB2Error(reason) { }
+        virtual std::string getErrorInfo() const {
+            return "Internal illegal statement";
+        }
+    };
+
     class BuilderStatusError : public MLB2Error {
     public:
         BuilderStatusError(std::string reason) : MLB2Error(reason) { }

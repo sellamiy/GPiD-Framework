@@ -2,7 +2,7 @@
 #define MAGIC_LITERAL_BUILDER_f_SMTLIB2__SCRIPTING_TOOLS_HPP
 
 #include <smtlib2utils/smtlib2utils.hpp>
-#include <mlbsmt2/mlbInterface.hpp>
+#include <mlbsmt2/mlbconfig.hpp>
 
 namespace mlbsmt2 {
 
@@ -36,6 +36,10 @@ namespace mlbsmt2 {
         bool handleApplyComps(const smtlib2utils::SMTl2Command& cmd);
     public:
         MlbScriptCHandler();
+
+        inline const name_storage& getLoadedConsts() const { return loadedConsts; }
+        inline const function_storage& getLoadedFuns() const { return loadedFuns; }
+        inline const std::list<MlbApplication>& getApplications() const { return applications; }
     };
 
     class MlbScriptParser {
@@ -43,10 +47,17 @@ namespace mlbsmt2 {
         smtlib2utils::SMTl2CommandParser cparser;
         MlbScriptCHandler chandler;
 
-        void _parse();
     public:
         MlbScriptParser(const std::string filename)
             : cparser(filename, smem) {}
+
+        inline void parse() {
+            cparser.initialize();
+            cparser.parse(chandler);
+        }
+
+        inline const MlbScriptCHandler& getHandler() const { return chandler; }
+
     };
 
 }

@@ -78,9 +78,3 @@ bool MlbScriptCHandler::handleApplyComps(const SMTl2Command& cmd) {
     }
     return true;
 }
-
-void MlbScriptParser::_parse() {
-    cparser.initialize();
-    cparser.parse(chandler);
-}
-

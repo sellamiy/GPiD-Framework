@@ -69,6 +69,9 @@ namespace gpid {
         for (std::string filename : options.source_files) {
             builder.loadSMTlib2File(filename);
         }
+        for (std::string filename : options.script_files) {
+            builder.loadMlbScript(filename);
+        }
         
         if (!builder.exploitable()) {
             throw DataError("Masmalig file loading resulted in corruption");
