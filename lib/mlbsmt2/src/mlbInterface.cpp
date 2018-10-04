@@ -181,6 +181,7 @@ void MagicLiteralData::addSymetricFunToConsts
     string_set::iterator it_left = consts_type_in.at(ptype).begin();
     while (it_left != consts_type_in.at(ptype).end()) {
         string_set::iterator it_right = it_left;
+        ++it_right;
         while (it_right != consts_type_in.at(ptype).end()) {
             std::stringstream ss;
             ss << "(" << funname << " " << *it_left << " " << *it_right << ")";
