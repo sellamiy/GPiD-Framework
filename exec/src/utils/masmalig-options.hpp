@@ -7,8 +7,12 @@
 
 /* ===== Structures ===== */
 
+enum class MasmaligHandlingMode { Print, Export };
+
 struct OptionStorage : public gpid::GPiDOptions {
     gpid::MasmaligOptions mopts;
+    MasmaligHandlingMode mode = MasmaligHandlingMode::Print;
+    std::string outfile;
 };
 
 enum class OptionStatus {
@@ -33,11 +37,12 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 	    ("v,version", "Print framework version")
 	    ;
 
-	parser.add_options("Input")
+	parser.add_options("I/Os")
 	    ("s,source", "SMTLibv2 File Source",
              cxxopts::value<std::vector<std::string>>(opts.mopts.source_files))
             ("m,script", "Mlb script source",
              cxxopts::value<std::vector<std::string>>(opts.mopts.script_files))
+            ("o,output", "Abducible output file", cxxopts::value<std::string>())
 	    ;
 
         parser.add_options("Engine")
@@ -63,7 +68,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 static inline OptionStatus handleOptions
 (OptionStorage& opts, cxxopts::Options& parser, cxxopts::ParseResult& results) {
     try {
-        std::vector<std::string> help_cats = {"", "Input", "Engine"};
+        std::vector<std::string> help_cats = {"", "I/Os", "Engine"};
 	if (results.count("help")) {
 	    snlog::l_message(parser.help(help_cats));
 	    return OptionStatus::ENDED;
@@ -78,6 +83,11 @@ static inline OptionStatus handleOptions
             for (auto r : mlbsmt2::productionDescriptions)
                 snlog::l_notif(r.first, r.second);
             return OptionStatus::ENDED;
+        }
+
+        if (results.count("output")) {
+            opts.mode = MasmaligHandlingMode::Export;
+            opts.outfile = results["output"].as<std::string>();
         }
 
         // opts.source_files and opts.script_files automatically filled
