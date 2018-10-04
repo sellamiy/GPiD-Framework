@@ -185,7 +185,7 @@ namespace smtlib2utils {
         uint32_t nstart = skipWhitespaces(source, start);
         uint32_t pos = nstart;
         std::list<SMTlib2TokenResult> plist;
-        while (source[pos] != ')') {
+        while (pos < source.length() && source[pos] != ')') {
             plist.push_back(nextSort(source, pos));
             pos = skipWhitespaces(source, plist.back().end);
         }
