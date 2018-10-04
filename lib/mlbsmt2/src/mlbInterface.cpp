@@ -228,7 +228,8 @@ void MagicLiteralData::updateFuns(const function_storage& toAdd) {
 }
 
 void MagicLiteralData::updateApps(const std::list<MlbApplication>& toAdd) {
-    script_appl_list.insert(toAdd.begin(), toAdd.begin(), toAdd.end());
+    for (const MlbApplication& app : toAdd)
+        script_appl_list.push_back(app);
 }
 
 void MagicLiteralData::applyFuns() {
