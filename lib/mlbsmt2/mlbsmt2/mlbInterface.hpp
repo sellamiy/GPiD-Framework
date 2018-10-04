@@ -157,7 +157,7 @@ namespace mlbsmt2 {
             throw BuilderStatusError("Illegal builder state for literal build");
         if (state == BuilderState::Exploited)
             state = BuilderState::Building;
-        typename MagicProductionRule::ProductionData& pdata = rules.front()->next(data);
+        typename MagicProductionRule::ProductionData pdata = rules.front()->next(data);
         while(!rules.empty() && !rules.front()->hasNext(data))
             // Remove already completed rule
             rules.pop_front();
