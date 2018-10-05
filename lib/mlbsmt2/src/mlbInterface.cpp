@@ -297,6 +297,7 @@ bool MagicLiteralBuilder::exploitData(DataExploitation e) {
         break;
     case DataExploitation::ApplyScript:
         data.applyScript();
+        break;
     default:
         return false;
     }
