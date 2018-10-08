@@ -1,0 +1,6 @@
+#ifndef LIB_INFOLINE__HEADER
+#define LIB_INFOLINE__HEADER
+
+#include <infoline/bsr-infoline.hpp>
+
+#endif
