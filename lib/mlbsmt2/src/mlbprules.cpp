@@ -19,6 +19,7 @@ namespace mlbsmt2 {
             if (!iter_inited) {
                 iter = data.consts_iterator();
                 iter_inited = true;
+                hasNext(data); // Forces iterator initialization
             }
         }
     public:
