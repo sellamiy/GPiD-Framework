@@ -27,6 +27,9 @@ namespace instrument {
         /** File target for the webtrace if webtrace == true */
         std::string webtrace_file;
 
+        /** Local infoline vie instrumentation hooks */
+        bool infoliner = false;
+
     };
 
 }

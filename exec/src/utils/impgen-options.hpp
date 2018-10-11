@@ -102,6 +102,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
              cxxopts::value<std::string>())
             ("generate-webtrace", "Generate a webtrace page via instrumentation",
              cxxopts::value<std::string>())
+            ("infoline", "Infoline program data via instrumentation",
+             cxxopts::value<bool>())
             ;
 
 	cxxopts::ParseResult results = parser.parse(argc, argv);
@@ -244,6 +246,9 @@ static inline OptionStatus handleOptions
             opts.instrument.webtrace = true;
             opts.instrument.webtrace_file = results["generate-webtrace"].as<std::string>();
         }
+        if (results.count("infoline")) {
+            opts.instrument.infoliner = true;
+        }
 
 #ifdef DOT_FOUND
         if (results.count("dot-autocompile")) {
@@ -299,7 +304,7 @@ static inline OptionStatus detectConflicts
         /* Inactive options */
 #ifndef GPID_INSTRUMENTATION
         const std::vector<std::string> instr_opts
-        { "generate-selection-graph", "generate-webtrace" };
+        { "generate-selection-graph", "generate-webtrace", "infoline" };
         for (uint32_t pc = 0; pc < instr_opts.size(); pc++) {
             if (results.count(instr_opts[pc])) {
                 snlog::l_fatal("Option uses instrumentation but instrumentation is not configured:");

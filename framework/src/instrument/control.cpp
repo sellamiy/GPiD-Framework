@@ -3,6 +3,7 @@
 #include <snlog/snlog.hpp>
 #include <lcdot/dotcommand.hpp>
 #include <gpid/instrument/instrument.hpp>
+#include <gpid/instrument/infoline.hpp>
 #include <gpid/instrument/selgraph.hpp>
 #include <gpid/instrument/webtrace.hpp>
 
@@ -78,6 +79,43 @@ namespace instrument {
     (InstrumentOptions&, InstrumentController&)
     { webtraceInstrument->terminate(); }
 
+    static InfolineInstrument* infolineInstrument;
+    static std::string infolineLocalSelect;
+    static inline void infolineInstrument_stack_push(const std::string)
+    { infolineInstrument->update_count("depth", 1); }
+    static inline void infolineInstrument_stack_pop(const std::string)
+    { infolineInstrument->update_count("depth", -1); }
+    static inline void infolineInstrument_pre_select(const std::string d)
+    {
+        infolineInstrument->update_count("preselected", 1);
+        infolineInstrument->new_data("preselection", d);
+        infolineLocalSelect = d;
+    }
+    static inline void infolineInstrument_implicate(const std::string)
+    {
+        infolineInstrument->update_count("implicates", 1);
+    }
+    static inline void infolineInstrument_skip(const std::string d)
+    {
+        infolineInstrument->update_count("skipped", 1);
+        infolineInstrument->new_data("skip-reason", d);
+    }
+    static inline void infolineInstrument_ismt_test(const std::string d)
+    {
+        infolineInstrument->update_count("ismt-tests", 1);
+        infolineInstrument->new_data("ismt-reason", d);
+    }
+    static inline void infolineInstrument_ismt_result(const std::string d)
+    {
+        infolineInstrument->new_data("ismt-result", d);
+    }
+    static inline void infolineInstrument_reset(const std::string)
+    { infolineInstrument->initialize(); }
+
+    static inline void infolineInstrument_finalizer
+    (InstrumentOptions&, InstrumentController&)
+    { infolineInstrument->terminate(); }
+
     /* Instrumentation initializer */
     extern void initialize(InstrumentOptions& opts, InstrumentController& ctrler) {
         snlog::l_notif("initialize instruments...");
@@ -103,6 +141,18 @@ namespace instrument {
             analyzers[instloc::ismt_result].push_back(&webtraceInstrument_ismt_result);
             analyzers[instloc::reset].push_back(&webtraceInstrument_reset);
             finalizers.push_back(&webtraceInstrument_finalizer);
+        }
+        if (opts.infoliner) {
+            infolineInstrument = new InfolineInstrument();
+            analyzers[instloc::stack_push].push_back(&infolineInstrument_stack_push);
+            analyzers[instloc::stack_pop].push_back(&infolineInstrument_stack_pop);
+            analyzers[instloc::pre_select].push_back(&infolineInstrument_pre_select);
+            analyzers[instloc::implicate].push_back(&infolineInstrument_implicate);
+            analyzers[instloc::skip].push_back(&infolineInstrument_skip);
+            analyzers[instloc::ismt_test].push_back(&infolineInstrument_ismt_test);
+            analyzers[instloc::ismt_result].push_back(&infolineInstrument_ismt_result);
+            analyzers[instloc::reset].push_back(&infolineInstrument_reset);
+            finalizers.push_back(&infolineInstrument_finalizer);
         }
     }
 

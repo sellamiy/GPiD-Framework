@@ -61,8 +61,8 @@ target_link_libraries(gpid-core-static starray-static lcdot-static smtlib2utils-
 target_link_libraries(gpid-core-shared starray-shared lcdot-shared smtlib2utils-shared mlbsmt2-shared snlog)
 
 if(GPID_INSTRUMENTATION)
-  target_link_libraries(gpid-core-static pctrace-static)
-  target_link_libraries(gpid-core-shared pctrace-shared)
+  target_link_libraries(gpid-core-static pctrace-static infoline-static)
+  target_link_libraries(gpid-core-shared pctrace-shared infoline-shared)
 endif()
 # ==============================================================================
 # Install framework
