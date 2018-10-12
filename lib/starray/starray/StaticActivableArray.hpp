@@ -1,7 +1,7 @@
 /**
  * \file starray/StaticActivableArray.hpp
  * \author Yanis Sellami
- * \date 2017
+ * \date 2015
  */
 #ifndef LIB_STARRAY__STATIC_ACTIVABLE_ARRAY_HPP
 #define LIB_STARRAY__STATIC_ACTIVABLE_ARRAY_HPP
@@ -44,6 +44,17 @@ namespace starray {
          * @note Complexity: O(1).
          */
         void activate(uint32_t i);
+        /**
+         * @brief Reactivates all boxes.
+         *
+         * @note Complexity: O(size). O(1) if all elements are activated.
+         */
+        inline void activate_all() {
+            for (uint32_t i = 0; i < total_size; ++i) {
+                if (total_size == activated_size) return;
+                activate(i);
+            }
+        }
         /**
          * @brief Deactivates a box of the ActivableArray.
          *
