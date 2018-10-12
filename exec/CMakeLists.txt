@@ -11,64 +11,82 @@ find_package(Threads REQUIRED)
 include(FrameworkSolverRegistration)
 # ------------------------------------------------------------------------------
 set(EXEC_TEMPLATES_DIR "${CMAKE_SOURCE_DIR}/exec/templates")
-set(IMPGEN_INCLUDE_TEMPLATES "sai/identifiers.hpp" "sai/impgen-executors.hpp")
-set(IMPGEN_SOURCES_TEMPLATES)
-set(IMPGEN_PREPROCESSED_TARGETS)
+set(EXEC_INCLUDE_TEMPLATES "sai/identifiers.hpp" "sai/impgen-executors.hpp" "sai/guniti-executors.hpp")
+set(EXEC_SOURCES_TEMPLATES)
+set(EXEC_PREPROCESSED_TARGETS)
 # ------------------------------------------------------------------------------
-foreach(template_name ${IMPGEN_INCLUDE_TEMPLATES})
+foreach(template_name ${EXEC_INCLUDE_TEMPLATES})
   set(template_source "${EXEC_TEMPLATES_DIR}/${template_name}")
   set(template_target "${LOCAL_EXEC_INCLUDE_DIR}/${template_name}")
   get_filename_component(template_info "${template_target}" NAME_WE)
   generate_multi_file("${template_target}" "${template_source}" ${SOLVER_TARGETS})
-  list(APPEND IMPGEN_PREPROCESSED_TARGETS ${template_info}-multi)
+  list(APPEND EXEC_PREPROCESSED_TARGETS ${template_info}-multi)
 endforeach()
-foreach(template_name ${IMPGEN_SOURCES_TEMPLATES})
+foreach(template_name ${EXEC_SOURCES_TEMPLATES})
   set(template_source "${EXEC_TEMPLATES_DIR}/src/${template_name}")
   set(template_target "${LOCAL_EXEC_SOURCES_DIR}/src/${template_name}")
   get_filename_component(template_info "${template_target}" NAME_WE)
   generate_multi_file("${template_target}" "${template_source}" ${SOLVER_TARGETS})
-  list(APPEND IMPGEN_PREPROCESSED_TARGETS ${template_info}-multi)
+  list(APPEND EXEC_PREPROCESSED_TARGETS ${template_info}-multi)
 endforeach()
 # ------------------------------------------------------------------------------
+set(CORE_STATIC_LINK_LIBRARIES gpid-core-static witchw-static cxxopts Threads::Threads)
+set(CORE_SHARED_LINK_LIBRARIES gpid-core-shared witchw-shared cxxopts Threads::Threads)
+# ------------------------------------------------------------------------------
+function(add_split_exec interface name source)
+  set(SEXEC_EXECUTABLE_NAME gpid-${name}-${interface})
+  set(SEXEC_SSOLVER_MACRO SINGLE_SOLVER_${interface})
+  string(REGEX REPLACE - _tm_ SEXEC_SSOLVER_MACRO ${SEXEC_SSOLVER_MACRO})
+  set(SEXEC_STATIC_LINK ${interface}-static)
+  set(SEXEC_SHARED_LINK ${interface}-shared)
+  add_executable(${SEXEC_EXECUTABLE_NAME} "${source}")
+  add_dependencies(${SEXEC_EXECUTABLE_NAME} ${EXEC_PREPROCESSED_TARGETS})
+  target_include_directories(${SEXEC_EXECUTABLE_NAME} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
+  target_compile_definitions(${SEXEC_EXECUTABLE_NAME} PRIVATE
+    SINGLE_SOLVER_ONLY
+    ${SEXEC_SSOLVER_MACRO})
+  if(STATIC_EXECUTABLES)
+    target_link_libraries(${SEXEC_EXECUTABLE_NAME} ${SEXEC_STATIC_LINK} ${CORE_STATIC_LINK_LIBRARIES})
+  else()
+    target_link_libraries(${SEXEC_EXECUTABLE_NAME} ${SEXEC_SHARED_LINK} ${CORE_SHARED_LINK_LIBRARIES})
+  endif()
+  install(TARGETS ${SEXEC_EXECUTABLE_NAME} RUNTIME DESTINATION bin)
+endfunction()
 # ==============================================================================
 # ImpGen - an implicate generator
 # ==============================================================================
-set(IMPGEN_STATIC_LINK_LIBRARIES gpid-core-static witchw-static cxxopts Threads::Threads)
-set(IMPGEN_SHARED_LINK_LIBRARIES gpid-core-shared witchw-shared cxxopts Threads::Threads)
 add_executable(gpid-impgen "src/gpid-impgen.cpp")
-add_dependencies(gpid-impgen ${IMPGEN_PREPROCESSED_TARGETS})
+add_dependencies(gpid-impgen ${EXEC_PREPROCESSED_TARGETS})
 target_include_directories(gpid-impgen PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
 if(STATIC_EXECUTABLES)
-  target_link_libraries(gpid-impgen ${SOLVER_STATIC_TARGETS} ${IMPGEN_STATIC_LINK_LIBRARIES})
+  target_link_libraries(gpid-impgen ${SOLVER_STATIC_TARGETS} ${CORE_STATIC_LINK_LIBRARIES})
 else()
-  target_link_libraries(gpid-impgen ${SOLVER_SHARED_TARGETS} ${IMPGEN_SHARED_LINK_LIBRARIES})
+  target_link_libraries(gpid-impgen ${SOLVER_SHARED_TARGETS} ${CORE_SHARED_LINK_LIBRARIES})
 endif()
 install(TARGETS gpid-impgen RUNTIME DESTINATION bin)
 # ==============================================================================
-# Split-IMPGEN - single implicate generators linked to specific solver
+# Split-ImpGen - single implicate generators linked to specific solver
 # ==============================================================================
-function(add_split_impgen interface)
-  set(SIMPGEN_EXECUTABLE_NAME gpid-impgen-${interface})
-  set(SIMPGEN_SSOLVER_MACRO SINGLE_SOLVER_${interface})
-  string(REGEX REPLACE - _tm_ SIMPGEN_SSOLVER_MACRO ${SIMPGEN_SSOLVER_MACRO})
-  set(SIMPGEN_STATIC_LINK ${interface}-static)
-  set(SIMPGEN_SHARED_LINK ${interface}-shared)
-  add_executable(${SIMPGEN_EXECUTABLE_NAME} "src/gpid-impgen.cpp")
-  add_dependencies(${SIMPGEN_EXECUTABLE_NAME} ${IMPGEN_PREPROCESSED_TARGETS})
-  target_include_directories(${SIMPGEN_EXECUTABLE_NAME} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
-  target_compile_definitions(${SIMPGEN_EXECUTABLE_NAME} PRIVATE
-    SINGLE_SOLVER_ONLY
-    ${SIMPGEN_SSOLVER_MACRO})
-  if(STATIC_EXECUTABLES)
-    target_link_libraries(${SIMPGEN_EXECUTABLE_NAME} ${SIMPGEN_STATIC_LINK} ${IMPGEN_STATIC_LINK_LIBRARIES})
-  else()
-    target_link_libraries(${SIMPGEN_EXECUTABLE_NAME} ${SIMPGEN_SHARED_LINK} ${IMPGEN_SHARED_LINK_LIBRARIES})
-  endif()
-  install(TARGETS ${SIMPGEN_EXECUTABLE_NAME} RUNTIME DESTINATION bin)
-endfunction()
-
 foreach(interface ${SOLVER_TARGETS})
-  add_split_impgen(${interface})
+  add_split_exec(${interface} "impgen" "src/gpid-impgen.cpp")
+endforeach()
+# ==============================================================================
+# GunitI - a unit implicate generator
+# ==============================================================================
+add_executable(gpid-guniti "src/gpid-guniti.cpp")
+add_dependencies(gpid-guniti ${EXEC_PREPROCESSED_TARGETS})
+target_include_directories(gpid-guniti PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
+if(STATIC_EXECUTABLES)
+  target_link_libraries(gpid-guniti ${SOLVER_STATIC_TARGETS} ${CORE_STATIC_LINK_LIBRARIES})
+else()
+  target_link_libraries(gpid-guniti ${SOLVER_SHARED_TARGETS} ${CORE_SHARED_LINK_LIBRARIES})
+endif()
+install(TARGETS gpid-guniti RUNTIME DESTINATION bin)
+# ==============================================================================
+# Split-GunitI - single unit implicate generators linked to specific solver
+# ==============================================================================
+foreach(interface ${SOLVER_TARGETS})
+  add_split_exec(${interface} "guniti" "src/gpid-guniti.cpp")
 endforeach()
 # ==============================================================================
 # Parser - an abducible files parser

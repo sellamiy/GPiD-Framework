@@ -12,6 +12,7 @@
 #include <gpid/impgen/naive_engine.hpp>
 #include <gpid/impgen/advanced_engine.hpp>
 #include <gpid/impgen/algorithm.hpp>
+#include <gpid/impgen/guniti.hpp>
 
 #include <gpid/masmalig/algorithm.hpp>
 
