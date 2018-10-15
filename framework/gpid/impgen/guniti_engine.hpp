@@ -183,9 +183,11 @@ namespace gpid {
     template<typename InterfaceT>
     inline void GunitiEngine<InterfaceT>::initializeSolvers(ProblemLoaderT& pbld) {
         pbld.prepareReader();
+        solver_contrads.pop();
         while (pbld.hasConstraint()) {
             solver_contrads.addConstraint(pbld.nextConstraint());
         }
+        solver_contrads.push();
     }
 
     template<typename InterfaceT>
