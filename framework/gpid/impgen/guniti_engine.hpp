@@ -140,6 +140,8 @@ namespace gpid {
         /** Internally selects literals to skip according to a model. */
         inline void modelCleanUp();
 
+        inline void prepruneInconsistentLiterals();
+
         /** Insert the current hypothsis as an implicate in the storage structure. */
         inline void storeCurrentImplicate();
     };
@@ -288,6 +290,26 @@ namespace gpid {
                 insthandle(instrument::idata(getLiteral(idx).str() + ":model"),
                            instrument::instloc::skip);
             }
+        }
+        lactive.reset_iterator();
+        selection = lactive.get_first();
+    }
+
+    template<typename InterfaceT>
+    inline void GunitiEngine<InterfaceT>::prepruneInconsistentLiterals() {
+        InterfaceT& solver_tmp = interfaceEngine.newInterface();
+        for (index_t idx = 0; idx <= lactive.get_last(); ++idx) {
+            if (!lactive.is_active(idx)) continue;
+            solver_tmp.push();
+            solver_tmp.addLiteral(getLiteral(idx));
+            SolverTestStatus status = solver_tmp.check();
+            if (status == SolverTestStatus::UNSAT) {
+                snlog::l_info("Inconsistent literal : " + getLiteral(idx).str() + " -- removed");
+                lactive.deactivate(idx);
+            } else if (status == SolverTestStatus::UNKNOWN) {
+                snlog::l_warn("Interface-undecidable literal detected: " + getLiteral(idx).str());
+            }
+            solver_tmp.pop();
         }
         lactive.reset_iterator();
         selection = lactive.get_first();

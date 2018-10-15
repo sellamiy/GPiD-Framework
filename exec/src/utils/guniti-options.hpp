@@ -73,6 +73,9 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 
             ("time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
             ("implicate-limit", "Maximal number of implicates to generate", cxxopts::value<uint64_t>())
+
+            ("preprune-inconsistencies", "Preprune possibly inconsistent abducible literals")
+            ("keep-inconsistencies", "Do not remove inconsistent literals")
             ;
 
 	parser.add_options("Output")
@@ -148,6 +151,11 @@ static inline OptionStatus handleOptions
 	    opts.guniti.use_models = true;
 	if (results.count("dont-use-models"))
 	    opts.guniti.use_models = false;
+
+        if (results.count("preprune-inconsistencies"))
+            opts.guniti.allow_inconsistencies = false;
+        if (results.count("keep-inconsistencies"))
+            opts.guniti.allow_inconsistencies = true;
 
         if (results.count("time-limit"))
             opts.core.time_limit = results["time-limit"].as<uint64_t>();
@@ -247,7 +255,8 @@ static inline OptionStatus detectConflicts
             { "print-storage", "dont-print-storage"},
             { "print-storage", "dont-store-implicates"},
             { "export-storage", "dont-store-implicates"},
-            { "use-models", "dont-use-models"}
+            { "use-models", "dont-use-models"},
+            { "preprune-inconsistencies", "keep-inconsistencies" }
         };
 
         for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {

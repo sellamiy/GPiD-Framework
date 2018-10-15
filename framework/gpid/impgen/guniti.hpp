@@ -113,6 +113,9 @@ namespace gpid {
 
         reset();
 
+        if (!options.allow_inconsistencies)
+            lengine.prepruneInconsistentLiterals();
+
         // Model initialization
         SolverTestStatus status = lengine.testEmpty();
         bool complete = false;
