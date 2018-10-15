@@ -281,10 +281,7 @@ namespace gpid {
     template<typename InterfaceT>
     inline void GunitiEngine<InterfaceT>::modelCleanUp() {
         const ModelT& model = solver_contrads.getModel();
-        lactive.reset_iterator();
-        for (index_t idx = lactive.get_first();
-             idx <= lactive.get_last();
-             idx = lactive.get_next()) {
+        for (index_t idx = 0; idx <= lactive.get_last(); ++idx) {
             if (!lactive.is_active(idx)) continue;
             if (model.implies(getLiteral(idx))) {
                 lactive.deactivate(idx);
