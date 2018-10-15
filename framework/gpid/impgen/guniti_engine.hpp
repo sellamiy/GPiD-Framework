@@ -33,7 +33,7 @@ namespace gpid {
             inline bool operator!=(const giterator<T>& o) const
             { return read != o.read; }
             inline bool operator==(const giterator<T>& o) const
-            { return read != o.read; }
+            { return read == o.read; }
             inline giterator& operator++()
             { read = true; return *this; }
             inline       T operator*()       { return value; }
