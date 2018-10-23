@@ -2,7 +2,7 @@
 # Static arrays library - local library target
 # ==============================================================================
 project(libstarray LANGUAGES CXX)
-set(LIBSTARRAY_VERSION "0.3")
+set(LIBSTARRAY_VERSION "0.4")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/starray/starray.hpp.in
   ${LOCAL_LIB_HEADERS_DIR}/starray/starray.hpp)

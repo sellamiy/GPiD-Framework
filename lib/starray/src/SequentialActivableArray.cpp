@@ -43,7 +43,7 @@ void SequentialActivableArray::deactivate(uint32_t i)
     tab[i].status = aa_elt_st::INACTIVE;
 }
 
-uint32_t SequentialActivableArray::get_downward(uint32_t src) {
+uint32_t SequentialActivableArray::get_downward(uint32_t src) const {
     uint32_t pos = src;
     do {
         if (pos == 0) return src;
@@ -52,7 +52,7 @@ uint32_t SequentialActivableArray::get_downward(uint32_t src) {
     return pos;
 }
 
-uint32_t SequentialActivableArray::get_upward(uint32_t src) {
+uint32_t SequentialActivableArray::get_upward(uint32_t src) const {
     uint32_t pos = src;
     while (tab[pos].status == aa_elt_st::INACTIVE) {
         pos++;

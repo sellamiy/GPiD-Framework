@@ -13,12 +13,12 @@ namespace starray {
     public:
         GlobalArrayBloc();
         ~GlobalArrayBloc();
-        inline bool hasTag(std::string tag);
-        inline GAB_Status allocate(std::string tag, size_t size);
-        inline GAB_Status setElmCount(std::string tag, uint32_t elm_count);
-        inline GAB_Status setElmSize(std::string tag, size_t elm_size);
-        inline GAB_Status access(std::string tag, uint32_t pos);
-        inline void* recoverActivePointer();
+        inline bool hasTag(const std::string& tag) const;
+        inline GAB_Status allocate(const std::string& tag, size_t size);
+        inline GAB_Status setElmCount(const std::string& tag, uint32_t elm_count);
+        inline GAB_Status setElmSize(const std::string& tag, size_t elm_size);
+        inline GAB_Status access(const std::string& tag, uint32_t pos);
+        inline void* recoverActivePointer() const;
     };
     static GlobalArrayBloc globalArrayBloc;
 };
@@ -28,25 +28,29 @@ using namespace starray;
 GlobalArrayBloc::GlobalArrayBloc() : activePointer(NULL) {}
 GlobalArrayBloc::~GlobalArrayBloc() { for (std::pair<std::string, void*> p : dataMap) free(p.second); }
 
-inline bool GlobalArrayBloc::hasTag(std::string tag) { return dataMap[tag] != NULL; }
-inline void* GlobalArrayBloc::recoverActivePointer() { return activePointer; }
-inline GAB_Status GlobalArrayBloc::allocate(std::string tag, size_t size) {
+inline bool GlobalArrayBloc::hasTag(const std::string& tag) const {
+    return dataMap.find(tag) != dataMap.end();
+}
+
+inline void* GlobalArrayBloc::recoverActivePointer() const { return activePointer; }
+
+inline GAB_Status GlobalArrayBloc::allocate(const std::string& tag, size_t size) {
     void* data = malloc(size);
     if (data == NULL) return GAB_Status::ALLOCATION_FAILURE;
     dataMap[tag] = data;
     return GAB_Status::SUCCESS;
 }
-inline GAB_Status GlobalArrayBloc::setElmCount(std::string tag, uint32_t elm_count) {
+inline GAB_Status GlobalArrayBloc::setElmCount(const std::string& tag, uint32_t elm_count) {
     if (dataMap[tag] == NULL) return GAB_Status::UNALLOCATED_CONF_STORAGE;
     countMap[tag] = elm_count;
     return GAB_Status::SUCCESS;
 }
-inline GAB_Status GlobalArrayBloc::setElmSize(std::string tag, size_t elm_size) {
+inline GAB_Status GlobalArrayBloc::setElmSize(const std::string& tag, size_t elm_size) {
     if (dataMap[tag] == NULL) return GAB_Status::UNALLOCATED_CONF_STORAGE;
     sizeMap[tag] = elm_size;
     return GAB_Status::SUCCESS;
 }
-inline GAB_Status GlobalArrayBloc::access(std::string tag, uint32_t pos) {
+inline GAB_Status GlobalArrayBloc::access(const std::string& tag, uint32_t pos) {
     if (dataMap[tag] == NULL) return GAB_Status::TAG_UNALLOCATED;
     if (countMap[tag] == 0 || sizeMap[tag] == 0) return GAB_Status::UNCONFED_ACCESS;
     if (countMap[tag] <= pos) return GAB_Status::OOB_ACCESS;
@@ -54,7 +58,7 @@ inline GAB_Status GlobalArrayBloc::access(std::string tag, uint32_t pos) {
     return GAB_Status::SUCCESS;
 }
 
-extern GAB_Status starray::requestContinuousArray(std::string tag, uint32_t elm_count, size_t elm_size) {
+extern GAB_Status starray::requestContinuousArray(const std::string& tag, uint32_t elm_count, size_t elm_size) {
     GAB_Status ret;
     if (globalArrayBloc.hasTag(tag)) return GAB_Status::TAG_DUPLICATION;
     ret = globalArrayBloc.allocate(tag, elm_count*elm_size);
@@ -65,7 +69,7 @@ extern GAB_Status starray::requestContinuousArray(std::string tag, uint32_t elm_
     return ret;
 }
 
-extern GAB_Status starray::accessContinuousPointer(std::string tag, uint32_t elm_pos, void** ptr) {
+extern GAB_Status starray::accessContinuousPointer(const std::string& tag, uint32_t elm_pos, void** ptr) {
     GAB_Status ret;
     if (!globalArrayBloc.hasTag(tag)) return GAB_Status::TAG_UNKNOWN;
     ret  = globalArrayBloc.access(tag, elm_pos);

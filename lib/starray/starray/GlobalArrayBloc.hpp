@@ -48,7 +48,7 @@ namespace starray {
      * \return SUCCESS if the block has been successfully allocated.
      * \return Any error code otherwise.
      */
-    extern GAB_Status requestContinuousArray(std::string tag, uint32_t elm_count, size_t elm_size);
+    extern GAB_Status requestContinuousArray(const std::string& tag, uint32_t elm_count, size_t elm_size);
 
     /**
      * \brief Access a previously allocated memory region.
@@ -63,7 +63,7 @@ namespace starray {
      * \return SUCCESS if the pointer to the element has been set.
      * \return Any error code otherwise.
      */
-    extern GAB_Status accessContinuousPointer(std::string tag, uint32_t elm_pos, void** ptr);
+    extern GAB_Status accessContinuousPointer(const std::string& tag, uint32_t elm_pos, void** ptr);
 
 };
 

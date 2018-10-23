@@ -75,14 +75,14 @@ namespace starray {
          * corresponding aa_elt element.
          * @note Complexity: O(1).
          */
-        inline uint8_t is_active(uint32_t i) {
+        inline constexpr uint8_t is_active(uint32_t i) const {
             // assert(i < total_size);
             // assert(tab[i].value <= 1);
             return (int)tab[i].value;
         }
         // TODO: Add tests for this method!
         /** @warning Untested. */
-        inline uint32_t get_maximal_size()
+        inline constexpr uint32_t get_maximal_size() const
         { return total_size; }
         /**
          * @brief Get the active size of the ActivableArray.
@@ -92,7 +92,7 @@ namespace starray {
          * @return the number of active elements in the ActivableArray.
          * @note Complexity: O(1).
          */
-        inline uint32_t get_activated_size()
+        inline constexpr uint32_t get_activated_size() const
         { return activated_size; }
 
         /**
@@ -103,7 +103,7 @@ namespace starray {
          * otherwise.
          * @note Complexity: O(1).
          */
-        inline uint8_t has_next()
+        inline constexpr uint8_t has_next() const
         { return (uint8_t)(list_curr->next != list_last.index); }
         /**
          * @brief Get the ActivableArray next active element.
@@ -123,9 +123,9 @@ namespace starray {
         }
         // TODO: Add tests for these two methods!
         /** @warning Untested. */
-        inline uint32_t get_first() { return tab[list_first.next].index; }
+        inline constexpr uint32_t get_first() const { return tab[list_first.next].index; }
         /** @warning Untested. */
-        inline uint32_t get_last() { return tab[list_last.prev].index; }
+        inline constexpr uint32_t get_last() const { return tab[list_last.prev].index; }
         /**
          * @brief Reset the ActivableArray iterator.
          *
