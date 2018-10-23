@@ -52,8 +52,12 @@ const std::shared_ptr<std::string>& AbducibleParserCommandHandler::nextAbducible
         it_init = true;
     }
     if (abdit == abddata.end()) {
-        snlog::l_info("The following may be triggered by wrong size information in abducible file");
-        snlog::l_info("The following may be an internal error");
+        snlog::l_info()
+            << "The following may be triggered by wrong size information in abducible file"
+            << snlog::l_end
+            << snlog::l_info
+            << "The following may be an internal error"
+            << snlog::l_end;
         throw IllegalAccessError("No more abducible literal");
     }
     const std::shared_ptr<std::string>& res = *abdit;

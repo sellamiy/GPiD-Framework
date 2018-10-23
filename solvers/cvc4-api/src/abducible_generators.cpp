@@ -11,7 +11,7 @@ void CVC4AbducibleHandler::allocate(const std::string id, size_t size) {
 
 void CVC4AbducibleHandler::handleAbducible(const std::shared_ptr<std::string>& abd) {
     CVC4::Options opts4;
-    snlog::l_warn("Fixme: Abducible Parser - input language as an option"); // TODO
+    snlog::l_warn() << "Fixme: Abducible Parser - input language as an option" << snlog::l_end; // TODO
     opts4.setInputLanguage(CVC4::language::input::LANG_SMTLIB_V2);
 
     CVC4::ExprManager& em = pbld.getContextManager();
@@ -56,10 +56,11 @@ static inline void cvc4_abduciblesUtils_allEq
     for (const std::string decl : pbld.getDeclarations()) {
         CVC4::Expr fun = p->getFunction(decl);
         if (fun.getType().isFunction()) {
-            snlog::l_warn("Function are currently not handles by this CVC4 abducible generator");
+            snlog::l_warn()
+                << "Function are currently not handles by this CVC4 abducible generator" << snlog::l_end;
             // TODO : Handle functions
-            // snlog::l_info(fun.getType());
-            // snlog::l_info(fun.getType().getBaseType());
+            // snlog::l_info() << fun.getType() << snlog::l_end;
+            // snlog::l_info() << fun.getType().getBaseType() << snlog::l_end;
         } else {
             knownVars.push_back(fun);
             typeTable[fun.getType()].push_back(fun);
@@ -104,6 +105,6 @@ void CVC4AbducibleLiteralsGenerator::generate(const std::string generator) {
     if (gmisc::inmap(abg_cvc4_abdgeneration_table, generator)) {
         handler._cpt = abg_cvc4_abdgeneration_table[generator](pbld, mapper, links);
     } else {
-        snlog::l_fatal("Unknown cvc4 abducible generator: " + generator);
+        snlog::l_fatal() << "Unknown cvc4 abducible generator: " << generator << snlog::l_end;
     }
 }

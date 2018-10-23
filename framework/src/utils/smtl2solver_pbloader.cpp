@@ -146,17 +146,19 @@ namespace smtl2 {
     }
 
     bool SMTl2PCH_ProblemLoader::handleSkip(const smtlib2utils::SMTl2Command& cmd) {
-        snlog::l_warn("Unauthorized SMTlib2 command in problem file (skipped): " + cmd.getName());
+        snlog::l_warn()
+            << "Unauthorized SMTlib2 command in problem file (skipped): "
+            << cmd.getName() << snlog::l_end;
         return true;
     }
 
     bool SMTl2PCH_ProblemLoader::handleEcho(const smtlib2utils::SMTl2Command& cmd) {
-        snlog::l_message(cmd.getData());
+        snlog::l_message() << cmd.getData() << snlog::l_end;
         return true;
     }
 
     bool SMTl2PCH_ProblemLoader::handleExit(const smtlib2utils::SMTl2Command&) {
-        snlog::l_info("Instructed to exit through the problem");
+        snlog::l_info() << "Instructed to exit through the problem" << snlog::l_end;
         return false;
     }
 
@@ -174,7 +176,7 @@ namespace smtl2 {
 
     bool SMTl2PCH_ProblemLoader::handleGetAssertions(const smtlib2utils::SMTl2Command&) {
         for (constraint asptr : conslist) {
-            snlog::l_message(*asptr);
+            snlog::l_message() << *asptr << snlog::l_end;
         }
         return true;
     }
@@ -182,11 +184,11 @@ namespace smtl2 {
     bool SMTl2PCH_ProblemLoader::handleGetSetting(const smtlib2utils::SMTl2Command& cmd) {
         for (smtlib2utils::SMTl2Command& setting : ctx.opts) {
             if (setting.getData().find(cmd.getData()) != std::string::npos) {
-                snlog::l_message(setting.getData());
+                snlog::l_message() << setting.getData() << snlog::l_end;
                 return true;
             }
         }
-        snlog::l_warn("Unknown setting access required");
+        snlog::l_warn() << "Unknown setting access required" << snlog::l_end;
         return false;
     }
 
@@ -216,15 +218,16 @@ using namespace gpid;
 
 void SMTl2SolverProblemLoader::load(std::string filename, std::string language) {
     if (language != "default" && language != "smt2" && language != "SMT2") {
-        snlog::l_warn("SMTlib2 Solver-CLI interface language input must be smt2");
-        snlog::l_warn("Bruteforcing input file...");
+        snlog::l_warn() << "SMTlib2 Solver-CLI interface language input must be smt2"
+                        << snlog::l_end << snlog::l_warn
+                        << "Bruteforcing input file..." << snlog::l_end;
     }
     parser = std::unique_ptr<smtlib2utils::SMTl2CommandParser>
         (new smtlib2utils::SMTl2CommandParser(filename, ctx.memory));
     parser->initialize();
     parser->parse(*handler);
     if (!parser->valid()) {
-        snlog::l_fatal("Problem parsing error!");
+        snlog::l_fatal() << "Problem parsing error!" << snlog::l_end;
     }
 }
 

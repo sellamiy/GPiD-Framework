@@ -39,7 +39,7 @@ bool MlbScriptCHandler::handleFun(const SMTl2Command& cmd) {
 }
 
 bool MlbScriptCHandler::handleMagic(const SMTl2Command& cmd) {
-    snlog::l_warn("For now, magic keyword handles hardcoded integer magics only");
+    snlog::l_warn() << "For now, magic keyword handles hardcoded integer magics only" << snlog::l_end;
     SMTlib2TokenResult magic = nextNumeral(*cmd.getDataPtr());
     loadedConsts[magic.value()] = "Int";
     return true;

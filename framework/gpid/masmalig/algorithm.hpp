@@ -48,7 +48,8 @@ namespace gpid {
 
     template<typename LiteralHandlerT>
     void MasmaligAlgorithm<LiteralHandlerT>::printInfos() {
-        snlog::l_message("GPiD framework somehow magically smart literal generator " + project_version);
+        snlog::l_message() << "GPiD framework somehow magically smart literal generator "
+                           << project_version << snlog::l_end;
     }
 
     template<typename LiteralHandlerT>
@@ -82,9 +83,9 @@ namespace gpid {
             lhandler.handle(builder.buildLiteral());
         }
         if (iflags.systemInterrupted()) {
-            snlog::l_warn("Generation incomplete after interruption");
+            snlog::l_warn() << "Generation incomplete after interruption" << snlog::l_end;
         } else if (!builder.complete()) {
-            snlog::l_warn("The following may be due to improper input");
+            snlog::l_warn() << "The following may be due to improper input" << snlog::l_end;
             throw InternalError("Masmalig generation failure");
         }
     }

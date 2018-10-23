@@ -14,7 +14,7 @@ namespace instrument {
     typedef void (*finalizer) (InstrumentOptions&, InstrumentController&);
     std::list<finalizer> finalizers;
     extern void finalize(InstrumentOptions& opts, InstrumentController& ctrler) {
-        snlog::l_notif("finalize instruments...");
+        snlog::l_notif() << "finalize instruments..." << snlog::l_end;
         for (void (*finalizer)(InstrumentOptions&, InstrumentController&) : finalizers) {
             finalizer(opts, ctrler);
         }
@@ -118,7 +118,7 @@ namespace instrument {
 
     /* Instrumentation initializer */
     extern void initialize(InstrumentOptions& opts, InstrumentController& ctrler) {
-        snlog::l_notif("initialize instruments...");
+        snlog::l_notif() << "initialize instruments..." << snlog::l_end;
         if (opts.selection_graph) {
             selectionGrapher = new SelectionGrapher(ctrler.getSelectionGraphStream());
             analyzers[instloc::stack_push].push_back(&selectionGrapher_stack_push);

@@ -64,6 +64,6 @@ void MinisatLiteralsGenerator::generate(const std::string generator) {
     if (gmisc::inmap(abg_minisat_abdgeneration_table, generator)) {
         handler._cpt = abg_minisat_abdgeneration_table[generator](pbld, mapper, links);
     } else {
-        snlog::l_fatal("Unknown minisat abducible generator: " + generator);
+        snlog::l_fatal() << "Unknown minisat abducible generator: " << generator << snlog::l_end;
     }
 }

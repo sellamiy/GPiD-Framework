@@ -27,7 +27,7 @@ void MinisatProblemLoader::initCurrentMode() {
         break;
     default:
         // TODO: Raise Error
-        snlog::l_internal("Minisat problem ended in an Unknown state!");
+        snlog::l_internal() << "Minisat problem ended in an Unknown state!" << snlog::l_end;
         break;
     }
 }
@@ -35,7 +35,7 @@ void MinisatProblemLoader::initCurrentMode() {
 void MinisatProblemLoader::addConstraint(Minisat::vec<Minisat::Lit>& ps) {
     if (mode != IOMode::WRITE) {
         // TODO: Raise Error
-        snlog::l_warn("Writing problem on reading mode!");
+        snlog::l_warn() << "Writing problem on reading mode!" << snlog::l_end;
     }
     cons_sep.push(cons_data.size());
     for (int i = 0; i < ps.size(); i++)
@@ -54,7 +54,7 @@ void MinisatProblemLoader::goToNextConstraint() {
 bool MinisatProblemLoader::hasConstraint() {
     if (mode != IOMode::READ) {
         // TODO: Raise Error
-        snlog::l_warn("Reading problem on writing mode!");
+        snlog::l_warn() << "Reading problem on writing mode!" << snlog::l_end;
     }
     return read_session_seps.size() > 0;
 }
@@ -62,7 +62,7 @@ bool MinisatProblemLoader::hasConstraint() {
 Minisat::vec<Minisat::Lit>& MinisatProblemLoader::nextConstraint() {
     if (mode != IOMode::READ) {
         // TODO: Raise Error
-        snlog::l_warn("Reading problem on writing mode!");
+        snlog::l_warn() << "Reading problem on writing mode!" << snlog::l_end;
     }
     goToNextConstraint();
     return read_local_data;
@@ -106,6 +106,6 @@ void MinisatProblemLoader::load(const std::string filename, const std::string la
     if (gmisc::inmap(pld_minisat_language_table, language)) {
         pld_minisat_language_table[language](filename, *this);
     } else {
-        snlog::l_fatal("Unknown minisat input language: " + language);
+        snlog::l_fatal() << "Unknown minisat input language: " << language << snlog::l_end;
     }
 }

@@ -58,7 +58,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
         return str == OptionStatus::OK ? handleOptions(opts, parser, results) : str;
 
     } catch (const cxxopts::OptionException& e) {
-	snlog::l_error(e.what());
+	snlog::l_error() << e.what() << snlog::l_end;
 	return OptionStatus::FAILURE;
     }
 }
@@ -70,18 +70,18 @@ static inline OptionStatus handleOptions
     try {
         std::vector<std::string> help_cats = {"", "I/Os", "Engine"};
 	if (results.count("help")) {
-	    snlog::l_message(parser.help(help_cats));
+	    snlog::l_message() << parser.help(help_cats) << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 	if (results.count("version")) {
-	    snlog::l_message(gpid::version_message);
+	    snlog::l_message() << gpid::version_message << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 
         if (results.count("list-production-rules")) {
-            snlog::l_info("Masmalig production rules");
+            snlog::l_info() << "Masmalig production rules" << snlog::l_end;
             for (auto r : mlbsmt2::productionDescriptions)
-                snlog::l_notif(r.first, r.second);
+                snlog::l_notifg() << r.first << " --> " << r.second << snlog::l_end;
             return OptionStatus::ENDED;
         }
 
@@ -98,7 +98,7 @@ static inline OptionStatus handleOptions
 	return OptionStatus::OK;
 
     } catch (const cxxopts::OptionException& e) {
-	snlog::l_error(e.what());
+	snlog::l_error() << e.what() << snlog::l_end;
 	return OptionStatus::FAILURE;
     }
 }
@@ -120,9 +120,9 @@ static inline OptionStatus detectConflicts
             for (uint32_t lc = 0; lc < p_illeg[pc].size(); lc++)
                 if (!results.count(p_illeg[pc][lc])) active = false;
             if (active) {
-                snlog::l_fatal("Conflictual options detected:");
+                snlog::l_fatal() << "Conflictual options detected:" << snlog::l_end;
                 for (uint32_t lc = 0; lc < p_illeg[pc].size(); lc++)
-                    snlog::l_info("   @option: " + p_illeg[pc][lc]);
+                    snlog::l_info() << "   @option: " << p_illeg[pc][lc] << snlog::l_end;
                 return OptionStatus::FAILURE;
             }
         }
@@ -130,7 +130,7 @@ static inline OptionStatus detectConflicts
         return OptionStatus::OK;
 
     } catch (const cxxopts::OptionException& e) {
-	snlog::l_error(e.what());
+	snlog::l_error() << e.what() << snlog::l_end;
 	return OptionStatus::FAILURE;
     }
 }

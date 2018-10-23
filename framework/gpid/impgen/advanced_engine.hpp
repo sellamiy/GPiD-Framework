@@ -396,7 +396,7 @@ namespace gpid {
 
     template<typename InterfaceT>
     inline bool AdvancedAbducibleEngine<InterfaceT>::isConsequence(LiteralReference) {
-        snlog::l_warn("isConsequence not implemented"); // TODO
+        snlog::l_warn() << "isConsequence not implemented" << snlog::l_end; // TODO
         return false;
     }
 

@@ -12,15 +12,15 @@ template<typename InterfaceT, typename LiteralGeneratorT>
 static inline void generate_upae_x(OptionStorage& opts) {
     using GunitImplicateHandler = BasicImplicateHandler<GunitiEngine<InterfaceT>>;
     // TODO: Handle Errors on subcalls
-    l_message("init engine...");
+    l_message() << "init engine..." << l_end;
     GunitiAlgorithm<InterfaceT, LiteralGeneratorT, GunitImplicateHandler>::printInfos();
 
-    l_message("load problem...");
+    l_message() << "load problem..." << l_end;
     typename GunitiAlgorithm<InterfaceT, LiteralGeneratorT, GunitImplicateHandler>
         ::ProblemLoaderT Loader;
     Loader.load(opts.input, opts.input_lang);
 
-    l_message("recovering abducible literals...");
+    l_message() << "recovering abducible literals..." << l_end;
     LiteralGeneratorT LGenerator(Loader);
     if (opts.guniti.input_type == gpid::AbducibleInputType::FILE) {
         LGenerator.load(opts.guniti.input_file);
@@ -28,13 +28,13 @@ static inline void generate_upae_x(OptionStorage& opts) {
         LGenerator.generate(opts.guniti.input_generator);
     }
 
-    l_message("create decomposition engine...");
+    l_message() << "create decomposition engine..." << l_end;
     GunitImplicateHandler
         ihandler(opts.guniti.print_implicates, opts.guniti.store_implicates);
     GunitiAlgorithm<InterfaceT, LiteralGeneratorT, GunitImplicateHandler>
         Generator(Loader, LGenerator, ihandler, opts, opts.guniti);
 
-    l_message("generate implicates...");
+    l_message() << "generate implicates..." << l_end;
     opts.control.time.registerTime("generation");
     Generator.execute();
     opts.control.time.registerTime("generation-end");

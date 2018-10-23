@@ -17,22 +17,23 @@ static inline gunitiExecutionStatus wrap_generate(OptionStorage& opts) {
 
     {% for exception_class in interface.exceptions %}
     catch ({{ exception_class.classname }}& e) {
-        snlog::l_fatal("Solver exception recovered");
-        snlog::l_error(e.{{ exception_class.message_method }}());
+        snlog::l_fatal() << "Solver exception recovered" << snlog::l_end
+                         << snlog::l_error << e.{{ exception_class.message_method }}()
+                         << snlog::l_end;
         return gunitiExecutionStatus::FAILURE;
     }
     {% endfor %}
     catch (gpid::InternalError& e) {
-        snlog::l_internal(e.what());
+        snlog::l_internal() << e.what() << snlog::l_end;
         return gunitiExecutionStatus::FAILURE;
     }
     catch (gpid::GPiDError& e) {
-        snlog::l_fatal(e.what());
+        snlog::l_fatal() << e.what() << snlog::l_end;
         return gunitiExecutionStatus::FAILURE;
     }
     catch (std::exception& e) {
-        snlog::l_internal("Unexpected throwable recovered");
-        snlog::l_fatal(e.what());
+        snlog::l_internal() << "Unexpected throwable recovered" << snlog::l_end
+                            << snlog::l_fatal << e.what() << snlog::l_end;
         return gunitiExecutionStatus::FAILURE;
     }
 }
@@ -58,27 +59,28 @@ static inline gunitiExecutionStatus wrap_generate(OptionStorage& opts) {
 
         {% for exception_class in interface.exceptions %}
         catch ({{ exception_class.classname }}& e) {
-            snlog::l_fatal("Solver {{ interface.classname }} exception recovered");
-            snlog::l_error(e.{{ exception_class.message_method }}());
+            snlog::l_fatal() << "Solver {{ interface.classname }} exception recovered" << snlog::l_end
+                             << snlog::l_error << e.{{ exception_class.message_method }}()
+                             << snlog::l_end;
             return gunitiExecutionStatus::FAILURE;
         }
         {% endfor %}
         catch (gpid::InternalError& e) {
-            snlog::l_internal(e.what());
+            snlog::l_internal() << e.what() << snlog::l_end;
             return gunitiExecutionStatus::FAILURE;
         }
         catch (gpid::GPiDError& e) {
-            snlog::l_fatal(e.what());
+            snlog::l_fatal() << e.what() << snlog::l_end;
             return gunitiExecutionStatus::FAILURE;
         }
         catch (std::exception& e) {
-            snlog::l_internal("Unexpected throwable recovered");
-            snlog::l_fatal(e.what());
+            snlog::l_internal() << "Unexpected throwable recovered" << snlog::l_end
+                                << snlog::l_fatal << e.what() << snlog::l_end;
             return gunitiExecutionStatus::FAILURE;
         }
         {% endfor %}
     default:
-        snlog::l_internal("Unknown solver interface provided");
+        snlog::l_internal() << "Unknown solver interface provided" << snlog::l_end;
         return gunitiExecutionStatus::FAILURE;
     }
 }

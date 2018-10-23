@@ -53,7 +53,7 @@ static inline std::string ess_get_result
     std::string command = solver_exec + " " + script_file;
     std::shared_ptr<FILE> pipe(popen(command.c_str(), "r"), pclose);
     if (!pipe) {
-        snlog::l_error("Solver execution failure (popen)");
+        snlog::l_error() << "Solver execution failure (popen)" << snlog::l_end;
         return "unknown";
     }
     while (!feof(pipe.get())) {
@@ -69,8 +69,10 @@ static inline SolverTestStatus ess_analyze
     if (result.find("unknown") != std::string::npos) return SolverTestStatus::UNKNOWN;
     if (result.find("unsat")   != std::string::npos) return SolverTestStatus::UNSAT;
     if (result.find("sat")     != std::string::npos) return SolverTestStatus::SAT;
-    snlog::l_warn("Unanswered satisfiability query!");
-    snlog::l_warn("Unsafely assuming SAT for error handling consistency reasons");
+    snlog::l_warn()
+        << "Unanswered satisfiability query!" << snlog::l_end
+        << snlog::l_warn << "Unsafely assuming SAT for error handling consistency reasons"
+        << snlog::l_end;
     return SolverTestStatus::SAT;
 }
 
@@ -82,8 +84,8 @@ static inline SolverTestStatus execute_solver_script
 
 static inline void smtlib2_check_cleanup (const std::string script_file) {
     if (remove(script_file.c_str()) != 0) {
-        snlog::l_warn("Couldn't delete smtl2 cli solver interface script file");
-        snlog::l_error(strerror(errno));
+        snlog::l_warn() << "Couldn't delete smtl2 cli solver interface script file" << snlog::l_end
+                        << snlog::l_error << strerror(errno) << snlog::l_end;
     }
 }
 

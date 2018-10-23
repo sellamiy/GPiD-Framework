@@ -33,9 +33,9 @@ void GPiDAlgorithm::join() {
         if (execution_thread->joinable()) {
             execution_thread->join();
         } else {
-            snlog::l_error("Thread algorithm instance not joinable");
+            snlog::l_error() << "Thread algorithm instance not joinable" << snlog::l_end;
         }
     } else {
-        snlog::l_error("Trying to join non-threaded algorithm instance");
+        snlog::l_error() << "Trying to join non-threaded algorithm instance" << snlog::l_end;
     }
 }

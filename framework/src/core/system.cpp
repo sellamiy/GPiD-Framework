@@ -10,8 +10,8 @@
 static std::stack<gpid::SystemInterruptionFlags*> sys_flag_locs;
 
 static void systemInterruptHandler(int signum) {
-    snlog::l_fatal("Interrupted");
-    snlog::l_info(signum);
+    snlog::l_fatal() << "Interrupted" << snlog::l_end;
+    snlog::l_info() << signum << snlog::l_end;
 
     sys_flag_locs.top()->interrupt(gpid::SystemInterruptionFlags::Reason::__USER);
 }
@@ -47,7 +47,7 @@ class systemTimeoutWaiter {
             current_date = std::chrono::high_resolution_clock::now();
             duration = std::chrono::duration_cast<std::chrono::seconds>(current_date - origin_date);
         }
-        snlog::l_fatal("Timeout");
+        snlog::l_fatal() << "Timeout" << snlog::l_end;
         external_flags_addr->interrupt(gpid::SystemInterruptionFlags::Reason::__TIMEOUT);
     }
 

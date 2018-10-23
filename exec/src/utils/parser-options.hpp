@@ -40,7 +40,7 @@ static inline OptionStatus parseOptions(ParserOptions& opts, int& argc, char**& 
 	return handleOptions(opts, parser, results);
 
     } catch (const cxxopts::OptionException& e) {
-	snlog::l_error(e.what());
+	snlog::l_error() << e.what() << snlog::l_end;
 	return OptionStatus::FAILURE;
     }
 }
@@ -52,26 +52,26 @@ static inline OptionStatus handleOptions
     try {
 
 	if (results.count("help")) {
-	    snlog::l_message(parser.help({"", "Input"}));
+	    snlog::l_message() << parser.help({"", "Input"}) << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 	if (results.count("version")) {
-	    snlog::l_message(gpid::version_message);
+	    snlog::l_message() << gpid::version_message << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 
 	if (results.count("input")) {
 	    opts.input = results["input"].as<std::string>();
 	} else {
-	    snlog::l_fatal("No input file provided");
-	    snlog::l_info(parser.help({"Input"}));
+	    snlog::l_fatal() << "No input file provided" << snlog::l_end
+                             << snlog::l_info << parser.help({"Input"}) << snlog::l_end;
 	    return OptionStatus::FAILURE;
 	}
 
 	return OptionStatus::OK;
 
     } catch (const cxxopts::OptionException& e) {
-	snlog::l_error(e.what());
+	snlog::l_error() << e.what() << snlog::l_end;
 	return OptionStatus::FAILURE;
     }
 }

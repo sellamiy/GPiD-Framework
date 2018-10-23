@@ -109,6 +109,6 @@ void Z3AbducibleLiteralsGenerator::generate(const std::string generator) {
     if (gmisc::inmap(abg_z3_abdgeneration_table, generator)) {
         handler._cpt = abg_z3_abdgeneration_table[generator](pbld, mapper, links);
     } else {
-        snlog::l_fatal("Unknown z3 abducible generator: " + generator);
+        snlog::l_fatal() << "Unknown z3 abducible generator: " << generator << snlog::l_end;
     }
 }

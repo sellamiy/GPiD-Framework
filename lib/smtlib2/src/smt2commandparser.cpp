@@ -78,33 +78,35 @@ namespace smtlib2utils {
 
     void SMTl2CParseEngine::handleError(std::string msg) {
         std::stringstream buf;
-        buf << "Parsing failure: "
-            << "@file:" << fsource
-            << ":" << std::to_string(spos.line)
-            << ":" << std::to_string(spos.col)
-            << " : " << msg;
-        snlog::l_error(buf.str());
+        snlog::l_error() << "Parsing failure: "
+                         << "@file:" << fsource
+                         << ":" << std::to_string(spos.line)
+                         << ":" << std::to_string(spos.col)
+                         << " : " << msg
+                         << snlog::l_end;
         if (state == EngineState::OPENED) closeSource();
         state = EngineState::ERROR;
     }
 
     void SMTl2CParseEngine::openSource() {
-        snlog::t_internal(state != EngineState::UNINITIALIZED, "Opening already opened abducible parser");
+        snlog::t_internal(state != EngineState::UNINITIALIZED)
+            << "Opening already opened abducible parser" << snlog::l_end;
         ssource = std::ifstream(fsource);
         if (!ssource.is_open()) handleError("Could not open source file");
         if (state != EngineState::ERROR) state = EngineState::OPENED;
     }
 
     void SMTl2CParseEngine::closeSource() {
-        snlog::t_internal(state != EngineState::OPENED && state != EngineState::COMPLETE,
-                          "Closing non opened abducible parser");
+        snlog::t_internal(state != EngineState::OPENED && state != EngineState::COMPLETE)
+            << "Closing non opened abducible parser" << snlog::l_end;
         ssource.close();
         if (state == EngineState::OPENED || state == EngineState::COMPLETE)
             state = EngineState::CLOSED;
     }
 
     void SMTl2CParseEngine::nextCommand() {
-        snlog::t_internal(state != EngineState::OPENED, "Reading on uninitialized SMTlib2 parser");
+        snlog::t_internal(state != EngineState::OPENED)
+            << "Reading on uninitialized SMTlib2 parser" << snlog::l_end;
         std::stringstream cmdbuf;
         std::stringstream databuf;
         char c;
@@ -159,7 +161,7 @@ namespace smtlib2utils {
         if (handlers.find(cmd.getName()) != handlers.end()) {
             return handlers[cmd.getName()](cmd);
         } else {
-            snlog::l_error("Unknown command: " + cmd.getName());
+            snlog::l_error() << "Unknown command: " << cmd.getName() << snlog::l_end;
             return false;
         }
     }

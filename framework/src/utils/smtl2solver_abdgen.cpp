@@ -17,7 +17,7 @@ void SMTl2SolverAbducibleGenerator::load(std::string filename) {
 }
 
 void SMTl2SolverAbducibleGenerator::generate(std::string generatorid) {
-    snlog::l_warn("No generator available for SMTlib2 via CLI solver interface");
+    snlog::l_warn() << "No generator available for SMTlib2 via CLI solver interface" << snlog::l_end;
     throw UnknownUtilityError("Unknown generator id: " + generatorid);
 }
 

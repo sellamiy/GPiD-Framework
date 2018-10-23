@@ -9,7 +9,7 @@ using namespace gpid;
 struct LiteralPrinter { void handle(const std::string lit); };
 
 inline void LiteralPrinter::handle(const std::string lit) {
-    snlog::l_message(lit);
+    snlog::l_message() << lit << snlog::l_end;
 }
 
 struct LiteralExporter {
@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 	return EXIT_SUCCESS;
     }
 
-    l_message("start magically smart literal generator...");
+    l_message() << "start magically smart literal generator..." << l_end;
 
     try {
         if (opts.mode == MasmaligHandlingMode::Print) {
@@ -50,19 +50,19 @@ int main(int argc, char** argv) {
             generator.execute();
         } else if (opts.mode == MasmaligHandlingMode::Export) {
             LiteralExporter exporter(opts.outfile);
-            l_info("Writing to " + opts.outfile);
+            l_info() << "Writing to " << opts.outfile << l_end;
             MasmaligAlgorithm<LiteralExporter> generator(exporter, opts, opts.mopts);
             generator.execute();
         } else {
-            snlog::l_internal("Unknown masmalig handling mode");
+            snlog::l_internal() << "Unknown masmalig handling mode" << snlog::l_end;
             return EXIT_FAILURE;
         }
-        l_message("complete.");
+        l_message() << "complete." << l_end;
     } catch (mlbsmt2::MLB2Error& e) {
-        snlog::l_fatal(e.what());
+        snlog::l_fatal() << e.what() << snlog::l_end;
         return EXIT_FAILURE;
     } catch (gpid::GPiDError& e) {
-        snlog::l_fatal(e.what());
+        snlog::l_fatal() << e.what() << snlog::l_end;
         return EXIT_FAILURE;
     }
 

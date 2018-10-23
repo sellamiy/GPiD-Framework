@@ -86,7 +86,8 @@ namespace gpid {
 
     template<typename EngineT, typename LitGenT, typename IHandlerT>
     void ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::printInfos() {
-        snlog::l_message("GPiD framework implicate generator " + project_version);
+        snlog::l_message() << "GPiD framework implicate generator "
+                           << project_version << snlog::l_end;
     }
 
     template<typename EngineT, typename LitGenT, typename IHandlerT>

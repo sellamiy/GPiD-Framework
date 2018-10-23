@@ -249,12 +249,12 @@ namespace gpid {
 
     template<typename InterfaceT>
     inline void NaiveAbducibleEngine<InterfaceT>::printStorage() {
-        snlog::l_internal("Storage not available in naive engine");
+        snlog::l_internal() << "Storage not available in naive engine" << snlog::l_end;
     }
 
     template<typename InterfaceT>
     inline void NaiveAbducibleEngine<InterfaceT>::exportStorage(const std::string) {
-        snlog::l_internal("Storage not available in naive engine");
+        snlog::l_internal() << "Storage not available in naive engine" << snlog::l_end;
     }
 
     template<typename InterfaceT>
@@ -389,12 +389,12 @@ namespace gpid {
 
     template<typename InterfaceT>
     inline void NaiveAbducibleEngine<InterfaceT>::modelCleanUp() {
-        snlog::l_internal("Models not available in naive engine");
+        snlog::l_internal() << "Models not available in naive engine" << snlog::l_end;
     }
 
     template<typename InterfaceT>
     inline void NaiveAbducibleEngine<InterfaceT>::storeCurrentImplicate() {
-        snlog::l_internal("Storage not available in naive engine");
+        snlog::l_internal() << "Storage not available in naive engine" << snlog::l_end;
     }
 
     template<typename InterfaceT>

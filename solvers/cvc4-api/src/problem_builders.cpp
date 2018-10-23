@@ -34,7 +34,8 @@ static void tpl_cvc4_parser
     CVC4::parser::Parser* parser = pb.build();
     CVC4::SmtEngine temp(&em);
     temp.setOption("produce-assertions", true);
-    snlog::l_warn("Fixme: CVC4 Parser - safer assertions recovery handler required"); // TODO
+    snlog::l_warn() << "Fixme: CVC4 Parser - safer assertions recovery handler required"
+                    << snlog::l_end; // TODO
     CVC4::Command* cmd;
     while ((cmd = parser->nextCommand())) {
         consld.getDeclarations().collect(cmd);
@@ -76,6 +77,6 @@ void CVC4ProblemLoader::load(const std::string filename, const std::string langu
     if (gmisc::inmap(pld_cvc4_language_table, language)) {
         pld_cvc4_language_table[language](filename, consld);
     } else {
-        snlog::l_fatal("Unknown cvc4 input language: " + language);
+        snlog::l_fatal() << "Unknown cvc4 input language: " << language << snlog::l_end;
     }
 }

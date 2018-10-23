@@ -62,20 +62,20 @@ namespace gpid {
 
     template<typename DeclarationsT>
     inline void ProblemConstraintsLoader<DeclarationsT>::addConstraint(ConstraintT cons) {
-        snlog::t_warn(mode != IOMode::WRITE, "Writing problem on reading mode");
+        snlog::t_warn(mode != IOMode::WRITE) << "Writing problem on reading mode" << snlog::l_end;
         cons_data.push_back(cons);
     }
 
     template<typename DeclarationsT>
     inline bool ProblemConstraintsLoader<DeclarationsT>::hasMoreConstraints() {
-        snlog::t_warn(mode != IOMode::READ, "Reading problem on writing mode");
+        snlog::t_warn(mode != IOMode::READ) << "Reading problem on writing mode" << snlog::l_end;
         return reading_pos < cons_data.size();
     }
 
     template<typename DeclarationsT>
     inline typename ProblemConstraintsLoader<DeclarationsT>::ConstraintT
     ProblemConstraintsLoader<DeclarationsT>::nextConstraint() {
-        snlog::t_warn(mode != IOMode::READ, "Reading problem on writing mode");
+        snlog::t_warn(mode != IOMode::READ) << "Reading problem on writing mode" << snlog::l_end;
         return cons_data[reading_pos++];
     }
 
@@ -89,7 +89,7 @@ namespace gpid {
             reading_pos = -1;
             break;
         default:
-            snlog::l_internal("Problem loader ended in an Unknown state!");
+            snlog::l_internal() << "Problem loader ended in an Unknown state!" << snlog::l_end;
             throw InternalError("Problem loader ended in an Unknown state!");
         }
     }

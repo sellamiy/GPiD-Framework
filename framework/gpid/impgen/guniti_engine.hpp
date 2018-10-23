@@ -306,10 +306,12 @@ namespace gpid {
             solver_tmp.addLiteral(getLiteral(idx));
             SolverTestStatus status = solver_tmp.check();
             if (status == SolverTestStatus::UNSAT) {
-                snlog::l_info("Inconsistent literal : " + getLiteral(idx).str() + " -- removed");
+                snlog::l_info() << "Inconsistent literal : " << getLiteral(idx).str()
+                                << " -- removed" << snlog::l_end;
                 lactive.deactivate(idx);
             } else if (status == SolverTestStatus::UNKNOWN) {
-                snlog::l_warn("Interface-undecidable literal detected: " + getLiteral(idx).str());
+                snlog::l_warn() << "Interface-undecidable literal detected: "
+                                << getLiteral(idx).str() << snlog::l_end;
             }
             solver_tmp.pop();
         }

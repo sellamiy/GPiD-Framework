@@ -46,67 +46,55 @@ namespace snlog {
 #define s_nbg_wit "\033[0;47m"
 
 #define s_reset   "\033[0m"
-    template<typename printable>
-    inline void l_message(const printable& msg)
-    { std::cerr << "-- "                                << msg << std::endl; }
-    template<typename printable>
-    inline void l_info(const printable& msg)
-    { std::cerr << s_bfg_blu << "INFO: "     << s_reset << msg << std::endl; }
-    template<typename printable>
-    inline void l_warn(const printable& msg)
-    { std::cerr << s_bfg_ylw << "WARNING: "  << s_reset << msg << std::endl; }
-    template<typename printable>
-    inline void l_error(const printable& msg)
-    { std::cerr << s_bfg_red << "ERROR: "    << s_reset << msg << std::endl; }
-    template<typename printable>
-    inline void l_internal(const printable& msg)
-    { std::cerr << s_bfg_mag << "INTERNAL: " << s_reset << msg << std::endl; }
-    template<typename printable>
-    inline void l_fatal(const printable& msg)
-    { std::cerr << s_bfg_red << "FATAL: "    << s_nfg_red << msg << s_reset << std::endl; }
-    template<typename printable>
-    inline void l_notif(const printable& msg)
-    { std::cerr << s_bfg_cya << "-- " << msg << s_reset        << std::endl; }
-    template<typename printable_a, typename printable_b>
-    inline void l_notif(const printable_a& nmg, const printable_b&msg)
-    { std::cerr << s_bfg_gre << "-- " << nmg << ": "  << s_reset << msg << std::endl; }
+
+    inline std::ostream& l_end(std::ostream& os) { return os << s_reset << std::endl; }
+
+    inline std::ostream& l_message (std::ostream& os) { return os << "-- "; }
+    inline std::ostream& l_info    (std::ostream& os) { return os << s_bfg_blu << "INFO: "     << s_reset; }
+    inline std::ostream& l_warn    (std::ostream& os) { return os << s_bfg_ylw << "WARNING: "  << s_reset; }
+    inline std::ostream& l_error   (std::ostream& os) { return os << s_bfg_red << "ERROR: "    << s_reset; }
+    inline std::ostream& l_internal(std::ostream& os) { return os << s_bfg_mag << "INTERNAL: " << s_reset; }
+    inline std::ostream& l_fatal   (std::ostream& os) { return os << s_bfg_red << "FATAL: "    << s_nfg_red; }
+    inline std::ostream& l_notif   (std::ostream& os) { return os << s_bfg_cya << "-- "; }
+    inline std::ostream& l_notifg  (std::ostream& os) { return os << s_bfg_gre << "-- "; }
 #else
-    template<typename printable>
-    inline void l_message(const printable& msg)  { std::cerr << "-- "        << msg << std::endl; }
-    template<typename printable>
-    inline void l_info(const printable& msg)     { std::cerr << "INFO: "     << msg << std::endl; }
-    template<typename printable>
-    inline void l_warn(const printable& msg)     { std::cerr << "WARNING: "  << msg << std::endl; }
-    template<typename printable>
-    inline void l_error(const printable& msg)    { std::cerr << "ERROR: "    << msg << std::endl; }
-    template<typename printable>
-    inline void l_internal(const printable& msg) { std::cerr << "INTERNAL: " << msg << std::endl; }
-    template<typename printable>
-    inline void l_fatal(const printable& msg)    { std::cerr << "FATAL: "    << msg << std::endl; }
-    template<typename printable>
-    inline void l_notif(const printable& msg)    { std::cerr << "-- "        << msg << std::endl; }
-    template<typename printable_a, typename printable_b>
-    inline void l_notif(const printable_a& nmg, const printable_b&msg)
-    { std::cerr << "-- " << nmg << ": " << msg << std::endl; }
+    inline std::ostream& l_end(std::ostream& os) { return os << std::endl; }
+
+    inline std::ostream& l_message (std::ostream& os) { return os << "-- "; }
+    inline std::ostream& l_info    (std::ostream& os) { return os << "INFO: "; }
+    inline std::ostream& l_warn    (std::ostream& os) { return os << "WARNING: "; }
+    inline std::ostream& l_error   (std::ostream& os) { return os << "ERROR: "; }
+    inline std::ostream& l_internal(std::ostream& os) { return os << "INTERNAL: "; }
+    inline std::ostream& l_fatal   (std::ostream& os) { return os << "FATAL: "; }
+    inline std::ostream& l_notif   (std::ostream& os) { return os << "-- "; }
+    inline std::ostream& l_notifg  (std::ostream& os) { return os << "-- "; }
 #endif
-    template<typename printable>
-    inline void l_raw(const printable& msg)      { std::cout << msg; }
+    inline std::ostream& l_raw     (std::ostream& os) { return os; }
 
-    template<typename printable>
-    inline void t_raw(bool test, const printable& msg)      { if(test) l_raw(msg); }
+    inline std::ostream& l_message()  { return l_message (std::cerr); }
+    inline std::ostream& l_info()     { return l_info    (std::cerr); }
+    inline std::ostream& l_warn()     { return l_warn    (std::cerr); }
+    inline std::ostream& l_error()    { return l_error   (std::cerr); }
+    inline std::ostream& l_internal() { return l_internal(std::cerr); }
+    inline std::ostream& l_fatal()    { return l_fatal   (std::cerr); }
+    inline std::ostream& l_notif()    { return l_notif   (std::cerr); }
+    inline std::ostream& l_notifg()   { return l_notifg  (std::cerr); }
+    inline std::ostream& l_raw()      { return l_raw     (std::cerr); }
 
-    template<typename printable>
-    inline void t_message(bool test, const printable& msg)  { if(test) l_message(msg); }
-    template<typename printable>
-    inline void t_info(bool test, const printable& msg)     { if(test) l_info(msg); }
-    template<typename printable>
-    inline void t_warn(bool test, const printable& msg)     { if(test) l_warn(msg); }
-    template<typename printable>
-    inline void t_error(bool test, const printable& msg)    { if(test) l_error(msg); }
-    template<typename printable>
-    inline void t_internal(bool test, const printable& msg) { if(test) l_internal(msg); }
-    template<typename printable>
-    inline void t_fatal(bool test, const printable& msg)    { if(test) l_fatal(msg); }
+    struct l_nimbuf : public std::streambuf
+    { virtual int overflow(int c) override { return c; } };
+    struct l_nimstr : public std::ostream
+    { public: l_nimstr() : std::ostream(&m_sb) {} private: l_nimbuf m_sb; };
+    static l_nimstr l_null;
+
+    inline std::ostream& t_raw     (bool test) { return test ? l_raw()      : l_null; }
+
+    inline std::ostream& t_message (bool test) { return test ? l_message()  : l_null; }
+    inline std::ostream& t_info    (bool test) { return test ? l_info()     : l_null; }
+    inline std::ostream& t_warn    (bool test) { return test ? l_warn()     : l_null; }
+    inline std::ostream& t_error   (bool test) { return test ? l_error()    : l_null; }
+    inline std::ostream& t_internal(bool test) { return test ? l_internal() : l_null; }
+    inline std::ostream& t_fatal   (bool test) { return test ? l_fatal()    : l_null; }
 };
 
 #endif

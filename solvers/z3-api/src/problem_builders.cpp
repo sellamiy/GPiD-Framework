@@ -44,6 +44,6 @@ void Z3ProblemLoader::load(const std::string filename, const std::string languag
     if (gmisc::inmap(pld_z3_language_table, language)) {
         pld_z3_language_table[language](filename, consld);
     } else {
-        snlog::l_fatal("Unknown z3 input language: " + language);
+        snlog::l_fatal() << "Unknown z3 input language: " << language << snlog::l_end;
     }
 }

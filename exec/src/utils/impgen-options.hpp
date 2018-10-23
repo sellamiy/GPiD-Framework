@@ -112,7 +112,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
         return str == OptionStatus::OK ? handleOptions(opts, parser, results) : str;
 
     } catch (const cxxopts::OptionException& e) {
-	snlog::l_error(e.what());
+	snlog::l_error() << e.what() << snlog::l_end;
 	return OptionStatus::FAILURE;
     }
 }
@@ -128,11 +128,11 @@ static inline OptionStatus handleOptions
         std::vector<std::string> help_cats = {"", "Input", "Output", "Engine", "Instrument"};
 #endif
 	if (results.count("help")) {
-	    snlog::l_message(parser.help(help_cats));
+	    snlog::l_message() << parser.help(help_cats) << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 	if (results.count("version")) {
-	    snlog::l_message(gpid::version_message);
+	    snlog::l_message() << gpid::version_message << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 
@@ -189,8 +189,9 @@ static inline OptionStatus handleOptions
 	if (results.count("input")) {
 	    opts.input = results["input"].as<std::string>();
 	} else {
-	    snlog::l_fatal("No input file provided");
-	    snlog::l_info(parser.help({"Input"}));
+	    snlog::l_fatal() << "No input file provided" << snlog::l_end
+                             << snlog::l_info << parser.help({"Input"})
+                             << snlog::l_end;
 	    return OptionStatus::FAILURE;
 	}
 
@@ -205,17 +206,22 @@ static inline OptionStatus handleOptions
         if (results.count("generator")) {
             opts.interface = toInterfaceId(results["generator"].as<std::string>());
             if (opts.interface == interface_id::UNKNOWN_INTERFACE) {
-                snlog::l_fatal("Unknown generator:" + results["generator"].as<std::string>());
-                snlog::l_info(parser.help({"Generator"}));
+                snlog::l_fatal()
+                    << "Unknown generator:" << results["generator"].as<std::string>()
+                    << snlog::l_end
+                    << snlog::l_info << parser.help({"Generator"}) << snlog::l_end;
                 return OptionStatus::FAILURE;
             } else if (opts.interface == interface_id::UNCONFIGURED_INTERFACE) {
-                snlog::l_fatal(results["generator"].as<std::string>() + " interface not configured");
-                snlog::l_info(parser.help({"Generator"}));
+                snlog::l_fatal()
+                    << results["generator"].as<std::string>() << " interface not configured"
+                    << snlog::l_end << snlog::l_info << parser.help({"Generator"})
+                    << snlog::l_end;
                 return OptionStatus::FAILURE;
             }
         } else {
-            snlog::l_fatal("No generator selected");
-            snlog::l_info(parser.help({"Generator"}));
+            snlog::l_fatal() << "No generator selected" << snlog::l_end
+                             << snlog::l_info << parser.help({"Generator"})
+                             << snlog::l_end;
             return OptionStatus::FAILURE;
         }
 #endif
@@ -233,7 +239,7 @@ static inline OptionStatus handleOptions
         if (results.count("time-unit")) {
             std::string ru_tunit = results["time-unit"].as<std::string>();
             if (ru_tunit != opts.control.time.selectDurationUnit(ru_tunit)) {
-                snlog::l_fatal("Unknown time unit: " + ru_tunit);
+                snlog::l_fatal() << "Unknown time unit: " << ru_tunit << snlog::l_end;
                 return OptionStatus::FAILURE;
             }
         }
@@ -259,7 +265,7 @@ static inline OptionStatus handleOptions
 	return OptionStatus::OK;
 
     } catch (const cxxopts::OptionException& e) {
-	snlog::l_error(e.what());
+	snlog::l_error() << e.what() << snlog::l_end;
 	return OptionStatus::FAILURE;
     }
 }
@@ -294,9 +300,9 @@ static inline OptionStatus detectConflicts
             for (uint32_t lc = 0; lc < p_illeg[pc].size(); lc++)
                 if (!results.count(p_illeg[pc][lc])) active = false;
             if (active) {
-                snlog::l_fatal("Conflictual options detected:");
+                snlog::l_fatal() << "Conflictual options detected:" << snlog::l_end;
                 for (uint32_t lc = 0; lc < p_illeg[pc].size(); lc++)
-                    snlog::l_info("   @option: " + p_illeg[pc][lc]);
+                    snlog::l_info() << "   @option: " << p_illeg[pc][lc] << snlog::l_end;
                 return OptionStatus::FAILURE;
             }
         }
@@ -307,8 +313,9 @@ static inline OptionStatus detectConflicts
         { "generate-selection-graph", "generate-webtrace", "infoline" };
         for (uint32_t pc = 0; pc < instr_opts.size(); pc++) {
             if (results.count(instr_opts[pc])) {
-                snlog::l_fatal("Option uses instrumentation but instrumentation is not configured:");
-                snlog::l_info("   @option: " + instr_opts[pc]);
+                snlog::l_fatal() << "Option uses instrumentation but instrumentation is not configured:"
+                                 << snlog::l_end << snlog::l_info
+                                 << "   @option: " << instr_opts[pc] << snlog::l_end;
                 return OptionStatus::FAILURE;
             }
         }
@@ -317,7 +324,7 @@ static inline OptionStatus detectConflicts
         return OptionStatus::OK;
 
     } catch (const cxxopts::OptionException& e) {
-	snlog::l_error(e.what());
+	snlog::l_error() << e.what() << snlog::l_end;
 	return OptionStatus::FAILURE;
     }
 }

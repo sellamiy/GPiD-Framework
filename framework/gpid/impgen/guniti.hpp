@@ -76,7 +76,8 @@ namespace gpid {
 
     template<typename InterfaceT, typename LitGenT, typename IHandlerT>
     void GunitiAlgorithm<InterfaceT, LitGenT, IHandlerT>::printInfos() {
-        snlog::l_message("GPiD framework unit implicate generator " + project_version);
+        snlog::l_message() << "GPiD framework unit implicate generator "
+                           << project_version << snlog::l_end;
     }
 
     template<typename InterfaceT, typename LitGenT, typename IHandlerT>
