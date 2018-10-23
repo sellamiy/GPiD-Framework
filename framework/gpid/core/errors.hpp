@@ -14,12 +14,12 @@ namespace gpid {
 
     /** Main exception class for the framework related errors */
     class GPiDError : public std::exception {
-        std::string reason;
+        const std::string reason;
     public:
         /** Constructor \param reason Cause of the exception */
-        GPiDError(std::string reason) : reason(reason) { }
+        GPiDError(const std::string& reason) : reason(reason) { }
         /** Obtain error type textual information. */
-        virtual std::string getErrorInfo() const = 0;
+        virtual const std::string getErrorInfo() const = 0;
         /** Textual information of the cause of the error. */
         virtual const char* what() const throw () {
             return (getErrorInfo() + " : " + reason).c_str();
@@ -30,15 +30,15 @@ namespace gpid {
     class GPiDSystemError : public GPiDError {
     public:
         /** Constructor \param reason Cause of the exception */
-        GPiDSystemError(std::string reason) : GPiDError(reason) { }
+        GPiDSystemError(const std::string& reason) : GPiDError(reason) { }
     };
 
     /** Exception class for internal errors */
     class InternalError : public GPiDSystemError {
     public:
         /** Constructor \param reason Cause of the exception */
-        InternalError(std::string reason) : GPiDSystemError(reason) { }
-        virtual std::string getErrorInfo() const {
+        InternalError(const std::string& reason) : GPiDSystemError(reason) { }
+        virtual const std::string getErrorInfo() const {
             return "Framework suffered an internal error";
         }
     };
@@ -47,8 +47,8 @@ namespace gpid {
     class MemoryError : public GPiDSystemError {
     public:
         /** Constructor \param reason Cause of the exception */
-        MemoryError(std::string reason) : GPiDSystemError(reason) { }
-        virtual std::string getErrorInfo() const {
+        MemoryError(const std::string& reason) : GPiDSystemError(reason) { }
+        virtual const std::string getErrorInfo() const {
             return "Failed at a memory operation";
         }
     };
@@ -57,15 +57,15 @@ namespace gpid {
     class GPiDInstanceError : public GPiDError {
     public:
         /** Constructor \param reason Cause of the exception */
-        GPiDInstanceError(std::string reason) : GPiDError(reason) { }
+        GPiDInstanceError(const std::string& reason) : GPiDError(reason) { }
     };
 
     /** Exception class for problems solvers can't decide */
     class UndecidableProblemError : public GPiDInstanceError {
     public:
         /** Constructor \param reason Cause of the exception */
-        UndecidableProblemError(std::string reason) : GPiDInstanceError(reason) { }
-        virtual std::string getErrorInfo() const {
+        UndecidableProblemError(const std::string& reason) : GPiDInstanceError(reason) { }
+        virtual const std::string getErrorInfo() const {
             return "The problem is undecidable";
         }
     };
@@ -74,8 +74,8 @@ namespace gpid {
     class ParseError : public GPiDInstanceError {
     public:
         /** Constructor \param reason Cause of the exception */
-        ParseError(std::string reason) : GPiDInstanceError(reason) { }
-        virtual std::string getErrorInfo() const {
+        ParseError(const std::string& reason) : GPiDInstanceError(reason) { }
+        virtual const std::string getErrorInfo() const {
             return "The parsing failed";
         }
     };
@@ -84,8 +84,8 @@ namespace gpid {
     class UnknownUtilityError : public GPiDInstanceError {
     public:
         /** Constructor \param reason Cause of the exception */
-        UnknownUtilityError(std::string reason) : GPiDInstanceError(reason) { }
-        virtual std::string getErrorInfo() const {
+        UnknownUtilityError(const std::string& reason) : GPiDInstanceError(reason) { }
+        virtual const std::string getErrorInfo() const {
             return "Failed at utility selection";
         }
     };
@@ -94,8 +94,8 @@ namespace gpid {
     class DataError : public GPiDInstanceError {
     public:
         /** Constructor \param reason Cause of the exception */
-        DataError(std::string reason) : GPiDInstanceError(reason) { }
-        virtual std::string getErrorInfo() const {
+        DataError(const std::string& reason) : GPiDInstanceError(reason) { }
+        virtual const std::string getErrorInfo() const {
             return "Failure while using instance data";
         }
     };
@@ -104,8 +104,8 @@ namespace gpid {
     class IllegalAccessError : public DataError {
     public:
         /** Constructor \param reason Cause of the exception */
-        IllegalAccessError(std::string reason) : DataError(reason) { }
-        virtual std::string getErrorInfo() const {
+        IllegalAccessError(const std::string& reason) : DataError(reason) { }
+        virtual const std::string getErrorInfo() const {
             return "Illegal access to instance data";
         }
     };

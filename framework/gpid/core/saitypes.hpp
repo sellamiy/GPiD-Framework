@@ -25,7 +25,7 @@ namespace gpid {
     };
 
     /** String converter for SolverTestStatus. */
-    inline std::string to_string(const SolverTestStatus& s) {
+    inline const std::string to_string(const SolverTestStatus& s) {
         return s == SolverTestStatus::SAT
             ? "SAT"
             : s == SolverTestStatus::UNSAT

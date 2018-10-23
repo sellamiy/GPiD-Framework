@@ -39,9 +39,9 @@ namespace gpid {
             reason = r;
         }
         /** \return true iff at least one interruption flag is set. */
-        inline bool systemInterrupted() { return interruption_flag; }
+        inline constexpr bool systemInterrupted() const { return interruption_flag; }
         /** \return The last interruption request's reason. */
-        inline SystemInterruptionReason getReason() { return reason; }
+        inline SystemInterruptionReason getReason() const { return reason; }
     };
 
     /**

@@ -25,7 +25,7 @@ namespace gpid {
         inline O& get(index_t idx);
 
         /** \return The number of mapped objects. */
-        inline uint32_t size();
+        inline constexpr uint32_t size() const;
 
         /** Default constructor */
         ObjectMapper();
@@ -83,7 +83,7 @@ namespace gpid {
     }
 
     template<typename O>
-    inline uint32_t ObjectMapper<O>::size() {
+    inline constexpr uint32_t ObjectMapper<O>::size() const {
         return _mapping.size();
     }
 
