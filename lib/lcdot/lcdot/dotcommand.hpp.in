@@ -19,7 +19,7 @@ namespace lcdot {
          * \param source Filename of the source graph to compile.
          * \param target Filename of the resulting compiled graph.
          */
-        extern void autocompile(std::string source, std::string target);
+        extern void autocompile(const std::string& source, const std::string& target);
     }
 }
 #endif

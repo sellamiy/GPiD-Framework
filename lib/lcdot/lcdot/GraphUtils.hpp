@@ -46,7 +46,7 @@ namespace lcdot {
     };
 
     /** \brief Converts a dot color to its graphviz-dot textual form. */
-    extern std::string dotString(DotColor c);
+    extern const std::string dotString(DotColor c);
 
     /** \brief Enumerative representation of graphviz-dot graph node shapes. */
     enum DotShape {
@@ -62,7 +62,7 @@ namespace lcdot {
     };
 
     /** \brief Converts a node shape to its graphviz-dot textual form. */
-    extern std::string dotString(DotShape s);
+    extern const std::string dotString(DotShape s);
 
     /** \brief Enumerative representation of graphviz-dot arrow type. */
     enum DotArrowType {
@@ -73,17 +73,17 @@ namespace lcdot {
     };
 
     /** \brief Converts an arrow type to its graphviz-dot textual form. */
-    extern std::string dotString(DotArrowType t);
+    extern const std::string dotString(DotArrowType t);
 
     /** \brief Enumerative representation of graphviz-dot arrow direction. */
     enum DotArrowDir { dad_forward, dad_back, dad_both, dad_none };
     /** \brief Converts an arrow direction to its graphviz-dot textual form. */
-    extern std::string dotString(DotArrowDir d);
+    extern const std::string dotString(DotArrowDir d);
 
     /** \brief Enumerative representation of graphviz-dot arrow style. */
     enum DotArrowStyle { das_dashed, das_dotted, das_solid };
     /** \brief Converts an arrow style to its graphviz-dot textual form. */
-    extern std::string dotString(DotArrowStyle s);
+    extern const std::string dotString(DotArrowStyle s);
 
     /** \brief Representation of a graphviz-dot node format. */
     class GraphNodeType {
@@ -121,7 +121,7 @@ namespace lcdot {
          * \param label Label given to this node.
          * \return A string representing this node type in dot format.
          */
-        std::string operator()(const std::string label);
+        std::string operator()(const std::string& label) const;
     };
 
     /** \brief Representation of a graphviz-dot edge format. */
@@ -159,16 +159,16 @@ namespace lcdot {
          * \param label Label given to this edge.
          * \return A string representing this edge type in dot format.
          */
-        std::string operator()(const std::string label);
+        std::string operator()(const std::string& label) const;
     };
 
     /** \brief Write a node declaration in graphviz-dot format. */
     extern void writeNode(std::ostream& stream, int nodeid,
-                          const std::string nodelabel, GraphNodeType nodet,
+                          const std::string& nodelabel, GraphNodeType nodet,
                           int pad=0);
     /** \brief Write an edge declaration in graphviz-dot format. */
     extern void writeEdge(std::ostream& stream, int srcid, int tgtid,
-                          const std::string edgelabel, GraphEdgeType et, int pad=0);
+                          const std::string& edgelabel, GraphEdgeType et, int pad=0);
 
 }
 

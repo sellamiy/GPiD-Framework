@@ -2,7 +2,7 @@
 # Dot - Dot graphs generation - local library target
 # ==============================================================================
 project(liblcdot LANGUAGES CXX)
-set(LIBLCDOT_VERSION "0.1")
+set(LIBLCDOT_VERSION "0.2")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lcdot/dotgraph.hpp.in
   ${LOCAL_LIB_HEADERS_DIR}/lcdot/dotgraph.hpp)

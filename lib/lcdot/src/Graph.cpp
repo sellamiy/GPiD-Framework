@@ -4,13 +4,13 @@
 
 using namespace lcdot;
 
-int Graph::createNode(std::string name, GraphNodeType type) {
+int Graph::createNode(const std::string& name, GraphNodeType type) {
     nodes[nextNode] = type;
     node_labels[nextNode] = name;
     return nextNode++;
 }
 
-void Graph::createEdge(int src, int tgt, std::string label, GraphEdgeType type) {
+void Graph::createEdge(int src, int tgt, const std::string& label, GraphEdgeType type) {
     GraphEdge edge(src, tgt);
     edges[edge] = type;
     edge_labels[edge] = label;

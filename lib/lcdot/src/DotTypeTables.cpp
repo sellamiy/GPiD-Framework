@@ -5,7 +5,7 @@
 namespace lcdot {
 namespace tables {
 
-    static std::string dotColorTable[] = {
+    static const std::string dotColorTable[] = {
         "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure",
         "beige", "bisque", "black", "blanchedalmond", "blue",
         "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse",
@@ -38,7 +38,7 @@ namespace tables {
         "yellow", "yellowgreen"
     };
 
-    static std::string dotShapeTable[] = {
+    static const std::string dotShapeTable[] = {
         "box", "polygon", "ellipse", "circle", "point", "egg", "triangle", "plaintext", "diamond",
         "trapezium", "parallelogram", "house", "pentagon", "hexagon", "septagon", "octagon",
         "doublecircle", "doubleoctagon", "tripleoctagon", "invtriangle", "invtrapezium",
@@ -46,35 +46,35 @@ namespace tables {
         "box3d", "component"
     };
 
-    static std::string dotArrowTypeTable[] = {
+    static const std::string dotArrowTypeTable[] = {
         "normal", "inv", "dot", "invdot", "odot", "invodot", "none", "tee",
         "empty", "invempty", "diamond", "odiamond", "ediamond", "crow",
         "box", "obox", "open", "halfopen", "vee"
     };
 
-    static std::string dotArrowDirTable[] = {
+    static const std::string dotArrowDirTable[] = {
         "forward", "back", "both", "none"
     };
 
-    static std::string dotArrowStyleTable[] = {
+    static const std::string dotArrowStyleTable[] = {
         "dashed", "dotted", "solid"
     };
     
 }
 }
 
-extern std::string lcdot::dotString(DotColor c) {
+extern const std::string lcdot::dotString(DotColor c) {
     return tables::dotColorTable[c];
 }
-extern std::string lcdot::dotString(DotShape s) {
+extern const std::string lcdot::dotString(DotShape s) {
     return tables::dotShapeTable[s];
 }
-extern std::string lcdot::dotString(DotArrowType t) {
+extern const std::string lcdot::dotString(DotArrowType t) {
     return tables::dotArrowTypeTable[t];
 }
-extern std::string lcdot::dotString(DotArrowDir d) {
+extern const std::string lcdot::dotString(DotArrowDir d) {
     return tables::dotArrowDirTable[d];
 }
-extern std::string lcdot::dotString(DotArrowStyle s) {
+extern const std::string lcdot::dotString(DotArrowStyle s) {
     return tables::dotArrowStyleTable[s];
 }

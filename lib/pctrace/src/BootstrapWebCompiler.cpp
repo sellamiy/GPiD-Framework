@@ -26,7 +26,7 @@ static inline void bootstrap_header(std::ostream& stream) {
     
 }
 
-static inline void bootstrap_algorithm(std::ostream& stream, const std::string pagetitle) {
+static inline void bootstrap_algorithm(std::ostream& stream, const std::string& pagetitle) {
     stream << "<div class=\"card\">" << std::endl;
     stream << "<div class=\"card-header\">" << std::endl;
     stream << "<h1>" << pagetitle << "</h1>" << std::endl;
@@ -34,19 +34,19 @@ static inline void bootstrap_algorithm(std::ostream& stream, const std::string p
     stream << "<div class=\"card-body\">" << std::endl;
 }
 
-static inline void bootstrap_mapping(std::ostream& stream, const std::string k, const std::string v) {
+static inline void bootstrap_mapping(std::ostream& stream, const std::string& k, const std::string& v) {
 
     stream << "<p>" << std::endl;
     stream << "<kbd>" << k << " &larr;</kbd> " << v << std::endl;
 }
 
-static inline void bootstrap_command(std::ostream& stream, const std::string c) {
+static inline void bootstrap_command(std::ostream& stream, const std::string& c) {
 
     stream << "<p>" << std::endl;
     stream << "<kbd>" << c << "</kbd>" << std::endl;
 }
 
-static inline void bootstrap_collapse(std::ostream& stream, const std::string k, const std::string v) {
+static inline void bootstrap_collapse(std::ostream& stream, const std::string& k, const std::string& v) {
     uint64_t collapse_id = next_id();
     stream << "<p>" << std::endl;
     stream << "<div class=\"card\">" << std::endl;
@@ -74,27 +74,27 @@ static inline void bootstrap_footer(std::ostream& stream) {
 
 
 
-void pctrace::BootstrapWebCompiler::open(const std::string title) {
+void pctrace::BootstrapWebCompiler::open(const std::string& title) const {
     bootstrap_header(stream);
     bootstrap_algorithm(stream, title);
 }
 
-void pctrace::BootstrapWebCompiler::maps(const std::string key, const std::string val) {
+void pctrace::BootstrapWebCompiler::maps(const std::string& key, const std::string& val) const {
     bootstrap_mapping(stream, key, val);
 }
 
-void pctrace::BootstrapWebCompiler::command(const std::string c) {
+void pctrace::BootstrapWebCompiler::command(const std::string& c) const {
     bootstrap_command(stream, c);
 }
 
-void pctrace::BootstrapWebCompiler::encapsulate(const std::string key, const std::string val) {
+void pctrace::BootstrapWebCompiler::encapsulate(const std::string& key, const std::string& val) const {
     bootstrap_collapse(stream, key, val);
 }
 
-void pctrace::BootstrapWebCompiler::decapsulate() {
+void pctrace::BootstrapWebCompiler::decapsulate() const {
     bootstrap_collapse_end(stream);
 }
 
-void pctrace::BootstrapWebCompiler::close() {
+void pctrace::BootstrapWebCompiler::close() const {
     bootstrap_footer(stream);
 }

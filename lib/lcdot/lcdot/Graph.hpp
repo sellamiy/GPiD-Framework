@@ -35,7 +35,7 @@ namespace lcdot {
         std::map<GraphEdge, GraphEdgeType, GraphEdgeCompare> edges;
     public:
         /** \brief Graph construction. */
-        Graph(std::string name) : name(name), nextNode(0) {}
+        Graph(const std::string& name) : name(name), nextNode(0) {}
 
         /**
          * \brief Add a node to the graph.
@@ -43,7 +43,7 @@ namespace lcdot {
          * \param type Type of the node to create.
          * \return Id of the newly created node.
          */
-        int createNode(std::string name, GraphNodeType type);
+        int createNode(const std::string& name, GraphNodeType type);
         /**
          * \brief Add an edge to the graph.
          * \param src Id of the source node.
@@ -51,7 +51,7 @@ namespace lcdot {
          * \param label Label of the edge.
          * \param type Type of the edge to create.
          */
-        void createEdge(int src, int tgt, std::string label, GraphEdgeType type);
+        void createEdge(int src, int tgt, const std::string& label, GraphEdgeType type);
         /** \brief Change the type of a node. */
         void changeNodeType(int id, GraphNodeType type);
         /** \brief Change the type of an edge. */

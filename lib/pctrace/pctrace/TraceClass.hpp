@@ -18,31 +18,31 @@ namespace pctrace {
     public:
         TraceCompiler(std::ostream& stream) : stream(stream) {}
 
-        virtual void open       (const std::string title) = 0;
-        virtual void maps       (const std::string key,
-                                 const std::string val)   = 0;
-        virtual void command    (const std::string c)     = 0;
-        virtual void encapsulate(const std::string key,
-                                 const std::string val)   = 0;
-        virtual void decapsulate()                         = 0;
-        virtual void close      ()                         = 0;
+        virtual void open       (const std::string& title) const = 0;
+        virtual void maps       (const std::string& key,
+                                 const std::string& val)   const = 0;
+        virtual void command    (const std::string& c)     const = 0;
+        virtual void encapsulate(const std::string& key,
+                                 const std::string& val)   const = 0;
+        virtual void decapsulate()                         const = 0;
+        virtual void close      ()                         const = 0;
     };
 
     /** Abstract base class representing a part of an execution trace. */
     class TraceElement {
     public:
         virtual ~TraceElement() {}
-        virtual void compile(TraceCompiler& compiler) = 0;
+        virtual void compile(const TraceCompiler& compiler) const = 0;
     };
 
     /** Begining of a trace. */
     class TraceStart : public TraceElement {
         const std::string name;
     public:
-        TraceStart(const std::string name) : name(name)   {}
+        TraceStart(const std::string& name) : name(name)   {}
         TraceStart(const TraceStart& o)     : name(o.name) {}
 
-        virtual void compile(TraceCompiler& compiler) {
+        virtual void compile(const TraceCompiler& compiler) const override {
             compiler.open(name);
         }
     };
@@ -52,12 +52,12 @@ namespace pctrace {
         const std::string name;
         const std::string value;
     public:
-        TraceVariable(const std::string name, const std::string value)
+        TraceVariable(const std::string& name, const std::string& value)
             : name(name),   value(value)   {}
         TraceVariable(const TraceVariable& o)
             : name(o.name), value(o.value) {}
 
-        virtual void compile(TraceCompiler& compiler) {
+        virtual void compile(const TraceCompiler& compiler) const override {
             compiler.maps(name, value);
         }
     };
@@ -66,10 +66,10 @@ namespace pctrace {
     class TraceInstruction : public TraceElement {
         const std::string inst;
     public:
-        TraceInstruction(const std::string inst)   : inst(inst)   {}
+        TraceInstruction(const std::string& inst)   : inst(inst)   {}
         TraceInstruction(const TraceInstruction& o) : inst(o.inst) {}
 
-        virtual void compile(TraceCompiler& compiler) {
+        virtual void compile(const TraceCompiler& compiler) const override {
             compiler.command(inst);
         }
     };
@@ -79,12 +79,12 @@ namespace pctrace {
         const std::string name;
         const std::string params;
     public:
-        TraceCallStart(const std::string name, const std::string params)
+        TraceCallStart(const std::string& name, const std::string& params)
             : name(name),   params(params)   {}
         TraceCallStart(const TraceCallStart& o)
             : name(o.name), params(o.params) {}
 
-        virtual void compile(TraceCompiler& compiler) {
+        virtual void compile(const TraceCompiler& compiler) const override {
             compiler.encapsulate(name, params);
         }
     };
@@ -95,7 +95,7 @@ namespace pctrace {
         TraceCallEnd()                    {}
         TraceCallEnd(const TraceCallEnd&) {}
 
-        virtual void compile(TraceCompiler& compiler) {
+        virtual void compile(const TraceCompiler& compiler) const override {
             compiler.decapsulate();
         }
     };
@@ -106,7 +106,7 @@ namespace pctrace {
         TraceEnd()                {}
         TraceEnd(const TraceEnd&) {}
 
-        virtual void compile(TraceCompiler& compiler) {
+        virtual void compile(const TraceCompiler& compiler) const override {
             compiler.close();
         }
     };
@@ -124,20 +124,20 @@ namespace pctrace {
             sequence.clear();
         }
 
-        inline void traceStart(const std::string tracename)
+        inline void traceStart(const std::string& tracename)
         { sequence.push_back(new TraceStart(tracename)); }
         inline void traceStop()
         { sequence.push_back(new TraceEnd()); }
-        inline void traceVariableValue(const std::string varname, const std::string varvalue)
+        inline void traceVariableValue(const std::string& varname, const std::string& varvalue)
         { sequence.push_back(new TraceVariable(varname, varvalue)); }
-        inline void traceInstruction(const std::string instext)
+        inline void traceInstruction(const std::string& instext)
         { sequence.push_back(new TraceInstruction(instext)); }
-        inline void traceCallStart(const std::string funcname, const std::string funcparams)
+        inline void traceCallStart(const std::string& funcname, const std::string& funcparams)
         { sequence.push_back(new TraceCallStart(funcname, funcparams)); }
         inline void traceCallEnd()
         { sequence.push_back(new TraceCallEnd()); }
 
-        inline void compile(TraceCompiler& compiler) {
+        inline void compile(const TraceCompiler& compiler) const {
             for (TraceElement* e : sequence) {
                 e->compile(compiler);
             }

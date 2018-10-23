@@ -2,7 +2,7 @@
 # Pretty Compilable Trace - Compilable format trace export - local library target
 # ==============================================================================
 project(libpctrace LANGUAGES CXX)
-set(LIBPCTRACE_VERSION "0.1")
+set(LIBPCTRACE_VERSION "0.2")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pctrace/pctrace.hpp.in
   ${LOCAL_LIB_HEADERS_DIR}/pctrace/pctrace.hpp)
