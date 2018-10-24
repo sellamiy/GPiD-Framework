@@ -96,10 +96,10 @@ namespace gpid {
         inline constexpr index_t getCurrentIndex() const;
     public:
         /** Create an abducible engine. */
-        GunitiEngine(size_t size, ContextManagerT& ctx, GunitiOptions& iopts);
+        GunitiEngine(size_t size, ContextManagerT& ctx, ImpgenOptions& iopts);
         /** Create an abducible engine. */
         template<typename AbducibleSource>
-        GunitiEngine(AbducibleSource& source, ContextManagerT& ctx, GunitiOptions& iopts);
+        GunitiEngine(AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts);
 
         /** Reinitialize the abducible engine. */
         inline void reinit();
@@ -149,7 +149,7 @@ namespace gpid {
     /* *** Implementations *** */
 
     template<typename InterfaceT> GunitiEngine<InterfaceT>::GunitiEngine
-    (size_t size, ContextManagerT& ctx, GunitiOptions& iopts)
+    (size_t size, ContextManagerT& ctx, ImpgenOptions& iopts)
         : interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
           lactive(size),
@@ -162,7 +162,7 @@ namespace gpid {
 
     template<typename InterfaceT>
     template<typename AbducibleSource> GunitiEngine<InterfaceT>::GunitiEngine
-    (AbducibleSource& source, ContextManagerT& ctx, GunitiOptions& iopts)
+    (AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts)
         : interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
           lactive(source.count()),

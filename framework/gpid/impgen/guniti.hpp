@@ -34,7 +34,7 @@ namespace gpid {
         using ProblemLoaderT = typename InterfaceT::ProblemLoaderT;
     private:
 
-        GunitiOptions& options;
+        ImpgenOptions& options;
         EngineT lengine;
         ProblemLoaderT& pbloader;
         IHandlerT& imphandler;
@@ -49,7 +49,7 @@ namespace gpid {
     public:
         /** Algorithm initialization */
         GunitiAlgorithm(ProblemLoaderT& pbld, LitGenT& lgen, IHandlerT& ihdl,
-                        GPiDOptions& opts, GunitiOptions& iopts);
+                        GPiDOptions& opts, ImpgenOptions& iopts);
 
         /** Print informations on the algorithm and its parameters. */
         static void printInfos();
@@ -66,7 +66,7 @@ namespace gpid {
     template<typename InterfaceT, typename LitGenT, typename IHandlerT>
     GunitiAlgorithm<InterfaceT, LitGenT, IHandlerT>::
     GunitiAlgorithm(ProblemLoaderT& pbld, LitGenT& lgen, IHandlerT& ihdl,
-                    GPiDOptions& opts, GunitiOptions& iopts)
+                    GPiDOptions& opts, ImpgenOptions& iopts)
         : GPiDAlgorithm(opts),
           options(iopts),
           lengine(lgen, pbld.getContextManager(), iopts),

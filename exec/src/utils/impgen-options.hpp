@@ -25,6 +25,7 @@ struct OptionStorage : public gpid::GPiDOptions
     gpid::instrument::InstrumentOptions instrument;
     witchw::wController control;
     bool naive = false;
+    bool guniti_delegation = true;
 };
 
 enum class OptionStatus {
@@ -75,6 +76,9 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 
             ("allow-inconsistencies", "Let the engine generate inconsistent implicates")
             ("dont-allow-inconsistencies", "Force the engine generate consistent implicates only")
+
+            ("allow-guniti-delegation", "Let the engine generate inconsistent implicates")
+            ("prevent-guniti-delegation", "Force the engine generate consistent implicates only")
 
             ("detect-consequences", "Let the engine detect and skip consequences of previous assignments")
             ("dont-detect-consequences", "Never detect consequences of selected abducibles")
@@ -177,6 +181,11 @@ static inline OptionStatus handleOptions
             opts.impgen.detect_consequences = true;
         if (results.count("dont-detect-consequences"))
             opts.impgen.detect_consequences = false;
+
+        if (results.count("allow-guniti-delegation"))
+            opts.guniti_delegation = true;
+        if (results.count("prevent-guniti-delegation"))
+            opts.guniti_delegation = false;
 
         if (results.count("implicate-size-limit"))
             opts.impgen.max_level = results["implicate-size-limit"].as<uint32_t>() + 1;
@@ -288,6 +297,7 @@ static inline OptionStatus detectConflicts
             { "use-models", "dont-use-models"},
             { "allow-inconsistencies", "dont-allow-inconsistencies" },
             { "detect-consequences", "dont-detect-consequences" },
+            { "allow-guniti-delegation", "prevent-guniti-delegation" },
             { "naive", "store-implicates" },
             { "naive", "use-models" },
             { "naive", "detect-consequences" },

@@ -55,9 +55,6 @@ namespace gpid {
 
     };
 
-    /** Options for the unit implicate generator algorithm. */
-    struct GunitiOptions : public ImpgenOptions { };
-
 }
 
 #endif

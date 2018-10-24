@@ -6,8 +6,6 @@
 using namespace snlog;
 using namespace gpid;
 
-enum class impgenExecutionStatus { SUCCESS, FAILURE };
-
 template<class EngineT, class LiteralGeneratorT>
 static inline void generate_upae_x(OptionStorage& opts) {
     // TODO: Handle Errors on subcalls
@@ -49,21 +47,6 @@ static inline void generate_upae_x(OptionStorage& opts) {
     for (std::pair<std::string, GPiDAlgorithm::counter_t> p : Generator.getSkippedCounts()) {
         opts.control.stats.addStatistic(p.first, p.second, 4);
     }
-}
-
-template<class InterfaceT, class LiteralGeneratorT>
-static inline void generate(OptionStorage& opts) {
-    if (opts.naive) {
-        generate_upae_x<NaiveAbducibleEngine<InterfaceT>, LiteralGeneratorT>(opts);
-    } else {
-        generate_upae_x<AdvancedAbducibleEngine<InterfaceT>, LiteralGeneratorT>(opts);
-    }
-}
-
-#include "sai/impgen-executors.hpp"
-
-static inline impgenExecutionStatus generate(OptionStorage& opts) {
-    return wrap_generate(opts);
 }
 
 #endif

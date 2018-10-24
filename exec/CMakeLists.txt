@@ -11,7 +11,7 @@ find_package(Threads REQUIRED)
 include(FrameworkSolverRegistration)
 # ------------------------------------------------------------------------------
 set(EXEC_TEMPLATES_DIR "${CMAKE_SOURCE_DIR}/exec/templates")
-set(EXEC_INCLUDE_TEMPLATES "sai/identifiers.hpp" "sai/impgen-executors.hpp" "sai/guniti-executors.hpp")
+set(EXEC_INCLUDE_TEMPLATES "sai/identifiers.hpp" "sai/impgen-executors.hpp")
 set(EXEC_SOURCES_TEMPLATES)
 set(EXEC_PREPROCESSED_TARGETS)
 # ------------------------------------------------------------------------------
@@ -69,24 +69,6 @@ install(TARGETS gpid-impgen RUNTIME DESTINATION bin)
 # ==============================================================================
 foreach(interface ${SOLVER_TARGETS})
   add_split_exec(${interface} "impgen" "src/gpid-impgen.cpp")
-endforeach()
-# ==============================================================================
-# GunitI - a unit implicate generator
-# ==============================================================================
-add_executable(gpid-guniti "src/gpid-guniti.cpp")
-add_dependencies(gpid-guniti ${EXEC_PREPROCESSED_TARGETS})
-target_include_directories(gpid-guniti PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
-if(STATIC_EXECUTABLES)
-  target_link_libraries(gpid-guniti ${SOLVER_STATIC_TARGETS} ${CORE_STATIC_LINK_LIBRARIES})
-else()
-  target_link_libraries(gpid-guniti ${SOLVER_SHARED_TARGETS} ${CORE_SHARED_LINK_LIBRARIES})
-endif()
-install(TARGETS gpid-guniti RUNTIME DESTINATION bin)
-# ==============================================================================
-# Split-GunitI - single unit implicate generators linked to specific solver
-# ==============================================================================
-foreach(interface ${SOLVER_TARGETS})
-  add_split_exec(${interface} "guniti" "src/gpid-guniti.cpp")
 endforeach()
 # ==============================================================================
 # Parser - an abducible files parser

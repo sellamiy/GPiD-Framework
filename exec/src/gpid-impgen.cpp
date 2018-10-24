@@ -1,6 +1,6 @@
 #define GPID_EXEC_GPID_IMPGEN_CPP
 
-#include "utils/impgen-executors.hpp"
+#include "utils/impgen-wrappers.hpp"
 
 using namespace std;
 using namespace snlog;
