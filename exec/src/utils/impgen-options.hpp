@@ -53,7 +53,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 	parser.add_options("Input")
 	    ("i,input", "Input file", cxxopts::value<std::string>())
             ("l,load-abducibles", "Abducible file", cxxopts::value<std::string>())
-            ("a,autogen-abducibles", "Abducible auto generation type", cxxopts::value<std::string>())
+            ("autogen-abducibles", "Abducible auto generation type", cxxopts::value<std::string>())
             ("input-language", "Language of input file", cxxopts::value<std::string>())
 	    ;
 
@@ -66,9 +66,9 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 #endif
 
         parser.add_options("Engine")
-            ("naive", "Generate implicates using the naive engine (trying all)")
+            ("n,naive", "Generate implicates using the naive engine (trying all)")
 
-            ("s,store-implicates", "Allow generated implicate to be stored")
+            ("store-implicates", "Allow generated implicate to be stored")
             ("dont-store-implicates", "Allow generated implicate to be stored")
 
             ("use-models", "Use solver models to prune hypotheses sets")
@@ -83,16 +83,16 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
             ("detect-consequences", "Let the engine detect and skip consequences of previous assignments")
             ("dont-detect-consequences", "Never detect consequences of selected abducibles")
 
-            ("implicate-size-limit", "Max number of abducibles in implicates", cxxopts::value<uint32_t>())
+            ("d,implicate-size-limit", "Max number of abducibles in implicates", cxxopts::value<uint32_t>())
 
-            ("time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
-            ("implicate-limit", "Maximal number of implicates to generate", cxxopts::value<uint64_t>())
+            ("t,time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
+            ("c,implicate-limit", "Maximal number of implicates to generate", cxxopts::value<uint64_t>())
             ;
 
 	parser.add_options("Output")
 	    ("p,print-implicates", "Print generated implicates")
 	    ("dont-print-implicates", "Do not print generated implicates")
-            ("print-storage", "Print only stored implicates after computation")
+            ("P,print-storage", "Print only stored implicates after computation")
 	    ("dont-print-storage", "Do not print stored implicates")
             ("export-storage", "Export stored implicates in graph form after computation")
             ("time-unit", "Unit for printing time data (truncated)", cxxopts::value<std::string>())
