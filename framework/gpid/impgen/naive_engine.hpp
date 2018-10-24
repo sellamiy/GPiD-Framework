@@ -130,7 +130,7 @@ namespace gpid {
         inline void mapLink(uint32_t idx, uint32_t tgt_idx);
 
         /** Original size of the set. */
-        inline uint32_t getSourceSize();
+        inline constexpr uint32_t getSourceSize() const;
         /** Count of skipped candidates for various reasons. */
         inline std::map<std::string, counter_t>& getSkippedCounts();
 
@@ -142,7 +142,7 @@ namespace gpid {
         /** Print the current implicate storage structure state. */
         inline void printStorage();
         /** Export the current implicate storage structure state. */
-        inline void exportStorage(const std::string filename);
+        inline void exportStorage(const std::string& filename);
 
         /**
          * \brief Find the next non tested literal.
@@ -222,7 +222,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline uint32_t NaiveAbducibleEngine<InterfaceT>::getSourceSize() {
+    inline constexpr uint32_t NaiveAbducibleEngine<InterfaceT>::getSourceSize() const {
         return msize;
     }
 
@@ -253,7 +253,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void NaiveAbducibleEngine<InterfaceT>::exportStorage(const std::string) {
+    inline void NaiveAbducibleEngine<InterfaceT>::exportStorage(const std::string&) {
         snlog::l_internal() << "Storage not available in naive engine" << snlog::l_end;
     }
 

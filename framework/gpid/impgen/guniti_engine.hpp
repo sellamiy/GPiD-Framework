@@ -93,7 +93,7 @@ namespace gpid {
         inline bool canBeSkipped(LiteralReference h);
 
         inline LiteralT& getLiteral(index_t idx);
-        inline index_t getCurrentIndex();
+        inline constexpr index_t getCurrentIndex() const;
     public:
         /** Create an abducible engine. */
         GunitiEngine(size_t size, ContextManagerT& ctx, GunitiOptions& iopts);
@@ -110,7 +110,7 @@ namespace gpid {
         inline void mapLiteral(uint32_t idx, LiteralT* hyp);
 
         /** Original size of the set. */
-        inline uint32_t getSourceSize();
+        inline constexpr uint32_t getSourceSize() const;
         /** Count of skipped candidates for various reasons. */
         inline std::map<std::string, counter_t>& getSkippedCounts();
 
@@ -123,7 +123,7 @@ namespace gpid {
         /** Print the current implicate storage structure state. */
         inline void printStorage();
         /** Export the current implicate storage structure state. */
-        inline void exportStorage(const std::string filename);
+        inline void exportStorage(const std::string& filename);
 
         /**
          * \brief Find the next non tested literal.
@@ -191,7 +191,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline uint32_t GunitiEngine<InterfaceT>::getSourceSize() {
+    inline constexpr uint32_t GunitiEngine<InterfaceT>::getSourceSize() const {
         return lactive.get_maximal_size();
     }
 
@@ -218,7 +218,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void GunitiEngine<InterfaceT>::exportStorage(const std::string filename) {
+    inline void GunitiEngine<InterfaceT>::exportStorage(const std::string& filename) {
         std::ofstream outstr(filename);
         storage.exportGraph(outstr);
     }
@@ -271,8 +271,8 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline typename GunitiEngine<InterfaceT>::index_t
-    GunitiEngine<InterfaceT>::getCurrentIndex() {
+    inline constexpr typename GunitiEngine<InterfaceT>::index_t
+    GunitiEngine<InterfaceT>::getCurrentIndex() const {
         return selection;
     }
 

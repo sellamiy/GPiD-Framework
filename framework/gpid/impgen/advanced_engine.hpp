@@ -37,7 +37,7 @@ namespace gpid {
         inline void removeLiterals(uint32_t lkey);
 
         /** \return The current number of literals in the conjunction. */
-        inline size_t size() { return _array.get_activated_size(); }
+        inline constexpr size_t size() const { return _array.get_activated_size(); }
 
         /** Iterator on the literal references of the conjunction. */
         typedef typename starray::SequentialActivableArray::iterator iterator;
@@ -142,7 +142,7 @@ namespace gpid {
         inline void mapLink(uint32_t idx, uint32_t tgt_idx);
 
         /** Original size of the set. */
-        inline uint32_t getSourceSize();
+        inline constexpr uint32_t getSourceSize() const;
         /** Count of skipped candidates for various reasons. */
         inline std::map<std::string, counter_t>& getSkippedCounts();
 
@@ -154,7 +154,7 @@ namespace gpid {
         /** Print the current implicate storage structure state. */
         inline void printStorage();
         /** Export the current implicate storage structure state. */
-        inline void exportStorage(const std::string filename);
+        inline void exportStorage(const std::string& filename);
 
         /**
          * \brief Find the next non tested literal.
@@ -238,7 +238,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline uint32_t AdvancedAbducibleEngine<InterfaceT>::getSourceSize() {
+    inline constexpr uint32_t AdvancedAbducibleEngine<InterfaceT>::getSourceSize() const {
         return lactive.get_maximal_size();
     }
 
@@ -271,7 +271,7 @@ namespace gpid {
     }
 
     template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::exportStorage(const std::string filename) {
+    inline void AdvancedAbducibleEngine<InterfaceT>::exportStorage(const std::string& filename) {
         std::ofstream outstr(filename);
         storage.exportGraph(outstr);
     }
