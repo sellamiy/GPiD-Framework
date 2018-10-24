@@ -18,7 +18,7 @@
 namespace infoline {
 
     struct InfoData {
-        InfoData(const std::string dname) : dname(dname) {}
+        InfoData(const std::string& dname) : dname(dname) {}
         const std::string dname;
         virtual std::string str() const = 0;
     };
@@ -34,9 +34,9 @@ namespace infoline {
         std::shared_ptr<O> _ptr;
         Stringify stringifier;
     public:
-        PointerInfoData(const std::string dname, std::shared_ptr<O> ptr)
+        PointerInfoData(const std::string& dname, std::shared_ptr<O> ptr)
             : InfoData(dname), _ptr(ptr) {}
-        PointerInfoData(const std::string dname, const O& data)
+        PointerInfoData(const std::string& dname, const O& data)
             : InfoData(dname), _ptr(new O(data)) {}
         PointerInfoData(const PointerInfoData<O, Stringify>& o)
             : InfoData(o.dname), _ptr(o._ptr) {}
@@ -50,8 +50,8 @@ namespace infoline {
         std::unique_ptr<std::thread> ilth;
         int ldelay = BSR_INFOLINE_UPDATE_DELAY;
         bool interrupt;
-        void update();
-        void loop();
+        void update() const;
+        void loop() const;
     public:
         BsRInfoliner() = default;
         BsRInfoliner(const std::vector<InfoDataPtr>& data) : data(data) {}

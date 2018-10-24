@@ -7,9 +7,9 @@
 
 using namespace infoline;
 
-void BsRInfoliner::update() {
+void BsRInfoliner::update() const {
     std::cout << "\r[";
-    for (InfoDataPtr& ptr : data)
+    for (InfoDataPtr ptr : data)
         std::cout << *ptr << "  ";
     std::cout << "]" << std::flush;
 }
@@ -25,7 +25,7 @@ void BsRInfoliner::discard() {
     std::cout << std::endl;
 }
 
-void BsRInfoliner::loop() {
+void BsRInfoliner::loop() const {
     do {
         update();
         std::this_thread::sleep_for(std::chrono::milliseconds(ldelay));
