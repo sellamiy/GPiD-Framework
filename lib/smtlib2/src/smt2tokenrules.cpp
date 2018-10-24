@@ -5,27 +5,27 @@
 
 namespace smtlib2utils {
 
-    static inline bool isWhitespace(char c) {
+    static inline constexpr bool isWhitespace(char c) {
         return c == '\t' || c == '\n' || c == '\r' || c == ' ' ;
     }
 
-    static inline bool isSymbolEnd(char c) {
+    static inline constexpr bool isSymbolEnd(char c) {
         return isWhitespace(c) || c == '(' || c == ')';
     }
 
-    static inline bool isDigit(char c) {
+    static inline constexpr bool isDigit(char c) {
         return c == '0' || c == '1' || c == '2' || c == '3' || c == '4'
             || c == '5' || c == '6' || c == '7' || c == '8' || c == '9';
     }
 
     /*
-    static inline bool isNonZeroDigit(char c) {
+    static inline constexpr bool isNonZeroDigit(char c) {
         return c == '1' || c == '2' || c == '3' || c == '4'
             || c == '5' || c == '6' || c == '7' || c == '8' || c == '9';
     }
     */
 
-    static inline bool isLetter(char c) {
+    static inline constexpr bool isLetter(char c) {
         return c == 'a' || c == 'b' || c == 'c' || c == 'd' || c == 'e'
             || c == 'f' || c == 'g' || c == 'h' || c == 'i' || c == 'j'
             || c == 'k' || c == 'l' || c == 'm' || c == 'n' || c == 'o'
@@ -39,14 +39,14 @@ namespace smtlib2utils {
             || c == 'Y' || c == 'Z';
     }
 
-    static inline bool isSymbolAdChar(char c) {
+    static inline constexpr bool isSymbolAdChar(char c) {
         return c == '+' || c == '-' || c == '/' || c == '*' || c == '='
             || c == '%' || c == '?' || c == '!' || c == '.' || c == '$'
             || c == '_' || c == '~' || c == '&' || c == '^' || c == '<'
             || c == '>' || c == '@';
     }
 
-    static inline bool isSymbolChar(char c) {
+    static inline constexpr bool isSymbolChar(char c) {
         return isDigit(c) || isLetter(c) || isSymbolAdChar(c);
     }
 

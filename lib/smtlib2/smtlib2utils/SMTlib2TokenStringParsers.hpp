@@ -35,7 +35,7 @@ namespace smtlib2utils {
 
         inline const SMTlib2TokenResult& first() const { return content.front(); }
         inline const SMTlib2TokenResult& last() const { return content.back(); }
-        inline size_t size() const { return content.size(); }
+        inline constexpr size_t size() const { return content.size(); }
 
         SMTlib2TokenList(const std::list<SMTlib2TokenResult>& tkl)
             : content(tkl), start(tkl.front().start), end(tkl.back().end) {}
@@ -45,7 +45,7 @@ namespace smtlib2utils {
             : content(o.content), start(o.start), end(o.end) {}
     };
 
-    bool isReserved(const std::string word);
+    bool isReserved(const std::string& word);
     inline bool isReserved(const SMTlib2TokenResult& tk) {
         return isReserved(tk.value());
     }

@@ -12,7 +12,7 @@ namespace smtlib2utils {
         std::string name;
         std::shared_ptr<std::string> data;
     public:
-        SMTl2Command(std::string n, const std::shared_ptr<std::string>& d)
+        SMTl2Command(const std::string& n, const std::shared_ptr<std::string>& d)
             : name(n), data(d) {}
         SMTl2Command(const SMTl2Command& o)
             : name(o.name), data(o.data) {}
@@ -39,14 +39,14 @@ namespace smtlib2utils {
     class SMTl2CommandParser {
         std::unique_ptr<SMTl2CParseEngine> engine;
     public:
-        SMTl2CommandParser(std::string filename, SMTl2StringMemory& allocator);
+        SMTl2CommandParser(const std::string& filename, SMTl2StringMemory& allocator);
         ~SMTl2CommandParser();
 
         void initialize();
         void parse(SMTl2CommandHandler& handler);
 
-        bool complete();
-        bool valid();
+        bool complete() const;
+        bool valid() const;
     };
 
 }

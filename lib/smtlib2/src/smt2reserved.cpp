@@ -29,7 +29,7 @@ namespace smtlib2utils {
         "reset", "reset-assertions", "set-info", "set-logic", "set-option"
     };
 
-    bool isReserved(const std::string word) {
+    bool isReserved(const std::string& word) {
         return ReservedWordsTable.find(word) != ReservedWordsTable.end();
     }
 

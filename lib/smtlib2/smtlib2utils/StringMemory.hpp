@@ -15,8 +15,8 @@ namespace smtlib2utils {
         SMTl2StringMemory();
         ~SMTl2StringMemory();
 
-        std::shared_ptr<std::string> alloc(std::string s);
-        std::shared_ptr<std::string> alloc(std::stringstream& s);
+        std::shared_ptr<std::string> alloc(const std::string& s);
+        std::shared_ptr<std::string> alloc(const std::stringstream& s);
     };
 
 }

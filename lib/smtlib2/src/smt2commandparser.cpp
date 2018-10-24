@@ -7,11 +7,11 @@
 
 namespace smtlib2utils {
 
-    static inline bool isSMTl2Whitespace(char c) {
+    static inline constexpr bool isSMTl2Whitespace(char c) {
         return c == '\t' || c == '\n' || c == '\r' || c == ' ' ;
     }
 
-    static inline bool isSMTl2Parenthesis(char c) {
+    static inline constexpr bool isSMTl2Parenthesis(char c) {
         return c == '(' || c == ')' ;
     }
 
@@ -43,17 +43,21 @@ namespace smtlib2utils {
         void nextCommand();
 
     public:
-        SMTl2CParseEngine(std::string fsource, SMTl2StringMemory& allocator);
+        SMTl2CParseEngine(const std::string& fsource, SMTl2StringMemory& allocator);
         ~SMTl2CParseEngine();
 
-        bool valid();
-        bool complete();
+        constexpr bool valid() const {
+            return state != EngineState::ERROR;
+        }
+        constexpr bool complete() const {
+            return state == EngineState::COMPLETE;
+        }
 
         friend class SMTl2CommandParser;
     };
 
     SMTl2CParseEngine::SMTl2CParseEngine
-    (std::string fsource, SMTl2StringMemory& allocator)
+    (const std::string& fsource, SMTl2StringMemory& allocator)
         : allocator(allocator),
           fsource(fsource),
           spos({0,0}),
@@ -67,13 +71,6 @@ namespace smtlib2utils {
 
     void SMTl2CParseEngine::start() {
         openSource();
-    }
-
-    bool SMTl2CParseEngine::valid() {
-        return state != EngineState::ERROR;
-    }
-    bool SMTl2CParseEngine::complete() {
-        return state == EngineState::COMPLETE;
     }
 
     void SMTl2CParseEngine::handleError(std::string msg) {
@@ -166,7 +163,7 @@ namespace smtlib2utils {
         }
     }
 
-    SMTl2CommandParser::SMTl2CommandParser(std::string filename, SMTl2StringMemory& allocator)
+    SMTl2CommandParser::SMTl2CommandParser(const std::string& filename, SMTl2StringMemory& allocator)
         : engine(new SMTl2CParseEngine(filename, allocator)) {}
     SMTl2CommandParser::~SMTl2CommandParser() {}
 
@@ -186,10 +183,10 @@ namespace smtlib2utils {
         }
     }
 
-    bool SMTl2CommandParser::complete() {
+    bool SMTl2CommandParser::complete() const {
         return engine->complete();
     }
-    bool SMTl2CommandParser::valid() {
+    bool SMTl2CommandParser::valid() const {
         return engine->valid();
     }
 

@@ -14,12 +14,12 @@ namespace smtlib2utils {
     SMTl2StringMemory::SMTl2StringMemory() : data(new SMTl2StringMemoryData()) {}
     SMTl2StringMemory::~SMTl2StringMemory() {}
 
-    std::shared_ptr<std::string> SMTl2StringMemory::alloc(std::string s) {
+    std::shared_ptr<std::string> SMTl2StringMemory::alloc(const std::string& s) {
         data->plist.push_back(std::shared_ptr<std::string>(new std::string(s)));
         return data->plist.back();
     }
 
-    std::shared_ptr<std::string> SMTl2StringMemory::alloc(std::stringstream& s) {
+    std::shared_ptr<std::string> SMTl2StringMemory::alloc(const std::stringstream& s) {
         data->plist.push_back(std::shared_ptr<std::string>(new std::string(s.str())));
         return data->plist.back();
     }
