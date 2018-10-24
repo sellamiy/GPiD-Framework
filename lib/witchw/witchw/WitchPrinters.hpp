@@ -24,7 +24,7 @@ namespace witchw {
         /** \brief Statistic depth level */
         const uint32_t level;
         /** \brief Initializing constructor */
-        wStatisticData(std::string key, std::string data, uint32_t level = 1)
+        wStatisticData(const std::string& key, const std::string& data, uint32_t level = 1)
             : key(key), data(data), level(level) {}
         /** \brief Copy constructor */
         wStatisticData(const wStatisticData& cpy)
@@ -51,7 +51,7 @@ namespace witchw {
 
         /** \brief Create and add a new statistic to the current group. */
         template <typename printable>
-        inline void addStatistic(const std::string key, const printable data, const uint32_t level = 1)
+        inline void addStatistic(const std::string& key, const printable& data, const uint32_t level = 1)
         {
             std::stringstream dvalue;
             dvalue << data;

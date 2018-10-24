@@ -2,7 +2,7 @@
 # WitchW Library - local library target
 # ==============================================================================
 project(libwitchw LANGUAGES CXX)
-set(LIBWITCHW_VERSION "0.1")
+set(LIBWITCHW_VERSION "0.2")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/witchw/witchw.hpp.in
   ${LOCAL_LIB_HEADERS_DIR}/witchw/witchw.hpp)
