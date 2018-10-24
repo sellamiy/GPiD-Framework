@@ -37,7 +37,7 @@ namespace gpid {
         std::list<std::pair<anidx_t, LiteralRefT>> rmpending;
 
         inline void insertLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it);
-        inline bool containsLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it);
+        inline bool containsLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it) const;
 
         inline bool fwdSubsumesLocal(anidx_t idx);
         inline void bwdSubsumesRemoveLocal(anidx_t idx, anidx_t pdx, LiteralRefT src);
@@ -54,7 +54,7 @@ namespace gpid {
         /** Insert a clause in a tree from a literal conjunction. */
         inline void insert(HypothesisT& h);
         /** Check if a clause (from literal conjunction) is part of the tree. */
-        inline bool contains(HypothesisT& h);
+        inline bool contains(HypothesisT& h) const;
 
         /** Perform a forward subsumption test for a given clause. */
         inline bool fwdSubsumes(HypothesisT& h);
@@ -89,13 +89,12 @@ namespace gpid {
     }
 
     template<typename InterfaceT, typename HypothesisT>
-    inline bool AbducibleTree<InterfaceT, HypothesisT>::contains(HypothesisT& h)
+    inline bool AbducibleTree<InterfaceT, HypothesisT>::contains(HypothesisT& h) const
     { typename HypothesisT::iterator it = h.begin(); return containsLocal(1, h, it); }
 
     template<typename InterfaceT, typename HypothesisT>
-    inline bool
-    AbducibleTree<InterfaceT, HypothesisT>::containsLocal(anidx_t idx, HypothesisT& h,
-                                                          typename HypothesisT::iterator& it) {
+    inline bool AbducibleTree<InterfaceT, HypothesisT>
+    ::containsLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it) const {
         if (it == h.end()) {
             return gmisc::inset(tnodes, idx);
         }
