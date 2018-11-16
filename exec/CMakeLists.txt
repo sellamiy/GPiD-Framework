@@ -8,9 +8,10 @@ find_package(Threads REQUIRED)
 # ==============================================================================
 # Generate interfaces code for executables
 # ==============================================================================
+set(EXEC_TEMPLATES_DIR "${CMAKE_SOURCE_DIR}/exec/templates")
+# ==============================================================================
 include(FrameworkSolverRegistration)
 # ------------------------------------------------------------------------------
-set(EXEC_TEMPLATES_DIR "${CMAKE_SOURCE_DIR}/exec/templates")
 set(EXEC_INCLUDE_TEMPLATES "sai/identifiers.hpp" "sai/impgen-executors.hpp")
 set(EXEC_SOURCES_TEMPLATES)
 set(EXEC_PREPROCESSED_TARGETS)
@@ -29,7 +30,30 @@ foreach(template_name ${EXEC_SOURCES_TEMPLATES})
   generate_multi_file("${template_target}" "${template_source}" ${SOLVER_TARGETS})
   list(APPEND EXEC_PREPROCESSED_TARGETS ${template_info}-multi)
 endforeach()
+# ==============================================================================
+include(FrameworkIlinvaRegistration)
 # ------------------------------------------------------------------------------
+set(ILINVA_INCLUDE_TEMPLATES "ilinva/executors.hpp")
+set(ILINVA_SOURCES_TEMPLATES)
+set(ILINVA_PREPROCESSED_TARGETS "identifiers-multi") # Note: sai/identifiers template required
+# ------------------------------------------------------------------------------
+foreach(template_name ${ILINVA_INCLUDE_TEMPLATES})
+  set(template_source "${EXEC_TEMPLATES_DIR}/${template_name}")
+  set(template_target "${LOCAL_EXEC_INCLUDE_DIR}/${template_name}")
+  get_filename_component(template_info "${template_target}" NAME_WE)
+  generate_ich_multi_file(TARGET "${template_target}" TEMPLATE "${template_source}"
+    ICHANDLERS ${ICH_TARGETS})
+  list(APPEND ILINVA_PREPROCESSED_TARGETS ${template_info}-multi)
+endforeach()
+foreach(template_name ${ILINVA_SOURCES_TEMPLATES})
+  set(template_source "${EXEC_TEMPLATES_DIR}/src/${template_name}")
+  set(template_target "${LOCAL_EXEC_SOURCES_DIR}/src/${template_name}")
+  get_filename_component(template_info "${template_target}" NAME_WE)
+  generate_ich_multi_file(TARGET "${template_target}" TEMPLATE "${template_source}"
+    ICHANDLERS ${ICH_TARGETS})
+  list(APPEND ILINVA_PREPROCESSED_TARGETS ${template_info}-multi)
+endforeach()
+# ==============================================================================
 set(CORE_STATIC_LINK_LIBRARIES gpid-core-static witchw-static cxxopts Threads::Threads)
 set(CORE_SHARED_LINK_LIBRARIES gpid-core-shared witchw-shared cxxopts Threads::Threads)
 # ------------------------------------------------------------------------------
@@ -90,3 +114,28 @@ else()
   target_link_libraries(gpid-masmalig gpid-core-shared cxxopts Threads::Threads)
 endif()
 install(TARGETS gpid-masmalig RUNTIME DESTINATION bin)
+# ==============================================================================
+# Ilinvas - a loop invariant generator
+# ==============================================================================
+foreach(ich ${ICH_TARGETS})
+  set(execname gpid-ilinva-${ich})
+  set(ICH_DEF_MACRO ILINVA_CODE_HANDLER_${ich})
+  string(REGEX REPLACE - _tm_ ICH_DEF_MACRO ${ICH_DEF_MACRO})
+  add_executable(${execname} "src/gpid-ilinva.cpp")
+  add_dependencies(${execname} ${ILINVA_PREPROCESSED_TARGETS})
+  target_include_directories(${execname} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
+  target_compile_definitions(${execname} PRIVATE ${ICH_DEF_MACRO})
+  if(STATIC_EXECUTABLES)
+    target_link_libraries(${execname}
+      ${ich}-static
+      ${SOLVER_STATIC_TARGETS}
+      ${CORE_STATIC_LINK_LIBRARIES})
+  else()
+    target_link_libraries(${execname}
+      ${ich}-shared
+      ${SOLVER_SHARED_TARGETS}
+      ${CORE_SHARED_LINK_LIBRARIES})
+  endif()
+  install(TARGETS ${execname} RUNTIME DESTINATION bin)
+  # TODO: Maybe: Split executable solver targets for ilinva
+endforeach()
