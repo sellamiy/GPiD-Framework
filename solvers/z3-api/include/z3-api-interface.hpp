@@ -1,6 +1,7 @@
 #ifndef Z3_API_INTERFACE_FOR_GPID__HPP
 #define Z3_API_INTERFACE_FOR_GPID__HPP
 
+#include <gpid/core/saitypes.hpp>
 #include "z3-api-context.hpp"
 #include "z3-api-loaders.hpp"
 #include "z3-api-printers.hpp"
@@ -33,7 +34,7 @@ namespace gpid {
 
         template<typename ConjunctionIteratorGetter> static std::ostream& write
         (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
-         ObjectMapper<Z3Literal>& mapper, bool negate=false);
+         const ObjectMapper<Z3Literal>& mapper, bool negate=false);
 
         template<typename ClauseIteratorGetter> void addClause
         (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
@@ -74,7 +75,7 @@ namespace gpid {
     template<typename ConjunctionIteratorGetter>
     inline std::ostream& Z3InterfaceAPI::write
     (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter& h,
-     ObjectMapper<Z3Literal>& mapper, bool negate) {
+     const ObjectMapper<Z3Literal>& mapper, bool negate) {
         auto it = h.begin();
         z3::expr cl = mapper.get(*it).expr;
         while (++it != h.end()) {

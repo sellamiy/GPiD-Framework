@@ -17,6 +17,7 @@ namespace gpid {
     class GPiDAlgorithm {
         std::unique_ptr<std::thread> execution_thread;
         void _terminate_execution();
+        bool _execution_complete = false;
     protected:
         /** Options of the algorithm */
         GPiDOptions& options;
@@ -31,6 +32,9 @@ namespace gpid {
     public:
         /** Counter type for compting things. */
         using counter_t = uint64_t;
+
+        /** Algorithm completion checker **/
+        inline constexpr bool complete() const { return _execution_complete; }
 
         /** Main wrapper method for executing the algorithm. */
         void execute(bool in_thread=false);

@@ -1,7 +1,7 @@
 #ifndef Z3_API_LOADERS_FOR_GPID__HPP
 #define Z3_API_LOADERS_FOR_GPID__HPP
 
-#include <gpid/gpid.hpp>
+#include <gpid/utils/pblloader.hpp>
 #include "z3-api-context.hpp"
 
 namespace gpid {

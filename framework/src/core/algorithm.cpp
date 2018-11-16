@@ -11,6 +11,7 @@ void GPiDAlgorithm::_terminate_execution() {
     stopTimeout();
     restoreInterruptionHandlers();
     insthandle(instrument::idata(), instrument::instloc::end);
+    _execution_complete = true;
 }
 
 void GPiDAlgorithm::execute(bool in_thread) {

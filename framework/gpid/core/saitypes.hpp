@@ -24,6 +24,18 @@ namespace gpid {
         UNKNOWN
     };
 
+    static inline constexpr bool isSatResult
+    (SolverTestStatus status, SolverTestStatus sua) {
+        return status == SolverTestStatus::SAT
+            || (status == SolverTestStatus::UNKNOWN && sua == SolverTestStatus::SAT);
+    }
+
+    static inline constexpr bool isUnsatResult
+    (SolverTestStatus status, SolverTestStatus sua) {
+        return status == SolverTestStatus::UNSAT
+            || (status == SolverTestStatus::UNKNOWN && sua == SolverTestStatus::UNSAT);
+    }
+
     /** String converter for SolverTestStatus. */
     inline const std::string to_string(const SolverTestStatus& s) {
         return s == SolverTestStatus::SAT

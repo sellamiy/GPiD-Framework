@@ -1,7 +1,7 @@
 #ifndef CVC4_API_LOADERS_FOR_GPID__HPP
 #define CVC4_API_LOADERS_FOR_GPID__HPP
 
-#include <gpid/gpid.hpp>
+#include <gpid/utils/pblloader.hpp>
 #include "cvc4-api-context.hpp"
 
 namespace gpid {

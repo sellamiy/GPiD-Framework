@@ -10,6 +10,7 @@
 #include <mlbsmt2/mlbsmt2.hpp>
 #include <gpid/core/algorithm.hpp>
 #include <gpid/core/errors.hpp>
+#include <gpid/reference/version.hpp>
 #include <gpid/masmalig/options.hpp>
 
 namespace gpid {
@@ -72,6 +73,9 @@ namespace gpid {
         }
         for (std::string filename : options.script_files) {
             builder.loadMlbScript(filename);
+        }
+        for (std::string filename : options.whyml_files) {
+            builder.loadWhyMLFile(filename);
         }
         
         if (!builder.exploitable()) {

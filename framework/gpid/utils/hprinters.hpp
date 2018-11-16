@@ -18,13 +18,13 @@ namespace gpid {
     template<typename InterfaceT, typename HypothesisT>
     class LiteralHypothesisPrinter {
         HypothesisT& hypothesis;
-        ObjectMapper<typename InterfaceT::LiteralT>& mapper;
+        const ObjectMapper<typename InterfaceT::LiteralT>& mapper;
         typename InterfaceT::ContextManagerT& ctx;
         bool negate;
     public:
         /** Initialization of a literal conjunction printer. */
         LiteralHypothesisPrinter
-        (HypothesisT& lh, ObjectMapper<typename InterfaceT::LiteralT>& mp,
+        (HypothesisT& lh, const ObjectMapper<typename InterfaceT::LiteralT>& mp,
          typename InterfaceT::ContextManagerT& ctx, bool neg=true)
             : hypothesis(lh), mapper(mp), ctx(ctx), negate(neg) {}
         /** Copy constructor */
@@ -34,7 +34,7 @@ namespace gpid {
         /** \return The underlying literal conjunction to print. */
         inline HypothesisT& getHypothesis() const { return hypothesis; }
         /** \return The underlying mapper from literal reference to literals. */
-        inline ObjectMapper<typename InterfaceT::LiteralT>& getMapper() const { return mapper; }
+        inline const ObjectMapper<typename InterfaceT::LiteralT>& getMapper() const { return mapper; }
         /** \return The underlying interface context manager. */
         inline typename InterfaceT::ContextManagerT& getContextManager() const { return ctx; }
         /** \return True iff the conjunction should be printed as a clause. */
@@ -48,7 +48,7 @@ namespace gpid {
     /** Build an implicate (clause) printer from a literal conjunction. */
     template<typename InterfaceT, typename HypothesisT>
     inline const LiteralHypothesisPrinter<InterfaceT, HypothesisT> implicate
-    (HypothesisT& h, ObjectMapper<typename InterfaceT::LiteralT>& mp,
+    (HypothesisT& h, const ObjectMapper<typename InterfaceT::LiteralT>& mp,
      typename InterfaceT::ContextManagerT& ctx) {
         return LiteralHypothesisPrinter<InterfaceT, HypothesisT>(h, mp, ctx, true);
     }
@@ -56,7 +56,7 @@ namespace gpid {
     /** Build a conjunction printer from a literal conjunction. */
     template<typename InterfaceT, typename HypothesisT>
     inline const LiteralHypothesisPrinter<InterfaceT, HypothesisT> hypothesis
-    (HypothesisT& h, ObjectMapper<typename InterfaceT::LiteralT>& mp,
+    (HypothesisT& h, const ObjectMapper<typename InterfaceT::LiteralT>& mp,
      typename InterfaceT::ContextManagerT& ctx) {
         return LiteralHypothesisPrinter<InterfaceT, HypothesisT>(h, mp, ctx, false);
     }

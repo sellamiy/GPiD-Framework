@@ -1,6 +1,8 @@
 #ifndef CVC4_API_INTERFACE_FOR_GPID__HPP
 #define CVC4_API_INTERFACE_FOR_GPID__HPP
 
+#include <gpid/core/saitypes.hpp>
+
 #include "cvc4-api-context.hpp"
 #include "cvc4-api-loaders.hpp"
 #include "cvc4-api-printers.hpp"
@@ -31,7 +33,7 @@ namespace gpid {
 
         template<typename ConjunctionIteratorGetter> static std::ostream& write
         (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
-         ObjectMapper<CVC4Literal>& mapper, bool negate=false);
+         const ObjectMapper<CVC4Literal>& mapper, bool negate=false);
 
         template<typename ClauseIteratorGetter> void addClause
         (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
@@ -76,7 +78,7 @@ namespace gpid {
     template<typename ConjunctionIteratorGetter>
     inline std::ostream& CVC4InterfaceAPI::write
     (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
-     ObjectMapper<CVC4Literal>& mapper, bool negate) {
+     const ObjectMapper<CVC4Literal>& mapper, bool negate) {
         auto it = h.begin();
         CVC4::Expr cl = mapper.get(*it).expr;
         while (++it != h.end()) {

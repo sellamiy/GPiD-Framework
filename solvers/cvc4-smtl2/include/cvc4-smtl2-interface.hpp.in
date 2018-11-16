@@ -1,7 +1,7 @@
 #ifndef CVC4_SMTLIB2_CLI_INTERFACE_FOR_GPID__HPP
 #define CVC4_SMTLIB2_CLI_INTERFACE_FOR_GPID__HPP
 
-#include <gpid/gpid.hpp>
+#include <gpid/utils/smtlib2solver.hpp>
 
 #cmakedefine CVC4_EXECUTABLE "@CVC4_EXECUTABLE@"
 

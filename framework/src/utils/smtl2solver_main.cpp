@@ -71,6 +71,7 @@ static inline SolverTestStatus ess_analyze
     if (result.find("sat")     != std::string::npos) return SolverTestStatus::SAT;
     snlog::l_warn()
         << "Unanswered satisfiability query!" << snlog::l_end
+        << snlog::l_error << result << snlog::l_end
         << snlog::l_warn << "Unsafely assuming SAT for error handling consistency reasons"
         << snlog::l_end;
     return SolverTestStatus::SAT;
@@ -90,7 +91,6 @@ static inline void smtlib2_check_cleanup (const std::string script_file) {
 }
 
 SolverTestStatus SMTl2SolverInterface::check() {
-    const std::string script_file = "_ssivc_gpid_temp.smt2";
     write_smtlib2_script(ctx, assertions, level, script_file);
     SolverTestStatus res = execute_solver_script(ctx, solver_exec, script_file);
     smtlib2_check_cleanup(script_file);

@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <minisatp-abdgen.hpp>
+#include <gpid/utils/stdutils.hpp>
 
 using namespace gpid;
 using namespace Minisat;

@@ -4,7 +4,7 @@
 #include <minisatp-loaders.hpp>
 #include <minisat/core/Dimacs.h>
 #include <snlog/snlog.hpp>
-#include <gpid/gpid.hpp>
+#include <gpid/utils/stdutils.hpp>
 
 using namespace gpid;
 

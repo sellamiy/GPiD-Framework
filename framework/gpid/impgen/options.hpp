@@ -8,6 +8,7 @@
 
 #include <string>
 #include <limits>
+#include <gpid/core/saitypes.hpp>
 
 namespace gpid {
 
@@ -39,6 +40,9 @@ namespace gpid {
 
         /** Skip literals detected as consequences of previous assignments */
         bool detect_consequences = false;
+
+        /** Treat unknown solver */
+        SolverTestStatus unknown_handle = SolverTestStatus::UNKNOWN;
 
         /** Maximal number of abducible hypotheses in an implicate */
         uint32_t max_level = std::numeric_limits<uint32_t>::max();

@@ -1,7 +1,7 @@
 #ifndef MINISAT_PATCHED_INTERFACE_FOR_GPID__HPP
 #define MINISAT_PATCHED_INTERFACE_FOR_GPID__HPP
 
-#include <gpid/gpid.hpp>
+#include <gpid/core/saitypes.hpp>
 
 #include "minisatp-context.hpp"
 #include "minisatp-loaders.hpp"
@@ -39,7 +39,7 @@ namespace gpid {
 
         template<typename ConjunctionIteratorGetter> static std::ostream& write
         (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
-         ObjectMapper<MinisatLiteral>& mapper, bool negate=false);
+         const ObjectMapper<MinisatLiteral>& mapper, bool negate=false);
 
         template<typename ClauseIteratorGetter> void addClause
         (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
@@ -86,7 +86,7 @@ namespace gpid {
     template<typename ConjunctionIteratorGetter>
     inline std::ostream& MinisatInterface::write
     (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter& h,
-     ObjectMapper<MinisatLiteral>& mapper, bool negate) {
+     const ObjectMapper<MinisatLiteral>& mapper, bool negate) {
         Minisat::vec<Minisat::Lit> ps;
         for (auto ml : h) {
             Minisat::Lit cl = mapper.get(ml).lit;

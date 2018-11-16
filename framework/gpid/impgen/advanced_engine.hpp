@@ -72,6 +72,8 @@ namespace gpid {
         /** Internal depth indexing type. */
         using level_t = uint32_t;
     private:
+        const ImpgenOptions& options;
+
         SolverInterfaceEngine<InterfaceT> interfaceEngine;
         InterfaceT& solver_contrads;
         InterfaceT& solver_consistency;
@@ -140,6 +142,7 @@ namespace gpid {
         inline void mapLiteral(uint32_t idx, LiteralT* hyp);
         /** Specify incompatible literals. */
         inline void mapLink(uint32_t idx, uint32_t tgt_idx);
+        inline const ObjectMapper<LiteralT>& getMapper() const;
 
         /** Original size of the set. */
         inline constexpr uint32_t getSourceSize() const;
@@ -155,6 +158,9 @@ namespace gpid {
         inline void printStorage();
         /** Export the current implicate storage structure state. */
         inline void exportStorage(const std::string& filename);
+
+        /** Get the implicate browser. \warning Not Thread Safe. \warning Modifiable */
+        inline LiteralHypothesis& getCurrentImplicate();
 
         /**
          * \brief Find the next non tested literal.
@@ -198,7 +204,8 @@ namespace gpid {
     template<typename InterfaceT>
     AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine
     (size_t size, ContextManagerT& ctx, ImpgenOptions& iopts)
-        : interfaceEngine(ctx),
+        : options(iopts),
+          interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
           lactive(size),
@@ -211,7 +218,8 @@ namespace gpid {
     template<typename AbducibleSource>
     AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine
     (AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts)
-        : interfaceEngine(ctx),
+        : options(iopts),
+          interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
           lactive(source.count()),
@@ -250,6 +258,11 @@ namespace gpid {
     inline void AdvancedAbducibleEngine<InterfaceT>::mapLink(index_t idx, index_t tgt_idx) {
         llinks[idx].push_back(tgt_idx);
     }
+    template<typename InterfaceT>
+    inline const ObjectMapper<typename InterfaceT::LiteralT>&
+    AdvancedAbducibleEngine<InterfaceT>::getMapper() const {
+        return lmapper;
+    }
 
     template<typename InterfaceT>
     inline std::map<std::string, uint64_t>& AdvancedAbducibleEngine<InterfaceT>::getSkippedCounts() {
@@ -263,6 +276,12 @@ namespace gpid {
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::printCurrentImplicate() {
         printlh(implicate<InterfaceT>(hypothesis, lmapper, interfaceEngine.getContextManager()));
+    }
+
+    template<typename InterfaceT>
+    inline LiteralHypothesis&
+    AdvancedAbducibleEngine<InterfaceT>::getCurrentImplicate() {
+        return hypothesis;
     }
 
     template<typename InterfaceT>
@@ -387,11 +406,11 @@ namespace gpid {
         solver_consistency.push();
         solver_consistency.addLiteral(lmapper.get(h));
         SolverTestStatus status = solver_consistency.check();
-        if (status == SolverTestStatus::UNKNOWN) {
+        if (status == SolverTestStatus::UNKNOWN && options.unknown_handle == SolverTestStatus::UNKNOWN) {
             throw UndecidableProblemError("Solver could not decide consistency query");
         }
         solver_consistency.pop();
-        return status == SolverTestStatus::SAT;
+        return isSatResult(status, options.unknown_handle);
     }
 
     template<typename InterfaceT>

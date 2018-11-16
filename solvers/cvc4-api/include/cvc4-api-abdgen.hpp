@@ -2,6 +2,8 @@
 #define CVC4_API_ABDUCIBLE_GENERATION_FOR_GPID__HPP
 
 #include <list>
+#include <gpid/core/memory.hpp>
+#include <gpid/utils/abdparseutils.hpp>
 #include "cvc4-api-loaders.hpp"
 
 namespace gpid {

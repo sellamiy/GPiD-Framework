@@ -36,7 +36,7 @@ namespace gpid {
         constraint_internal data;
         inline std::string str() { return *data; }
         SMTl2SolverLiteral(constraint_internal s) : data(s) {}
-        SMTl2SolverLiteral(SMTl2SolverLiteral& o) : data(o.data) {}
+        SMTl2SolverLiteral(const SMTl2SolverLiteral& o) : data(o.data) {}
     };
 
     struct SMTl2SolverModel {
@@ -109,13 +109,17 @@ namespace gpid {
         const std::string solver_exec;
         ContextManagerT& ctx;
 
+        const std::string script_file;
+
         uint64_t level = 0;
         std::map<uint64_t, std::list<std::shared_ptr<std::string>>> assertions;
 
         ModelT model;
     public:
         SMTl2SolverInterface(const std::string solver_exec, ContextManagerT& manager)
-            : solver_exec(solver_exec), ctx(manager) {}
+            : solver_exec(solver_exec), ctx(manager),
+              script_file("_ssivc_gpid_temp_" + std::to_string((uintptr_t)this) + ".smt2")
+        {}
 
         inline ContextManagerT& getContextManager() { return ctx; }
         inline ModelT& getModel() { return model; }
@@ -129,7 +133,7 @@ namespace gpid {
 
         template<typename ConjunctionIteratorGetter> static std::ostream& write
         (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
-         ObjectMapper<LiteralT>& mapper, bool negate=false);
+         const ObjectMapper<LiteralT>& mapper, bool negate=false);
 
         inline void push() { ++level; }
         inline void pop() { assertions[level--].clear(); }
@@ -169,7 +173,7 @@ namespace gpid {
     template<typename ConjunctionIteratorGetter>
     std::ostream& SMTl2SolverInterface::write
     (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter& h,
-     ObjectMapper<LiteralT>& mapper, bool negate) {
+     const ObjectMapper<LiteralT>& mapper, bool negate) {
         if (negate) os << "(not ";
         os << "(and ";
         auto it = h.begin();

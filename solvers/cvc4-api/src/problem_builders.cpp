@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <cvc4-api-loaders.hpp>
+#include <gpid/utils/stdutils.hpp>
 
 using namespace gpid;
 

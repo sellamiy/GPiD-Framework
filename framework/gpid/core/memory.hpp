@@ -22,7 +22,7 @@ namespace gpid {
         /** Map a given reference to a given object in memory. */
         inline void map(index_t idx, O* l);
         /** Access an object in memory from its refence. */
-        inline O& get(index_t idx);
+        inline O& get(index_t idx) const;
 
         /** \return The number of mapped objects. */
         inline constexpr uint32_t size() const;
@@ -43,7 +43,7 @@ namespace gpid {
      * memoryObjectAllocation function.
      */
     template<typename O>
-    inline void memoryRangeAllocation(const std::string id, size_t s) {
+    inline void memoryRangeAllocation(const std::string& id, size_t s) {
         starray::GAB_Status res;
         res = starray::requestContinuousArray(id, s, sizeof(O));
         if (res != starray::GAB_Status::SUCCESS) throw MemoryError("request for abducibles failed");
@@ -57,13 +57,19 @@ namespace gpid {
      */
     template<typename O, typename ... ObjectParameters>
     inline void memoryObjectAllocation
-    (const std::string id, uint32_t pos, ObjectMapper<O>& mapper, ObjectParameters... opars) {
+    (const std::string& id, uint32_t pos, ObjectMapper<O>& mapper, ObjectParameters... opars) {
         O *mloc;
         starray::GAB_Status res;
         res = starray::accessContinuousPointer(id, pos, (void**)&mloc);
         if (res != starray::GAB_Status::SUCCESS) throw MemoryError("access for abducibles failed");
         new (mloc) O(opars...);
         mapper.map(pos, mloc);
+    }
+
+    inline void memoryRangeRelease(const std::string& id) {
+        starray::GAB_Status res;
+        res = starray::releaseContinuousArray(id);
+        if (res != starray::GAB_Status::SUCCESS) throw MemoryError("release for abducibles failed");
     }
 
     /* *** Implementations *** */
@@ -78,8 +84,8 @@ namespace gpid {
     }
 
     template<typename O>
-    inline O& ObjectMapper<O>::get(index_t idx) {
-        return *_mapping[idx];
+    inline O& ObjectMapper<O>::get(index_t idx) const {
+        return *_mapping.at(idx);
     }
 
     template<typename O>

@@ -3,7 +3,8 @@
 
 #include <map>
 #include <list>
-#include <gpid/gpid.hpp>
+#include <gpid/core/memory.hpp>
+#include <gpid/utils/abdparseutils.hpp>
 #include "minisatp-loaders.hpp"
 
 namespace gpid {

@@ -10,6 +10,7 @@
 #include <gpid/core/algorithm.hpp>
 #include <gpid/core/errors.hpp>
 #include <gpid/core/saitypes.hpp>
+#include <gpid/reference/version.hpp>
 #include <gpid/impgen/options.hpp>
 #include <gpid/impgen/implicates.hpp>
 #include <gpid/instrument/instrument.hpp>
@@ -172,12 +173,12 @@ namespace gpid {
 
                 SolverTestStatus status = lengine.testHypothesis(level);
 
-                if (status == SolverTestStatus::SAT) {
+                if (isSatResult(status, options.unknown_handle)) {
                     if (options.use_models) {
                         lengine.modelCleanUp();
                     }
                     selectCandidate();
-                } else if (status == SolverTestStatus::UNSAT) {
+                } else if (isUnsatResult(status, options.unknown_handle)) {
                     // We have found an implicate
                     notifyImplicate();
                     pop();

@@ -286,7 +286,7 @@ namespace gpid {
         template<typename ConjunctionIteratorGetter>
         static std::ostream& write(std::ostream& os, ContextManagerT& ctx,
                                    ConjunctionIteratorGetter& h,
-                                   ObjectMapper<LiteralT>& mapper, bool negate=false);
+                                   const ObjectMapper<LiteralT>& mapper, bool negate=false);
 
         /**
          * \brief Push the solver contextual level.
@@ -326,7 +326,7 @@ namespace gpid {
 
     template<typename ConjunctionIteratorGetter>
     std::ostream& TisiInterface::write
-    (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter&, ObjectMapper<LiteralT>&, bool)
+    (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter&, const ObjectMapper<LiteralT>&, bool)
     { return os << "*_*"; }
 
 }

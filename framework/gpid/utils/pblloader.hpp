@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <snlog/snlog.hpp>
+#include <gpid/core/errors.hpp>
 
 namespace gpid {
 
