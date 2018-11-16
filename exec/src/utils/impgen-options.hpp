@@ -83,6 +83,10 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
             ("detect-consequences", "Let the engine detect and skip consequences of previous assignments")
             ("dont-detect-consequences", "Never detect consequences of selected abducibles")
 
+            ("unknown-as-error", "Treat unknown solver results as errors")
+            ("unknown-as-sat", "Treat unknown solver results as satisfiable results")
+            ("unknown-as-unsat", "Treat unknown solver results as unsatisfiable results")
+
             ("d,implicate-size-limit", "Max number of abducibles in implicates", cxxopts::value<uint32_t>())
 
             ("t,time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
@@ -186,6 +190,13 @@ static inline OptionStatus handleOptions
             opts.guniti_delegation = true;
         if (results.count("prevent-guniti-delegation"))
             opts.guniti_delegation = false;
+
+        if (results.count("unknown-as-error"))
+            opts.impgen.unknown_handle = gpid::SolverTestStatus::UNKNOWN;
+        if (results.count("unknown-as-sat"))
+            opts.impgen.unknown_handle = gpid::SolverTestStatus::SAT;
+        if (results.count("unknown-as-unsat"))
+            opts.impgen.unknown_handle = gpid::SolverTestStatus::UNSAT;
 
         if (results.count("implicate-size-limit"))
             opts.impgen.max_level = results["implicate-size-limit"].as<uint32_t>() + 1;
@@ -302,7 +313,10 @@ static inline OptionStatus detectConflicts
             { "naive", "use-models" },
             { "naive", "detect-consequences" },
             { "naive", "print-storage" },
-            { "naive", "export-storage" }
+            { "naive", "export-storage" },
+            { "unknown-as-error", "unknown-as-sat" },
+            { "unknown-as-error", "unknown-as-unsat" },
+            { "unknown-as-sat", "unknown-as-unsat" }
         };
 
         for (uint32_t pc = 0; pc < p_illeg.size(); pc++) {

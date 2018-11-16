@@ -42,6 +42,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
              cxxopts::value<std::vector<std::string>>(opts.mopts.source_files))
             ("m,script", "Mlb script source",
              cxxopts::value<std::vector<std::string>>(opts.mopts.script_files))
+            ("w,whyml", "WhyML source file",
+             cxxopts::value<std::vector<std::string>>(opts.mopts.whyml_files))
             ("o,output", "Abducible output file", cxxopts::value<std::string>())
 	    ;
 
