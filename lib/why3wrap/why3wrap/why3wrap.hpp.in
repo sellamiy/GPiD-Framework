@@ -1,0 +1,8 @@
+#ifndef LIB_WHY3WRAP__MAIN_HEADER
+#define LIB_WHY3WRAP__MAIN_HEADER
+
+#include <why3wrap/why3config.hpp>
+#include <why3wrap/why3proof.hpp>
+#include <why3wrap/why3utils.hpp>
+
+#endif
