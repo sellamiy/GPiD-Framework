@@ -8,55 +8,7 @@ import yaml
 from codegencore import pp_warning, pp_error
 from codegencore import prepare_directory, create_template_env, render_template
 # --------------------------------------
-class ExceptionData:
-
-    def __init__(self, classname, message_method):
-        self.classname = classname
-        self.message_method = message_method
-# --------------------------------------
-class InterfaceData:
-
-    def __init__(self, ifilename):
-        self.filename = ifilename
-        self.data = None
-        self.name = None
-        self.mainheader = None
-        self.classname = None
-        self.generationclass = None
-        self.exceptions = []
-
-        self._load_yaml()
-        self._prepare_data()
-
-    def _load_yaml(self):
-        stream = open(self.filename, 'r')
-        try:
-            self.data = yaml.load(stream)
-            self.data = self.data[list(self.data)[0]]
-        except yaml.YAMLError as e:
-            if hasattr(e, 'problem_mark'):
-                mark = e.problem_mark
-                msg = "Yaml loading error: {0} @{1},{2}".format(str(e), mark.line+1, mark.column+1)
-                raise Exception(msg)
-            else:
-                raise e
-        stream.close()
-
-    def _prepare_data(self):
-        self.name = self.data['name']
-        self.name = self.name.replace('-', '_tm_')
-
-        self.mainheader = self.data['mainheader']
-        self.classname = self.data['classname']
-        self.generationclass = self.data['generationclass']
-
-        for excclass in self.data['exceptions']:
-            self.exceptions.append(ExceptionData(excclass['classname'], excclass['message_method']))
-# --------------------------------------
-class MultiInterfaceData:
-
-    def __init__(self, interface_list):
-        self.interfaces = [ InterfaceData(iname) for iname in interface_list ] if interface_list else []
+from codegendata import MultiInterfaceData
 # --------------------------------------
 def main(args):
     # ----------

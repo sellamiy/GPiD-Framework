@@ -2,22 +2,11 @@
 # --------------------------------------
 # Interfaces configuration files generator
 # --------------------------------------
-import sys, os, string
+import sys, os
 # --------------------------------------
 from codegencore import pp_warning, pp_error
 from codegencore import prepare_directory
-# --------------------------------------
-def write_indent(stream, indent, text):
-    stream.write(' '*indent)
-    stream.write(text)
-    stream.write('\n')
-# --------------------------------------
-def parse_exception_data(data):
-    splitter = data[0] if not data[0] in string.ascii_letters else ' '
-    if not data[0] in string.ascii_letters:
-        data = data[1:]
-    datal = data.split(splitter)
-    return datal[0], datal[1]
+from codegencore import write_indent, parse_exception_data
 # --------------------------------------
 def export_config(stream, args):
     write_indent(stream, 0, '{0}-interface:'.format(args.interface))

@@ -2,7 +2,7 @@
 # --------------------------------------
 # Version-file handlers configurator
 # --------------------------------------
-import sys, os
+import sys, os, string
 import jinja2
 from colorama import Fore, Style
 # --------------------------------------
@@ -27,4 +27,16 @@ def render_template(env, template, data, stream):
     except jinja2.TemplateSyntaxError as e:
         msg = "Template Syntax Error : {0} @l{1} : {2}".format(e.filename, e.lineno, e.message)
         raise Exception(msg, e)
+# --------------------------------------
+def write_indent(stream, indent, text):
+    stream.write(' '*indent)
+    stream.write(text)
+    stream.write('\n')
+# --------------------------------------
+def parse_exception_data(data):
+    splitter = data[0] if not data[0] in string.ascii_letters else ' '
+    if not data[0] in string.ascii_letters:
+        data = data[1:]
+    datal = data.split(splitter)
+    return datal[0], datal[1]
 # --------------------------------------
