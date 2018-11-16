@@ -2,18 +2,8 @@
 # GPiD Target solvers
 # ==============================================================================
 include(FrameworkSolverRegistration)
+include(FileSystemTools)
 # ==============================================================================
-macro(subdirlist result curdir)
-  file(GLOB children RELATIVE ${curdir} ${curdir}/*)
-  set(dirlist "")
-  foreach(child ${children})
-    if(IS_DIRECTORY ${curdir}/${child})
-      list(APPEND dirlist ${child})
-    endif()
-  endforeach()
-  set(${result} ${dirlist})
-endmacro()
-# ------------------------------------------------------------------------------
 subdirlist(LOCAL_SOLVER_INTERFACE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR})
 foreach(subdir ${LOCAL_SOLVER_INTERFACE_DIRECTORIES})
   if (NOT ${subdir} IN_LIST SKIP_SOLVER_INTERFACE)
