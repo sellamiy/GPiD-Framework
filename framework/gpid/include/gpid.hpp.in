@@ -16,6 +16,9 @@
 
 #include <gpid/masmalig/algorithm.hpp>
 
+#include <gpid/ilinva/dual_engine.hpp>
+#include <gpid/ilinva/algorithm.hpp>
+
 #include <gpid/utils/pblloader.hpp>
 #include <gpid/utils/abdparser.hpp>
 #include <gpid/utils/abdparseutils.hpp>
