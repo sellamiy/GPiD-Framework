@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(antlr4-download NONE)
+
+include(ExternalProject)
+
+ExternalProject_Add(antlr4_runtime
+  PREFIX            antlr4_runtime
+  GIT_REPOSITORY    https://github.com/antlr/antlr4.git
+  GIT_TAG           4.7.1
+  SOURCE_DIR        "${CMAKE_BINARY_DIR}/capsule/antlr/antlr4-sources"
+  SOURCE_SUBDIR     runtime/Cpp
+  BINARY_DIR        "${CMAKE_BINARY_DIR}/capsule/antlr/antlr4-build"
+  PATCH_COMMAND     git apply "${CMAKE_SOURCE_DIR}/cmake/patches/antlr4-libdest.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/antlr4-target-includedirs.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/antlr4-parseratnsimu-warning.patch"
+  BUILD_COMMAND     ""
+  INSTALL_COMMAND   ""
+  TEST_COMMAND      ""
+  UPDATE_DISCONNECTED 1
+  )

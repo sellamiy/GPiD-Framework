@@ -1,0 +1,14 @@
+diff --git a/runtime/Cpp/runtime/CMakeLists.txt b/runtime/Cpp/runtime/CMakeLists.txt
+index fdb920e99..b84260657 100644
+--- a/runtime/Cpp/runtime/CMakeLists.txt
++++ b/runtime/Cpp/runtime/CMakeLists.txt
+@@ -44,6 +44,9 @@ elseif(APPLE)
+   target_link_libraries(antlr4_static ${COREFOUNDATION_LIBRARY})
+ endif()
+ 
++target_include_directories(antlr4_shared PUBLIC ${PROJECT_SOURCE_DIR}/runtime/src)
++target_include_directories(antlr4_static PUBLIC ${PROJECT_SOURCE_DIR}/runtime/src)
++
+ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+   set(disabled_compile_warnings "/wd4251")
+ else()

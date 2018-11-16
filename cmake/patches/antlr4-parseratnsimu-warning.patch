@@ -1,0 +1,13 @@
+diff --git a/runtime/Cpp/runtime/src/atn/ParserATNSimulator.cpp b/runtime/Cpp/runtime/src/atn/ParserATNSimulator.cpp
+index aaa9e820c..7c715d0cb 100755
+--- a/runtime/Cpp/runtime/src/atn/ParserATNSimulator.cpp
++++ b/runtime/Cpp/runtime/src/atn/ParserATNSimulator.cpp
+@@ -53,7 +53,7 @@ ParserATNSimulator::ParserATNSimulator(const ATN &atn, std::vector<dfa::DFA> &de
+ 
+ ParserATNSimulator::ParserATNSimulator(Parser *parser, const ATN &atn, std::vector<dfa::DFA> &decisionToDFA,
+                                        PredictionContextCache &sharedContextCache)
+-: ATNSimulator(atn, sharedContextCache), parser(parser), decisionToDFA(decisionToDFA) {
++: ATNSimulator(atn, sharedContextCache), decisionToDFA(decisionToDFA), parser(parser) {
+   InitializeInstanceFields();
+ }
+ 
