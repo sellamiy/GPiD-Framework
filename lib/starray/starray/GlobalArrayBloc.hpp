@@ -29,7 +29,9 @@ namespace starray {
         /** System allocation failure */
         ALLOCATION_FAILURE,
         /** Failed to configure as the memory location does not exist */
-        UNALLOCATED_CONF_STORAGE
+        UNALLOCATED_CONF_STORAGE,
+        /** Operation corrupted the memory tracker */
+        TRACKER_CORRUPTION
     };
     /** Memory operation possible results. */
     using GAB_Status = GlobalArrayBlocStatus;
@@ -49,6 +51,8 @@ namespace starray {
      * \return Any error code otherwise.
      */
     extern GAB_Status requestContinuousArray(const std::string& tag, uint32_t elm_count, size_t elm_size);
+
+    extern GAB_Status releaseContinuousArray(const std::string& tag);
 
     /**
      * \brief Access a previously allocated memory region.
