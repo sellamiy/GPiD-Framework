@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <sstream>
 #include <snlog/snlog.hpp>
+#include <whymlp/whymlp.hpp>
 #include <mlbsmt2/mlbconfig.hpp>
 #include <mlbsmt2/mlbprules.hpp>
 #include <mlbsmt2/mlbscript.hpp>
@@ -200,3 +201,26 @@ produceFromScript(const std::string filename, MagicLiteralData& data) {
     capsule->addRule(produceBooleanConsts);
     return capsule;
 }
+
+extern const MagicProductionRulePtr mlbsmt2::
+produceFromWhyML(const std::string filename, MagicLiteralData& data) {
+    whymlp::VextractParser parser(filename);
+    data.updateConsts(parser.getVars()); // TODO: Perform a type convertion
+    snlog::l_warn() << "Type conversion WhyML typenames -> Smtl2 typenames not implemented" << snlog::l_end;
+
+    // TODO: Improve the modularity
+    std::list<MlbApplication> applications;
+    applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "int" }));
+    applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "int" }));
+    applications.push_back(MlbApplication(MlbApplicationType::Equality, ">", { "int" }));
+    applications.push_back(MlbApplication(MlbApplicationType::Equality, ">=", { "int" }));
+    applications.push_back(MlbApplication(MlbApplicationType::Equality, "<", { "int" }));
+    applications.push_back(MlbApplication(MlbApplicationType::Equality, "<=", { "int" }));
+    data.updateApps(applications);
+
+    std::shared_ptr<EncapsulatedProductionRules> capsule(new EncapsulatedProductionRules());
+    capsule->requires(DataExploitation::ApplyScript);
+    capsule->addRule(produceBooleanConsts);
+    return capsule;
+}
+

@@ -108,6 +108,7 @@ namespace mlbsmt2 {
 
         void loadSMTlib2File(const std::string filename);
         void loadMlbScript(const std::string filename);
+        void loadWhyMLFile(const std::string filename);
 
         void exploitData();
 
