@@ -40,6 +40,7 @@ namespace smtlib2utils {
         std::unique_ptr<SMTl2CParseEngine> engine;
     public:
         SMTl2CommandParser(const std::string& filename, SMTl2StringMemory& allocator);
+        SMTl2CommandParser(std::shared_ptr<std::string> data, SMTl2StringMemory& allocator);
         ~SMTl2CommandParser();
 
         void initialize();

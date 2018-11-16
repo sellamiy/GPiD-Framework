@@ -20,9 +20,15 @@ namespace smtlib2utils {
         SMTl2StringMemory& allocator;
 
         enum class EngineState { UNINITIALIZED, OPENED, CLOSED, COMPLETE, ERROR };
+        enum class source_t { File, Data };
 
+        source_t source;
         std::string fsource;
-        std::ifstream ssource;
+        std::shared_ptr<std::string> dsource;
+
+        std::ifstream sfsource;
+        std::istringstream sssource;
+        std::istream& ssource;
         struct fpostracker { int line, col; } spos;
 
         EngineState state;
@@ -36,6 +42,8 @@ namespace smtlib2utils {
 
         void handleError(std::string msg);
 
+        char nextChar();
+
         void updatePositionTracker(char c);
 
         void parseComment();
@@ -44,6 +52,7 @@ namespace smtlib2utils {
 
     public:
         SMTl2CParseEngine(const std::string& fsource, SMTl2StringMemory& allocator);
+        SMTl2CParseEngine(std::shared_ptr<std::string> dsource, SMTl2StringMemory& allocator);
         ~SMTl2CParseEngine();
 
         constexpr bool valid() const {
@@ -59,7 +68,20 @@ namespace smtlib2utils {
     SMTl2CParseEngine::SMTl2CParseEngine
     (const std::string& fsource, SMTl2StringMemory& allocator)
         : allocator(allocator),
+          source(source_t::File),
           fsource(fsource),
+          ssource(sfsource),
+          spos({0,0}),
+          state(EngineState::UNINITIALIZED),
+          lastCommand("nope", std::shared_ptr<std::string>(nullptr))
+    {}
+
+    SMTl2CParseEngine::SMTl2CParseEngine
+    (std::shared_ptr<std::string> dsource, SMTl2StringMemory& allocator)
+        : allocator(allocator),
+          source(source_t::Data),
+          dsource(dsource),
+          ssource(sssource),
           spos({0,0}),
           state(EngineState::UNINITIALIZED),
           lastCommand("nope", std::shared_ptr<std::string>(nullptr))
@@ -76,7 +98,7 @@ namespace smtlib2utils {
     void SMTl2CParseEngine::handleError(std::string msg) {
         std::stringstream buf;
         snlog::l_error() << "Parsing failure: "
-                         << "@file:" << fsource
+                         << "@file:" << (source == source_t::File ? fsource : "*data")
                          << ":" << std::to_string(spos.line)
                          << ":" << std::to_string(spos.col)
                          << " : " << msg
@@ -88,15 +110,20 @@ namespace smtlib2utils {
     void SMTl2CParseEngine::openSource() {
         snlog::t_internal(state != EngineState::UNINITIALIZED)
             << "Opening already opened abducible parser" << snlog::l_end;
-        ssource = std::ifstream(fsource);
-        if (!ssource.is_open()) handleError("Could not open source file");
+        if (source == source_t::File) {
+            sfsource = std::ifstream(fsource);
+            if (!sfsource.is_open()) handleError("Could not open source file");
+        } else {
+            sssource = std::istringstream(*dsource);
+        }
         if (state != EngineState::ERROR) state = EngineState::OPENED;
     }
 
     void SMTl2CParseEngine::closeSource() {
         snlog::t_internal(state != EngineState::OPENED && state != EngineState::COMPLETE)
             << "Closing non opened abducible parser" << snlog::l_end;
-        ssource.close();
+        if (source == source_t::File)
+            sfsource.close();
         if (state == EngineState::OPENED || state == EngineState::COMPLETE)
             state = EngineState::CLOSED;
     }
@@ -112,7 +139,7 @@ namespace smtlib2utils {
         bool ondata = false;
         while (ssource.get(c)) {
             updatePositionTracker(c);
-            if (c == ';') parseComment();
+            if (c == ';') { parseComment(); continue; }
             if (c == '(') depth++;
             if (c == ')') depth--;
             if (depth == 0 && cwritten) break;
@@ -165,6 +192,8 @@ namespace smtlib2utils {
 
     SMTl2CommandParser::SMTl2CommandParser(const std::string& filename, SMTl2StringMemory& allocator)
         : engine(new SMTl2CParseEngine(filename, allocator)) {}
+    SMTl2CommandParser::SMTl2CommandParser(std::shared_ptr<std::string> data, SMTl2StringMemory& allocator)
+        : engine(new SMTl2CParseEngine(data, allocator)) {}
     SMTl2CommandParser::~SMTl2CommandParser() {}
 
     void SMTl2CommandParser::initialize() {
