@@ -4,6 +4,7 @@
 add_subdirectory(snlog)
 add_subdirectory(ugly)
 add_subdirectory(lcdot)
+add_subdirectory(lisptp)
 add_subdirectory(pctrace)
 add_subdirectory(smtlib2)
 add_subdirectory(mlbsmt2)

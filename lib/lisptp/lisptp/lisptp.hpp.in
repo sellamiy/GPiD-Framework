@@ -1,0 +1,11 @@
+#ifndef LIB_LISP_TREE_PARSER__MAIN_HEADER
+#define LIB_LISP_TREE_PARSER__MAIN_HEADER
+
+#include <lisptp/lisptree.hpp>
+#include <lisptp/lisptreevisitor.hpp>
+
+namespace lisptp {
+    extern std::shared_ptr<LispTreeNode> parse(const std::string& data);
+}
+
+#endif
