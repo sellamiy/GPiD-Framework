@@ -12,8 +12,8 @@ file(GLOB LIBMLBSMT2_SOURCES "src/*.cpp")
 # ------------------------------------------------------------------------------
 add_library(mlbsmt2-static STATIC ${LIBMLBSMT2_SOURCES})
 add_library(mlbsmt2-shared SHARED ${LIBMLBSMT2_SOURCES})
-target_link_libraries(mlbsmt2-static snlog smtlib2utils-static whymlp-static)
-target_link_libraries(mlbsmt2-shared snlog smtlib2utils-shared whymlp-shared)
+target_link_libraries(mlbsmt2-static snlog smtlib2utils-static whymlp-static ugly)
+target_link_libraries(mlbsmt2-shared snlog smtlib2utils-shared whymlp-shared ugly)
 target_include_directories(mlbsmt2-static PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}" "${LOCAL_LIB_HEADERS_DIR}" ${PYTHON_INCLUDE_DIRS})
 target_include_directories(mlbsmt2-shared PUBLIC

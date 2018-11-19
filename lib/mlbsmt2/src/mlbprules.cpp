@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <sstream>
 #include <snlog/snlog.hpp>
+#include <ugly/ugly.hpp>
 #include <whymlp/whymlp.hpp>
 #include <mlbsmt2/mlbconfig.hpp>
 #include <mlbsmt2/mlbprules.hpp>
@@ -210,12 +211,20 @@ produceFromWhyML(const std::string filename, MagicLiteralData& data) {
 
     // TODO: Improve the modularity
     std::list<MlbApplication> applications;
-    applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "int", "bool" }));
-    applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "int", "bool" }));
-    applications.push_back(MlbApplication(MlbApplicationType::Equality, ">", { "int" }));
-    applications.push_back(MlbApplication(MlbApplicationType::Equality, ">=", { "int" }));
-    applications.push_back(MlbApplication(MlbApplicationType::Equality, "<", { "int" }));
-    applications.push_back(MlbApplication(MlbApplicationType::Equality, "<=", { "int" }));
+
+    if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "int")) {
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, ">", { "int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, ">=", { "int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "<", { "int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "<=", { "int" }));
+    }
+    if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "bool")) {
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "bool" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "bool" }));
+    }
+
     data.updateApps(applications);
 
     std::shared_ptr<EncapsulatedProductionRules> capsule(new EncapsulatedProductionRules());
