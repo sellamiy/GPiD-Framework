@@ -3,5 +3,6 @@
 
 #include <ugly/SetOfSets.hpp>
 #include <ugly/BeurkTables.hpp>
+#include <ugly/MapUtils.hpp>
 
 #endif
