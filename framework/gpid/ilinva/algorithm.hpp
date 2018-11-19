@@ -85,6 +85,8 @@ namespace gpid {
 
         reset();
 
+        bool assume_proven = true;
+
         while (!pengine.isProven()) {
 
             LoopId loop = pengine.selectUnprovenLoop();
@@ -99,6 +101,7 @@ namespace gpid {
 
                 backtrack();
                 if (level_stack.empty()) {
+                    assume_proven = false;
                     snlog::l_error() << "No more strengthening candidates available" << snlog::l_end;
                     break;
                 }
@@ -108,16 +111,19 @@ namespace gpid {
 
         }
 
-        // TODO: Analyze results, print relevant stuff, ...
-        if (options.output == "") {
-            snlog::l_info() << "Writing results to stdout..." << snlog::l_end
-                            << snlog::l_message << "invariants for the program..."
-                            << snlog::l_end;
-            pengine.getSourceHandler().exportSource(std::cout);
-            snlog::l_message() << "---------------------" << snlog::l_end;
+        if (assume_proven) {
+            if (options.output == "") {
+                snlog::l_info() << "Writing results to stdout..." << snlog::l_end
+                                << snlog::l_message << "invariants for the program..."
+                                << snlog::l_end;
+                pengine.getSourceHandler().exportSource(std::cout);
+                snlog::l_message() << "---------------------" << snlog::l_end;
+            } else {
+                snlog::l_info() << "Writing results to " << options.output << snlog::l_end;
+                pengine.getSourceHandler().exportSource(options.output);
+            }
         } else {
-            snlog::l_info() << "Writing results to " << options.output << snlog::l_end;
-            pengine.getSourceHandler().exportSource(options.output);
+            snlog::l_error() << "No invariants found" << snlog::l_end;
         }
 
     }
