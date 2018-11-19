@@ -457,7 +457,7 @@ mrecord_field : GHOST? MUTABLE? lident_nq label* COLUMN type ;
 
 pgm_defn : fun_body | EQUAL FUN binder+ spec* RIGHTARROW spec* expr ;
 
-pgm_decl : COLUMN type | param (spec* param)+ COLUMN type spec* ;
+pgm_decl : param+ (COLUMN result)? spec* ;
 // Wrappers
 rec_defn : fun_defn ; // Wrap
 fun_body : param+ (COLUMN result)? spec* EQUAL spec* expr ; // Wrap (adapt)
