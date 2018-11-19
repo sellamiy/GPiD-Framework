@@ -34,8 +34,9 @@ int main(int argc, char** argv) {
     opts.control.stats.addStatisticGroup();
     opts.control.stats.addStatistic
         ("Total time", opts.control.time.duration("start", "end"));
-    opts.control.stats.addStatistic
-        ("Generation time", opts.control.time.duration("generation", "generation-end"), 4);
+    if (gStatus == ilinvaExecutionStatus::SUCCESS)
+        opts.control.stats.addStatistic
+            ("Generation time", opts.control.time.duration("generation", "generation-end"), 4);
     l_message() << "print generation statistics..." << l_end
                 << l_raw << opts.control.stats
                 << l_message << "complete." << l_end;
