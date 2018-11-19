@@ -210,8 +210,8 @@ produceFromWhyML(const std::string filename, MagicLiteralData& data) {
 
     // TODO: Improve the modularity
     std::list<MlbApplication> applications;
-    applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "int" }));
-    applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "int" }));
+    applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "int", "bool" }));
+    applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "int", "bool" }));
     applications.push_back(MlbApplication(MlbApplicationType::Equality, ">", { "int" }));
     applications.push_back(MlbApplication(MlbApplicationType::Equality, ">=", { "int" }));
     applications.push_back(MlbApplication(MlbApplicationType::Equality, "<", { "int" }));
