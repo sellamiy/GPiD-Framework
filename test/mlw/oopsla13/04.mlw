@@ -1,0 +1,16 @@
+module Oopsla04
+ use int.Int
+ use ref.Ref
+
+ let main (y0: int) : unit
+  diverges
+ = let x = ref (-50) in
+   let y = ref y0 in
+   while !x < 0 do
+    invariant { true }
+    x := !x + !y;
+    y := !y + 1;
+   done;
+   assert { !y > 0 }
+
+end

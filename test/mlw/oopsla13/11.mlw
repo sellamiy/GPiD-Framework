@@ -1,0 +1,16 @@
+module Oopsla11
+ use int.Int
+ use ref.Ref
+
+ let main (void) : unit =
+  let j = ref 0 in
+  let x = ref 100 in
+
+  for i = 0 to !x - 1 do
+   invariant { true }
+   j := !j + 2
+  done;
+
+  assert { !j = !x * 2 }
+
+end

@@ -1,0 +1,33 @@
+module Oopsla12
+ use int.Int
+ use ref.Ref
+
+ val unknown1 (unit) : bool
+ val unknown2 (unit) : bool
+
+ let main (flag: bool) : unit
+  diverges
+ = let t = ref 0 in let s = ref 0 in let a = ref 0 in let b = ref 0 in
+   let x = ref 1 in let y = ref 0 in
+
+   while unknown1() do
+    invariant { true } 
+    a := !a + 1;
+    b := !b + 1;
+    s := !s + !a;
+    t := !t + !b;
+    if flag then t := !t + !a
+   done;
+
+   if flag then begin
+    x := !t - 2 * !s + 2;
+   end;
+
+   while !y <= !x do
+    invariant { true }
+    if unknown2() then y := !y + 1 else y := !y + 2
+   done;
+
+   assert { !y <= 4 }
+
+end

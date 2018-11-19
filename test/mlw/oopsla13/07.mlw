@@ -1,0 +1,25 @@
+module Oopsla07
+ use int.Int
+ use ref.Ref
+ use int.EuclideanDivision
+
+ val unknown (unit) : bool
+
+ let main (n: int) : unit
+  requires { n >= 0 }
+  diverges
+ = let i = ref 0 in let a = ref 0 in let b = ref 0 in
+
+   while !i < 0 do
+    invariant { true }
+    if unknown() then begin
+     a := !a + 1; b := !b + 2;
+    end else begin
+     a := !a + 2; b := !b + 1;
+    end;
+    i := !i + 1;
+   done;
+
+   assert { !a + !b = 3*n }
+
+end

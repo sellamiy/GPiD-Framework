@@ -1,0 +1,19 @@
+module Oopsla19
+ use int.Int
+ use ref.Ref
+
+ let main (n: int) (m:int) : unit
+  requires { n >= 0 }
+  requires { m >= 0 }
+  requires { m < n }
+  diverges
+ = let x = ref 0 in let y = ref m in
+   while !x < n do
+    invariant { true }
+    x := !x + 1;
+    if !x > m then y := !y + 1
+   done;
+
+   assert { !y = n }
+
+end

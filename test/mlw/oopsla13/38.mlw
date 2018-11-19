@@ -1,0 +1,17 @@
+module Oopsla38
+ use int.Int
+ use ref.Ref
+ use int.EuclideanDivision
+
+ let main (n: int) : unit diverges =
+ let x = ref 0 in let y = ref 0 in let i = ref 0 in
+
+ while !i < n do invariant { true }
+  i := !i + 1;
+  x := !x + 1;
+  if mod !i 2 = 0 then y := !y + 1
+ done;
+
+ if mod !i 2 = 0 then assert { !x = 2 * !y }
+
+end

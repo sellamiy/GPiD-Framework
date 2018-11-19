@@ -1,0 +1,19 @@
+module Oopsla14
+ use int.Int
+ use ref.Ref
+
+ val unknown (unit) : bool
+
+ let main (m: int) : unit
+  requires { m > 0 }
+ = let a = ref 0 in
+
+   for j = 1 to m do
+    invariant { true }
+    if unknown() then a := !a + 1 else a := !a - 1
+   done;
+
+   assert { !a >= -m };
+   assert { !a <= m }
+
+end

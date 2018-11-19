@@ -1,0 +1,19 @@
+module Oopsla44
+ use int.Int
+ use ref.Ref
+
+ let main (k: int) (flag: bool) : unit diverges
+ = let i = ref 0 in let j = ref 0 in let n = ref 2 in
+
+  if flag then n := 1;
+
+  i := 0;
+
+  while !i <= k do invariant { true }
+   i := !i + 1;
+   j := !j + !n;
+  done;
+
+  if flag then assert { !j = !i }
+
+end

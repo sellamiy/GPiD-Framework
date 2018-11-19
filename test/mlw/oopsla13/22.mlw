@@ -1,0 +1,24 @@
+module Oopsla22
+ use int.Int
+ use ref.Ref
+ use int.EuclideanDivision
+
+ val unknown (unit) : bool
+
+ let main (void) : unit
+  diverges
+ = let x = ref 0 in let y = ref 0 in let z = ref 0 in let k = ref 0 in
+
+   while unknown() do
+    invariant { true }
+
+    if mod !k 3 = 0 then x := !x + 1;
+    y := !y + 1;
+    z := !z + 1;
+    k := !x + !y + !z;
+   done;
+
+   assert { !x = !y };
+   assert { !y = !z };
+
+end

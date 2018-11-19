@@ -1,0 +1,16 @@
+module Oopsla23
+ use int.Int
+ use ref.Ref
+
+ let main (n: int) : unit
+  requires { n >= 0 }
+ = let sum = ref 0 in
+
+  for i = 0 to n - 1 do
+   invariant { true }
+   sum := !sum + i
+  done;
+
+  assert { !sum >= 0 }
+
+end

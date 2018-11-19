@@ -1,0 +1,36 @@
+module Oopsla45
+ use int.Int
+ use ref.Ref
+ use int.EuclideanDivision
+
+ val unknown1 (unit) : bool
+ val unknown2 (unit) : bool
+ val unknown3 (unit) : bool
+
+ let main (flag: bool) : unit diverges
+ = let x = ref 0 in let y = ref 0 in let j = ref 0 in let i = ref 0 in
+
+   while unknown1() do invariant { true }
+    x := !x + 1;
+    y := !y + 1;
+    i := !i + !x;
+    j := !j + !y;
+    if flag then j := !j + 1
+   done;
+
+   if !j >= !i then x := !y else x := !y + 1;
+
+   let w = ref 1 in let z = ref 0 in
+
+   while unknown2() do invariant { true }
+    while unknown3() do invariant { true }
+     if mod !w 2 = 1 then x := !x + 1;
+     if mod !z 2 = 0 then y := !y + 1;
+     z := !x + !y;
+     w := !z + 1;
+    done
+   done;
+
+   assert { !x = !y }
+
+end

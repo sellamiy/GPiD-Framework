@@ -1,0 +1,18 @@
+module Oopsla32
+ use int.Int
+ use ref.Ref
+
+ let foo (b0 : bool) (j0 : int) () : unit
+ = let i = ref j0 in
+   let j = ref j0 in
+   let b = ref b0 in
+
+   for n = 0 to 199 do
+       invariant { true }
+       if !b then i := !i + 1 else j := !j + 1;
+       if !b then b := false else b := true;
+   done;
+
+   assert { !i = !j };
+
+end

@@ -1,0 +1,36 @@
+module Oopsla20
+ use int.Int
+ use ref.Ref
+
+ val unknown (unit) : bool
+
+ let main (x0: int) (y0: int) (k: int) (i: int) (n: int) : unit
+  requires { (x0 + y0) = k }
+  diverges
+ = let m = ref 0 in let j = ref 0 in
+   let x = ref x0 in let y = ref y0 in
+
+   while !j < n do
+    invariant { true }
+
+    if !j = i then begin
+     x := !x + 1;
+     y := !y - 1
+    end else begin
+     x := !x - 1;
+     y := !y + 1
+    end;
+
+    if unknown() then m := !j;
+
+    j := !j + 1;
+   done;
+
+   assert { (!x + !y) = k };
+
+   if n > 0 then begin
+    assert { 0 <= !m };
+    assert { !m < n }
+   end
+
+end
