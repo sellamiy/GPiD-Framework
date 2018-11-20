@@ -28,12 +28,14 @@ namespace why3wrap {
     class SplitProofParser {
         const std::string anchor;
         strptr data;
+        const bool valid;
         std::list<SplitProofResult> proof;
     public:
         SplitProofParser(const std::string& anchor, strptr data)
-            : anchor(anchor), data(data) {}
+            : anchor(anchor), data(data), valid(*data != "") {}
         void parse();
         const std::list<SplitProofResult>& results() const { return proof; }
+        inline constexpr bool isValid() const { return valid; }
     };
 
     class SplitProofVCParser {

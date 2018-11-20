@@ -48,10 +48,15 @@ namespace why3wrap {
         uintset res;
         SplitProofParser parser(filename, execute(gen_proof_command(filename, prover)));
         parser.parse();
-        for (const SplitProofResult& r : parser.results()) {
-            if (!r.isValid()) {
-                res.insert(r.index);
+        if (parser.isValid()) {
+            for (const SplitProofResult& r : parser.results()) {
+                if (!r.isValid()) {
+                    res.insert(r.index);
+                }
             }
+        } else {
+            snlog::l_internal() << "Cannot detect why3 results on empty data" << snlog::l_end;
+            res.insert(-1);
         }
         return res;
     }
