@@ -76,6 +76,7 @@ namespace whymlp {
         class Vextractor {
             const std::string filename;
             map<string, string> vars;
+            set<string> refs;
             bool valid;
         public:
             Vextractor(const std::string& filename);
@@ -87,6 +88,7 @@ namespace whymlp {
             void extractVars();
 
             inline const map<string, string>& getVars() const { return vars; }
+            inline const set<string>& getRefs() const { return refs; }
         };
 
     }
@@ -117,6 +119,13 @@ void whymlp::whyantlr::Vextractor::extractVars() {
 
         vars = listener.getVars();
 
+        for (const pair<string, string>& var : vars)
+            if (isRefType(var.second))
+                refs.insert(var.first);
+
+        for (const std::string& var : refs)
+            vars[var] = asNonRefType(vars[var]);
+
         valid = !errl.hasDetectedErrors();
     } else {
         valid = false;
@@ -141,4 +150,10 @@ const map<string, string>& whymlp::VextractParser::getVars() const {
     if (!parser->hasExtract())
         parser->extractVars();
     return parser->getVars();
+}
+
+const set<string>& whymlp::VextractParser::getRefs() const {
+    if (!parser->hasExtract())
+        parser->extractVars();
+    return parser->getRefs();
 }

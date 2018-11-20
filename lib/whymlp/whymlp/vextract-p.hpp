@@ -2,6 +2,7 @@
 #define LIB_WHYMLP__VARIABLES_EXTRACTOR_HEADER
 
 #include <map>
+#include <set>
 #include <memory>
 #include <whymlp/whymlparse.hpp>
 
@@ -16,6 +17,7 @@ namespace whymlp {
         ~VextractParser();
 
         const std::map<std::string, std::string>& getVars() const;
+        const std::set<std::string>& getRefs() const;
 
         bool hasFailed() const;
     };

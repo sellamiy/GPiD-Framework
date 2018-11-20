@@ -45,6 +45,15 @@ class TypeVisitor : public WhyMLBaseVisitor {
 
         return string("type-deduction-failed");
     }
+
+    antlrcpp::Any typeApplicationDeduction(const std::string& appname, antlrcpp::Any source) {
+        antlrcpp::Any sany = typeDeduction(source);
+        if (appname == "ref") {
+            const std::string svalue = sany.as<string>();
+            return string(svalue + ":ref");
+        }
+        return sany;
+    }
 public:
     TypeVisitor(map<string, string>& vars) : vars(vars) {}
 
@@ -62,6 +71,12 @@ public:
     }
 
     virtual antlrcpp::Any visitExpr(WhyMLParser::ExprContext *ctx) override {
+        if (ctx->ww_application() != nullptr) {
+            const std::string& appname = ctx->expr(0)->getText();
+            // TODO: The following only deduces type for 1 var applicative types
+            // TODO: Should be improved
+            return typeApplicationDeduction(appname, visit(ctx->expr(1)));
+        }
         return typeDeduction(visitChildren(ctx));
     }
 
@@ -81,5 +96,16 @@ public:
         return string(BOOL_TYPESTR);
     }
 };
+
+/* Type utils functions */
+
+static inline bool isRefType(const std::string& tdata) {
+    return tdata.find(":ref") != std::string::npos;
+}
+
+static inline const std::string asNonRefType(const std::string& tdata) {
+    size_t rpos = tdata.find(":ref");
+    return tdata.substr(0, rpos);
+}
 
 #endif

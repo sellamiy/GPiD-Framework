@@ -167,7 +167,7 @@ expr
     | expr OBRACKET expr DOT DOT expr CBRACKET SQUOTE*
     | expr OBRACKET expr DOT DOT CBRACKET SQUOTE*
     | expr OBRACKET DOT DOT expr CBRACKET SQUOTE*
-    | expr expr+
+    | expr expr+ ww_application
     | expr op expr
     | NOT expr
     | expr PRG_AND expr
@@ -243,6 +243,9 @@ expr_r_parentheses : qualifier? OPAR expr CPAR ;
 expr_r_letpattern : LET pattern EQUAL expr IN expr ;
 
 expr_r_forloop : FOR lident EQUAL expr (TO | DOWNTO) expr DO invariant* expr DONE ;
+
+// Wrap handlers
+ww_application : ;
 /* ----------------------------------------------------- */
 // Why3 formulas
 formula

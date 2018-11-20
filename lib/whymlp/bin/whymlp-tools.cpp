@@ -96,7 +96,9 @@ static inline int whdl_vextract(const WhyMLPToolsOpts& opts) {
         l_info() << filename << " (variables)" << l_end;
         parser = shared_ptr<VextractParser>(new VextractParser(filename));
         for (const pair<string, string>& var : parser->getVars()) {
-            l_message() << var.first << " (" << var.second << ")" << l_end;
+            l_message() << var.first << " (" << var.second << ")"
+                        << (parser->getRefs().count(var.first) > 0 ? " (ref)" : "")
+                        << l_end;
         }
     }
     if (parser->hasFailed())
