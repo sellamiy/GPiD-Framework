@@ -33,6 +33,8 @@ namespace gpid {
         /** Generator initialization */
         MasmaligAlgorithm(LiteralHandlerT& lhandler, GPiDOptions& opts, MasmaligOptions& iopts);
 
+        inline mlbsmt2::MagicLiteralBuilder& getBuilder() { return builder; }
+
         /** Print informations on the algorithm and its parameters. */
         static void printInfos();
     };

@@ -45,6 +45,7 @@ W3WML_LSet::W3WML_LSet(const std::string& filename) {
         W3WML_LSet_LRec handler(literals);
         MasmaligAlgorithm<W3WML_LSet_LRec> loader(handler, opts, mopts);
         loader.execute();
+        references = loader.getBuilder().getWhyMLRefs();
     } catch (mlbsmt2::MLB2Error& e) {
         snlog::l_error() << "W3WML Mlw literals recovery failed: " << e.what() << snlog::l_end;
     } catch (gpid::GPiDError& e) {

@@ -61,7 +61,8 @@ namespace gpid {
     DualInvariantEngine<CodeHandlerT, InterfaceT>::newStrengthener(LoopIdentifierT loop) {
         std::shared_ptr<StrengthenerT>
             stren(new StrengthenerT(sourceCode.generateAbductionProblem(loop),
-                                    sourceCode.generateSourceLiterals(loop)));
+                                    sourceCode.generateSourceLiterals(loop),
+                                    sourceCode.generateContext(loop)));
         strengtheners[stren->getId()] = stren;
         return stren->getId();
     }

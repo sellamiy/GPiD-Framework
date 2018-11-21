@@ -8,12 +8,15 @@ namespace gpid {
 
 #if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_cvc4_tm_api
 
+    // TODO: Add parameter in template for passing why3 refs for these converters
+    // TODO: Something like ICHContextManager (?)
+
     template<> inline W3WML_Constraint convert<W3WML_ICH, CVC4InterfaceAPI, LiteralHypothesis>
     (ObjectMapper<CVC4InterfaceAPI::LiteralT> const& mapper, LiteralHypothesis& hyp,
-     CVC4InterfaceAPI::ContextManagerT& ctx) {
+     CVC4InterfaceAPI::ContextManagerT& ctx, std::set<std::string>& ictx) {
         std::stringstream ss;
         ss << hypothesis<CVC4InterfaceAPI>(hyp, mapper, ctx);
-        return W3WML_Constraint(why3wrap::Smt2Why3(ss.str()));
+        return W3WML_Constraint(why3wrap::Smt2Why3(ss.str(), ictx));
     }
 
     template<> CVC4InterfaceAPI::LiteralT convert<W3WML_ICH, CVC4InterfaceAPI>
@@ -27,10 +30,10 @@ namespace gpid {
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, CVC4InterfaceSMTl2CLI, LiteralHypothesis>
     (ObjectMapper<CVC4InterfaceSMTl2CLI::LiteralT> const& mapper, LiteralHypothesis& hyp,
-     CVC4InterfaceSMTl2CLI::ContextManagerT& ctx) {
+     CVC4InterfaceSMTl2CLI::ContextManagerT& ctx, std::set<std::string>& ictx) {
         std::stringstream ss;
         ss << hypothesis<CVC4InterfaceSMTl2CLI>(hyp, mapper, ctx);
-        return W3WML_Constraint(why3wrap::Smt2Why3(ss.str()));
+        return W3WML_Constraint(why3wrap::Smt2Why3(ss.str(), ictx));
     }
 
     template<> CVC4InterfaceSMTl2CLI::LiteralT convert<W3WML_ICH, CVC4InterfaceSMTl2CLI>
@@ -45,10 +48,10 @@ namespace gpid {
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, Z3InterfaceAPI, LiteralHypothesis>
     (ObjectMapper<Z3InterfaceAPI::LiteralT> const& mapper, LiteralHypothesis& hyp,
-     Z3InterfaceAPI::ContextManagerT& ctx) {
+     Z3InterfaceAPI::ContextManagerT& ctx, std::set<std::string>& ictx) {
         std::stringstream ss;
         ss << hypothesis<Z3InterfaceAPI>(hyp, mapper, ctx);
-        return W3WML_Constraint(why3wrap::Smt2Why3(ss.str()));
+        return W3WML_Constraint(why3wrap::Smt2Why3(ss.str(), ictx));
     }
 
     template<> Z3InterfaceAPI::LiteralT convert<W3WML_ICH, Z3InterfaceAPI>
@@ -64,10 +67,10 @@ namespace gpid {
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, Z3InterfaceSMTl2CLI, LiteralHypothesis>
     (ObjectMapper<Z3InterfaceSMTl2CLI::LiteralT> const& mapper, LiteralHypothesis& hyp,
-     Z3InterfaceSMTl2CLI::ContextManagerT& ctx) {
+     Z3InterfaceSMTl2CLI::ContextManagerT& ctx, std::set<std::string>& ictx) {
         std::stringstream ss;
         ss << hypothesis<Z3InterfaceSMTl2CLI>(hyp, mapper, ctx);
-        return W3WML_Constraint(why3wrap::Smt2Why3(ss.str()));
+        return W3WML_Constraint(why3wrap::Smt2Why3(ss.str(), ictx));
     }
 
     template<> Z3InterfaceSMTl2CLI::LiteralT convert<W3WML_ICH, Z3InterfaceSMTl2CLI>

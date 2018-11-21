@@ -56,3 +56,7 @@ const std::list<W3WML_Constraint>& W3WML_ICH::generateSourceLiterals(LoopIdentif
     }
     return literals;
 }
+
+std::set<std::string>& W3WML_ICH::generateContext(LoopIdentifierT) {
+    return plits.getReferences();
+}

@@ -16,8 +16,8 @@ namespace gpid {
     template<typename CodeHandlerT, typename InterfaceT, typename InterfaceLiteralBrowser>
     typename CodeHandlerT::ConstraintT
     convert(const ObjectMapper<typename InterfaceT::LiteralT>& mapper,
-            InterfaceLiteralBrowser& cons,
-            typename InterfaceT::ContextManagerT& ctx);
+            InterfaceLiteralBrowser& cons, typename InterfaceT::ContextManagerT& ctx,
+            typename CodeHandlerT::ContextManagerT& ictx);
 
     template<typename CodeHandlerT, typename InterfaceT>
     typename InterfaceT::LiteralT
@@ -31,8 +31,9 @@ namespace gpid {
             : ch_c(cons) {}
         DualConstraintData(const ObjectMapper<typename InterfaceT::LiteralT>& mapper,
                            InterfaceLiteralBrowser& cons,
-                           typename InterfaceT::ContextManagerT& ctx)
-            : ch_c(convert<CodeHandlerT, InterfaceT, InterfaceLiteralBrowser>(mapper, cons, ctx)) {}
+                           typename InterfaceT::ContextManagerT& ctx,
+                           typename CodeHandlerT::ContextManagerT& ictx)
+            : ch_c(convert<CodeHandlerT, InterfaceT, InterfaceLiteralBrowser>(mapper, cons, ctx, ictx)) {}
         DualConstraintData(DualConstraintData& o)
             : ch_c(o.ch_c) {}
         inline operator typename CodeHandlerT::ConstraintT() const { return ch_c; }

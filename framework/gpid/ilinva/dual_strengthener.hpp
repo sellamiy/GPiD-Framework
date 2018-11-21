@@ -39,11 +39,13 @@ namespace gpid {
             std::atomic<bool> writeable;
 
             typename InterfaceT::ContextManagerT& ictx;
+            typename CodeHandlerT::ContextManagerT& ich_ctx;
 
             ConstraintT implicant;
         public:
-            ImplicateForwarder(typename InterfaceT::ContextManagerT& ictx)
-                : readable(false), writeable(true), ictx(ictx),
+            ImplicateForwarder(typename InterfaceT::ContextManagerT& ictx,
+                               typename CodeHandlerT::ContextManagerT& ich_ctx)
+                : readable(false), writeable(true), ictx(ictx), ich_ctx(ich_ctx),
                   implicant(CodeHandlerT::C_False)
             {}
 
@@ -73,7 +75,8 @@ namespace gpid {
         using ImplicateGeneratorPtr = std::shared_ptr<ImplicateGenerator>;
         ImplicateGeneratorPtr generator;
     public:
-        DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons);
+        DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
+                                  typename CodeHandlerT::ContextManagerT& ich_ctx);
         ~DualConditionStrengthener();
 
         inline constexpr IdentifierT getId() const { return identifier; }
@@ -96,7 +99,7 @@ namespace gpid {
     inline void DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateForwarder
     ::operator()(AbducibleEngine& engine) {
         while(!writeable);
-        implicant = ConstraintT(engine.getMapper(), engine.getCurrentImplicate(), ictx);
+        implicant = ConstraintT(engine.getMapper(), engine.getCurrentImplicate(), ictx, ich_ctx);
         writeable = false;
         readable = true;
     }
@@ -114,9 +117,10 @@ namespace gpid {
 
     template<typename CodeHandlerT, typename InterfaceT>
     DualConditionStrengthener<CodeHandlerT, InterfaceT>
-    ::DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons)
+    ::DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
+                                typename CodeHandlerT::ContextManagerT& ich_ctx)
         : identifier(nextStrengthenerId()),
-          forwarder(_problemBuilder.getContextManager()),
+          forwarder(_problemBuilder.getContextManager(), ich_ctx),
           generator(nullptr)
     {
         _problemBuilder.load(pfile, "smt2");

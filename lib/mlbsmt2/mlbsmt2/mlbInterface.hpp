@@ -1,6 +1,7 @@
 #ifndef MAGIC_LITERAL_BUILDER_f_SMTLIB2__INTERFACE_HPP
 #define MAGIC_LITERAL_BUILDER_f_SMTLIB2__INTERFACE_HPP
 
+#include <set>
 #include <smtlib2utils/smtlib2utils.hpp>
 #include <mlbsmt2/mlberrors.hpp>
 #include <mlbsmt2/mlbconfig.hpp>
@@ -100,6 +101,8 @@ namespace mlbsmt2 {
         std::list<MagicProductionRulePtr> rules;
         std::map<DataExploitation, bool> exploitations;
 
+        std::set<std::string> whyml_refs;
+
         MagicLiteralData data;
 
         bool exploitData(DataExploitation e);
@@ -119,6 +122,8 @@ namespace mlbsmt2 {
             return state == BuilderState::Exploited
                 || state == BuilderState::Building;
         }
+
+        inline const std::set<std::string>& getWhyMLRefs() const { return whyml_refs; }
 
         std::string buildLiteral();
     };

@@ -13,6 +13,7 @@ namespace gpid {
         std::list<W3WML_Constraint> literals;
     public:
         using ConstraintT = W3WML_Constraint;
+        using ContextManagerT = std::set<std::string>; // Reference-typed variables
         using LoopIdentifierT = size_t;
         static const W3WML_Constraint C_False;
 
@@ -38,6 +39,8 @@ namespace gpid {
         const std::string generateAbductionProblem(LoopIdentifierT);
 
         const std::list<ConstraintT>& generateSourceLiterals(LoopIdentifierT);
+
+        std::set<std::string>& generateContext(LoopIdentifierT);
 
         LoopIdentifierT selectUnprovenBlock();
 

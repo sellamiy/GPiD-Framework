@@ -282,7 +282,7 @@ void MagicLiteralBuilder::loadMlbScript(const std::string filename) {
 }
 
 void MagicLiteralBuilder::loadWhyMLFile(const std::string filename) {
-    uses(produceFromWhyML(filename, data));
+    uses(produceFromWhyML(filename, data, whyml_refs));
 }
 
 bool MagicLiteralBuilder::exploitData(DataExploitation e) {

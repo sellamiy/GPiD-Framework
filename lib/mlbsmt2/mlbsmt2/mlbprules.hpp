@@ -20,7 +20,7 @@ namespace mlbsmt2 {
     produceFromScript(const std::string filename, MagicLiteralData& data);
 
     extern const MagicProductionRulePtr
-    produceFromWhyML(const std::string filename, MagicLiteralData& data);
+    produceFromWhyML(const std::string filename, MagicLiteralData& data, std::set<std::string>& refs);
 
 }
 

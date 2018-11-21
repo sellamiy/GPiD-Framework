@@ -69,9 +69,11 @@ namespace gpid {
 
     class W3WML_LSet {
         std::list<std::string> literals;
+        std::set<std::string> references;
     public:
         W3WML_LSet(const std::string& filename);
         inline const std::list<std::string>& getLiterals() const { return literals; }
+        inline std::set<std::string>& getReferences() { return references; }
     };
 
 }
