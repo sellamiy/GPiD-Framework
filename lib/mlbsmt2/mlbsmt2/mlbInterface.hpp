@@ -82,7 +82,8 @@ namespace mlbsmt2 {
         inline MagicParsingHandler& getHandler() { return *handler; }
         inline smtlib2utils::SMTl2StringMemory& getMemory() { return smem; }
 
-        void updateConsts(const name_storage& toAdd);
+        inline void updateConsts(const name_storage& toAdd) { updateConsts(toAdd, {}); }
+        void updateConsts(const name_storage& toAdd, const name_storage& typeConv);
         void updateFuns(const function_storage& toAdd);
         void updateApps(const std::list<MlbApplication>& toAdd);
 

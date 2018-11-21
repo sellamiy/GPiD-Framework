@@ -206,25 +206,24 @@ produceFromScript(const std::string filename, MagicLiteralData& data) {
 extern const MagicProductionRulePtr mlbsmt2::
 produceFromWhyML(const std::string filename, MagicLiteralData& data, std::set<std::string>& refs) {
     whymlp::ExtractorParser parser(filename);
-    data.updateConsts(parser.getVars()); // TODO: Perform a type convertion
-    data.updateConsts(parser.getLits()); // TODO: Perform a type convertion
+    data.updateConsts(parser.getVars(), { {"int", "Int"}, {"real", "Real"}, {"bool", "Bool"} });
+    data.updateConsts(parser.getLits(), { {"int", "Int"}, {"real", "Real"}, {"bool", "Bool"} });
     refs = parser.getRefs();
-    snlog::l_warn() << "Type conversion WhyML typenames -> Smtl2 typenames not implemented" << snlog::l_end;
 
     // TODO: Improve the modularity
     std::list<MlbApplication> applications;
 
-    if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "int")) {
-        applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "int" }));
-        applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "int" }));
-        applications.push_back(MlbApplication(MlbApplicationType::Equality, ">", { "int" }));
-        applications.push_back(MlbApplication(MlbApplicationType::Equality, ">=", { "int" }));
-        applications.push_back(MlbApplication(MlbApplicationType::Equality, "<", { "int" }));
-        applications.push_back(MlbApplication(MlbApplicationType::Equality, "<=", { "int" }));
-    }
     if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "bool")) {
-        applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "bool" }));
-        applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "bool" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "Bool" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "Bool" }));
+    }
+    if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "int")) {
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "Int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "Int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, ">", { "Int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, ">=", { "Int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "<", { "Int" }));
+        applications.push_back(MlbApplication(MlbApplicationType::Equality, "<=", { "Int" }));
     }
 
     data.updateApps(applications);

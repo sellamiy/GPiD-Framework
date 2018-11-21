@@ -214,10 +214,15 @@ void MagicLiteralData::extractFuns() {
     }
 }
 
-void MagicLiteralData::updateConsts(const name_storage& toAdd) {
+void MagicLiteralData::updateConsts(const name_storage& toAdd, const name_storage& typeConv) {
     for (const std::pair<std::string, std::string>& nconst : toAdd) {
-        consts_type_in[nconst.second].insert(nconst.first);
-        consts_name_in[nconst.first] = nconst.second;
+        if (typeConv.count(nconst.second) > 0) {
+            consts_type_in[typeConv.at(nconst.second)].insert(nconst.first);
+            consts_name_in[nconst.first] = typeConv.at(nconst.second);
+        } else {
+            consts_type_in[nconst.second].insert(nconst.first);
+            consts_name_in[nconst.first] = nconst.second;
+        }
     }
 }
 
