@@ -208,12 +208,14 @@ produceFromWhyML(const std::string filename, MagicLiteralData& data, std::set<st
     whymlp::ExtractorParser parser(filename);
     data.updateConsts(parser.getVars(), { {"int", "Int"}, {"real", "Real"}, {"bool", "Bool"} });
     data.updateConsts(parser.getLits(), { {"int", "Int"}, {"real", "Real"}, {"bool", "Bool"} });
+    data.updateFuns({{"not",{{"Bool"},"Bool"}}}); // boolean negation as function wrapper
     refs = parser.getRefs();
 
     // TODO: Improve the modularity
     std::list<MlbApplication> applications;
 
     if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "bool")) {
+        applications.push_back(MlbApplication(MlbApplicationType::Function, "not"));
         applications.push_back(MlbApplication(MlbApplicationType::Equality, "=", { "Bool" }));
         applications.push_back(MlbApplication(MlbApplicationType::Equality, "distinct", { "Bool" }));
     }
