@@ -36,6 +36,9 @@ namespace gpid {
 
         using AbducibleEngine = AdvancedAbducibleEngine<InterfaceT>;
 
+        class ImplicateForwarder;
+        class ImplicateDisjunctor;
+
         class ImplicateForwarder {
             std::atomic<bool> readable;
             std::atomic<bool> writeable;
@@ -43,12 +46,12 @@ namespace gpid {
             typename InterfaceT::ContextManagerT& ictx;
             typename CodeHandlerT::ContextManagerT& ich_ctx;
 
-            ConstraintT implicant;
+            friend class ImplicateDisjunctor;
+            std::list<ConstraintT> implicants;
         public:
             ImplicateForwarder(typename InterfaceT::ContextManagerT& ictx,
                                typename CodeHandlerT::ContextManagerT& ich_ctx)
-                : readable(false), writeable(true), ictx(ictx), ich_ctx(ich_ctx),
-                  implicant(CodeHandlerT::C_False)
+                : readable(false), writeable(true), ictx(ictx), ich_ctx(ich_ctx)
             {}
 
             inline constexpr bool isReadable() const { return readable; }
@@ -57,6 +60,20 @@ namespace gpid {
             inline void unhook() { readable = true; writeable = true; }
 
             void operator()(AbducibleEngine& engine);
+            ConstraintT nextImplicant();
+        };
+
+        class ImplicateDisjunctor {
+            std::vector<ConstraintT> source;
+            size_t lid, rid;
+        public:
+            ImplicateDisjunctor(ImplicateForwarder& fwder)
+                : source(std::make_move_iterator(std::begin(fwder.implicants)),
+                         std::make_move_iterator(std::end(fwder.implicants))),
+                  lid(0), rid(1)
+            {}
+
+            inline bool canDisjunct() const { return lid + 1 < source.size(); }
             ConstraintT nextImplicant();
         };
 
@@ -74,6 +91,7 @@ namespace gpid {
         AbdGeneratorPtr abdGenerator;
 
         ImplicateForwarder forwarder;
+        ImplicateDisjunctor disjunctor;
         using ImplicateGeneratorPtr = std::shared_ptr<ImplicateGenerator>;
         ImplicateGeneratorPtr generator;
     public:
@@ -87,11 +105,14 @@ namespace gpid {
             while (!generator->complete()) {
                 if (forwarder.isReadable()) return true;
             }
-            return false;
+            return disjunctor.canDisjunct();
         }
 
         inline ConstraintT nextCandidate() {
-            return forwarder.nextImplicant();
+            if (!generator->complete())
+                return forwarder.nextImplicant();
+            else
+                return disjunctor.nextImplicant();
         }
     };
 
@@ -101,7 +122,7 @@ namespace gpid {
     inline void DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateForwarder
     ::operator()(AbducibleEngine& engine) {
         while(!writeable);
-        implicant = ConstraintT(engine.getMapper(), engine.getCurrentImplicate(), ictx, ich_ctx);
+        implicants.push_back(ConstraintT(engine.getMapper(), engine.getCurrentImplicate(), ictx, ich_ctx));
         writeable = false;
         readable = true;
     }
@@ -110,10 +131,22 @@ namespace gpid {
     inline typename DualConditionStrengthener<CodeHandlerT, InterfaceT>::ConstraintT
     DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateForwarder::nextImplicant() {
         while(!readable);
-        ConstraintT result = implicant; // TODO: This copy is necessary for consistency
-                                        //       Ensure that it is done
+        ConstraintT result = implicants.back();
+        // TODO: This copy is necessary for consistency
+        //       Ensure that it is done
         readable = false;
         writeable = true;
+        return result;
+    }
+
+    template<typename CodeHandlerT, typename InterfaceT>
+    inline typename DualConditionStrengthener<CodeHandlerT, InterfaceT>::ConstraintT
+    DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateDisjunctor::nextImplicant() {
+        ConstraintT result = ConstraintT(CodeHandlerT::ConstraintT::disjunct(source[lid], source[rid]));
+        rid++;
+        if (rid >= source.size()) {
+            rid = ++lid + 1;
+        }
         return result;
     }
 
@@ -123,6 +156,7 @@ namespace gpid {
                                 typename CodeHandlerT::ContextManagerT& ich_ctx)
         : identifier(nextStrengthenerId()),
           forwarder(_problemBuilder.getContextManager(), ich_ctx),
+          disjunctor(forwarder),
           generator(nullptr)
     {
         _problemBuilder.load(pfile, "smt2");
