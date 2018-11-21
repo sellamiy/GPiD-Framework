@@ -10,6 +10,8 @@
 #include <atomic>
 #include <gpid/impgen/guniti_engine.hpp>
 #include <gpid/impgen/guniti.hpp>
+#include <gpid/impgen/advanced_engine.hpp>
+#include <gpid/impgen/algorithm.hpp>
 #include <gpid/ilinva/dual_data.hpp>
 #include <gpid/ilinva/dual_ssag.hpp>
 
@@ -30,9 +32,9 @@ namespace gpid {
 
         using CodeConstraintListT = std::list<typename CodeHandlerT::ConstraintT>;
 
-        using ConstraintT = DualConstraintData<CodeHandlerT, InterfaceT, GunitiHypothesis>;
+        using ConstraintT = DualConstraintData<CodeHandlerT, InterfaceT, LiteralHypothesis>;
 
-        using AbducibleEngine = GunitiEngine<InterfaceT>;
+        using AbducibleEngine = AdvancedAbducibleEngine<InterfaceT>;
 
         class ImplicateForwarder {
             std::atomic<bool> readable;
@@ -59,7 +61,7 @@ namespace gpid {
         };
 
         using ImplicateGenerator =
-            GunitiAlgorithm<InterfaceT,
+            ImpgenAlgorithm<AbducibleEngine,
                             SomehowSmartDualAbducibleGenerator<CodeHandlerT, InterfaceT>,
                             ImplicateForwarder>;
 
