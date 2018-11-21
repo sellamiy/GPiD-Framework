@@ -65,13 +65,19 @@ namespace gpid {
 
         class ImplicateDisjunctor {
             std::vector<ConstraintT> source;
+            bool updated;
             size_t lid, rid;
         public:
-            ImplicateDisjunctor(ImplicateForwarder& fwder)
-                : source(std::make_move_iterator(std::begin(fwder.implicants)),
-                         std::make_move_iterator(std::end(fwder.implicants))),
-                  lid(0), rid(1)
-            {}
+            ImplicateDisjunctor() : updated(false) {}
+
+            inline void update(ImplicateForwarder& fwder) {
+                source = std::vector<ConstraintT>(std::make_move_iterator(std::begin(fwder.implicants)),
+                                                  std::make_move_iterator(std::end(fwder.implicants)));
+                lid = 0; rid = 1;
+                updated = true;
+            }
+
+            inline constexpr bool isUpdated() const { return updated; }
 
             inline bool canDisjunct() const { return lid + 1 < source.size(); }
             ConstraintT nextImplicant();
@@ -101,9 +107,12 @@ namespace gpid {
 
         inline constexpr IdentifierT getId() const { return identifier; }
 
-        inline bool hasMoreStrengthenings() const {
+        inline bool hasMoreStrengthenings() {
             while (!generator->complete()) {
                 if (forwarder.isReadable()) return true;
+            }
+            if (!disjunctor.isUpdated()) {
+                disjunctor.update(forwarder);
             }
             return disjunctor.canDisjunct();
         }
@@ -156,7 +165,6 @@ namespace gpid {
                                 typename CodeHandlerT::ContextManagerT& ich_ctx)
         : identifier(nextStrengthenerId()),
           forwarder(_problemBuilder.getContextManager(), ich_ctx),
-          disjunctor(forwarder),
           generator(nullptr)
     {
         _problemBuilder.load(pfile, "smt2");
