@@ -8,8 +8,8 @@
 #define GPID_FRAMEWORK__ILINVA__DUAL_STRENGTHENER_HPP
 
 #include <atomic>
-#include <gpid/impgen/advanced_engine.hpp>
-#include <gpid/impgen/algorithm.hpp>
+#include <gpid/impgen/guniti_engine.hpp>
+#include <gpid/impgen/guniti.hpp>
 #include <gpid/ilinva/dual_data.hpp>
 #include <gpid/ilinva/dual_ssag.hpp>
 
@@ -30,9 +30,9 @@ namespace gpid {
 
         using CodeConstraintListT = std::list<typename CodeHandlerT::ConstraintT>;
 
-        using ConstraintT = DualConstraintData<CodeHandlerT, InterfaceT, LiteralHypothesis>;
+        using ConstraintT = DualConstraintData<CodeHandlerT, InterfaceT, GunitiHypothesis>;
 
-        using AbducibleEngine = AdvancedAbducibleEngine<InterfaceT>;
+        using AbducibleEngine = GunitiEngine<InterfaceT>;
 
         class ImplicateForwarder {
             std::atomic<bool> readable;
@@ -59,7 +59,7 @@ namespace gpid {
         };
 
         using ImplicateGenerator =
-            ImpgenAlgorithm<AbducibleEngine,
+            GunitiAlgorithm<InterfaceT,
                             SomehowSmartDualAbducibleGenerator<CodeHandlerT, InterfaceT>,
                             ImplicateForwarder>;
 

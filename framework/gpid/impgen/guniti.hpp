@@ -10,6 +10,7 @@
 #include <gpid/core/algorithm.hpp>
 #include <gpid/core/errors.hpp>
 #include <gpid/core/saitypes.hpp>
+#include <gpid/reference/version.hpp>
 #include <gpid/impgen/options.hpp>
 #include <gpid/impgen/guniti_engine.hpp>
 #include <gpid/impgen/implicates.hpp>
@@ -121,11 +122,11 @@ namespace gpid {
         SolverTestStatus status = lengine.testEmpty();
         bool complete = false;
 
-        if (status == SolverTestStatus::SAT) {
+        if (isSatResult(status, options.unknown_handle)) {
             if (options.use_models) {
                 lengine.modelCleanUp();
             }
-        } else if (status == SolverTestStatus::UNSAT) {
+        } else if (isUnsatResult(status, options.unknown_handle)) {
             notifyImplicate();
             complete = true;
         } else {
@@ -138,9 +139,9 @@ namespace gpid {
 
             SolverTestStatus status = lengine.testCurrentLiteral();
 
-            if (status == SolverTestStatus::UNSAT) {
+            if (isUnsatResult(status, options.unknown_handle)) {
                 notifyImplicate();
-            } else if (status == SolverTestStatus::UNKNOWN) {
+            } else if (isUnknownResult(status, options.unknown_handle)) {
                 throw UndecidableProblemError("Solver could not decide query");
             }
 

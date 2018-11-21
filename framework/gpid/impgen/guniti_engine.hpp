@@ -86,6 +86,8 @@ namespace gpid {
 
         std::map<std::string, counter_t> counts_wrap;
 
+        GunitiHypothesis wrap_hyp = GunitiHypothesis(0);
+
         inline void addSolverLiteral(index_t idx);
         inline void clearSolversLiteral();
 
@@ -113,6 +115,7 @@ namespace gpid {
         inline constexpr uint32_t getSourceSize() const;
         /** Count of skipped candidates for various reasons. */
         inline std::map<std::string, counter_t>& getSkippedCounts();
+        inline const ObjectMapper<LiteralT>& getMapper() const;
 
         /** Check if the current hypothesis is a contradiction to the problem. */
         inline SolverTestStatus testEmpty();
@@ -124,6 +127,9 @@ namespace gpid {
         inline void printStorage();
         /** Export the current implicate storage structure state. */
         inline void exportStorage(const std::string& filename);
+
+        /** Get the implicate browser. \warning Not Thread Safe. \warning Modifiable */
+        inline GunitiHypothesis& getCurrentImplicate();
 
         /**
          * \brief Find the next non tested literal.
@@ -198,6 +204,12 @@ namespace gpid {
     template<typename InterfaceT>
     inline void GunitiEngine<InterfaceT>::mapLiteral(index_t idx, LiteralT* hyp) {
         lmapper.map(idx, hyp);
+    }
+
+    template<typename InterfaceT>
+    inline const ObjectMapper<typename InterfaceT::LiteralT>&
+    GunitiEngine<InterfaceT>::getMapper() const {
+        return lmapper;
     }
 
     template<typename InterfaceT>
@@ -280,6 +292,14 @@ namespace gpid {
     inline typename InterfaceT::LiteralT&
     GunitiEngine<InterfaceT>::getCurrentLiteral() {
         return getLiteral(getCurrentIndex());
+    }
+
+    template<typename InterfaceT>
+    inline GunitiHypothesis&
+    GunitiEngine<InterfaceT>::getCurrentImplicate() {
+        // Wrapping current literal hypothesis in an hypothesis wrapper
+        wrap_hyp.addLiteral(getCurrentIndex(), 0);
+        return wrap_hyp;
     }
 
     template<typename InterfaceT>
