@@ -17,6 +17,7 @@ namespace whymlp {
         ~ExtractorParser();
 
         const std::map<std::string, std::string>& getVars() const;
+        const std::map<std::string, std::string>& getLits() const;
         const std::set<std::string>& getRefs() const;
 
         bool hasFailed() const;

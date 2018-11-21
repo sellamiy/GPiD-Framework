@@ -27,7 +27,7 @@ static inline OParseResult parse_opts(WhyMLPToolsOpts& opts, int& argc, char**& 
             ("v,version", "Print framework version")
             ("t,tokenize", "Tokenize the source file")
             ("a,annotate", "Annotate the source file")
-            ("e,extract-variables", "Extract variables from the source file")
+            ("e,extract", "Extract elements from the source file")
 
             ("input", "Input files", cxxopts::value<vector<string>>(opts.inputs))
             ;
@@ -53,7 +53,7 @@ static inline OParseResult parse_opts(WhyMLPToolsOpts& opts, int& argc, char**& 
         if (results.count("annotate")) {
             opts.tool = WhyMLPTool::Annotator;
         }
-        if (results.count("extract-variables")) {
+        if (results.count("extract")) {
             opts.tool = WhyMLPTool::Extractor;
         }
 
@@ -90,15 +90,19 @@ static inline int whdl_tokenize(const WhyMLPToolsOpts& opts) {
         return EXIT_SUCCESS;
 }
 
-static inline int whdl_vextract(const WhyMLPToolsOpts& opts) {
+static inline int whdl_extract(const WhyMLPToolsOpts& opts) {
     shared_ptr<ExtractorParser> parser;
     for (const string& filename : opts.inputs) {
-        l_info() << filename << " (variables)" << l_end;
         parser = shared_ptr<ExtractorParser>(new ExtractorParser(filename));
+        l_info() << filename << " (variables)" << l_end;
         for (const pair<string, string>& var : parser->getVars()) {
             l_message() << var.first << " (" << var.second << ")"
                         << (parser->getRefs().count(var.first) > 0 ? " (ref)" : "")
                         << l_end;
+        }
+        l_info() << filename << " (literals)" << l_end;
+        for (const pair<string, string>& lit : parser->getLits()) {
+            l_message() << lit.first << " (" << lit.second << ")" << l_end;
         }
     }
     if (parser->hasFailed())
@@ -122,7 +126,7 @@ int main(int argc, char** argv) {
         case WhyMLPTool::Annotator:
             return whdl_annotate(opts);
         case WhyMLPTool::Extractor:
-            return whdl_vextract(opts);
+            return whdl_extract(opts);
         case WhyMLPTool::None:
             l_message() << "Do nothing" << l_end;
             return EXIT_SUCCESS;

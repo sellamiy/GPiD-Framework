@@ -108,4 +108,11 @@ static inline const std::string asNonRefType(const std::string& tdata) {
     return tdata.substr(0, rpos);
 }
 
+static inline const std::string prefixTypeConversion(const std::string& op, const std::string& pretype) {
+    if (op == "-") {
+        return pretype;
+    }
+    return "undeduced-prefixed-type-conversion";
+}
+
 #endif

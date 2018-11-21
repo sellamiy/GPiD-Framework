@@ -10,6 +10,7 @@ using namespace std;
 
 #include "error-listener.hpp"
 #include "vextract-listener.hpp"
+#include "lextract-listener.hpp"
 
 namespace whymlp {
     namespace whyantlr {
@@ -17,6 +18,7 @@ namespace whymlp {
         class Extractor {
             const std::string filename;
             map<string, string> vars;
+            map<string, string> lits;
             set<string> refs;
             bool valid;
             bool extracted;
@@ -30,6 +32,7 @@ namespace whymlp {
             void extract();
 
             inline const map<string, string>& getVars() const { return vars; }
+            inline const map<string, string>& getLits() const { return lits; }
             inline const set<string>& getRefs() const { return refs; }
         };
 
@@ -55,12 +58,13 @@ void whymlp::whyantlr::Extractor::extract() {
         parser.addErrorListener(&errl);
         auto data = parser.mlwfile();
 
-        /* Extract variables */
         antlr4::tree::ParseTreeWalker walker;
-        VextractWhyMLListener listener;
-        walker.walk(&listener, data);
 
-        vars = listener.getVars();
+        /* Extract variables */
+        VextractWhyMLListener vlistener;
+        walker.walk(&vlistener, data);
+
+        vars = vlistener.getVars();
 
         for (const pair<string, string>& var : vars)
             if (isRefType(var.second))
@@ -68,6 +72,12 @@ void whymlp::whyantlr::Extractor::extract() {
 
         for (const std::string& var : refs)
             vars[var] = asNonRefType(vars[var]);
+
+        /* Extract constants */
+        LextractWhyMLListener llistener;
+        walker.walk(&llistener, data);
+
+        lits = llistener.getLiterals();
 
         /* Conclude */
         valid = !errl.hasDetectedErrors();
@@ -95,6 +105,12 @@ const map<string, string>& whymlp::ExtractorParser::getVars() const {
     if (!parser->hasExtract())
         parser->extract();
     return parser->getVars();
+}
+
+const std::map<std::string, std::string>& whymlp::ExtractorParser::getLits() const {
+    if (!parser->hasExtract())
+        parser->extract();
+    return parser->getLits();
 }
 
 const set<string>& whymlp::ExtractorParser::getRefs() const {
