@@ -205,7 +205,7 @@ produceFromScript(const std::string filename, MagicLiteralData& data) {
 
 extern const MagicProductionRulePtr mlbsmt2::
 produceFromWhyML(const std::string filename, MagicLiteralData& data, std::set<std::string>& refs) {
-    whymlp::VextractParser parser(filename);
+    whymlp::ExtractorParser parser(filename);
     data.updateConsts(parser.getVars()); // TODO: Perform a type convertion
     refs = parser.getRefs();
     snlog::l_warn() << "Type conversion WhyML typenames -> Smtl2 typenames not implemented" << snlog::l_end;

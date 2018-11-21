@@ -9,7 +9,7 @@ using namespace std;
 using namespace snlog;
 using namespace whymlp;
 
-enum class WhyMLPTool { None, Annotator, Tokenizer, Vextract };
+enum class WhyMLPTool { None, Annotator, Tokenizer, Extractor };
 
 struct WhyMLPToolsOpts {
     vector<string> inputs;
@@ -54,7 +54,7 @@ static inline OParseResult parse_opts(WhyMLPToolsOpts& opts, int& argc, char**& 
             opts.tool = WhyMLPTool::Annotator;
         }
         if (results.count("extract-variables")) {
-            opts.tool = WhyMLPTool::Vextract;
+            opts.tool = WhyMLPTool::Extractor;
         }
 
         return OParseResult::ToForward;
@@ -91,10 +91,10 @@ static inline int whdl_tokenize(const WhyMLPToolsOpts& opts) {
 }
 
 static inline int whdl_vextract(const WhyMLPToolsOpts& opts) {
-    shared_ptr<VextractParser> parser;
+    shared_ptr<ExtractorParser> parser;
     for (const string& filename : opts.inputs) {
         l_info() << filename << " (variables)" << l_end;
-        parser = shared_ptr<VextractParser>(new VextractParser(filename));
+        parser = shared_ptr<ExtractorParser>(new ExtractorParser(filename));
         for (const pair<string, string>& var : parser->getVars()) {
             l_message() << var.first << " (" << var.second << ")"
                         << (parser->getRefs().count(var.first) > 0 ? " (ref)" : "")
@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
             return whdl_tokenize(opts);
         case WhyMLPTool::Annotator:
             return whdl_annotate(opts);
-        case WhyMLPTool::Vextract:
+        case WhyMLPTool::Extractor:
             return whdl_vextract(opts);
         case WhyMLPTool::None:
             l_message() << "Do nothing" << l_end;

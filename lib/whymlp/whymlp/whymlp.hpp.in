@@ -6,6 +6,6 @@
 
 #include <whymlp/tokenizer-p.hpp>
 #include <whymlp/annotator-p.hpp>
-#include <whymlp/vextract-p.hpp>
+#include <whymlp/extractor-p.hpp>
 
 #endif
