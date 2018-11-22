@@ -8,7 +8,6 @@
 #define GPID_FRAMEWORK__ILINVA__DUAL_ENGINE_HPP
 
 #include <gpid/ilinva/dual_strengthener.hpp>
-#include <gpid/instrument/instrument.hpp>
 
 namespace gpid {
 

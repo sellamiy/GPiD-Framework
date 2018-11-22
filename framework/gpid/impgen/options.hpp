@@ -6,7 +6,6 @@
 #ifndef GPID_FRAMEWORK__IMPGEN__OPTIONS_HPP
 #define GPID_FRAMEWORK__IMPGEN__OPTIONS_HPP
 
-#include <string>
 #include <limits>
 #include <gpid/core/saitypes.hpp>
 

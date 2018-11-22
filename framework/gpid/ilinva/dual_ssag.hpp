@@ -6,9 +6,7 @@
 #ifndef GPID_FRAMEWORK__ILINVA__DUAL_SOMEHOW_SMART_ABDUCIBLE_GENERATION_HPP
 #define GPID_FRAMEWORK__ILINVA__DUAL_SOMEHOW_SMART_ABDUCIBLE_GENERATION_HPP
 
-#include <map>
 #include <list>
-#include <snlog/snlog.hpp>
 #include <gpid/ilinva/dual_data.hpp>
 
 namespace gpid {

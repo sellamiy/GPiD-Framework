@@ -1,6 +1,5 @@
 #define GPID_FRAMEWORK__UTIL__ABDPARSER_GENERIC_CPP
 
-#include <string>
 #include <snlog/snlog.hpp>
 #include <gpid/core/errors.hpp>
 #include <gpid/utils/abdparser.hpp>

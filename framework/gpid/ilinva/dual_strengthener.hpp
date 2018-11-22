@@ -12,7 +12,6 @@
 #include <gpid/impgen/guniti.hpp>
 #include <gpid/impgen/advanced_engine.hpp>
 #include <gpid/impgen/algorithm.hpp>
-#include <gpid/ilinva/dual_data.hpp>
 #include <gpid/ilinva/dual_ssag.hpp>
 
 namespace gpid {

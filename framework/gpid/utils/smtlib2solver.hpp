@@ -7,10 +7,6 @@
 #ifndef GPID_FRAMEWORK__UTILS__SMTLIB2_CLI_SOLVER_INTERFACE_HPP
 #define GPID_FRAMEWORK__UTILS__SMTLIB2_CLI_SOLVER_INTERFACE_HPP
 
-#include <map>
-#include <list>
-#include <string>
-#include <smtlib2utils/smtlib2utils.hpp>
 #include <gpid/core/saitypes.hpp>
 #include <gpid/core/memory.hpp>
 #include <gpid/utils/abdparseutils.hpp>
