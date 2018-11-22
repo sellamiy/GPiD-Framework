@@ -1,6 +1,7 @@
 #define WHY3_WHYML_ICH_FOR_GPID__ICH__CPP
 
 #include <fstream>
+#include <sstream>
 #include <snlog/snlog.hpp>
 #include <why3wrap/why3wrap.hpp>
 #include <why3-whyml-ich.hpp>
@@ -13,7 +14,7 @@ using namespace gpid;
 const W3WML_Constraint W3WML_ICH::C_False = W3WML_Constraint("false");
 
 bool W3WML_ICH::isProven() {
-    problem.save_to(WHYML_TEMPORARY_SOURCEFILE);
+    problem.save_to(WHYML_TEMPORARY_SOURCEFILE, plits.getReferences());
     snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__
                     << " TODO: Select Why3 Prover via Options "<< snlog::l_end;
     return why3wrap::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4").isComplete();
@@ -57,6 +58,15 @@ const std::list<W3WML_Constraint>& W3WML_ICH::generateSourceLiterals(LoopIdentif
     return literals;
 }
 
-std::set<std::string>& W3WML_ICH::generateContext(LoopIdentifierT) {
-    return plits.getReferences();
+W3WML_Loop_Ctx W3WML_ICH::generateContext(LoopIdentifierT lid) {
+    return W3WML_Loop_Ctx(plits.getReferences(), problem.getInvariant(lid).conj);
+}
+
+const W3WML_Constraint W3WML_Loop_Ctx::getCandidateConstraint() {
+    std::stringstream ss;
+    ss << "(and ";
+    for (auto part : candidate)
+        ss << part;
+    ss << ")";
+    return W3WML_Constraint(ss.str());
 }

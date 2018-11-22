@@ -26,6 +26,8 @@ namespace gpid {
         const bool inconsistencies;
         /** Candidates skipped thanks to consequence detection. */
         const bool consequences;
+
+        const bool additionals;
     };
 
 };

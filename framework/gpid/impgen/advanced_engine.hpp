@@ -77,6 +77,7 @@ namespace gpid {
         SolverInterfaceEngine<InterfaceT> interfaceEngine;
         InterfaceT& solver_contrads;
         InterfaceT& solver_consistency;
+        InterfaceT& solver_additionals;
 
         starray::SequentialActivableArray lactive;
         ObjectMapper<LiteralT> lmapper;
@@ -92,6 +93,7 @@ namespace gpid {
             counter_t level_depth = 0;
             counter_t consistency = 0;
             counter_t consequence = 0;
+            counter_t additionals = 0;
         } skip_counters;
 
         std::map<level_t, std::list<index_t> > selection_map;
@@ -121,6 +123,8 @@ namespace gpid {
         inline bool canBeSkipped(LiteralReference h);
         /** \brief Decide if an literal is consistent with active ones. */
         inline bool isConsistent(LiteralReference h);
+
+        inline bool passAdditionalChecks(LiteralReference h);
 
         inline bool isConsequence(LiteralReference h);
 
@@ -161,6 +165,8 @@ namespace gpid {
 
         /** Get the implicate browser. \warning Not Thread Safe. \warning Modifiable */
         inline LiteralHypothesis& getCurrentImplicate();
+
+        inline void addAdditionalCheckLiteral(typename InterfaceT::LiteralT& cons);
 
         /**
          * \brief Find the next non tested literal.
@@ -208,6 +214,7 @@ namespace gpid {
           interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
+          solver_additionals(interfaceEngine.newInterface()),
           lactive(size),
           storage(interfaceEngine.newInterface(), lmapper),
           hypothesis(size),
@@ -222,6 +229,7 @@ namespace gpid {
           interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
+          solver_additionals(interfaceEngine.newInterface()),
           lactive(source.count()),
           lmapper(source.getMapper()),
           llinks(source.getLinks()),
@@ -243,6 +251,12 @@ namespace gpid {
         while (pbld.hasConstraint()) {
             solver_contrads.addConstraint(pbld.nextConstraint());
         }
+    }
+
+    template<typename InterfaceT>
+    inline void AdvancedAbducibleEngine<InterfaceT>::addAdditionalCheckLiteral
+    (typename InterfaceT::LiteralT& cons) {
+        solver_additionals.addLiteral(cons);
     }
 
     template<typename InterfaceT>
@@ -270,6 +284,7 @@ namespace gpid {
         counts_wrap["level depth"]  = skip_counters.level_depth;
         counts_wrap["consistency"]  = skip_counters.consistency;
         counts_wrap["consequences"] = skip_counters.consequence;
+        counts_wrap["additionals"]  = skip_counters.additionals;
         return counts_wrap;
     }
 
@@ -406,11 +421,26 @@ namespace gpid {
         solver_consistency.push();
         solver_consistency.addLiteral(lmapper.get(h));
         SolverTestStatus status = solver_consistency.check();
-        if (status == SolverTestStatus::UNKNOWN && options.unknown_handle == SolverTestStatus::UNKNOWN) {
+        if (isUnknownResult(status, options.unknown_handle)) {
             throw UndecidableProblemError("Solver could not decide consistency query");
         }
         solver_consistency.pop();
         return isSatResult(status, options.unknown_handle);
+    }
+
+    template<typename InterfaceT>
+    inline bool AdvancedAbducibleEngine<InterfaceT>::passAdditionalChecks(LiteralReference h) {
+        solver_additionals.push();
+        solver_additionals.addLiteral(lmapper.get(h), true);
+        SolverTestStatus status = solver_additionals.check();
+        if (isUnknownResult(status, options.unknown_handle)) {
+            throw UndecidableProblemError("Solver could not decide additional check query");
+        }
+        solver_additionals.pop();
+        if (options.additional_check_mode == SolverTestStatus::SAT)
+            return isSatResult(status, options.unknown_handle);
+        else
+            return isUnsatResult(status, options.unknown_handle);
     }
 
     template<typename InterfaceT>
@@ -442,6 +472,12 @@ namespace gpid {
         if (!skipctrl.inconsistencies && !isConsistent(h)) {
             skip_counters.consistency++;
             insthandle(instrument::idata(lmapper.get(h).str() + ":consistency"),
+                       instrument::instloc::skip);
+            return true;
+        }
+        if (skipctrl.additionals && !passAdditionalChecks(h)) {
+            skip_counters.additionals++;
+            insthandle(instrument::idata(lmapper.get(h).str() + ":additional"),
                        instrument::instloc::skip);
             return true;
         }

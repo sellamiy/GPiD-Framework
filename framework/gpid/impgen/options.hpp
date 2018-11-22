@@ -41,6 +41,9 @@ namespace gpid {
         /** Skip literals detected as consequences of previous assignments */
         bool detect_consequences = false;
 
+        bool additional_checker = false;
+        SolverTestStatus additional_check_mode = SolverTestStatus::UNSAT;
+
         /** Treat unknown solver */
         SolverTestStatus unknown_handle = SolverTestStatus::UNKNOWN;
 

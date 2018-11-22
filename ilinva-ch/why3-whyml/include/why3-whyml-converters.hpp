@@ -9,11 +9,10 @@ namespace gpid {
     template<typename InterfaceT, typename LiteralHypothesisT>
     inline W3WML_Constraint convert_w3wml
     (ObjectMapper<typename InterfaceT::LiteralT> const& mapper,
-     LiteralHypothesisT& hyp,
-     typename InterfaceT::ContextManagerT& ctx, std::set<std::string>& ictx) {
+     LiteralHypothesisT& hyp, typename InterfaceT::ContextManagerT& ctx) {
         std::stringstream ss;
         ss << hypothesis<InterfaceT>(hyp, mapper, ctx);
-        return W3WML_Constraint(why3wrap::Smt2Why3(ss.str(), ictx));
+        return W3WML_Constraint(ss.str());
     }
 
 #if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_cvc4_tm_api
@@ -23,14 +22,14 @@ namespace gpid {
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, CVC4InterfaceAPI, LiteralHypothesis>
     (ObjectMapper<CVC4InterfaceAPI::LiteralT> const& mapper, LiteralHypothesis& hyp,
-     CVC4InterfaceAPI::ContextManagerT& ctx, std::set<std::string>& ictx) {
-        return convert_w3wml<CVC4InterfaceAPI, LiteralHypothesis>(mapper, hyp, ctx, ictx);
+     CVC4InterfaceAPI::ContextManagerT& ctx) {
+        return convert_w3wml<CVC4InterfaceAPI, LiteralHypothesis>(mapper, hyp, ctx);
     }
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, CVC4InterfaceAPI, GunitiHypothesis>
     (ObjectMapper<CVC4InterfaceAPI::LiteralT> const& mapper, GunitiHypothesis& hyp,
-     CVC4InterfaceAPI::ContextManagerT& ctx, std::set<std::string>& ictx) {
-        return convert_w3wml<CVC4InterfaceAPI, GunitiHypothesis>(mapper, hyp, ctx, ictx);
+     CVC4InterfaceAPI::ContextManagerT& ctx) {
+        return convert_w3wml<CVC4InterfaceAPI, GunitiHypothesis>(mapper, hyp, ctx);
     }
 
     template<> CVC4InterfaceAPI::LiteralT convert<W3WML_ICH, CVC4InterfaceAPI>
@@ -44,14 +43,14 @@ namespace gpid {
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, CVC4InterfaceSMTl2CLI, LiteralHypothesis>
     (ObjectMapper<CVC4InterfaceSMTl2CLI::LiteralT> const& mapper, LiteralHypothesis& hyp,
-     CVC4InterfaceSMTl2CLI::ContextManagerT& ctx, std::set<std::string>& ictx) {
-        return convert_w3wml<CVC4InterfaceSMTl2CLI, LiteralHypothesis>(mapper, hyp, ctx, ictx);
+     CVC4InterfaceSMTl2CLI::ContextManagerT& ctx) {
+        return convert_w3wml<CVC4InterfaceSMTl2CLI, LiteralHypothesis>(mapper, hyp, ctx);
     }
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, CVC4InterfaceSMTl2CLI, GunitiHypothesis>
     (ObjectMapper<CVC4InterfaceSMTl2CLI::LiteralT> const& mapper, GunitiHypothesis& hyp,
-     CVC4InterfaceSMTl2CLI::ContextManagerT& ctx, std::set<std::string>& ictx) {
-        return convert_w3wml<CVC4InterfaceSMTl2CLI, GunitiHypothesis>(mapper, hyp, ctx, ictx);
+     CVC4InterfaceSMTl2CLI::ContextManagerT& ctx) {
+        return convert_w3wml<CVC4InterfaceSMTl2CLI, GunitiHypothesis>(mapper, hyp, ctx);
     }
 
     template<> CVC4InterfaceSMTl2CLI::LiteralT convert<W3WML_ICH, CVC4InterfaceSMTl2CLI>
@@ -66,14 +65,14 @@ namespace gpid {
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, Z3InterfaceAPI, LiteralHypothesis>
     (ObjectMapper<Z3InterfaceAPI::LiteralT> const& mapper, LiteralHypothesis& hyp,
-     Z3InterfaceAPI::ContextManagerT& ctx, std::set<std::string>& ictx) {
-        return convert_w3wml<Z3InterfaceAPI, LiteralHypothesis>(mapper, hyp, ctx, ictx);
+     Z3InterfaceAPI::ContextManagerT& ctx) {
+        return convert_w3wml<Z3InterfaceAPI, LiteralHypothesis>(mapper, hyp, ctx);
     }
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, Z3InterfaceAPI, GunitiHypothesis>
     (ObjectMapper<Z3InterfaceAPI::LiteralT> const& mapper, GunitiHypothesis& hyp,
-     Z3InterfaceAPI::ContextManagerT& ctx, std::set<std::string>& ictx) {
-        return convert_w3wml<Z3InterfaceAPI, GunitiHypothesis>(mapper, hyp, ctx, ictx);
+     Z3InterfaceAPI::ContextManagerT& ctx) {
+        return convert_w3wml<Z3InterfaceAPI, GunitiHypothesis>(mapper, hyp, ctx);
     }
 
     template<> Z3InterfaceAPI::LiteralT convert<W3WML_ICH, Z3InterfaceAPI>
@@ -89,14 +88,14 @@ namespace gpid {
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, Z3InterfaceSMTl2CLI, LiteralHypothesis>
     (ObjectMapper<Z3InterfaceSMTl2CLI::LiteralT> const& mapper, LiteralHypothesis& hyp,
-     Z3InterfaceSMTl2CLI::ContextManagerT& ctx, std::set<std::string>& ictx) {
-        return convert_w3wml<Z3InterfaceSMTl2CLI, LiteralHypothesis>(mapper, hyp, ctx, ictx);
+     Z3InterfaceSMTl2CLI::ContextManagerT& ctx) {
+        return convert_w3wml<Z3InterfaceSMTl2CLI, LiteralHypothesis>(mapper, hyp, ctx);
     }
 
     template<> inline W3WML_Constraint convert<W3WML_ICH, Z3InterfaceSMTl2CLI, GunitiHypothesis>
     (ObjectMapper<Z3InterfaceSMTl2CLI::LiteralT> const& mapper, GunitiHypothesis& hyp,
-     Z3InterfaceSMTl2CLI::ContextManagerT& ctx, std::set<std::string>& ictx) {
-        return convert_w3wml<Z3InterfaceSMTl2CLI, GunitiHypothesis>(mapper, hyp, ctx, ictx);
+     Z3InterfaceSMTl2CLI::ContextManagerT& ctx) {
+        return convert_w3wml<Z3InterfaceSMTl2CLI, GunitiHypothesis>(mapper, hyp, ctx);
     }
 
     template<> Z3InterfaceSMTl2CLI::LiteralT convert<W3WML_ICH, Z3InterfaceSMTl2CLI>

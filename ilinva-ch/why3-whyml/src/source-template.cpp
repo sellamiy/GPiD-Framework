@@ -2,21 +2,23 @@
 
 #include <fstream>
 #include <snlog/snlog.hpp>
+#include <why3wrap/why3wrap.hpp>
 #include <gpid/core/errors.hpp>
 #include <gpid/masmalig/algorithm.hpp>
 #include <why3-whyml-source.hpp>
 
 using namespace gpid;
 
-void W3WML_Template::save_to(const std::string& filename) const {
+void W3WML_Template::save_to(const std::string& filename, const std::set<std::string>& refs) const {
     std::ofstream ofs(filename);
     if (!ofs.is_open())
         throw InternalError("W3WML_Template could not open tempfile");
-    ofs << *this;
+    write(ofs, *this, refs);
     ofs.close();
 }
 
-std::ostream& gpid::operator<<(std::ostream& out, const W3WML_Template::InvariantElement& e) {
+std::ostream& gpid::write(std::ostream& out, const W3WML_Template::InvariantElement& e,
+                          const std::set<std::string>& refs) {
     out << "invariant {";
     if (e.conj.empty()) {
         out << " true ";
@@ -25,7 +27,7 @@ std::ostream& gpid::operator<<(std::ostream& out, const W3WML_Template::Invarian
         for (auto s : e.conj) {
             if (start) start = false;
             else out << " /\\ ";
-            out << "(" << s << ")";
+            out << "(" << why3wrap::Smt2Why3(s, refs) << ")";
         }
     }
     return out << "}";

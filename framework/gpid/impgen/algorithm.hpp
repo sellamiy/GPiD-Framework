@@ -70,6 +70,8 @@ namespace gpid {
 
         /** \return The counts of skipped candidates for various reasons. */
         std::map<std::string, counter_t>& getSkippedCounts();
+
+        EngineT& getEngine();
     };
 
     /* *** Implementation *** */
@@ -84,6 +86,11 @@ namespace gpid {
           pbloader(pbld),
           imphandler(ihdl)
     {}
+
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    inline EngineT& ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::getEngine() {
+        return lengine;
+    }
 
     template<typename EngineT, typename LitGenT, typename IHandlerT>
     void ImpgenAlgorithm<EngineT, LitGenT, IHandlerT>::printInfos() {

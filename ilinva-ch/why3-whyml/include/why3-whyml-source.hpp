@@ -46,24 +46,27 @@ namespace gpid {
         inline InvariantElement& getInvariant(size_t idx) const
         { return *(std::dynamic_pointer_cast<InvariantElement>(elements.at(idx))); }
 
-        void save_to(const std::string& filename) const;
+        void save_to(const std::string& filename, const std::set<std::string>& refs) const;
     };
 
     inline std::ostream& operator<<(std::ostream& out, const W3WML_Template::CodeElement& e) {
         return out << e.data;
     }
 
-    std::ostream& operator<<(std::ostream& out, const W3WML_Template::InvariantElement& e);
+    std::ostream& write(std::ostream& out, const W3WML_Template::InvariantElement& e,
+                        const std::set<std::string>& refs);
 
-    inline std::ostream& operator<<(std::ostream& out, const W3WML_Template::ElementPtr e) {
+    inline std::ostream& write(std::ostream& out, const W3WML_Template::ElementPtr e,
+                               const std::set<std::string>& refs) {
         if (e->type == W3WML_Template::Element::ElemType::Code)
             return out << *std::dynamic_pointer_cast<W3WML_Template::CodeElement>(e);
         else
-            return out << *std::dynamic_pointer_cast<W3WML_Template::InvariantElement>(e);
+            return write(out, *std::dynamic_pointer_cast<W3WML_Template::InvariantElement>(e), refs);
     }
 
-    inline std::ostream& operator<<(std::ostream& out, const W3WML_Template& t) {
-        for (auto e : t.getElements()) out << e.second;
+    inline std::ostream& write(std::ostream& out, const W3WML_Template& t,
+                               const std::set<std::string>& refs) {
+        for (auto e : t.getElements()) write(out, e.second, refs);
         return out;
     }
 
@@ -73,7 +76,7 @@ namespace gpid {
     public:
         W3WML_LSet(const std::string& filename);
         inline const std::list<std::string>& getLiterals() const { return literals; }
-        inline std::set<std::string>& getReferences() { return references; }
+        inline const std::set<std::string>& getReferences() const { return references; }
     };
 
 }

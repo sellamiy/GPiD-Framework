@@ -131,7 +131,7 @@ namespace gpid {
     inline void DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateForwarder
     ::operator()(AbducibleEngine& engine) {
         while(!writeable);
-        implicants.push_back(ConstraintT(engine.getMapper(), engine.getCurrentImplicate(), ictx, ich_ctx));
+        implicants.push_back(ConstraintT(engine.getMapper(), engine.getCurrentImplicate(), ictx));
         writeable = false;
         readable = true;
     }
@@ -172,9 +172,15 @@ namespace gpid {
             AbdGeneratorPtr(new AbdGeneratorT(cons, _problemBuilder.getContextManager()));
         abductionOpts.unknown_handle = SolverTestStatus::SAT;
         abductionOpts.max_level = 2; // TODO: As ilinva option
+        abductionOpts.additional_checker = true; // Prevents non redundant literals
+        abductionOpts.additional_check_mode = SolverTestStatus::SAT;
         generator =
             ImplicateGeneratorPtr(new ImplicateGenerator(_problemBuilder, *abdGenerator, forwarder,
                                                          abductionCoreOpts, abductionOpts));
+        typename InterfaceT::LiteralT _addlit
+            = convert<CodeHandlerT, InterfaceT>(ich_ctx.getCandidateConstraint(),
+                                                _problemBuilder.getContextManager());
+        generator->getEngine().addAdditionalCheckLiteral(_addlit);
         generator->execute(true);
     }
 

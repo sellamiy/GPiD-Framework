@@ -5,6 +5,20 @@
 
 namespace gpid {
 
+    class W3WML_Loop_Ctx {
+        const std::set<std::string>& refs;
+        std::list<const std::string>& candidate;
+    public:
+        W3WML_Loop_Ctx(const std::set<std::string>& refs, std::list<const std::string>& candidate)
+            : refs(refs), candidate(candidate) {}
+        W3WML_Loop_Ctx(const W3WML_Loop_Ctx& o)
+            : refs(o.refs), candidate(o.candidate) {}
+        inline const std::set<std::string>& getRefs() const { return refs; }
+        inline std::list<const std::string>& getCandidate() { return candidate; }
+
+        const W3WML_Constraint getCandidateConstraint();
+    };
+
     class W3WML_ICH {
         W3WML_Template problem;
         W3WML_LSet plits;
@@ -13,7 +27,7 @@ namespace gpid {
         std::list<W3WML_Constraint> literals;
     public:
         using ConstraintT = W3WML_Constraint;
-        using ContextManagerT = std::set<std::string>; // Reference-typed variables
+        using ContextManagerT = W3WML_Loop_Ctx;
         using LoopIdentifierT = size_t;
         static const W3WML_Constraint C_False;
 
@@ -40,15 +54,15 @@ namespace gpid {
 
         const std::list<ConstraintT>& generateSourceLiterals(LoopIdentifierT);
 
-        std::set<std::string>& generateContext(LoopIdentifierT);
+        ContextManagerT generateContext(LoopIdentifierT);
 
         LoopIdentifierT selectUnprovenBlock();
 
         inline void exportSource(const std::string& filename) const {
-            problem.save_to(filename);
+            problem.save_to(filename, plits.getReferences());
         }
         inline void exportSource(std::ostream& out) const {
-            out << problem;
+            write(out, problem, plits.getReferences());
         }
 
     };

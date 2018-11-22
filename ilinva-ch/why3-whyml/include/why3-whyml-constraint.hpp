@@ -15,7 +15,7 @@ namespace gpid {
         inline operator const std::string() const { return _d; }
 
         static inline W3WML_Constraint disjunct(const W3WML_Constraint& l, const W3WML_Constraint& r)
-        { return "(" + l.str() + ") \\/ (" + r.str() + ")"; }
+        { return "(or " + l.str() + r.str() + ")"; }
     };
 
 }

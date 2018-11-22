@@ -38,4 +38,3 @@ std::string Why3Smtl2CV::handle_call(const std::string& op, const std::list<std:
         return parenthize(join(space(op), lvs));
     return "(#ERROR#)";
 }
-
