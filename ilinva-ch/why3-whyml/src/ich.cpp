@@ -64,9 +64,15 @@ W3WML_Loop_Ctx W3WML_ICH::generateContext(LoopIdentifierT lid) {
 
 const W3WML_Constraint W3WML_Loop_Ctx::getCandidateConstraint() {
     std::stringstream ss;
-    ss << "(and ";
-    for (auto part : candidate)
-        ss << part;
-    ss << ")";
+    if (candidate.size() > 0) {
+        if (candidate.size() > 1)
+            ss << "(and ";
+        for (auto part : candidate)
+            ss << part;
+        if (candidate.size() > 1)
+            ss << ")";
+    } else {
+        ss << "true";
+    }
     return W3WML_Constraint(ss.str());
 }
