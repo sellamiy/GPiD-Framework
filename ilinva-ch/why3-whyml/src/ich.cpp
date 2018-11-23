@@ -79,12 +79,13 @@ const W3WML_Constraint W3WML_Loop_Ctx::getCandidateConstraint() {
 
 const std::list<W3WML_Constraint> W3WML_Loop_Ctx::getCandidateConstraintDSplit() {
     std::list<W3WML_Constraint> res;
-    res.push_back(getCandidateConstraint());
     for (auto part : candidate) {
         auto ftree = lisptp::parse(part);
         if (ftree->isCall() && (ftree->getValue() == "or" || ftree->getValue() == "OR"))
             for (auto leaf : ftree->getLeaves())
                 res.push_back(leaf->str());
+        else
+            res.push_back(part);
     }
     return res;
 }
