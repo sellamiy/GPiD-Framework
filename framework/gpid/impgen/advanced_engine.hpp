@@ -76,7 +76,7 @@ namespace gpid {
         SolverInterfaceEngine<InterfaceT> interfaceEngine;
         InterfaceT& solver_contrads;
         InterfaceT& solver_consistency;
-        InterfaceT& solver_additionals;
+        std::vector<LiteralT> additional_checks;
 
         starray::SequentialActivableArray lactive;
         ObjectMapper<LiteralT> lmapper;
@@ -215,7 +215,6 @@ namespace gpid {
           interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
-          solver_additionals(interfaceEngine.newInterface()),
           lactive(size),
           storage(interfaceEngine.newInterface(), lmapper),
           hypothesis(size),
@@ -230,7 +229,6 @@ namespace gpid {
           interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
-          solver_additionals(interfaceEngine.newInterface()),
           lactive(source.count()),
           lmapper(source.getMapper()),
           llinks(source.getLinks()),
@@ -257,7 +255,18 @@ namespace gpid {
     template<typename InterfaceT>
     inline void AdvancedAbducibleEngine<InterfaceT>::addAdditionalCheckLiteral
     (typename InterfaceT::LiteralT& cons) {
-        solver_additionals.addLiteral(cons);
+        solver_consistency.push();
+        solver_consistency.addLiteral(cons);
+        bool reject = false;
+        SolverTestStatus status = solver_consistency.check();
+        if (status == SolverTestStatus::ERROR) {
+            reject = true;
+            snlog::l_info() << "Reject additional checker " << cons.str() << snlog::l_end;
+        }
+        solver_consistency.pop();
+        if (!reject) {
+            additional_checks.push_back(cons);
+        }
     }
 
     template<typename InterfaceT>
@@ -448,17 +457,23 @@ namespace gpid {
 
     template<typename InterfaceT>
     inline bool AdvancedAbducibleEngine<InterfaceT>::passAdditionalChecks(LiteralReference h) {
-        solver_additionals.push();
-        solver_additionals.addLiteral(lmapper.get(h), true);
-        SolverTestStatus status = solver_additionals.check();
-        if (isUnknownResult(status, options.unknown_handle)) {
-            throw UndecidableProblemError("Solver could not decide additional check query");
+        for (LiteralT& checker : additional_checks) {
+            solver_consistency.push();
+            solver_consistency.addLiteral(checker, false);
+            solver_consistency.addLiteral(lmapper.get(h), true);
+            SolverTestStatus status = solver_consistency.check();
+            if (isUnknownResult(status, options.unknown_handle)) {
+                throw UndecidableProblemError("Solver could not decide additional check query");
+            }
+            solver_consistency.pop();
+            if (options.additional_check_mode == SolverTestStatus::SAT &&
+                isUnsatResult(status, options.unknown_handle))
+                return false;
+            else if (options.additional_check_mode == SolverTestStatus::UNSAT &&
+                     isSatResult(status, options.unknown_handle))
+                return false;
         }
-        solver_additionals.pop();
-        if (options.additional_check_mode == SolverTestStatus::SAT)
-            return isSatResult(status, options.unknown_handle);
-        else
-            return isUnsatResult(status, options.unknown_handle);
+        return true;
     }
 
     template<typename InterfaceT>
