@@ -169,6 +169,9 @@ namespace gpid {
 
         reset();
 
+        if (options.preprune_literals)
+            lengine.prepruneLiterals();
+
         while (level > 0 && !iflags.systemInterrupted()) {
             if (sdir == StackDirection::POP) {
 

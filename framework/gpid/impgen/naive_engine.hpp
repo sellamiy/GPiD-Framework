@@ -124,6 +124,8 @@ namespace gpid {
         /** Initialize the underlying solver interface with a given problem. */
         inline void initializeSolvers(ProblemLoaderT& pbld);
 
+        inline void prepruneLiterals();
+
         /** Map an index of the set to a specific literal. */
         inline void mapLiteral(uint32_t idx, LiteralT* hyp);
         /** Specify incompatible literals. */
@@ -219,6 +221,11 @@ namespace gpid {
         while (pbld.hasConstraint()) {
             solver_contrads.addConstraint(pbld.nextConstraint());
         }
+    }
+
+    template<typename InterfaceT>
+    inline void NaiveAbducibleEngine<InterfaceT>::prepruneLiterals() {
+        snlog::l_internal() << "Preprune service not available in naive engine" << snlog::l_end;
     }
 
     template<typename InterfaceT>

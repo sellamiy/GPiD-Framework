@@ -21,7 +21,8 @@ namespace gpid {
         /** The formula is unsatisfiable */
         UNSAT,
         /** The formula satisfiability status cannot be computed */
-        UNKNOWN
+        UNKNOWN,
+        ERROR
     };
 
     static inline constexpr bool isSatResult
@@ -47,7 +48,10 @@ namespace gpid {
             ? "SAT"
             : s == SolverTestStatus::UNSAT
             ? "UNSAT"
-            : "UNKNOWN";
+            : s == SolverTestStatus::UNKNOWN
+            ? "UNKNOWN"
+            : "ERROR"
+            ;
     }
 
     /** Manager for handling multiple solver interfaces with a shared context. */

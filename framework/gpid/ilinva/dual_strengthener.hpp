@@ -171,6 +171,7 @@ namespace gpid {
             AbdGeneratorPtr(new AbdGeneratorT(cons, _problemBuilder.getContextManager()));
         abductionOpts.unknown_handle = SolverTestStatus::SAT;
         abductionOpts.max_level = 2; // TODO: As ilinva option
+        abductionOpts.preprune_literals = true;
         abductionOpts.additional_checker = true; // Prevents non redundant literals
         abductionOpts.additional_check_mode = SolverTestStatus::SAT;
         generator =

@@ -37,6 +37,8 @@ namespace gpid {
         /** Do not skip inconsistent hypotheses sets */
         bool allow_inconsistencies = false;
 
+        bool preprune_literals = false;
+
         /** Skip literals detected as consequences of previous assignments */
         bool detect_consequences = false;
 

@@ -71,10 +71,8 @@ static inline SolverTestStatus ess_analyze
     if (result.find("sat")     != std::string::npos) return SolverTestStatus::SAT;
     snlog::l_warn()
         << "Unanswered satisfiability query!" << snlog::l_end
-        << snlog::l_error << result << snlog::l_end
-        << snlog::l_warn << "Unsafely assuming SAT for error handling consistency reasons"
-        << snlog::l_end;
-    return SolverTestStatus::SAT;
+        << snlog::l_error << result << snlog::l_end;
+    return SolverTestStatus::ERROR;
 }
 
 static inline SolverTestStatus execute_solver_script

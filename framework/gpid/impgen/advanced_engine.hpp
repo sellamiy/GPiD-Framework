@@ -141,6 +141,8 @@ namespace gpid {
         /** Initialize the underlying solver interface with a given problem. */
         inline void initializeSolvers(ProblemLoaderT& pbld);
 
+        inline void prepruneLiterals();
+
         /** Map an index of the set to a specific literal. */
         inline void mapLiteral(uint32_t idx, LiteralT* hyp);
         /** Specify incompatible literals. */
@@ -413,6 +415,23 @@ namespace gpid {
         }
         selection_map[clevel].clear();
         pselection_map[clevel].clear();
+    }
+
+    template<typename InterfaceT>
+    inline void AdvancedAbducibleEngine<InterfaceT>::prepruneLiterals() {
+        std::set<index_t> _todeact;
+        for (index_t h : lactive) {
+            solver_consistency.push();
+            solver_consistency.addLiteral(lmapper.get(h));
+            SolverTestStatus status = solver_consistency.check();
+            if (status == SolverTestStatus::ERROR) {
+                snlog::l_info() << "Prepruning literal " << lmapper.get(h).str() << snlog::l_end;
+                _todeact.insert(h);
+            }
+            solver_consistency.pop();
+        }
+        for (index_t h : _todeact)
+            lactive.deactivate(h);
     }
 
     template<typename InterfaceT>
