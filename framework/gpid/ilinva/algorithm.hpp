@@ -93,6 +93,13 @@ namespace gpid {
             StrengthenerId strengthener = pengine.newStrengthener(loop);
             level_stack.push(level_ids_t(loop, strengthener));
 
+            if (level_stack.size() > options.max_depth) {
+                while (pengine.hasMoreStrengthenings(strengthener)) {
+                    pengine.strengthen(level_stack.top());
+                    pengine.release(loop);
+                }
+            }
+
             if (pengine.hasMoreStrengthenings(strengthener)) {
 
                 pengine.strengthen(level_stack.top());

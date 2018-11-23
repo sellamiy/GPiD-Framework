@@ -60,6 +60,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 
         parser.add_options("Engine")
             ("t,time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
+            ("d,depth-limit", "Maximal strengthening depth allowed", cxxopts::value<uint32_t>())
             ;
 
 	parser.add_options("Output")
@@ -101,6 +102,9 @@ static inline OptionStatus handleOptions
 
         if (results.count("time-limit"))
             opts.core.time_limit = results["time-limit"].as<uint64_t>();
+
+        if (results.count("depth-limit"))
+            opts.ilinva.max_depth = results["depth-limit"].as<uint32_t>();
 
         if (results.count("output"))
 	    opts.ilinva.output = results["output"].as<std::string>();
