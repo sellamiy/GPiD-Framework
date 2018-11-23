@@ -177,10 +177,11 @@ namespace gpid {
         generator =
             ImplicateGeneratorPtr(new ImplicateGenerator(_problemBuilder, *abdGenerator, forwarder,
                                                          abductionCoreOpts, abductionOpts));
-        typename InterfaceT::LiteralT _addlit
-            = convert<CodeHandlerT, InterfaceT>(ich_ctx.getCandidateConstraint(),
-                                                _problemBuilder.getContextManager());
-        generator->getEngine().addAdditionalCheckLiteral(_addlit);
+        for (auto c_cons : ich_ctx.getCandidateConstraintDSplit()) {
+            typename InterfaceT::LiteralT _addlit
+                = convert<CodeHandlerT, InterfaceT>(c_cons, _problemBuilder.getContextManager());
+            generator->getEngine().addAdditionalCheckLiteral(_addlit);
+        }
         generator->execute(true);
     }
 

@@ -17,6 +17,7 @@ namespace gpid {
         inline std::list<const std::string>& getCandidate() { return candidate; }
 
         const W3WML_Constraint getCandidateConstraint();
+        const std::list<W3WML_Constraint> getCandidateConstraintDSplit();
     };
 
     class W3WML_ICH {
