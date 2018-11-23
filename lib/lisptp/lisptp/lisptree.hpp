@@ -2,6 +2,7 @@
 #define LIB_LISP_TREE_PARSER__LISP_TREE_HEADER
 
 #include <string>
+#include <sstream>
 #include <list>
 #include <memory>
 
@@ -14,6 +15,7 @@ namespace lisptp {
         const std::string value;
         const bool callstate;
         const std::list<LispTreeNodePtr> leaves;
+        void str(std::stringstream& ss) const;
     public:
         LispTreeNode(const std::string v, bool cs, const std::list<LispTreeNodePtr> ls)
             : value(v), callstate(cs), leaves(ls) {}
@@ -23,6 +25,8 @@ namespace lisptp {
         inline constexpr bool isCall() const { return callstate; }
         inline const std::string& getValue() const { return value; }
         inline const std::list<LispTreeNodePtr>& getLeaves() const { return leaves; }
+
+        const std::string str() const;
     };
 
 }
