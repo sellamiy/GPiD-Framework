@@ -11,6 +11,8 @@ namespace why3wrap {
 
     using strptr = std::shared_ptr<std::string>;
     using uintset = std::set<uint32_t>;
+    using vcpart_t = std::pair<uint32_t, std::string>;
+    using vcset_t = std::map<uint32_t, std::string>;
 
 #define BUFFER_SIZE 128
     static const strptr execute(const std::string& command) {
@@ -32,7 +34,9 @@ namespace why3wrap {
     static const std::string gen_proof_command
     (const std::string& filename, const std::string& prover) {
         std::stringstream cmd;
-        cmd << WHY3_EXECUTABLE << " prove -a split_vc -P " << prover << " " << filename;
+        cmd << WHY3_EXECUTABLE << " prove -a split_vc --debug print_attributes --debug transform "
+            << "-P " << prover << " " << filename
+            << " 2>&1";
         return cmd.str();
     }
 
@@ -43,46 +47,46 @@ namespace why3wrap {
         return cmd.str();
     }
 
-    static uintset detect_unverified
+    static vcset_t detect_unverified
     (const std::string& filename, const std::string& prover) {
-        uintset res;
+        vcset_t res;
         SplitProofParser parser(filename, execute(gen_proof_command(filename, prover)));
         parser.parse();
         if (parser.isValid()) {
             for (const SplitProofResult& r : parser.results()) {
                 if (!r.isValid()) {
-                    res.insert(r.index);
+                    res[r.index] = r.expl;
                 }
             }
         } else {
             snlog::l_internal() << "Cannot detect why3 results on empty data" << snlog::l_end;
-            res.insert(-1);
+            res[-1] = "nexpl:error";
         }
         return res;
     }
 
-    static std::list<strptr> extract_vc
-    (const std::string& filename, const std::string& prover, const uintset& locations) {
-        std::list<strptr> res;
+    static std::map<uint32_t, strptr> extract_vc
+    (const std::string& filename, const std::string& prover, const vcset_t& locations) {
+        std::map<uint32_t, strptr> res;
         SplitProofVCParser parser(execute(gen_extraction_command(filename, driver(prover))));
         parser.parse();
-        for (uint32_t idx : locations) {
-            res.push_back(parser.getVC(idx));
+        for (vcpart_t vc : locations) {
+            res[vc.first] = parser.getVC(vc.first);
         }
         return res;
     }
 
     extern ProofResult prove(const std::string& filename, const std::string& prover) {
-        uintset pending = detect_unverified(filename, prover);
+        vcset_t pending = detect_unverified(filename, prover);
         if (pending.empty()) {
             ProofResult res;
             return res;
         } else {
-            std::list<strptr> vcs = extract_vc(filename, prover, pending);
+            std::map<uint32_t, strptr> vcs = extract_vc(filename, prover, pending);
             for (auto it = vcs.begin(); it != vcs.end(); ++it) {
-                *it = vc_sanitization(*it);
+                it->second = vc_sanitization(it->second);
             }
-            ProofResult res(vcs);
+            ProofResult res(vcs, pending);
             return res;
         }
     }
