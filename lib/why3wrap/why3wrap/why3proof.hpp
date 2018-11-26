@@ -30,6 +30,10 @@ namespace why3wrap {
             return explanations.at(unproven.begin()->first);
         }
 
+        inline const std::map<index_t, std::string>& getExplanations() const {
+            return explanations;
+        }
+
         // TODO: Add an iterator on unprovens
     };
 

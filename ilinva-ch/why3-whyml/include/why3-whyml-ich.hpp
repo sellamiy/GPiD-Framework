@@ -1,6 +1,7 @@
 #ifndef WHY3_WHYML_ICH_FOR_GPID__HPP
 #define WHY3_WHYML_ICH_FOR_GPID__HPP
 
+#include <gpid/ilinva/coreich.hpp>
 #include "why3-whyml-source.hpp"
 
 namespace gpid {
@@ -49,7 +50,7 @@ namespace gpid {
             }
         }
 
-        bool isProven();
+        IchState proofCheck();
 
         const std::string generateAbductionProblem(LoopIdentifierT);
 

@@ -7,6 +7,7 @@
 #ifndef GPID_FRAMEWORK__ILINVA__DUAL_ENGINE_HPP
 #define GPID_FRAMEWORK__ILINVA__DUAL_ENGINE_HPP
 
+#include <gpid/ilinva/coreich.hpp>
 #include <gpid/ilinva/dual_strengthener.hpp>
 
 namespace gpid {
@@ -26,7 +27,7 @@ namespace gpid {
     public:
         DualInvariantEngine(CodeHandlerT& source);
 
-        inline bool isProven() { return sourceCode.isProven(); }
+        inline IchState proofCheck() { return sourceCode.proofCheck(); }
         inline LoopIdentifierT selectUnprovenLoop() {
             return sourceCode.selectUnprovenBlock();
         }

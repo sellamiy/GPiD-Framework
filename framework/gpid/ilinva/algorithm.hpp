@@ -10,6 +10,7 @@
 #include <stack>
 
 #include <gpid/core/algorithm.hpp>
+#include <gpid/ilinva/coreich.hpp>
 #include <gpid/ilinva/options.hpp>
 #include <gpid/instrument/instrument.hpp>
 
@@ -86,36 +87,41 @@ namespace gpid {
         reset();
 
         bool assume_proven = true;
+        LoopId loop; StrengthenerId strengthener;
 
-        while (!pengine.isProven()) {
+        while (true) {
+            IchState ichState = pengine.proofCheck();
 
-            LoopId loop = pengine.selectUnprovenLoop();
-            StrengthenerId strengthener = pengine.newStrengthener(loop);
+            if (ichState.proven)
+                break;
+
+            if (!ichState.strengthenable)
+                goto backtrack;
+
+            if (level_stack.size() >= options.max_depth)
+                goto backtrack;
+
+            loop = pengine.selectUnprovenLoop();
+            strengthener = pengine.newStrengthener(loop);
             level_stack.push(level_ids_t(loop, strengthener));
 
-            if (level_stack.size() > options.max_depth) {
-                while (pengine.hasMoreStrengthenings(strengthener)) {
-                    pengine.strengthen(level_stack.top());
-                    pengine.release(loop);
-                }
+            if (pengine.hasMoreStrengthenings(strengthener))
+                pengine.strengthen(level_stack.top());
+            else
+                goto backtrack;
+
+            continue;
+
+        backtrack:
+            backtrack();
+
+            if (level_stack.empty()) {
+                assume_proven = false;
+                snlog::l_error() << "No more strengthening candidates available" << snlog::l_end;
+                break;
             }
 
-            if (pengine.hasMoreStrengthenings(strengthener)) {
-
-                pengine.strengthen(level_stack.top());
-
-            } else {
-
-                backtrack();
-                if (level_stack.empty()) {
-                    assume_proven = false;
-                    snlog::l_error() << "No more strengthening candidates available" << snlog::l_end;
-                    break;
-                }
-
-                pengine.strengthen(level_stack.top());
-            }
-
+            pengine.strengthen(level_stack.top());
         }
 
         if (assume_proven) {

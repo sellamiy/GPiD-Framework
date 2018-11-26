@@ -13,11 +13,36 @@ using namespace gpid;
 
 const W3WML_Constraint W3WML_ICH::C_False = W3WML_Constraint("false");
 
-bool W3WML_ICH::isProven() {
+static inline bool isStrengthenableExplanation(const std::string& expl) {
+    return expl == "expl:postcondition"
+        || expl == "expl:exceptional postcondition"
+        || expl == "expl:assertion"
+        || expl == "expl:check"
+        || expl == "expl:lemma"
+        || expl == "expl:unreachable point" // TODO: Check relevancy
+        || expl == "expl:loop bounds" // TODO: Check relevancy
+        || expl == "expl:out of loop bounds" // TODO: Check relevancy
+        || expl == "expl:loop invariant preservation"
+        || expl == "expl:loop variant decrease" // TODO: Check relevancy
+        || expl == "expl:variant decrease" // TODO: Check relevancy
+        || expl == "expl:type invariant" // TODO: Check relevancy
+        || expl == "expl:termination" // TODO: Check relevancy
+        ;
+}
+
+static bool isStrengthenable(const why3wrap::ProofResult& proofResult) {
+    for (auto expl : proofResult.getExplanations())
+        if (!isStrengthenableExplanation(expl.second))
+            return false;
+    return true;
+}
+
+IchState W3WML_ICH::proofCheck() {
     problem.save_to(WHYML_TEMPORARY_SOURCEFILE, plits.getReferences());
     snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__
                     << " TODO: Select Why3 Prover via Options "<< snlog::l_end;
-    return why3wrap::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4").isComplete();
+    why3wrap::ProofResult proofResult = why3wrap::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4");
+    return IchState(proofResult.isComplete(), isStrengthenable(proofResult));
 }
 
 const std::string W3WML_ICH::generateAbductionProblem(LoopIdentifierT) {
