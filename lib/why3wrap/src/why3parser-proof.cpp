@@ -22,11 +22,11 @@ namespace why3wrap {
         return ProofElemStatus::Unknown;
     }
 
-    static inline void update_explanation(const std::string& line, std::string expl) {
-        size_t ipos = line.find("[@");
+    static inline void update_explanation(const std::string& line, std::string& expl) {
+        size_t ipos = line.find("[@expl");
         if (ipos != std::string::npos) {
             size_t kpos = line.find("]", ipos);
-            expl = line.substr(ipos + 2, kpos);
+            expl = line.substr(ipos + 2, kpos - ipos - 2);
         }
     }
 
