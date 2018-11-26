@@ -96,10 +96,10 @@ namespace gpid {
                 break;
 
             if (!ichState.strengthenable)
-                goto backtrack;
+                goto prebacktrack;
 
             if (level_stack.size() >= options.max_depth)
-                goto backtrack;
+                goto prebacktrack;
 
             loop = pengine.selectUnprovenLoop();
             strengthener = pengine.newStrengthener(loop);
@@ -112,6 +112,8 @@ namespace gpid {
 
             continue;
 
+        prebacktrack:
+            pengine.release(loop);
         backtrack:
             backtrack();
 
