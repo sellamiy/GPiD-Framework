@@ -2,9 +2,7 @@
 #define MAGIC_LITERAL_BUILDER_f_SMTLIB2__INTERFACE_HPP
 
 #include <set>
-#include <smtlib2utils/smtlib2utils.hpp>
 #include <mlbsmt2/mlberrors.hpp>
-#include <mlbsmt2/mlbconfig.hpp>
 #include <mlbsmt2/mlbscript.hpp>
 
 namespace mlbsmt2 {

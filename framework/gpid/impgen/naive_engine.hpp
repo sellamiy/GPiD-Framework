@@ -8,11 +8,9 @@
 #define GPID_FRAMEWORK__IMPGEN__NAIVE_ENGINE_HPP
 
 #include <set>
-#include <map>
 #include <list>
 
 #include <gpid/core/memory.hpp>
-#include <gpid/core/saitypes.hpp>
 #include <gpid/impgen/skipcontrol.hpp>
 #include <gpid/instrument/instrument.hpp>
 #include <gpid/utils/hprinters.hpp>

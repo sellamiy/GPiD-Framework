@@ -2,7 +2,6 @@
 
 #include <cstdlib>
 #include <cassert>
-#include <snlog/snlog.hpp>
 #include <starray/SequentialActivableArray.hpp>
 
 using namespace starray;

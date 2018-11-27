@@ -1,9 +1,7 @@
 #define LIB_WHYMLP__EXTRACTOR_CPP
 
-#include <antlr4-runtime.h>
 #include <snlog/snlog.hpp>
 #include <WhyMLLexer.h>
-#include <WhyMLParser.h>
 #include <whymlp/extractor-p.hpp>
 
 using namespace std;

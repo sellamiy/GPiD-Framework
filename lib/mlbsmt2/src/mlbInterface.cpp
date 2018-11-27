@@ -2,7 +2,6 @@
 
 #include <snlog/snlog.hpp>
 #include <mlbsmt2/mlbprules.hpp>
-#include <mlbsmt2/mlbscript.hpp>
 
 using namespace smtlib2utils;
 

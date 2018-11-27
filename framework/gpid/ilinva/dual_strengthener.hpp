@@ -8,7 +8,6 @@
 #define GPID_FRAMEWORK__ILINVA__DUAL_STRENGTHENER_HPP
 
 #include <atomic>
-#include <gpid/impgen/guniti_engine.hpp>
 #include <gpid/impgen/guniti.hpp>
 #include <gpid/impgen/advanced_engine.hpp>
 #include <gpid/impgen/algorithm.hpp>

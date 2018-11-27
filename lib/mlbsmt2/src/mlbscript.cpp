@@ -1,7 +1,6 @@
 #define MAGIC_LITERAL_BUILDER_f_SMTLIB2__SCRIPT_CPP
 
 #include <snlog/snlog.hpp>
-#include <mlbsmt2/mlbconfig.hpp>
 #include <mlbsmt2/mlbscript.hpp>
 
 using namespace smtlib2utils;

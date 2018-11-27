@@ -3,7 +3,6 @@
 
 #include <map>
 #include <list>
-#include <string>
 #include <memory>
 #include <why3wrap/why3config.hpp>
 

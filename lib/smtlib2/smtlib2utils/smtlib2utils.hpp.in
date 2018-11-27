@@ -3,6 +3,5 @@
 
 #include <smtlib2utils/SMTlib2CommandParser.hpp>
 #include <smtlib2utils/SMTlib2TokenStringParsers.hpp>
-#include <smtlib2utils/StringMemory.hpp>
 
 #endif

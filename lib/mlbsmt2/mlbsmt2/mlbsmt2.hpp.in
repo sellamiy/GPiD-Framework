@@ -1,10 +1,6 @@
 #ifndef LIB_MAGIC_LITERAL_BUILDER_f_SMTLIB2__HEADER
 #define LIB_MAGIC_LITERAL_BUILDER_f_SMTLIB2__HEADER
 
-#include <mlbsmt2/mlbconfig.hpp>
-#include <mlbsmt2/mlberrors.hpp>
-
-#include <mlbsmt2/mlbInterface.hpp>
 #include <mlbsmt2/mlbprules.hpp>
 
 #endif

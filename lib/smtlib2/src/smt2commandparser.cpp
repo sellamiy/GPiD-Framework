@@ -1,7 +1,5 @@
 #define LIB_SMTLIB2_UTILS__SMTLIB2_COMMAND_PARSE_ENGINE_CPP
 
-#include <sstream>
-
 #include <snlog/snlog.hpp>
 #include <smtlib2utils/SMTlib2CommandParser.hpp>
 

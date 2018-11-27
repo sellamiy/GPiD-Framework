@@ -1,6 +1,5 @@
 #define LIB_WHY3WRAP__PLATFORM_GENERAL_UTILS_CPP
 
-#include <sstream>
 #include <why3wrap/why3utils.hpp>
 
 using namespace why3wrap;

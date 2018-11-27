@@ -11,7 +11,6 @@
 #include <fstream>
 
 #include <gpid/core/memory.hpp>
-#include <gpid/core/saitypes.hpp>
 #include <gpid/storage/atrees.hpp>
 #include <gpid/impgen/skipcontrol.hpp>
 #include <gpid/instrument/instrument.hpp>

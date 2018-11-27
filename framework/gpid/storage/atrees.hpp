@@ -9,6 +9,7 @@
 
 #include <lcdot/dotgraph.hpp>
 
+#include <gpid/core/saitypes.hpp>
 #include <gpid/utils/hprinters.hpp>
 #include <gpid/utils/stdutils.hpp>
 

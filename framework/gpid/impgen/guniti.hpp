@@ -8,13 +8,9 @@
 #define GPID_FRAMEWORK__IMPGEN__GUNITI__ALGORITHM_HPP
 
 #include <gpid/core/algorithm.hpp>
-#include <gpid/core/errors.hpp>
-#include <gpid/core/saitypes.hpp>
 #include <gpid/reference/version.hpp>
-#include <gpid/impgen/options.hpp>
 #include <gpid/impgen/guniti_engine.hpp>
 #include <gpid/impgen/implicates.hpp>
-#include <gpid/instrument/instrument.hpp>
 
 namespace gpid {
 

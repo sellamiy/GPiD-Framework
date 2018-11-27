@@ -1,7 +1,6 @@
 #ifndef LIB_LISP_TREE_PARSER__MAIN_HEADER
 #define LIB_LISP_TREE_PARSER__MAIN_HEADER
 
-#include <lisptp/lisptree.hpp>
 #include <lisptp/lisptreevisitor.hpp>
 
 namespace lisptp {

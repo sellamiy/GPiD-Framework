@@ -1,7 +1,6 @@
 #ifndef LIB_WHY3WRAP__PROVERS_CONFIG_HEADER
 #define LIB_WHY3WRAP__PROVERS_CONFIG_HEADER
 
-#include <string>
 #include <why3wrap/why3config.hpp>
 
 namespace why3wrap {

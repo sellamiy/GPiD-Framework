@@ -1,13 +1,9 @@
 #define MAGIC_LITERAL_BUILDER_f_SMTLIB2__PRODUCTION_RULES_CPP
 
-#include <unordered_set>
-#include <sstream>
 #include <snlog/snlog.hpp>
 #include <ugly/ugly.hpp>
 #include <whymlp/whymlp.hpp>
-#include <mlbsmt2/mlbconfig.hpp>
 #include <mlbsmt2/mlbprules.hpp>
-#include <mlbsmt2/mlbscript.hpp>
 
 namespace mlbsmt2 {
 

@@ -7,12 +7,7 @@
 #ifndef GPID_FRAMEWORK__CORE_HEADER_
 #define GPID_FRAMEWORK__CORE_HEADER_
 
-#include <gpid/reference/version.hpp>
-
 #include <gpid/impgen/naive_engine.hpp>
-#include <gpid/impgen/advanced_engine.hpp>
-#include <gpid/impgen/algorithm.hpp>
-#include <gpid/impgen/guniti.hpp>
 
 #include <gpid/masmalig/algorithm.hpp>
 
@@ -20,8 +15,6 @@
 #include <gpid/ilinva/algorithm.hpp>
 
 #include <gpid/utils/pblloader.hpp>
-#include <gpid/utils/abdparser.hpp>
-#include <gpid/utils/abdparseutils.hpp>
 #include <gpid/utils/smtlib2solver.hpp>
 
 #ifdef GPID_INSTRUMENTATION
