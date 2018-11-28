@@ -1,0 +1,7 @@
+#ifndef LIB_SMTLIB2_LITERAL_TOOLS__HEADER
+#define LIB_SMTLIB2_LITERAL_TOOLS__HEADER
+
+#include <smtlit/smtlit-fabricator.hpp>
+#include <smtlit/smtlit-presets.hpp>
+
+#endif
