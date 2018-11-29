@@ -86,7 +86,7 @@ static const GenerationSet loc_generate(const SourceT& source) {
         fabricator.insert(smtlit_t(l.first, from_whyml_type(l.second)), annot_core_magic);
     }
     for (const std::string& ident : parser.getRefs()) {
-        fabricator.annotate(ident, "whyml-reference");
+        fabricator.annotate(ident, annot_whyml_ref);
     }
     loc_fabricate(fabricator, parser);
     FiltrationRule bool_filter(FilterMode::Conjunctive);

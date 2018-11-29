@@ -3,5 +3,8 @@
 
 #include <smtlit/smtlit-fabricator.hpp>
 #include <smtlit/smtlit-presets.hpp>
+#include <smtlit/smtlit-types.hpp>
+#include <smtlit/smtlit-annotations.hpp>
+#include <smtlit/smtlit-functions.hpp>
 
 #endif

@@ -16,6 +16,8 @@ namespace smtlit {
         inline SmtLitFabricator& get_fabricator() { return *fabricator; }
         inline const std::set<smtlit_t>& get_literals() const
         { return fabricator->get_filtered(); }
+        inline const std::set<smtident_t>& get_annotated(const smtannotation_t& annot) const
+        { return fabricator->get_annotated(annot); }
     };
 
     enum class GenerationSource { File, Raw };

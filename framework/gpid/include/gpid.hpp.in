@@ -9,8 +9,6 @@
 
 #include <gpid/impgen/naive_engine.hpp>
 
-#include <gpid/masmalig/algorithm.hpp>
-
 #include <gpid/ilinva/dual_engine.hpp>
 #include <gpid/ilinva/algorithm.hpp>
 

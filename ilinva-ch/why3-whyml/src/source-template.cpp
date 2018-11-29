@@ -3,8 +3,8 @@
 #include <fstream>
 #include <snlog/snlog.hpp>
 #include <why3wrap/why3wrap.hpp>
+#include <smtlit/smtlit.hpp>
 #include <gpid/core/errors.hpp>
-#include <gpid/masmalig/algorithm.hpp>
 #include <why3-whyml-source.hpp>
 
 using namespace gpid;
@@ -41,15 +41,13 @@ struct W3WML_LSet_LRec {
 
 W3WML_LSet::W3WML_LSet(const std::string& filename) {
     try {
-        GPiDOptions opts;
-        MasmaligOptions mopts;
-        mopts.whyml_files.push_back(filename);
-        W3WML_LSet_LRec handler(literals);
-        MasmaligAlgorithm<W3WML_LSet_LRec> loader(handler, opts, mopts);
-        loader.execute();
-        references = loader.getBuilder().getWhyMLRefs();
-    } catch (mlbsmt2::MLB2Error& e) {
-        snlog::l_error() << "W3WML Mlw literals recovery failed: " << e.what() << snlog::l_end;
+        smtlit::GenerationSet gset =
+            smtlit::generate_literals
+            <smtlit::GenerationSource::File, smtlit::GenerationPreset::WhyML>
+            (filename);
+        for (const smtlit::smtlit_t& lit : gset.get_literals())
+            literals.push_back(smtlit::ident(lit));
+        references = gset.get_annotated(smtlit::annot_whyml_ref);
     } catch (gpid::GPiDError& e) {
         snlog::l_error() << "W3WML Mlw literals recovery failed: " << e.what() << snlog::l_end;
     }

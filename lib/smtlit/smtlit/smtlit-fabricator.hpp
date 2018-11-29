@@ -92,6 +92,8 @@ namespace smtlit {
     public:
         inline const smtlit_set& get_lits() const { return lits; }
         inline const std::set<smtlit_t>& get_filtered() const { return filtered; }
+        inline const std::set<smtident_t>& get_annotated(const smtannotation_t& annot) const
+        { return _annots.at(annot); }
 
         inline void annotate(const smtident_t& l, const smtannotation_t& a);
         inline void insert(const smtlit_t& l);
