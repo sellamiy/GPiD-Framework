@@ -12,8 +12,8 @@ file(GLOB LIBSMTLIB2_CPP_SOURCES "src/*.cpp")
 # ------------------------------------------------------------------------------
 add_library(smtlib2tools-static STATIC ${LIBSMTLIB2_CPP_SOURCES})
 add_library(smtlib2tools-shared SHARED ${LIBSMTLIB2_CPP_SOURCES})
-target_link_libraries(smtlib2tools-static snlog whymlp-static ugly)
-target_link_libraries(smtlib2tools-shared snlog whymlp-shared ugly)
+target_link_libraries(smtlib2tools-static snlog)
+target_link_libraries(smtlib2tools-shared snlog)
 target_include_directories(smtlib2tools-static PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}" "${LOCAL_LIB_HEADERS_DIR}" ${PYTHON_INCLUDE_DIRS})
 target_include_directories(smtlib2tools-shared PUBLIC

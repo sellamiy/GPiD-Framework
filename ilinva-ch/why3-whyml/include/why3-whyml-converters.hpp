@@ -2,7 +2,7 @@
 #define WHY3_WHYML_ICH_FOR_GPID__CONVERTERS__HPP
 
 #include <snlog/snlog.hpp>
-#include <why3wrap/why3utils.hpp>
+#include <why3cpp/why3utils.hpp>
 
 namespace gpid {
 

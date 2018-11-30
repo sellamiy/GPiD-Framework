@@ -1,0 +1,15 @@
+#ifndef LIB_WHY3CPP__MAIN_HEADER
+#define LIB_WHY3CPP__MAIN_HEADER
+
+#define LIBWHY3CPP_NAME "Why3 WhyML Antlr parser library"
+#cmakedefine LIBWHY3CPP_VERSION "@LIBWHY3CPP_VERSION@"
+
+#include <why3cpp/tokenizer-p.hpp>
+#include <why3cpp/annotator-p.hpp>
+#include <why3cpp/extractor-p.hpp>
+
+#include <why3cpp/why3proof.hpp>
+#include <why3cpp/why3utils.hpp>
+#include <why3cpp/whyml-smtlit.hpp>
+
+#endif

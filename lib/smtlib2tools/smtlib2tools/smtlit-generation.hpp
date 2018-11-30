@@ -18,7 +18,7 @@ namespace smtlib2 {
     };
 
     enum class GenerationSource { File, Raw };
-    enum class GenerationPreset { SMTlib2, Mlb, WhyML };
+    enum class GenerationPreset { SMTlib2, Mlb };
 
     template<GenerationSource Source, GenerationPreset Preset>
     const GenerationSet generate_literals(const std::string& source);

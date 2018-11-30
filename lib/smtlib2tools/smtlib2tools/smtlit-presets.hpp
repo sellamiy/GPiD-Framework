@@ -15,11 +15,6 @@ namespace smtlib2 {
     template<> const GenerationSet
     generate_literals<GenerationSource::Raw, GenerationPreset::Mlb>(const std::string& data);
 
-    template<> const GenerationSet
-    generate_literals<GenerationSource::File, GenerationPreset::WhyML>(const std::string& filename);
-    template<> const GenerationSet
-    generate_literals<GenerationSource::Raw, GenerationPreset::WhyML>(const std::string& data);
-
     template<> void dump<ExportPreset::Raw>(const GenerationSet& gset, std::ostream& out);
     template<> void dump<ExportPreset::Abduce>(const GenerationSet& gset, std::ostream& out);
 

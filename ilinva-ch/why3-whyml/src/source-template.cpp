@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <snlog/snlog.hpp>
-#include <why3wrap/why3wrap.hpp>
+#include <why3cpp/why3cpp.hpp>
 #include <smtlib2tools/smtlit-presets.hpp>
 #include <smtlib2tools/smtlib2-annotations.hpp>
 #include <gpid/core/errors.hpp>
@@ -28,7 +28,7 @@ std::ostream& gpid::write(std::ostream& out, const W3WML_Template::InvariantElem
         for (auto s : e.conj) {
             if (start) start = false;
             else out << " /\\ ";
-            out << "(" << why3wrap::Smt2Why3(s, refs) << ")";
+            out << "(" << why3cpp::Smt2Why3(s, refs) << ")";
         }
     }
     return out << "}";
@@ -43,9 +43,7 @@ struct W3WML_LSet_LRec {
 W3WML_LSet::W3WML_LSet(const std::string& filename) {
     try {
         smtlib2::GenerationSet gset =
-            smtlib2::generate_literals
-            <smtlib2::GenerationSource::File, smtlib2::GenerationPreset::WhyML>
-            (filename);
+            why3cpp::generate_literals_whyml(filename);
         for (const smtlib2::smtlit_t& lit : gset.get_literals())
             literals.push_back(smtlib2::ident(lit));
         references = gset.get_annotated(smtlib2::annot_whyml_ref);

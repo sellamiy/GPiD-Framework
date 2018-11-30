@@ -3,7 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <snlog/snlog.hpp>
-#include <why3wrap/why3wrap.hpp>
+#include <lisptp/lisptp.hpp>
+#include <why3cpp/why3cpp.hpp>
 #include <why3-whyml-ich.hpp>
 
 #define WHYML_TEMPORARY_SOURCEFILE "temp_gpid_ilinva_w3wml.mlw"
@@ -30,7 +31,7 @@ static inline bool isStrengthenableExplanation(const std::string& expl) {
         ;
 }
 
-static bool isStrengthenable(const why3wrap::ProofResult& proofResult) {
+static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
     for (auto expl : proofResult.getExplanations())
         if (!isStrengthenableExplanation(expl.second))
             return false;
@@ -41,7 +42,7 @@ IchState W3WML_ICH::proofCheck() {
     problem.save_to(WHYML_TEMPORARY_SOURCEFILE, plits.getReferences());
     snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__
                     << " TODO: Select Why3 Prover via Options "<< snlog::l_end;
-    why3wrap::ProofResult proofResult = why3wrap::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4");
+    why3cpp::ProofResult proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4");
     return IchState(proofResult.isComplete(), isStrengthenable(proofResult));
 }
 
@@ -52,7 +53,7 @@ const std::string W3WML_ICH::generateAbductionProblem(LoopIdentifierT) {
                     << " TODO: Abduction problem should depend on loop Id "<< snlog::l_end;
     std::ofstream ofs;
     ofs.open(SMTV2_TEMPORARY_ABDUCEFILE);
-    ofs << why3wrap::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4").firstUnproven();
+    ofs << why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4").firstUnproven();
     ofs.close();
     return SMTV2_TEMPORARY_ABDUCEFILE;
 }
