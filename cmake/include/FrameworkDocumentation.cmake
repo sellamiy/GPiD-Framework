@@ -3,7 +3,7 @@
 # ==============================================================================
 if(BUILD_DOC AND DOXYGEN_FOUND)
 
-  set(DOXYGEN_INF ${CMAKE_CURRENT_SOURCE_DIR}/cmake/doxygen/doxygen.cfg.in)
+  set(DOXYGEN_INF ${CMAKE_CURRENT_SOURCE_DIR}/doxygen.cfg.in)
   set(DOXYGEN_OUTF ${CMAKE_CURRENT_BINARY_DIR}/local/config/doxygen.cfg)
 
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
