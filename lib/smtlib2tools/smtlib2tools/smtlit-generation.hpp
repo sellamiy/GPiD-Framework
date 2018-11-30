@@ -1,6 +1,7 @@
 #ifndef LIB_SMTLIB2_CPP_TOOLS__LITERALS_GENERATION__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__LITERALS_GENERATION__HEADER
 
+#include <memory>
 #include <smtlib2tools/smtlit-fabricator.hpp>
 
 namespace smtlib2 {
