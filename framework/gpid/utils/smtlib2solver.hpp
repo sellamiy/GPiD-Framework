@@ -22,9 +22,9 @@ namespace gpid {
     };
 
     struct SMTl2SolverManager {
-        smtlib2utils::SMTl2StringMemory memory;
-        std::list<smtlib2utils::SMTl2Command> opts;
-        std::list<smtlib2utils::SMTl2Command> decls;
+        smtlib2::StringMemory memory;
+        std::list<smtlib2::SMTl2Command> opts;
+        std::list<smtlib2::SMTl2Command> decls;
     };
 
     struct SMTl2SolverLiteral {
@@ -43,8 +43,8 @@ namespace gpid {
     class SMTl2SolverProblemLoader {
         SMTl2SolverManager ctx;
         SMTl2SolverConstraint curr;
-        std::unique_ptr<smtlib2utils::SMTl2CommandParser> parser;
-        std::unique_ptr<smtlib2utils::SMTl2CommandHandler> handler;
+        std::unique_ptr<smtlib2::SMTl2CommandParser> parser;
+        std::unique_ptr<smtlib2::SMTl2CommandHandler> handler;
     public:
         SMTl2SolverProblemLoader();
 

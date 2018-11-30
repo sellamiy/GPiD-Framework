@@ -1,11 +1,11 @@
 #define LIB_SMTLIB2_UTILS__SMTLIB2_RESERVED_KEYWORDS_CHECK_CPP
 
 #include <unordered_set>
-#include <smtlib2utils/SMTlib2TokenStringParsers.hpp>
+#include <smtlib2tools/smtlib2-defs.hpp>
 
-namespace smtlib2utils {
+namespace smtlib2 {
 
-    static std::unordered_set<std::string> ReservedWordsTable = {
+    static std::unordered_set<smtident_t> ReservedWordsTable = {
         "Bool", "continued-execution", "error", "false", "immediate-exit",
         "incomplete", "logic", "memout", "sat", "success", "theory", "true",
         "unknown", "unsupported", "unsat", ":all-statistics",
@@ -29,7 +29,7 @@ namespace smtlib2utils {
         "reset", "reset-assertions", "set-info", "set-logic", "set-option"
     };
 
-    bool isReserved(const std::string& word) {
+    bool is_reserved(const smtident_t& word) {
         return ReservedWordsTable.find(word) != ReservedWordsTable.end();
     }
 

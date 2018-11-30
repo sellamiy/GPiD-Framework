@@ -1,5 +1,5 @@
-#ifndef LIB_SMTLIB2_LITERAL_TOOLS__CONFIG__HEADER
-#define LIB_SMTLIB2_LITERAL_TOOLS__CONFIG__HEADER
+#ifndef LIB_SMTLIB2_CPP_TOOLS__CORE__HEADER
+#define LIB_SMTLIB2_CPP_TOOLS__CORE__HEADER
 
 #include <set>
 #include <map>
@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 
-namespace smtlit {
+namespace smtlib2 {
 
     using smtident_t = std::string;
     using smttype_t = std::string;
@@ -46,6 +46,8 @@ namespace smtlit {
     static inline const std::vector<smttype_t>& plist(const smtfun_t& f) { return std::get<2>(f); }
 
     extern smtlit_t apply(const smtfun_t& f, const smtparam_binding_set& params);
+
+    extern bool is_reserved(const smtident_t& ident);
 
 }
 

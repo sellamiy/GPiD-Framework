@@ -24,10 +24,10 @@ AbducibleParserCommandHandler::AbducibleParserCommandHandler() {
                   this, std::placeholders::_1);
 }
 
-bool AbducibleParserCommandHandler::handleNothing(const smtlib2utils::SMTl2Command&)
+bool AbducibleParserCommandHandler::handleNothing(const smtlib2::SMTl2Command&)
 { return true; }
 
-bool AbducibleParserCommandHandler::handleSize(const smtlib2utils::SMTl2Command& cmd) {
+bool AbducibleParserCommandHandler::handleSize(const smtlib2::SMTl2Command& cmd) {
     if (cmd.getData() == "auto") {
         return auto_size = true; // p.n.: assignment required
     } else {
@@ -36,7 +36,7 @@ bool AbducibleParserCommandHandler::handleSize(const smtlib2utils::SMTl2Command&
     }
 }
 
-bool AbducibleParserCommandHandler::handleAbducible(const smtlib2utils::SMTl2Command& cmd) {
+bool AbducibleParserCommandHandler::handleAbducible(const smtlib2::SMTl2Command& cmd) {
     abddata.push_back(cmd.getDataPtr());
     return true;
 }

@@ -1,17 +1,18 @@
-#define LIB_SMTLIB2_LITERAL_TOOLS__PRESET__WHYML__CPP
+#define LIB_SMTLIB2_CPP_TOOLS__PRESET__WHYML__CPP
 
 #include <fstream>
 #include <sstream>
 #include <snlog/snlog.hpp>
 #include <ugly/ugly.hpp>
 #include <whymlp/whymlp.hpp>
-#include <smtlit/smtlit-annotations.hpp>
-#include <smtlit/smtlit-types.hpp>
-#include <smtlit/smtlit-presets.hpp>
-#include <smtlit/smtlit-functions.hpp>
-#include <smtlit/smtlit-fabricator.hpp>
+#include <smtlib2tools/smtlib2-annotations.hpp>
+#include <smtlib2tools/smtlib2-types.hpp>
+#include <smtlib2tools/smtlib2-functions.hpp>
+#include <smtlib2tools/parser-command.hpp>
+#include <smtlib2tools/parser-tokens.hpp>
+#include <smtlib2tools/smtlit-presets.hpp>
 
-using namespace smtlit;
+using namespace smtlib2;
 
 static const smttype_t from_whyml_type(const std::string& whymlt) {
     if (whymlt == "int") return smt_int;
@@ -96,13 +97,13 @@ static const GenerationSet loc_generate(const SourceT& source) {
 }
 
 template<> const GenerationSet
-smtlit::generate_literals<GenerationSource::File, GenerationPreset::WhyML>(const std::string& filename) {
+smtlib2::generate_literals<GenerationSource::File, GenerationPreset::WhyML>(const std::string& filename) {
     // Wrap through the smtlib2utils file interface
     return loc_generate<std::string>(filename);
 }
 
 template<> const GenerationSet
-smtlit::generate_literals<GenerationSource::Raw, GenerationPreset::WhyML>(const std::string&) {
+smtlib2::generate_literals<GenerationSource::Raw, GenerationPreset::WhyML>(const std::string&) {
     // This wrap does not exist
     snlog::l_error() << "String-data generation flow for WhyML does not exist" << snlog::l_end
                      << snlog::l_error << "Please use files" << snlog::l_end;

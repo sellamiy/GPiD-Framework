@@ -1,21 +1,21 @@
-#define LIB_SMTLIB2_UTILS__SMTLIB2_COMMAND_PARSE_ENGINE_CPP
+#define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_COMMAND_PARSE_ENGINE_CPP
 
 #include <snlog/snlog.hpp>
-#include <smtlib2utils/SMTlib2CommandParser.hpp>
+#include <smtlib2tools/parser-command.hpp>
 
-namespace smtlib2utils {
+namespace smtlib2 {
 
-    static inline constexpr bool isSMTl2Whitespace(char c) {
+    static inline constexpr bool isWhitespace(char c) {
         return c == '\t' || c == '\n' || c == '\r' || c == ' ' ;
     }
 
-    static inline constexpr bool isSMTl2Parenthesis(char c) {
+    static inline constexpr bool isParenthesis(char c) {
         return c == '(' || c == ')' ;
     }
 
     class SMTl2CParseEngine {
 
-        SMTl2StringMemory& allocator;
+        StringMemory& allocator;
 
         enum class EngineState { UNINITIALIZED, OPENED, CLOSED, COMPLETE, ERROR };
         enum class source_t { File, Data };
@@ -49,8 +49,8 @@ namespace smtlib2utils {
         void nextCommand();
 
     public:
-        SMTl2CParseEngine(const std::string& fsource, SMTl2StringMemory& allocator);
-        SMTl2CParseEngine(std::shared_ptr<std::string> dsource, SMTl2StringMemory& allocator);
+        SMTl2CParseEngine(const std::string& fsource, StringMemory& allocator);
+        SMTl2CParseEngine(std::shared_ptr<std::string> dsource, StringMemory& allocator);
         ~SMTl2CParseEngine();
 
         constexpr bool valid() const {
@@ -64,7 +64,7 @@ namespace smtlib2utils {
     };
 
     SMTl2CParseEngine::SMTl2CParseEngine
-    (const std::string& fsource, SMTl2StringMemory& allocator)
+    (const std::string& fsource, StringMemory& allocator)
         : allocator(allocator),
           source(source_t::File),
           fsource(fsource),
@@ -75,7 +75,7 @@ namespace smtlib2utils {
     {}
 
     SMTl2CParseEngine::SMTl2CParseEngine
-    (std::shared_ptr<std::string> dsource, SMTl2StringMemory& allocator)
+    (std::shared_ptr<std::string> dsource, StringMemory& allocator)
         : allocator(allocator),
           source(source_t::Data),
           dsource(dsource),
@@ -142,11 +142,11 @@ namespace smtlib2utils {
             if (c == ')') depth--;
             if (depth == 0 && cwritten) break;
             if (depth == 1) {
-                if (!ondata && isSMTl2Whitespace(c)) {
+                if (!ondata && isWhitespace(c)) {
                     ondata = true;
                     continue;
                 }
-                if (!ondata && !isSMTl2Parenthesis(c)) {
+                if (!ondata && !isParenthesis(c)) {
                     cmdbuf << c;
                     if (!cwritten) cwritten = true;
                 }
@@ -188,9 +188,9 @@ namespace smtlib2utils {
         }
     }
 
-    SMTl2CommandParser::SMTl2CommandParser(const std::string& filename, SMTl2StringMemory& allocator)
+    SMTl2CommandParser::SMTl2CommandParser(const std::string& filename, StringMemory& allocator)
         : engine(new SMTl2CParseEngine(filename, allocator)) {}
-    SMTl2CommandParser::SMTl2CommandParser(std::shared_ptr<std::string> data, SMTl2StringMemory& allocator)
+    SMTl2CommandParser::SMTl2CommandParser(std::shared_ptr<std::string> data, StringMemory& allocator)
         : engine(new SMTl2CParseEngine(data, allocator)) {}
     SMTl2CommandParser::~SMTl2CommandParser() {}
 

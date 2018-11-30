@@ -1,10 +1,10 @@
-#define LIB_SMTLIB2_LITERAL_TOOLS__FABRICATOR__CPP
+#define LIB_SMTLIB2_CPP_TOOLS__FABRICATOR__CPP
 
 #include <snlog/snlog.hpp>
-#include <smtlit/smtlit-fabricator.hpp>
-#include <smtlit/smtlit-types.hpp>
+#include <smtlib2tools/smtlib2-types.hpp>
+#include <smtlib2tools/smtlit-fabricator.hpp>
 
-using namespace smtlit;
+using namespace smtlib2;
 
 bool FabricationFilter::accept(const smtlit_t& l, const smtannotation_map& annots) const {
     switch (policy) {

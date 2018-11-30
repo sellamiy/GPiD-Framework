@@ -3,7 +3,8 @@
 #include <fstream>
 #include <snlog/snlog.hpp>
 #include <why3wrap/why3wrap.hpp>
-#include <smtlit/smtlit.hpp>
+#include <smtlib2tools/smtlit-presets.hpp>
+#include <smtlib2tools/smtlib2-annotations.hpp>
 #include <gpid/core/errors.hpp>
 #include <why3-whyml-source.hpp>
 
@@ -41,13 +42,13 @@ struct W3WML_LSet_LRec {
 
 W3WML_LSet::W3WML_LSet(const std::string& filename) {
     try {
-        smtlit::GenerationSet gset =
-            smtlit::generate_literals
-            <smtlit::GenerationSource::File, smtlit::GenerationPreset::WhyML>
+        smtlib2::GenerationSet gset =
+            smtlib2::generate_literals
+            <smtlib2::GenerationSource::File, smtlib2::GenerationPreset::WhyML>
             (filename);
-        for (const smtlit::smtlit_t& lit : gset.get_literals())
-            literals.push_back(smtlit::ident(lit));
-        references = gset.get_annotated(smtlit::annot_whyml_ref);
+        for (const smtlib2::smtlit_t& lit : gset.get_literals())
+            literals.push_back(smtlib2::ident(lit));
+        references = gset.get_annotated(smtlib2::annot_whyml_ref);
     } catch (gpid::GPiDError& e) {
         snlog::l_error() << "W3WML Mlw literals recovery failed: " << e.what() << snlog::l_end;
     }

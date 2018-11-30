@@ -7,12 +7,13 @@
 #ifndef GPID_FRAMEWORK__UTILS__ABDPARSER_HPP
 #define GPID_FRAMEWORK__UTILS__ABDPARSER_HPP
 
-#include <smtlib2utils/smtlib2utils.hpp>
+#include <list>
+#include <smtlib2tools/parser-command.hpp>
 
 namespace gpid {
 
     /** \brief SMTlib 2 abducible files command handlers */
-    class AbducibleParserCommandHandler : public smtlib2utils::SMTl2CommandHandler {
+    class AbducibleParserCommandHandler : public smtlib2::SMTl2CommandHandler {
         uint32_t size = 0;
         bool auto_size = false;
 
@@ -20,9 +21,9 @@ namespace gpid {
         typename std::list<std::shared_ptr<std::string>>::iterator abdit;
         bool it_init = false;
 
-        bool handleSize(const smtlib2utils::SMTl2Command& cmd);
-        bool handleAbducible(const smtlib2utils::SMTl2Command& cmd);
-        bool handleNothing(const smtlib2utils::SMTl2Command&);
+        bool handleSize(const smtlib2::SMTl2Command& cmd);
+        bool handleAbducible(const smtlib2::SMTl2Command& cmd);
+        bool handleNothing(const smtlib2::SMTl2Command&);
     public:
         /** Handler constructor */
         AbducibleParserCommandHandler();
@@ -35,8 +36,8 @@ namespace gpid {
 
     /** \brief Parser for abducible files. */
     class AbducibleParser {
-        smtlib2utils::SMTl2StringMemory smem;
-        smtlib2utils::SMTl2CommandParser cparser;
+        smtlib2::StringMemory smem;
+        smtlib2::SMTl2CommandParser cparser;
         AbducibleParserCommandHandler chandler;
     public:
         /** Create an abducible file parser. */

@@ -1,9 +1,9 @@
-#ifndef LIB_SMTLIB2_LITERAL_TOOLS__FUNCTIONS__HEADER
-#define LIB_SMTLIB2_LITERAL_TOOLS__FUNCTIONS__HEADER
+#ifndef LIB_SMTLIB2_CPP_TOOLS__FUNCTIONS__HEADER
+#define LIB_SMTLIB2_CPP_TOOLS__FUNCTIONS__HEADER
 
-#include <smtlit/smtlit-types.hpp>
+#include <smtlib2tools/smtlib2-types.hpp>
 
-namespace smtlit {
+namespace smtlib2 {
 
     static const smtfun_t smt_and_f = smtfun_t("and", smt_bool, { smt_bool, smt_bool });
     static const smtfun_t smt_or_f =  smtfun_t("or",  smt_bool, { smt_bool, smt_bool });

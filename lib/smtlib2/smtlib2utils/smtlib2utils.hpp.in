@@ -1,7 +1,0 @@
-#ifndef LIB_SMTLIB2_UTILS__HEADER
-#define LIB_SMTLIB2_UTILS__HEADER
-
-#include <smtlib2utils/SMTlib2CommandParser.hpp>
-#include <smtlib2utils/SMTlib2TokenStringParsers.hpp>
-
-#endif

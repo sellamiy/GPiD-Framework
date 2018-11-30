@@ -1,9 +1,9 @@
-#define LIB_SMTLIB2_UTILS__SMTLIB2_TOKEN_RULES_PARSERS_CPP
+#define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_TOKEN_RULES_PARSERS_CPP
 
 #include <unordered_set>
-#include <smtlib2utils/SMTlib2TokenStringParsers.hpp>
+#include <smtlib2tools/parser-tokens.hpp>
 
-namespace smtlib2utils {
+namespace smtlib2 {
 
     static inline constexpr bool isWhitespace(char c) {
         return c == '\t' || c == '\n' || c == '\r' || c == ' ' ;

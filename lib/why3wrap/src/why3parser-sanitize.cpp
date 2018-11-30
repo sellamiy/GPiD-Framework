@@ -1,19 +1,19 @@
 #define LIB_WHY3WRAP__PARSERS_SANITIZE_CPP
 
 #include <snlog/snlog.hpp>
-#include <smtlib2utils/smtlib2utils.hpp>
+#include <smtlib2tools/parser-command.hpp>
 #include <why3wrap/why3proofutils.hpp>
 
 using strptr = std::shared_ptr<std::string>;
 
 namespace why3wrap {
 
-    class Sanitizer : public smtlib2utils::SMTl2CommandHandler {
+    class Sanitizer : public smtlib2::SMTl2CommandHandler {
         std::stringstream ss;
 
-        bool keep(const smtlib2utils::SMTl2Command& cmd);
-        bool sanitize(const smtlib2utils::SMTl2Command& cmd);
-        bool setlogic(const smtlib2utils::SMTl2Command& cmd);
+        bool keep(const smtlib2::SMTl2Command& cmd);
+        bool sanitize(const smtlib2::SMTl2Command& cmd);
+        bool setlogic(const smtlib2::SMTl2Command& cmd);
     public:
         Sanitizer();
 
@@ -60,22 +60,22 @@ Sanitizer::Sanitizer() {
     handlers["set-logic"] = std::bind(&Sanitizer::setlogic, this, std::placeholders::_1);
 }
 
-bool Sanitizer::keep(const smtlib2utils::SMTl2Command& cmd) {
+bool Sanitizer::keep(const smtlib2::SMTl2Command& cmd) {
     ss << cmd << '\n'; return true;
 }
 
-bool Sanitizer::sanitize(const smtlib2utils::SMTl2Command&) {
+bool Sanitizer::sanitize(const smtlib2::SMTl2Command&) {
     return true;
 }
 
-bool Sanitizer::setlogic(const smtlib2utils::SMTl2Command&) {
+bool Sanitizer::setlogic(const smtlib2::SMTl2Command&) {
     ss << "(set-logic ALL)" << '\n' ; return true;
 }
 
 extern strptr why3wrap::vc_sanitization(strptr data) {
-    smtlib2utils::SMTl2StringMemory smem;
+    smtlib2::StringMemory smem;
     Sanitizer sanitizer;
-    smtlib2utils::SMTl2CommandParser cparser(data, smem);
+    smtlib2::SMTl2CommandParser cparser(data, smem);
     cparser.initialize();
     cparser.parse(sanitizer);
     return sanitizer.getSanitizedScript();

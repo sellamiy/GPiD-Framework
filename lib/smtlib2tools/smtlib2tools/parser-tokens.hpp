@@ -1,10 +1,10 @@
-#ifndef LIB_SMTLIB2_UTILS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
-#define LIB_SMTLIB2_UTILS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
+#ifndef LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
+#define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
 
-#include <string>
 #include <list>
+#include <smtlib2tools/smtlib2-defs.hpp>
 
-namespace smtlib2utils {
+namespace smtlib2 {
 
     struct SMTlib2TokenResult {
         const std::string& source;
@@ -45,9 +45,8 @@ namespace smtlib2utils {
             : content(o.content), start(o.start), end(o.end) {}
     };
 
-    bool isReserved(const std::string& word);
     inline bool isReserved(const SMTlib2TokenResult& tk) {
-        return isReserved(tk.value());
+        return is_reserved(tk.value());
     }
 
     SMTlib2TokenResult nextSimpleSymbol(const std::string& source, uint32_t start=0);

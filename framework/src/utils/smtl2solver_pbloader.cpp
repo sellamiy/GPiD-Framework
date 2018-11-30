@@ -5,7 +5,7 @@
 namespace gpid {
 namespace smtl2 {
 
-    class SMTl2PCH_ProblemLoader : public smtlib2utils::SMTl2CommandHandler {
+    class SMTl2PCH_ProblemLoader : public smtlib2::SMTl2CommandHandler {
         SMTl2SolverManager& ctx;
 
         using constraint = std::shared_ptr<std::string>;
@@ -17,17 +17,17 @@ namespace smtl2 {
 
         void ensure_iteration();
 
-        bool handleAssert(const smtlib2utils::SMTl2Command& cmd);
-        bool handleDeclaration(const smtlib2utils::SMTl2Command& cmd);
-        bool handleSetting(const smtlib2utils::SMTl2Command& cmd);
-        bool handleNope(const smtlib2utils::SMTl2Command&);
-        bool handleSkip(const smtlib2utils::SMTl2Command& cmd);
-        bool handleEcho(const smtlib2utils::SMTl2Command& cmd);
-        bool handleExit(const smtlib2utils::SMTl2Command&);
-        bool handleReset(const smtlib2utils::SMTl2Command& cmd);
-        bool handleResetAssertions(const smtlib2utils::SMTl2Command&);
-        bool handleGetAssertions(const smtlib2utils::SMTl2Command&);
-        bool handleGetSetting(const smtlib2utils::SMTl2Command& cmd);
+        bool handleAssert(const smtlib2::SMTl2Command& cmd);
+        bool handleDeclaration(const smtlib2::SMTl2Command& cmd);
+        bool handleSetting(const smtlib2::SMTl2Command& cmd);
+        bool handleNope(const smtlib2::SMTl2Command&);
+        bool handleSkip(const smtlib2::SMTl2Command& cmd);
+        bool handleEcho(const smtlib2::SMTl2Command& cmd);
+        bool handleExit(const smtlib2::SMTl2Command&);
+        bool handleReset(const smtlib2::SMTl2Command& cmd);
+        bool handleResetAssertions(const smtlib2::SMTl2Command&);
+        bool handleGetAssertions(const smtlib2::SMTl2Command&);
+        bool handleGetSetting(const smtlib2::SMTl2Command& cmd);
     public:
         SMTl2PCH_ProblemLoader(SMTl2SolverManager& ctx) : ctx(ctx) {
             handlers["assert"] =
@@ -126,63 +126,63 @@ namespace smtl2 {
         constraint next();
     };
 
-    bool SMTl2PCH_ProblemLoader::handleAssert(const smtlib2utils::SMTl2Command& cmd) {
+    bool SMTl2PCH_ProblemLoader::handleAssert(const smtlib2::SMTl2Command& cmd) {
         conslist.push_back(cmd.getDataPtr());
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleDeclaration(const smtlib2utils::SMTl2Command& cmd) {
+    bool SMTl2PCH_ProblemLoader::handleDeclaration(const smtlib2::SMTl2Command& cmd) {
         ctx.decls.push_back(cmd);
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleSetting(const smtlib2utils::SMTl2Command& cmd) {
+    bool SMTl2PCH_ProblemLoader::handleSetting(const smtlib2::SMTl2Command& cmd) {
         ctx.opts.push_back(cmd);
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleNope(const smtlib2utils::SMTl2Command&) {
+    bool SMTl2PCH_ProblemLoader::handleNope(const smtlib2::SMTl2Command&) {
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleSkip(const smtlib2utils::SMTl2Command& cmd) {
+    bool SMTl2PCH_ProblemLoader::handleSkip(const smtlib2::SMTl2Command& cmd) {
         snlog::l_warn()
             << "Unauthorized SMTlib2 command in problem file (skipped): "
             << cmd.getName() << snlog::l_end;
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleEcho(const smtlib2utils::SMTl2Command& cmd) {
+    bool SMTl2PCH_ProblemLoader::handleEcho(const smtlib2::SMTl2Command& cmd) {
         snlog::l_message() << cmd.getData() << snlog::l_end;
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleExit(const smtlib2utils::SMTl2Command&) {
+    bool SMTl2PCH_ProblemLoader::handleExit(const smtlib2::SMTl2Command&) {
         snlog::l_info() << "Instructed to exit through the problem" << snlog::l_end;
         return false;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleReset(const smtlib2utils::SMTl2Command& cmd) {
+    bool SMTl2PCH_ProblemLoader::handleReset(const smtlib2::SMTl2Command& cmd) {
         handleResetAssertions(cmd);
         ctx.opts.clear();
         ctx.decls.clear();
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleResetAssertions(const smtlib2utils::SMTl2Command&) {
+    bool SMTl2PCH_ProblemLoader::handleResetAssertions(const smtlib2::SMTl2Command&) {
         conslist.clear();
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleGetAssertions(const smtlib2utils::SMTl2Command&) {
+    bool SMTl2PCH_ProblemLoader::handleGetAssertions(const smtlib2::SMTl2Command&) {
         for (constraint asptr : conslist) {
             snlog::l_message() << *asptr << snlog::l_end;
         }
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleGetSetting(const smtlib2utils::SMTl2Command& cmd) {
-        for (smtlib2utils::SMTl2Command& setting : ctx.opts) {
+    bool SMTl2PCH_ProblemLoader::handleGetSetting(const smtlib2::SMTl2Command& cmd) {
+        for (smtlib2::SMTl2Command& setting : ctx.opts) {
             if (setting.getData().find(cmd.getData()) != std::string::npos) {
                 snlog::l_message() << setting.getData() << snlog::l_end;
                 return true;
@@ -222,8 +222,8 @@ void SMTl2SolverProblemLoader::load(std::string filename, std::string language) 
                         << snlog::l_end << snlog::l_warn
                         << "Bruteforcing input file..." << snlog::l_end;
     }
-    parser = std::unique_ptr<smtlib2utils::SMTl2CommandParser>
-        (new smtlib2utils::SMTl2CommandParser(filename, ctx.memory));
+    parser = std::unique_ptr<smtlib2::SMTl2CommandParser>
+        (new smtlib2::SMTl2CommandParser(filename, ctx.memory));
     parser->initialize();
     parser->parse(*handler);
     if (!parser->valid()) {

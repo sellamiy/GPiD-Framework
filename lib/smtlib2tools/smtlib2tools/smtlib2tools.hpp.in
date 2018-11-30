@@ -1,0 +1,12 @@
+#ifndef LIB_SMTLIB2_CPP_TOOLS__HEADER
+#define LIB_SMTLIB2_CPP_TOOLS__HEADER
+
+#include <smtlib2tools/smtlib2-annotations.hpp>
+#include <smtlib2tools/smtlib2-functions.hpp>
+
+#include <smtlib2tools/smtlit-presets.hpp>
+
+#include <smtlib2tools/parser-command.hpp>
+#include <smtlib2tools/parser-tokens.hpp>
+
+#endif

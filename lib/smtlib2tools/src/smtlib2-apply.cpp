@@ -1,11 +1,11 @@
-#define LIB_SMTLIB2_LITERAL_TOOLS__CORE__CPP
+#define LIB_SMTLIB2_CPP_TOOLS__CORE__CPP
 
 #include <sstream>
-#include <smtlit/smtlit-config.hpp>
+#include <smtlib2tools/smtlib2-defs.hpp>
 
-using namespace smtlit;
+using namespace smtlib2;
 
-extern smtlit_t smtlit::apply(const smtfun_t& f, const smtparam_binding_set& params) {
+extern smtlit_t smtlib2::apply(const smtfun_t& f, const smtparam_binding_set& params) {
     std::stringstream ss;
     ss << "(" << ident(f);
     for (smtparam_size_t param = 0; param < plist(f).size(); ++param)

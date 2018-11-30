@@ -1,9 +1,9 @@
-#ifndef LIB_SMTLIB2_LITERAL_TOOLS__TYPES__HEADER
-#define LIB_SMTLIB2_LITERAL_TOOLS__TYPES__HEADER
+#ifndef LIB_SMTLIB2_CPP_TOOLS__TYPES__HEADER
+#define LIB_SMTLIB2_CPP_TOOLS__TYPES__HEADER
 
-#include <smtlit/smtlit-config.hpp>
+#include <smtlib2tools/smtlib2-defs.hpp>
 
-namespace smtlit {
+namespace smtlib2 {
 
     static const smttype_t smt_bool = "Bool";
     static const smttype_t smt_int = "Int";

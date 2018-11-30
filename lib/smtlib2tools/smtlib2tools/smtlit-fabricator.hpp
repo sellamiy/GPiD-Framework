@@ -1,9 +1,9 @@
-#ifndef LIB_SMTLIB2_LITERAL_TOOLS__FABRICATOR__HEADER
-#define LIB_SMTLIB2_LITERAL_TOOLS__FABRICATOR__HEADER
+#ifndef LIB_SMTLIB2_CPP_TOOLS__LITERAL_FABRICATOR__HEADER
+#define LIB_SMTLIB2_CPP_TOOLS__LITERAL_FABRICATOR__HEADER
 
-#include <smtlit/smtlit-config.hpp>
+#include <smtlib2tools/smtlib2-defs.hpp>
 
-namespace smtlit {
+namespace smtlib2 {
 
     enum class FabricationPolicy {
         Apply_Simple, Apply_Symmetric

@@ -36,8 +36,8 @@ foreach(template ${LIBWHY3WRAP_HEADERS_TEMPLATES})
   add_dependencies(why3wrap-static ${template_name}-why3-edit)
   add_dependencies(why3wrap-shared ${template_name}-why3-edit)
 endforeach()
-target_link_libraries(why3wrap-static snlog smtlib2utils-static lisptp-static)
-target_link_libraries(why3wrap-shared snlog smtlib2utils-shared lisptp-shared)
+target_link_libraries(why3wrap-static snlog smtlib2tools-static lisptp-static)
+target_link_libraries(why3wrap-shared snlog smtlib2tools-shared lisptp-shared)
 target_include_directories(why3wrap-static PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}" "${LOCAL_LIB_HEADERS_DIR}" ${PYTHON_INCLUDE_DIRS})
 target_include_directories(why3wrap-shared PUBLIC

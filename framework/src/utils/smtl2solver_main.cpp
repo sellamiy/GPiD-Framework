@@ -11,10 +11,10 @@ using AssertionsT = std::map<uint64_t, std::list<std::shared_ptr<std::string>>>;
 
 static inline void wsl2s_x_context
 (std::ofstream& target, SMTl2SolverInterface::ContextManagerT& ctx) {
-    for (smtlib2utils::SMTl2Command& cmd : ctx.opts) {
+    for (smtlib2::SMTl2Command& cmd : ctx.opts) {
         target << cmd << std::endl;
     }
-    for (smtlib2utils::SMTl2Command& cmd : ctx.decls) {
+    for (smtlib2::SMTl2Command& cmd : ctx.decls) {
         target << cmd << std::endl;
     }
 }

@@ -1,17 +1,16 @@
-#define LIB_SMTLIB2_LITERAL_TOOLS__PRESET__MLB__CPP
+#define LIB_SMTLIB2_CPP_TOOLS__PRESET__MLB__CPP
 
 #include <fstream>
 #include <sstream>
 #include <snlog/snlog.hpp>
-#include <smtlib2utils/smtlib2utils.hpp>
-#include <smtlit/smtlit-annotations.hpp>
-#include <smtlit/smtlit-types.hpp>
-#include <smtlit/smtlit-presets.hpp>
-#include <smtlit/smtlit-fabricator.hpp>
+#include <smtlib2tools/smtlib2-annotations.hpp>
+#include <smtlib2tools/smtlib2-types.hpp>
+#include <smtlib2tools/parser-command.hpp>
+#include <smtlib2tools/parser-tokens.hpp>
+#include <smtlib2tools/smtlit-presets.hpp>
 
 using namespace std;
-using namespace smtlit;
-using namespace smtlib2utils;
+using namespace smtlib2;
 
 class MlbHandler : public SMTl2CommandHandler {
 
@@ -105,7 +104,7 @@ MlbHandler::MlbHandler(SmtLitFabricator& fabricator, SmtFunStorage& funstorage)
 
 template<typename SourceT>
 static const GenerationSet loc_generate(const SourceT& source) {
-    SMTl2StringMemory smem;
+    StringMemory smem;
     GenerationSet result;
     SmtFunStorage funs;
     SmtLitFabricator& fabricator = result.get_fabricator();
@@ -120,13 +119,13 @@ static const GenerationSet loc_generate(const SourceT& source) {
 }
 
 template<> const GenerationSet
-smtlit::generate_literals<GenerationSource::File, GenerationPreset::Mlb>(const string& filename) {
+smtlib2::generate_literals<GenerationSource::File, GenerationPreset::Mlb>(const string& filename) {
     // Wrap through the smtlib2utils file interface
     return loc_generate<string>(filename);
 }
 
 template<> const GenerationSet
-smtlit::generate_literals<GenerationSource::Raw, GenerationPreset::Mlb>(const string& data) {
+smtlib2::generate_literals<GenerationSource::Raw, GenerationPreset::Mlb>(const string& data) {
     // Wrap through the smtlib2utils string data (via ptr) interface
     shared_ptr<string> _dptr = shared_ptr<string>(new string(data));
     return loc_generate<shared_ptr<string>>(_dptr);

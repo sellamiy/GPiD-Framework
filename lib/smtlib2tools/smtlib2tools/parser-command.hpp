@@ -1,12 +1,12 @@
-#ifndef LIB_SMTLIB2_UTILS__SMTLIB2_COMMAND_PARSER_HPP
-#define LIB_SMTLIB2_UTILS__SMTLIB2_COMMAND_PARSER_HPP
+#ifndef LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_COMMAND_PARSER_HPP
+#define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_COMMAND_PARSER_HPP
 
 #include <map>
 #include <fstream>
 #include <functional>
-#include <smtlib2utils/StringMemory.hpp>
+#include <smtlib2tools/string-memory.hpp>
 
-namespace smtlib2utils {
+namespace smtlib2 {
 
     class SMTl2Command {
         std::string name;
@@ -39,8 +39,8 @@ namespace smtlib2utils {
     class SMTl2CommandParser {
         std::unique_ptr<SMTl2CParseEngine> engine;
     public:
-        SMTl2CommandParser(const std::string& filename, SMTl2StringMemory& allocator);
-        SMTl2CommandParser(std::shared_ptr<std::string> data, SMTl2StringMemory& allocator);
+        SMTl2CommandParser(const std::string& filename, StringMemory& allocator);
+        SMTl2CommandParser(std::shared_ptr<std::string> data, StringMemory& allocator);
         ~SMTl2CommandParser();
 
         void initialize();
