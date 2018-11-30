@@ -7,11 +7,11 @@
 #ifndef GPID_FRAMEWORK__STORAGE__ATREES_HPP
 #define GPID_FRAMEWORK__STORAGE__ATREES_HPP
 
+#include <stdutils/collections.hpp>
 #include <lcdot/dotgraph.hpp>
 
 #include <gpid/core/saitypes.hpp>
 #include <gpid/utils/hprinters.hpp>
-#include <gpid/utils/stdutils.hpp>
 
 namespace gpid {
 
@@ -84,7 +84,7 @@ namespace gpid {
             return;
         }
         LiteralRefT l_loc = *it;
-        if (gmisc::ninmap(nodes[idx], l_loc))
+        if (stdutils::ninmap(nodes[idx], l_loc))
             nodes[idx][l_loc] = newNidx();
         insertLocal(nodes[idx][l_loc], h, ++it);
     }
@@ -97,10 +97,10 @@ namespace gpid {
     inline bool AbducibleTree<InterfaceT, HypothesisT>
     ::containsLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it) const {
         if (it == h.end()) {
-            return gmisc::inset(tnodes, idx);
+            return stdutils::inset(tnodes, idx);
         }
         LiteralRefT l_loc = *it;
-        return gmisc::inmap(nodes[idx], l_loc) ?
+        return stdutils::inmap(nodes[idx], l_loc) ?
             containsLocal(nodes[idx][l_loc], h, ++it) : false;
     }
 
@@ -154,7 +154,7 @@ namespace gpid {
     template<typename InterfaceT, typename HypothesisT>
     inline void AbducibleTree<InterfaceT, HypothesisT>::printLocal(anidx_t idx, HypothesisT& cprint,
                                                                    uint32_t clvl) {
-        if (nodes[idx].empty() && gmisc::inset(tnodes, idx)) {
+        if (nodes[idx].empty() && stdutils::inset(tnodes, idx)) {
             printlh(implicate<InterfaceT>(cprint, mapper, solver.getContextManager()));
         } else {
             for (auto p : nodes[idx]) {
@@ -175,7 +175,7 @@ namespace gpid {
     template<typename InterfaceT, typename HypothesisT>
     inline int AbducibleTree<InterfaceT, HypothesisT>::buildGraphLocal(anidx_t idx, lcdot::Graph& g) {
         if (nodes[idx].empty()) {
-            if (gmisc::inset(tnodes, idx)) {
+            if (stdutils::inset(tnodes, idx)) {
                 return g.createNode(std::to_string(idx), lcdot::types::GreenDiamondNode);
             } else {
                 return g.createNode(std::to_string(idx), lcdot::types::RedDiamondNode);
@@ -214,7 +214,7 @@ namespace gpid {
     template<typename InterfaceT, typename HypothesisT>
     inline bool AbducibleTree<InterfaceT, HypothesisT>::fwdSubsumesLocal(anidx_t idx) {
         if (nodes[idx].empty()) {
-            return gmisc::inset(tnodes, idx);
+            return stdutils::inset(tnodes, idx);
         }
         for (auto p : nodes[idx]) {
             solver.push();

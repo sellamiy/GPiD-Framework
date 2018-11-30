@@ -1,9 +1,9 @@
-#define LIB_PCTRACE__BOOTSTRAP_WEB_COMPILER_CPP
+#define LIB_STANDARD_UTILS__BOOTSTRAP_WEB_COMPILER_CPP
 
 #include <ostream>
-#include <pctrace/TraceCompilers.hpp>
+#include <stdutils/traces-bootstrap.hpp>
 
-using namespace pctrace;
+using namespace stdutils;
 
 static uint64_t INTERN_LPCT_BWC_ID = 0;
 static inline uint64_t next_id() {
@@ -74,27 +74,27 @@ static inline void bootstrap_footer(std::ostream& stream) {
 
 
 
-void pctrace::BootstrapWebCompiler::open(const std::string& title) const {
+void BootstrapWebCompiler::open(const std::string& title) const {
     bootstrap_header(stream);
     bootstrap_algorithm(stream, title);
 }
 
-void pctrace::BootstrapWebCompiler::maps(const std::string& key, const std::string& val) const {
+void BootstrapWebCompiler::maps(const std::string& key, const std::string& val) const {
     bootstrap_mapping(stream, key, val);
 }
 
-void pctrace::BootstrapWebCompiler::command(const std::string& c) const {
+void BootstrapWebCompiler::command(const std::string& c) const {
     bootstrap_command(stream, c);
 }
 
-void pctrace::BootstrapWebCompiler::encapsulate(const std::string& key, const std::string& val) const {
+void BootstrapWebCompiler::encapsulate(const std::string& key, const std::string& val) const {
     bootstrap_collapse(stream, key, val);
 }
 
-void pctrace::BootstrapWebCompiler::decapsulate() const {
+void BootstrapWebCompiler::decapsulate() const {
     bootstrap_collapse_end(stream);
 }
 
-void pctrace::BootstrapWebCompiler::close() const {
+void BootstrapWebCompiler::close() const {
     bootstrap_footer(stream);
 }

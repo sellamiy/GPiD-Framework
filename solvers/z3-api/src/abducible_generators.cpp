@@ -1,7 +1,7 @@
 #define Z3_API_INTERFACE_FOR_GPID__ABDUCIBLE_GENERATORS__CPP
 
 #include <functional>
-#include <gpid/utils/stdutils.hpp>
+#include <stdutils/collections.hpp>
 #include <z3-api-abdgen.hpp>
 
 using namespace gpid;
@@ -107,7 +107,7 @@ static std::map<std::string, AbdgenFunctionT> abg_z3_abdgeneration_table = {
 };
 
 void Z3AbducibleLiteralsGenerator::generate(const std::string generator) {
-    if (gmisc::inmap(abg_z3_abdgeneration_table, generator)) {
+    if (stdutils::inmap(abg_z3_abdgeneration_table, generator)) {
         handler._cpt = abg_z3_abdgeneration_table[generator](pbld, mapper, links);
     } else {
         snlog::l_fatal() << "Unknown z3 abducible generator: " << generator << snlog::l_end;

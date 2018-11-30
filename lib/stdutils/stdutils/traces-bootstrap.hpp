@@ -1,14 +1,14 @@
 /**
- * \file pctrace/TraceCompilers.hpp
+ * \file stdutils/traces-bootstrap.hpp
  * \author Yanis Sellami
  * \date 2018
  */
-#ifndef LIB_PCTRACE__TRACE_COMPILERS_HPP
-#define LIB_PCTRACE__TRACE_COMPILERS_HPP
+#ifndef LIB_STANDARD_UTILS__TRACE_COMPILERS_BOOTSTRAP_HPP
+#define LIB_STANDARD_UTILS__TRACE_COMPILERS_BOOTSTRAP_HPP
 
-#include <pctrace/TraceClass.hpp>
+#include <stdutils/traces.hpp>
 
-namespace pctrace {
+namespace stdutils {
 
     /** Trace compilation backend for bootstrap html pages. */
     class BootstrapWebCompiler : public TraceCompiler {

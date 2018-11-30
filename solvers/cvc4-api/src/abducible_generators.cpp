@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <cvc4-api-abdgen.hpp>
-#include <gpid/utils/stdutils.hpp>
+#include <stdutils/collections.hpp>
 
 using namespace gpid;
 
@@ -103,7 +103,7 @@ static std::map<std::string, AbdgenFunctionT> abg_cvc4_abdgeneration_table = {
 };
 
 void CVC4AbducibleLiteralsGenerator::generate(const std::string generator) {
-    if (gmisc::inmap(abg_cvc4_abdgeneration_table, generator)) {
+    if (stdutils::inmap(abg_cvc4_abdgeneration_table, generator)) {
         handler._cpt = abg_cvc4_abdgeneration_table[generator](pbld, mapper, links);
     } else {
         snlog::l_fatal() << "Unknown cvc4 abducible generator: " << generator << snlog::l_end;

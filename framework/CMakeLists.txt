@@ -57,13 +57,10 @@ set_target_properties(gpid-core-shared PROPERTIES
   VERSION ${VERSION}
   CLEAN_DIRECT_OUTPUT 1)
 
-target_link_libraries(gpid-core-static starray-static lcdot-static smtlib2utils-static smtlit-static snlog)
-target_link_libraries(gpid-core-shared starray-shared lcdot-shared smtlib2utils-shared smtlit-shared snlog)
-
-if(GPID_INSTRUMENTATION)
-  target_link_libraries(gpid-core-static pctrace-static infoline-static)
-  target_link_libraries(gpid-core-shared pctrace-shared infoline-shared)
-endif()
+target_link_libraries(gpid-core-static
+  stdutils-static starray-static lcdot-static smtlib2utils-static smtlit-static snlog)
+target_link_libraries(gpid-core-shared
+  stdutils-shared starray-shared lcdot-shared smtlib2utils-shared smtlit-shared snlog)
 # ==============================================================================
 # Install framework
 # ==============================================================================

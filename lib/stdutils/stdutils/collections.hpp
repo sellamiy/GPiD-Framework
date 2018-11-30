@@ -1,16 +1,16 @@
 /**
- * \file gpid/utils/stdutils.hpp
- * \brief Misc. utils for standard library
+ * \file stdutils/collections.hpp
+ * \brief Misc. utils for standard library's collections
  * \author Yanis Sellami
  * \date 2018
  */
-#ifndef GPID_FRAMEWORK__UTILS__STDUTILS_HPP
-#define GPID_FRAMEWORK__UTILS__STDUTILS_HPP
+#ifndef LIB_STANDARD_UTILS__COLLECTIONS_HPP
+#define LIB_STANDARD_UTILS__COLLECTIONS_HPP
 
 #include <map>
 #include <set>
 
-namespace gmisc {
+namespace stdutils {
 
     /** Check if a standard set contains a given key. */
     template<class T>

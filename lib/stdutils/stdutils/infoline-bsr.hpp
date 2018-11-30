@@ -1,10 +1,10 @@
 /**
- * \file infoline/bsr-infoline.hpp
+ * \file stdutils/infoline-bsr.hpp
  * \author Yanis Sellami
  * \date 2018
  */
-#ifndef LIB_INFOLINE__BACKSLASH_R_INFOLINE_HPP
-#define LIB_INFOLINE__BACKSLASH_R_INFOLINE_HPP
+#ifndef LIB_STANDARD_UTILS__BACKSLASH_R_INFOLINE_HPP
+#define LIB_STANDARD_UTILS__BACKSLASH_R_INFOLINE_HPP
 
 #include <map>
 #include <string>
@@ -15,7 +15,7 @@
 
 #define BSR_INFOLINE_UPDATE_DELAY 1000
 
-namespace infoline {
+namespace stdutils {
 
     struct InfoData {
         InfoData(const std::string& dname) : dname(dname) {}

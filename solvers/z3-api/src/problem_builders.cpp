@@ -1,7 +1,7 @@
 #define Z3_API_INTERFACE_FOR_GPID__PROBLEM_BUILDERS__CPP
 
 #include <functional>
-#include <gpid/utils/stdutils.hpp>
+#include <stdutils/collections.hpp>
 #include <z3-api-loaders.hpp>
 
 using namespace gpid;
@@ -42,7 +42,7 @@ static std::map<std::string, LanguageldFunctionT> pld_z3_language_table = {
 };
 
 void Z3ProblemLoader::load(const std::string filename, const std::string language) {
-    if (gmisc::inmap(pld_z3_language_table, language)) {
+    if (stdutils::inmap(pld_z3_language_table, language)) {
         pld_z3_language_table[language](filename, consld);
     } else {
         snlog::l_fatal() << "Unknown z3 input language: " << language << snlog::l_end;

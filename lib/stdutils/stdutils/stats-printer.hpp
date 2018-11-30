@@ -1,11 +1,11 @@
 /**
- * \file witchw/WitchPrinters.hpp
- * \brief Magic definitions for printing statistics.
+ * \file stdutils/stats-printer.hpp
+ * \brief Definitions for printing statistics.
  * \author Yanis Sellami
  * \date 2017
  */
-#ifndef LIB_WITCHW__WITCH_PRINTERS_HPP
-#define LIB_WITCHW__WITCH_PRINTERS_HPP
+#ifndef LIB_STANDARD_UTILS__STATS_PRINTERS_HPP
+#define LIB_STANDARD_UTILS__STATS_PRINTERS_HPP
 
 #include <cstdint>
 #include <string>
@@ -13,10 +13,10 @@
 #include <iostream>
 #include <sstream>
 
-namespace witchw {
+namespace stdutils {
 
     /** \brief A printable statistic */
-    struct wStatisticData {
+    struct StatisticData {
         /** \brief Statistic name */
         const std::string key;
         /** \brief Statistic value */
@@ -24,30 +24,30 @@ namespace witchw {
         /** \brief Statistic depth level */
         const uint32_t level;
         /** \brief Initializing constructor */
-        wStatisticData(const std::string& key, const std::string& data, uint32_t level = 1)
+        StatisticData(const std::string& key, const std::string& data, uint32_t level = 1)
             : key(key), data(data), level(level) {}
         /** \brief Copy constructor */
-        wStatisticData(const wStatisticData& cpy)
+        StatisticData(const StatisticData& cpy)
             : key(cpy.key), data(cpy.data), level(cpy.level) {}
     };
 
     /** \brief A set of printable statistics */
-    struct wStatistics {
+    struct StatisticPrinter {
         /** \brief Header message */
-        const std::string wStatisticsHeader =
+        const std::string StatisticsHeader =
             "----------------------------------------------------\n"
             "-------------------- Statistics --------------------\n"
             "----------------------------------------------------\n\n";
         /** \brief Footer message */
-        const std::string wStatisticsFooter =
+        const std::string StatisticsFooter =
             "\n----------------------------------------------------\n";
         /** \brief Statistics to print */
-        std::list<wStatisticData> stats;
+        std::list<StatisticData> stats;
         /** \brief Add a new statistic to the current group. */
-        inline void addStatistic(const wStatisticData& s) { stats.push_back(s); }
+        inline void addStatistic(const StatisticData& s) { stats.push_back(s); }
         /** \brief Create a new group of statistics. */
         inline void addStatisticGroup()
-        { if (stats.size() > 0) stats.push_back(wStatisticData("", "", 0)); }
+        { if (stats.size() > 0) stats.push_back(StatisticData("", "", 0)); }
 
         /** \brief Create and add a new statistic to the current group. */
         template <typename printable>
@@ -55,24 +55,24 @@ namespace witchw {
         {
             std::stringstream dvalue;
             dvalue << data;
-            const wStatisticData std(key, dvalue.str(), level);
+            const StatisticData std(key, dvalue.str(), level);
             stats.push_back(std);
         }
     };
 
-    inline std::ostream& operator<<(std::ostream& out, const wStatisticData& d) {
+    inline std::ostream& operator<<(std::ostream& out, const StatisticData& d) {
         if (d.level == 0) return out << std::endl;
         for (uint32_t i = 0; i < d.level; i++) out << " ";
         return out << "(*) " << d.key << " : " << d.data << std::endl;
     }
 
-    inline std::ostream& operator<<(std::ostream& out, const std::list<wStatisticData>& l) {
-        for (wStatisticData d : l) out << d;
+    inline std::ostream& operator<<(std::ostream& out, const std::list<StatisticData>& l) {
+        for (StatisticData d : l) out << d;
         return out;
     }
 
-    inline std::ostream& operator<<(std::ostream& out, const wStatistics& d) {
-        return out << d.wStatisticsHeader << d.stats << d.wStatisticsFooter;
+    inline std::ostream& operator<<(std::ostream& out, const StatisticPrinter& d) {
+        return out << d.StatisticsHeader << d.stats << d.StatisticsFooter;
     }
 
 }

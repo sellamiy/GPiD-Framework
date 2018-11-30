@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <minisatp-abdgen.hpp>
-#include <gpid/utils/stdutils.hpp>
+#include <stdutils/collections.hpp>
 
 using namespace gpid;
 using namespace Minisat;
@@ -62,7 +62,7 @@ static std::map<std::string, AbdgenFunctionT> abg_minisat_abdgeneration_table = 
 };
 
 void MinisatLiteralsGenerator::generate(const std::string generator) {
-    if (gmisc::inmap(abg_minisat_abdgeneration_table, generator)) {
+    if (stdutils::inmap(abg_minisat_abdgeneration_table, generator)) {
         handler._cpt = abg_minisat_abdgeneration_table[generator](pbld, mapper, links);
     } else {
         snlog::l_fatal() << "Unknown minisat abducible generator: " << generator << snlog::l_end;

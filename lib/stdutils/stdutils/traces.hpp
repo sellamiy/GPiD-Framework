@@ -1,15 +1,15 @@
 /**
- * \file pctrace/TraceClass.hpp
+ * \file stdutils/traces.hpp
  * \author Yanis Sellami
  * \date 2018
  */
-#ifndef LIB_PCTRACE__TRACE_CLASS_HPP
-#define LIB_PCTRACE__TRACE_CLASS_HPP
+#ifndef LIB_STANDARD_UTILS__TRACES_CLASS_HPP
+#define LIB_STANDARD_UTILS__TRACES_CLASS_HPP
 
 #include <string>
 #include <list>
 
-namespace pctrace {
+namespace stdutils {
 
     /** Abstract base class for trace compilation backends. */
     class TraceCompiler {

@@ -54,8 +54,8 @@ foreach(template_name ${ILINVA_SOURCES_TEMPLATES})
   list(APPEND ILINVA_PREPROCESSED_TARGETS ${template_info}-multi)
 endforeach()
 # ==============================================================================
-set(CORE_STATIC_LINK_LIBRARIES gpid-core-static witchw-static cxxopts Threads::Threads)
-set(CORE_SHARED_LINK_LIBRARIES gpid-core-shared witchw-shared cxxopts Threads::Threads)
+set(CORE_STATIC_LINK_LIBRARIES gpid-core-static cxxopts Threads::Threads)
+set(CORE_SHARED_LINK_LIBRARIES gpid-core-shared cxxopts Threads::Threads)
 # ------------------------------------------------------------------------------
 function(add_split_exec interface name source)
   set(SEXEC_EXECUTABLE_NAME gpid-${name}-${interface})

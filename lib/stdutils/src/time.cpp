@@ -1,13 +1,13 @@
-#define LIB_WITCHW__WTIME_CPP
+#define LIB_STANDARD_UTILS__TIME_CPP
 
 #include <sstream>
 #include <iostream>
 
-#include <witchw/WitchTime.hpp>
+#include <stdutils/time.hpp>
 
 using namespace std;
 
-namespace witchw {
+namespace stdutils {
 
     template <typename duration_type>
     static inline string dcst_duration
@@ -31,12 +31,12 @@ namespace witchw {
         return str.str();
     }
 
-    void wClock::registerTime(const string& key) {
+    void StdClock::registerTime(const string& key) {
         chrono::high_resolution_clock::time_point tp = chrono::high_resolution_clock::now();
         registered_cts[key] = tp;
     }
 
-    string wClock::selectDurationUnit(const string& unit) {
+    string StdClock::selectDurationUnit(const string& unit) {
         if (unit == "nanoseconds")  selected_dunit = unit;
         if (unit == "microseconds") selected_dunit = unit;
         if (unit == "milliseconds") selected_dunit = unit;
@@ -48,31 +48,31 @@ namespace witchw {
         return unit;
     }
 
-    string wClock::nanoseconds(const string& origin, const string& target) const {
+    string StdClock::nanoseconds(const string& origin, const string& target) const {
         return dcst_duration<chrono::nanoseconds>(registered_cts, origin, target) + " ns";
     }
-    string wClock::microseconds(const string& origin, const string& target) const {
+    string StdClock::microseconds(const string& origin, const string& target) const {
         return dcst_duration<chrono::microseconds>(registered_cts, origin, target) + " µs";
     }
-    string wClock::milliseconds(const string& origin, const string& target) const {
+    string StdClock::milliseconds(const string& origin, const string& target) const {
         return dcst_duration<chrono::milliseconds>(registered_cts, origin, target) + " ms";
     }
-    string wClock::seconds(const string& origin, const string& target) const {
+    string StdClock::seconds(const string& origin, const string& target) const {
         return dcst_duration<chrono::seconds>(registered_cts, origin, target) + " s";
     }
-    string wClock::minutes(const string& origin, const string& target) const {
+    string StdClock::minutes(const string& origin, const string& target) const {
         return dcst_duration<chrono::minutes>(registered_cts, origin, target) + " m";
     }
-    string wClock::hours(const string& origin, const string& target) const {
+    string StdClock::hours(const string& origin, const string& target) const {
         return dcst_duration<chrono::hours>(registered_cts, origin, target) + " h";
     }
-    string wClock::extseconds(const string& origin, const string& target) const {
+    string StdClock::extseconds(const string& origin, const string& target) const {
         string d_ms = dcyt_duration<chrono::milliseconds, chrono::seconds>(registered_cts, origin, target);
         if (d_ms.length() <= 1) d_ms = "00" + d_ms;
         else if (d_ms.length() <= 2) d_ms = "0" + d_ms;
         return dcst_duration<chrono::seconds>(registered_cts, origin, target) + "." + d_ms + " s";
     }
-    string wClock::extended(const string& origin, const string& target) const {
+    string StdClock::extended(const string& origin, const string& target) const {
         string d_h  = dcst_duration<chrono::hours>(registered_cts, origin, target);
         string d_m  = dcyt_duration<chrono::minutes, chrono::hours>(registered_cts, origin, target);
         string d_s  = dcyt_duration<chrono::seconds, chrono::minutes>(registered_cts, origin, target);
@@ -88,7 +88,7 @@ namespace witchw {
         dstr += " s";
         return dstr;
     }
-    string wClock::duration(const string& origin, const string& target) const {
+    string StdClock::duration(const string& origin, const string& target) const {
         if (selected_dunit == "nanoseconds")  return nanoseconds(origin, target);
         if (selected_dunit == "microseconds") return microseconds(origin, target);
         if (selected_dunit == "milliseconds") return milliseconds(origin, target);

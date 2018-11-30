@@ -3,7 +3,7 @@
 
 #include <cxxopts.hpp>
 #include <lcdot/dotcommand.hpp>
-#include <witchw/witchw.hpp>
+#include <stdutils/stats-controller.hpp>
 #include <gpid/gpid.hpp>
 
 /* ===== Structures ===== */
@@ -23,7 +23,7 @@ struct OptionStorage : public gpid::GPiDOptions
 
     gpid::ImpgenOptions impgen;
     gpid::instrument::InstrumentOptions instrument;
-    witchw::wController control;
+    stdutils::StatisticController control;
     bool naive = false;
     bool guniti_delegation = true;
 };

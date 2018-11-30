@@ -1,11 +1,11 @@
-#define LIB_INFOLINE__BACKSLASH_R_INFOLINE_CPP
+#define LIB_STANDARD_UTILS__BACKSLASH_R_INFOLINE_CPP
 
 #include <chrono>
 
 #include <snlog/snlog.hpp>
-#include <infoline/bsr-infoline.hpp>
+#include <stdutils/infoline-bsr.hpp>
 
-using namespace infoline;
+using namespace stdutils;
 
 void BsRInfoliner::update() const {
     std::cout << "\r[";

@@ -3,7 +3,7 @@
 
 #include <cxxopts.hpp>
 #include <lcdot/dotcommand.hpp>
-#include <witchw/witchw.hpp>
+#include <stdutils/stats-controller.hpp>
 #include <gpid/gpid.hpp>
 
 /* ===== Structures ===== */
@@ -21,7 +21,7 @@ struct OptionStorage : public gpid::GPiDOptions
 
     gpid::IlinvaOptions ilinva;
     gpid::instrument::InstrumentOptions instrument;
-    witchw::wController control;
+    stdutils::StatisticController control;
 };
 
 enum class OptionStatus {

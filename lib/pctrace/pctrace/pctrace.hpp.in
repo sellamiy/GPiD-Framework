@@ -1,6 +1,0 @@
-#ifndef LIB_PCTRACE__HEADER
-#define LIB_PCTRACE__HEADER
-
-#include <pctrace/TraceCompilers.hpp>
-
-#endif

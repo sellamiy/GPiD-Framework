@@ -6,7 +6,7 @@
 #ifndef GPID_FRAMEWORK__INSTRUMENT__WEBTRACE_HPP
 #define GPID_FRAMEWORK__INSTRUMENT__WEBTRACE_HPP
 
-#include <pctrace/pctrace.hpp>
+#include <stdutils/traces-bootstrap.hpp>
 
 namespace gpid {
 namespace instrument {
@@ -17,7 +17,7 @@ namespace instrument {
      */
     class WebtraceInstrument {
 
-        pctrace::Trace tracelog;
+        stdutils::Trace tracelog;
         std::ostream& target;
         
     public:

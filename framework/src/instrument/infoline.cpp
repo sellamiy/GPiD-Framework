@@ -2,10 +2,10 @@
 
 #include <snlog/snlog.hpp>
 #include <gpid/instrument/infoline.hpp>
-#include <gpid/utils/stdutils.hpp>
+#include <stdutils/collections.hpp>
 
 using namespace gpid;
-using namespace infoline;
+using namespace stdutils;
 
 using wtch_t_counters = std::map<std::string, int64_t>;
 using wtch_t_data = std::map<std::string, std::string>;
@@ -29,7 +29,7 @@ instrument::InfolineInstrument::InfolineInstrument() {
 
 void instrument::InfolineInstrument::update_count(const std::string& key, int32_t udter)
 {
-    if (gmisc::ninmap(counter_watchers, key)) {
+    if (stdutils::ninmap(counter_watchers, key)) {
         std::shared_ptr<int64_t> nptr = std::shared_ptr<int64_t>(new int64_t(0));
         InfoDataPtr idp =
             InfoDataPtr(new PointerInfoData<int64_t, int_str>(key, nptr));
@@ -41,7 +41,7 @@ void instrument::InfolineInstrument::update_count(const std::string& key, int32_
 
 void instrument::InfolineInstrument::new_data(const std::string& key, const std::string& value)
 {
-    if (gmisc::ninmap(data_watchers, key)) {
+    if (stdutils::ninmap(data_watchers, key)) {
         std::shared_ptr<std::string> nptr = std::shared_ptr<std::string>(new std::string(value));
         InfoDataPtr idp =
             InfoDataPtr(new PointerInfoData<std::string, str_id>(key, nptr));

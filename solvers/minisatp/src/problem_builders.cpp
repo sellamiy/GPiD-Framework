@@ -4,7 +4,7 @@
 #include <minisatp-loaders.hpp>
 #include <minisat/core/Dimacs.h>
 #include <snlog/snlog.hpp>
-#include <gpid/utils/stdutils.hpp>
+#include <stdutils/collections.hpp>
 
 using namespace gpid;
 
@@ -103,7 +103,7 @@ static std::map<std::string, LanguageldFunctionT> pld_minisat_language_table = {
 };
 
 void MinisatProblemLoader::load(const std::string filename, const std::string language) {
-    if (gmisc::inmap(pld_minisat_language_table, language)) {
+    if (stdutils::inmap(pld_minisat_language_table, language)) {
         pld_minisat_language_table[language](filename, *this);
     } else {
         snlog::l_fatal() << "Unknown minisat input language: " << language << snlog::l_end;

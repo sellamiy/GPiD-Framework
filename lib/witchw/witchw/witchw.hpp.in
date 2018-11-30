@@ -1,6 +1,0 @@
-#ifndef LIB_WITCHW__HEADER
-#define LIB_WITCHW__HEADER
-
-#include <witchw/WitchControl.hpp>
-
-#endif

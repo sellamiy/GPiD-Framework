@@ -1,20 +1,20 @@
 /**
- * \file witchw/WitchTime.hpp
- * \brief Magic definitions for handling time measurements.
+ * \file stdutils/time.hpp
+ * \brief Definitions for handling time measurements.
  * \author Yanis Sellami
  * \date 2017
  */
-#ifndef LIB_WITCHW__WITCH_TIME_HPP
-#define LIB_WITCHW__WITCH_TIME_HPP
+#ifndef LIB_STANDARD_UTILS__TIME_HPP
+#define LIB_STANDARD_UTILS__TIME_HPP
 
 #include <string>
 #include <chrono>
 #include <map>
 
-namespace witchw {
+namespace stdutils {
 
     /** \brief Time measuring magic clock. */
-    class wClock {
+    class StdClock {
         std::map<std::string, std::chrono::high_resolution_clock::time_point> registered_cts;
         std::string selected_dunit = "extended";
     public:

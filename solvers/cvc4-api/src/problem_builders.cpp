@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <cvc4-api-loaders.hpp>
-#include <gpid/utils/stdutils.hpp>
+#include <stdutils/collections.hpp>
 
 using namespace gpid;
 
@@ -75,7 +75,7 @@ static std::map<std::string, LanguageldFunctionT> pld_cvc4_language_table = {
 };
 
 void CVC4ProblemLoader::load(const std::string filename, const std::string language) {
-    if (gmisc::inmap(pld_cvc4_language_table, language)) {
+    if (stdutils::inmap(pld_cvc4_language_table, language)) {
         pld_cvc4_language_table[language](filename, consld);
     } else {
         snlog::l_fatal() << "Unknown cvc4 input language: " << language << snlog::l_end;

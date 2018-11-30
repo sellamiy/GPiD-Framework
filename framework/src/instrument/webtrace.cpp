@@ -23,6 +23,6 @@ void instrument::WebtraceInstrument::reset() {
 }
 void instrument::WebtraceInstrument::terminate() {
     tracelog.traceStop();
-    pctrace::BootstrapWebCompiler compiler(target);
+    stdutils::BootstrapWebCompiler compiler(target);
     tracelog.compile(compiler);
 }

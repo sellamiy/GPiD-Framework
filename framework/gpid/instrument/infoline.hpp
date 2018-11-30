@@ -10,7 +10,7 @@
 #include <stack>
 #include <string>
 #include <memory>
-#include <infoline/infoline.hpp>
+#include <stdutils/infoline-bsr.hpp>
 
 namespace gpid {
 namespace instrument {
@@ -21,7 +21,7 @@ namespace instrument {
      */
     class InfolineInstrument {
 
-        infoline::BsRInfoliner infoliner;
+        stdutils::BsRInfoliner infoliner;
 
         std::map<std::string, std::shared_ptr<int64_t>> counter_watchers;
         std::map<std::string, std::shared_ptr<std::string>> data_watchers;
