@@ -75,18 +75,30 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
     }
     /* Fabricate integer functions comparators */
     const std::map<std::string, std::list<std::vector<std::string>>>& papps = parser.getAppls();
+    size_t modcpt = 0;
     for (auto papp : papps) {
         /* Modulos */
         if (papp.first.find("mod") == 0) {
             const std::string modrl = papp.first.substr(3);
             for (auto varapt : papp.second) {
                 const std::string& vloc = varapt.at(0);
+                const std::string locid = "mod" + std::to_string(modcpt++);
                 smtparam_binding_set _binds;
                 _binds[1] = modrl;
                 FabricationRule _f(FilterMode::Disjunctive, FabricationPolicy::Apply_Simple,
-                                   smt_mod_f, _binds, annot_applied);
+                                   smt_mod_f, _binds, locid);
                 const FabricationFilter _exact(FilterPolicy::Content_Include, vloc);
+                _f.add_filter(_exact);
                 fabricator.fabricate(_f);
+                for (int divisor = 0; divisor < std::atoi(modrl.c_str()); ++divisor) {
+                    smtparam_binding_set _binds;
+                    _binds[1] = std::to_string(divisor);
+                    FabricationRule _g(FilterMode::Disjunctive, FabricationPolicy::Apply_Simple,
+                                       smt_eq_f("Int"), _binds, locid);
+                    const FabricationFilter _local(FilterPolicy::Annotation_Include, locid);
+                    _g.add_filter(_local);
+                    fabricator.fabricate(_g);
+                }
             }
         }
     }
