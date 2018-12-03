@@ -22,6 +22,7 @@ static const smttype_t from_whyml_type(const std::string& whymlt) {
 static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser& parser) {
     const FabricationFilter coreConstFilter(FilterPolicy::Annotation_Include, annot_core_const);
     const FabricationFilter coreMagicFilter(FilterPolicy::Annotation_Include, annot_core_magic);
+    /* Fabricate boolean comparators */
     if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "bool")) {
         FabricationRule _f0
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_not_f, annot_applied);
@@ -39,6 +40,7 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
         fabricator.fabricate(_f1);
         fabricator.fabricate(_f2);
     }
+    /* Fabricate integer comparators */
     if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "int")) {
         FabricationRule _f0
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_eq_f("Int"), annot_applied);
@@ -70,6 +72,23 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
         fabricator.fabricate(_f3);
         fabricator.fabricate(_f4);
         fabricator.fabricate(_f5);
+    }
+    /* Fabricate integer functions comparators */
+    const std::map<std::string, std::list<std::vector<std::string>>>& papps = parser.getAppls();
+    for (auto papp : papps) {
+        /* Modulos */
+        if (papp.first.find("mod") == 0) {
+            const std::string modrl = papp.first.substr(3);
+            for (auto varapt : papp.second) {
+                const std::string& vloc = varapt.at(0);
+                smtparam_binding_set _binds;
+                _binds[1] = modrl;
+                FabricationRule _f(FilterMode::Disjunctive, FabricationPolicy::Apply_Simple,
+                                   smt_mod_f, _binds, annot_applied);
+                const FabricationFilter _exact(FilterPolicy::Content_Include, vloc);
+                fabricator.fabricate(_f);
+            }
+        }
     }
 }
 

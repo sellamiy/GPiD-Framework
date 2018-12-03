@@ -9,6 +9,7 @@ using namespace std;
 #include "error-listener.hpp"
 #include "vextract-listener.hpp"
 #include "lextract-listener.hpp"
+#include "aplextract-listener.hpp"
 
 namespace why3cpp {
     namespace whyantlr {
@@ -18,6 +19,7 @@ namespace why3cpp {
             map<string, string> vars;
             map<string, string> lits;
             set<string> refs;
+            map<string, list<vector<string>>> appls;
             bool valid;
             bool extracted;
         public:
@@ -32,6 +34,7 @@ namespace why3cpp {
             inline const map<string, string>& getVars() const { return vars; }
             inline const map<string, string>& getLits() const { return lits; }
             inline const set<string>& getRefs() const { return refs; }
+            inline const map<string, list<vector<string>>>& getAppls() const { return appls; }
         };
 
     }
@@ -77,6 +80,12 @@ void why3cpp::whyantlr::Extractor::extract() {
 
         lits = llistener.getLiterals();
 
+        /* Extract applications */
+        AplextractWhyMLListener aplistener;
+        walker.walk(&aplistener, data);
+
+        appls = aplistener.getApplications();
+
         /* Conclude */
         valid = !errl.hasDetectedErrors();
     } else {
@@ -115,4 +124,10 @@ const set<string>& why3cpp::ExtractorParser::getRefs() const {
     if (!parser->hasExtract())
         parser->extract();
     return parser->getRefs();
+}
+
+const map<string, list<vector<string>>>& why3cpp::ExtractorParser::getAppls() const {
+    if (!parser->hasExtract())
+        parser->extract();
+    return parser->getAppls();
 }

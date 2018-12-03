@@ -92,19 +92,36 @@ static inline int whdl_tokenize(const Why3ToolsOpts& opts) {
 
 static inline int whdl_extract(const Why3ToolsOpts& opts) {
     shared_ptr<ExtractorParser> parser;
+
     for (const string& filename : opts.inputs) {
+
         parser = shared_ptr<ExtractorParser>(new ExtractorParser(filename));
+
         l_info() << filename << " (variables)" << l_end;
         for (const pair<string, string>& var : parser->getVars()) {
             l_message() << var.first << " (" << var.second << ")"
                         << (parser->getRefs().count(var.first) > 0 ? " (ref)" : "")
                         << l_end;
         }
+
         l_info() << filename << " (literals)" << l_end;
         for (const pair<string, string>& lit : parser->getLits()) {
             l_message() << lit.first << " (" << lit.second << ")" << l_end;
         }
+
+        l_info() << filename << " (applications)" << l_end;
+        for (const pair<string, list<vector<string>>>& appl : parser->getAppls()) {
+            l_message() << appl.first << " (to)" << l_end;
+            for (const auto& plist : appl.second) {
+                auto& mrs = l_message() << "     ->";
+                for (const string& param : plist) {
+                    mrs << " " << param;
+                }
+                mrs << l_end;
+            }
+        }
     }
+
     if (parser->hasFailed())
         return EXIT_FAILURE;
     else

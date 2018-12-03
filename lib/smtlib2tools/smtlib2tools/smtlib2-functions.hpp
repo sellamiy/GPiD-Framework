@@ -22,6 +22,8 @@ namespace smtlib2 {
     static inline const smtfun_t smt_gt_f(const smttype_t& type)
     { return smtfun_t(">", smt_bool, { type, type }); }
 
+    static const smtfun_t smt_mod_f = smtfun_t("mod", smt_int, { smt_int, smt_int });
+
     // static const smtfun_t <ident> = smtfun_t("ident", "rtype", { "param1", "param2" });
 
 }
