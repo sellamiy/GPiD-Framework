@@ -9,7 +9,7 @@ using namespace std;
 using namespace snlog;
 using namespace why3cpp;
 
-enum class Why3Tool { None, Annotator, Tokenizer, Extractor };
+enum class Why3Tool { None, Annotator, Tokenizer, Extractor, Literalizer };
 
 struct Why3ToolsOpts {
     vector<string> inputs;
@@ -28,6 +28,7 @@ static inline OParseResult parse_opts(Why3ToolsOpts& opts, int& argc, char**& ar
             ("t,tokenize", "Tokenize the source file")
             ("a,annotate", "Annotate the source file")
             ("e,extract", "Extract elements from the source file")
+            ("l,literals", "List smtliterals built from the source file")
 
             ("input", "Input files", cxxopts::value<vector<string>>(opts.inputs))
             ;
@@ -55,6 +56,9 @@ static inline OParseResult parse_opts(Why3ToolsOpts& opts, int& argc, char**& ar
         }
         if (results.count("extract")) {
             opts.tool = Why3Tool::Extractor;
+        }
+        if (results.count("literals")) {
+            opts.tool = Why3Tool::Literalizer;
         }
 
         return OParseResult::ToForward;
@@ -128,6 +132,18 @@ static inline int whdl_extract(const Why3ToolsOpts& opts) {
         return EXIT_SUCCESS;
 }
 
+static inline int whdl_literalize(const Why3ToolsOpts& opts) {
+    shared_ptr<AnnotatorParser> parser;
+    for (const string& filename : opts.inputs) {
+        l_info() << filename << " (smtlib2 literals)" << l_end;
+        auto lset = generate_literals_whyml(filename);
+        for (const smtlib2::smtlit_t& lit : lset.get_literals()) {
+            l_message() << smtlib2::ident(lit) << " (" << smtlib2::type(lit) << ")" << l_end;
+        }
+    }
+    return EXIT_SUCCESS;
+}
+
 int main(int argc, char** argv) {
 
     try {
@@ -144,6 +160,8 @@ int main(int argc, char** argv) {
             return whdl_annotate(opts);
         case Why3Tool::Extractor:
             return whdl_extract(opts);
+        case Why3Tool::Literalizer:
+            return whdl_literalize(opts);
         case Why3Tool::None:
             l_message() << "Do nothing" << l_end;
             return EXIT_SUCCESS;
