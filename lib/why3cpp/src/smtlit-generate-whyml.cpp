@@ -93,11 +93,15 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
                 for (int divisor = 0; divisor < std::atoi(modrl.c_str()); ++divisor) {
                     smtparam_binding_set _binds;
                     _binds[1] = std::to_string(divisor);
+                    const FabricationFilter _local(FilterPolicy::Annotation_Include, locid);
                     FabricationRule _g(FilterMode::Disjunctive, FabricationPolicy::Apply_Simple,
                                        smt_eq_f("Int"), _binds, locid);
-                    const FabricationFilter _local(FilterPolicy::Annotation_Include, locid);
                     _g.add_filter(_local);
                     fabricator.fabricate(_g);
+                    FabricationRule _h(FilterMode::Disjunctive, FabricationPolicy::Apply_Simple,
+                                       smt_not_f, locid + "n");
+                    _h.add_filter(_local);
+                    fabricator.fabricate(_h);
                 }
             }
         }
