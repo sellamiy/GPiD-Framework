@@ -6,23 +6,53 @@
 
 using namespace smtlib2;
 
-bool FabricationFilter::accept(const smtlit_t& l, const smtannotation_map& annots) const {
+static inline constexpr FilterResult asfr(bool b) {
+    return b ? FilterResult::Accept : FilterResult::Refuse;
+}
+
+FilterResult FabricationFilter::accept(const smtlit_t& l, const smtannotation_map& annots) const {
     switch (policy) {
     case FilterPolicy::Type_Include:
-        return type(l) == data;
+        return asfr(type(l) == data);
     case FilterPolicy::Type_Exclude:
-        return type(l) != data;
+        return asfr(type(l) != data);
     case FilterPolicy::Annotation_Include:
-        return annots.count(data) > 0 && annots.at(data).count(ident(l)) > 0;
+        return asfr(annots.count(data) > 0 && annots.at(data).count(ident(l)) > 0);
     case FilterPolicy::Annotation_Exclude:
-        return annots.count(data) == 0 || annots.at(data).count(ident(l)) == 0;
+        return asfr(annots.count(data) == 0 || annots.at(data).count(ident(l)) == 0);
     case FilterPolicy::Content_Include:
-        return ident(l).find(data) != std::string::npos;
+        return asfr(ident(l).find(data) != std::string::npos);
     case FilterPolicy::Content_Exclude:
-        return ident(l).find(data) == std::string::npos;
+        return asfr(ident(l).find(data) == std::string::npos);
+    case FilterPolicy::Annotation_NotAll:
+        return FilterResult::Skip;
     default:
         snlog::l_internal() << "Filter policy switch failure" << snlog::l_end;
-        return false;
+        return FilterResult::Skip;
+    }
+}
+
+FilterResult FabricationFilter::accept
+(const param_iterator_set& pset, const smtannotation_map& annots) const {
+    switch (policy) {
+    case FilterPolicy::Annotation_NotAll:
+        // Ensure that annotations are not all the same
+        for (const param_iterator& param : pset) {
+            const smtident_t _pident = ident(param);
+            if (data != annotation(_pident, annots))
+                return asfr(true);
+        }
+        return asfr(false);
+    case FilterPolicy::Type_Include:
+    case FilterPolicy::Type_Exclude:
+    case FilterPolicy::Annotation_Include:
+    case FilterPolicy::Annotation_Exclude:
+    case FilterPolicy::Content_Include:
+    case FilterPolicy::Content_Exclude:
+        return FilterResult::Skip;
+    default:
+        snlog::l_internal() << "Filter policy switch failure" << snlog::l_end;
+        return FilterResult::Skip;
     }
 }
 
@@ -56,10 +86,7 @@ bool FabricationRule::accept_bind(param_iterator_set& pset, const smtannotation_
         */
     }
 
-    for (const param_iterator& pit : pset)
-        if (!accept(smtlit_t(ident(pit), smt_anytype), annots))
-            return false;
-    return true;
+    return accept(pset, annots);
 }
 
 smtparam_binding_set FabricationRule::

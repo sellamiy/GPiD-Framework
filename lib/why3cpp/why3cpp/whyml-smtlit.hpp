@@ -5,6 +5,8 @@
 
 namespace why3cpp {
 
+    static const smtlib2::smtannotation_t annot_whyml_ref = "whyml-reference";
+
     const smtlib2::GenerationSet generate_literals_whyml(const std::string& filename);
 
 }

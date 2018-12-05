@@ -46,7 +46,7 @@ W3WML_LSet::W3WML_LSet(const std::string& filename) {
             why3cpp::generate_literals_whyml(filename);
         for (const smtlib2::smtlit_t& lit : gset.get_literals())
             literals.push_back(smtlib2::ident(lit));
-        references = gset.get_annotated(smtlib2::annot_whyml_ref);
+        references = gset.get_annotated(why3cpp::annot_whyml_ref);
     } catch (gpid::GPiDError& e) {
         snlog::l_error() << "W3WML Mlw literals recovery failed: " << e.what() << snlog::l_end;
     }

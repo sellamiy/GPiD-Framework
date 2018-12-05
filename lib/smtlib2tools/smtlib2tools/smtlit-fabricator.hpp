@@ -2,6 +2,8 @@
 #define LIB_SMTLIB2_CPP_TOOLS__LITERAL_FABRICATOR__HEADER
 
 #include <smtlib2tools/smtlib2-defs.hpp>
+#include <smtlib2tools/smtlib2-annotations.hpp>
+#include <smtlib2tools/smtlib2-types.hpp>
 
 namespace smtlib2 {
 
@@ -16,10 +18,13 @@ namespace smtlib2 {
         Type_Exclude,
         Annotation_Include,
         Annotation_Exclude,
+        Annotation_NotAll,
         Content_Include,
         Content_Exclude
     };
     using FilterData = std::string;
+
+    enum class FilterResult { Accept, Refuse, Skip };
 
     struct FabricationFilter {
         const FilterPolicy policy;
@@ -28,7 +33,8 @@ namespace smtlib2 {
             : policy(policy), data(data) {}
         FabricationFilter(const FabricationFilter& o)
             : policy(o.policy), data(o.data) {}
-        bool accept(const smtlit_t& l, const smtannotation_map& annots) const;
+        FilterResult accept(const smtlit_t& l, const smtannotation_map& annots) const;
+        FilterResult accept(const param_iterator_set& p, const smtannotation_map& annots) const;
     };
 
     class WorkRule {
@@ -37,9 +43,12 @@ namespace smtlib2 {
     public:
         WorkRule(FilterMode mode) : mode(mode) {}
         inline void add_filter(const FabricationFilter& f) { filters.push_back(f); }
+        inline bool accept(const param_iterator_set& p, const smtannotation_map& annots) const;
         inline bool accept(const smtlit_t& l, const smtannotation_map& annots) const;
-        inline bool accept_conj(const smtlit_t& l, const smtannotation_map& annots) const;
-        inline bool accept_disj(const smtlit_t& l, const smtannotation_map& annots) const;
+        template <typename VerifiableT>
+        inline bool accept_conj(const VerifiableT& e, const smtannotation_map& annots) const;
+        template <typename VerifiableT>
+        inline bool accept_disj(const VerifiableT& e, const smtannotation_map& annots) const;
     };
 
     class FabricationRule : public WorkRule {
@@ -53,10 +62,10 @@ namespace smtlib2 {
         bool accept_bind(param_iterator_set& pset, const smtannotation_map& annots) const;
     public:
         FabricationRule(FilterMode mode, FabricationPolicy policy, const smtfun_t& fun,
-                        const smtannotation_t annot="<?>")
+                        const smtannotation_t annot=annot_default)
             : WorkRule(mode), policy(policy), fun(fun), end_annotation(annot) {}
         FabricationRule(FilterMode mode, FabricationPolicy policy, const smtfun_t& fun,
-                        const smtparam_binding_set& binds, const smtannotation_t annot="<?>")
+                        const smtparam_binding_set& binds, const smtannotation_t annot=annot_default)
             : WorkRule(mode), policy(policy), fun(fun),
               default_binds(binds), end_annotation(annot) {}
 
@@ -106,25 +115,40 @@ namespace smtlib2 {
 
     /* Implementation */
 
-    inline bool WorkRule::accept_conj(const smtlit_t& l, const smtannotation_map& annots) const {
+    template <typename VerifiableT>
+    inline bool WorkRule::accept_conj(const VerifiableT& e, const smtannotation_map& annots) const {
         for (const FabricationFilter& filter : filters)
-            if (!filter.accept(l, annots))
+            if (filter.accept(e, annots) == FilterResult::Refuse)
                 return false;
         return true;
     }
 
-    inline bool WorkRule::accept_disj(const smtlit_t& l, const smtannotation_map& annots) const {
+    template <typename VerifiableT>
+    inline bool WorkRule::accept_disj(const VerifiableT& e, const smtannotation_map& annots) const {
         for (const FabricationFilter& filter : filters)
-            if (filter.accept(l, annots))
+            if (filter.accept(e, annots) == FilterResult::Accept)
                 return true;
         return false;
     }
 
     inline bool WorkRule::accept(const smtlit_t& l, const smtannotation_map& annots) const {
         if (mode == FilterMode::Conjunctive)
-            return accept_conj(l, annots);
+            return accept_conj<smtlit_t>(l, annots);
         else
-            return accept_disj(l, annots);
+            return accept_disj<smtlit_t>(l, annots);
+    }
+
+    inline bool WorkRule::accept(const param_iterator_set& pset, const smtannotation_map& annots) const {
+        /* Checkaccept the current bind */
+        if (mode == FilterMode::Conjunctive && !accept_conj<param_iterator_set>(pset, annots))
+            return false;
+        else if (mode == FilterMode::Disjunctive && !accept_disj<param_iterator_set>(pset, annots))
+            return false;
+        /* Checkaccept local literals */
+        for (const param_iterator& pit : pset)
+            if (!accept(smtlit_t(ident(pit), smt_anytype), annots))
+                return false;
+        return true;
     }
 
     inline const std::set<smtparam_size_t> FabricationRule::unbound() const {

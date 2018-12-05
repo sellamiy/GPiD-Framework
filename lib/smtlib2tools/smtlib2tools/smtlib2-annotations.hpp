@@ -10,7 +10,7 @@ namespace smtlib2 {
 
     static const smtannotation_t annot_applied = "application-result";
 
-    static const smtannotation_t annot_whyml_ref = "whyml-reference";
+    static const smtannotation_t annot_default = "<?>";
 
     // static const smtannotation_t <ident> = "";
 

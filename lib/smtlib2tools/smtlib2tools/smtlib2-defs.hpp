@@ -45,6 +45,8 @@ namespace smtlib2 {
 
     static inline const std::vector<smttype_t>& plist(const smtfun_t& f) { return std::get<2>(f); }
 
+    extern const smtannotation_t annotation(const smtident_t& i, const smtannotation_map& am);
+
     extern smtlit_t apply(const smtfun_t& f, const smtparam_binding_set& params);
 
     extern bool is_reserved(const smtident_t& ident);

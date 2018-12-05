@@ -22,6 +22,7 @@ static const smttype_t from_whyml_type(const std::string& whymlt) {
 static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser& parser) {
     const FabricationFilter coreConstFilter(FilterPolicy::Annotation_Include, annot_core_const);
     const FabricationFilter coreMagicFilter(FilterPolicy::Annotation_Include, annot_core_magic);
+    const FabricationFilter coreNAMgcFilter(FilterPolicy::Annotation_NotAll, annot_core_magic);
     /* Fabricate boolean comparators */
     if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "bool")) {
         FabricationRule _f0
@@ -32,10 +33,12 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_eq_f("Bool"), annot_applied);
         _f1.add_filter(coreConstFilter);
         _f1.add_filter(coreMagicFilter);
+        _f1.add_filter(coreNAMgcFilter);
         FabricationRule _f2
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_neq_f("Bool"), annot_applied);
         _f2.add_filter(coreConstFilter);
         _f2.add_filter(coreMagicFilter);
+        _f2.add_filter(coreNAMgcFilter);
         fabricator.fabricate(_f0);
         fabricator.fabricate(_f1);
         fabricator.fabricate(_f2);
@@ -46,26 +49,32 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_eq_f("Int"), annot_applied);
         _f0.add_filter(coreConstFilter);
         _f0.add_filter(coreMagicFilter);
+        _f0.add_filter(coreNAMgcFilter);
         FabricationRule _f1
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_neq_f("Int"), annot_applied);
         _f1.add_filter(coreConstFilter);
         _f1.add_filter(coreMagicFilter);
+        _f1.add_filter(coreNAMgcFilter);
         FabricationRule _f2
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_leq_f("Int"), annot_applied);
         _f2.add_filter(coreConstFilter);
         _f2.add_filter(coreMagicFilter);
+        _f2.add_filter(coreNAMgcFilter);
         FabricationRule _f3
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_geq_f("Int"), annot_applied);
         _f3.add_filter(coreConstFilter);
         _f3.add_filter(coreMagicFilter);
+        _f3.add_filter(coreNAMgcFilter);
         FabricationRule _f4
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_lt_f("Int"), annot_applied);
         _f4.add_filter(coreConstFilter);
         _f4.add_filter(coreMagicFilter);
+        _f4.add_filter(coreNAMgcFilter);
         FabricationRule _f5
             (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_gt_f("Int"), annot_applied);
         _f5.add_filter(coreConstFilter);
         _f5.add_filter(coreMagicFilter);
+        _f5.add_filter(coreNAMgcFilter);
         fabricator.fabricate(_f0);
         fabricator.fabricate(_f1);
         fabricator.fabricate(_f2);
@@ -85,7 +94,7 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
                 const std::string locid = "mod" + std::to_string(modcpt++);
                 smtparam_binding_set _binds;
                 _binds[1] = modrl;
-                FabricationRule _f(FilterMode::Disjunctive, FabricationPolicy::Apply_Simple,
+                FabricationRule _f(FilterMode::Conjunctive, FabricationPolicy::Apply_Simple,
                                    smt_mod_f, _binds, locid);
                 const FabricationFilter _exact(FilterPolicy::Content_Include, vloc);
                 _f.add_filter(_exact);
@@ -94,11 +103,11 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
                     smtparam_binding_set _binds;
                     _binds[1] = std::to_string(divisor);
                     const FabricationFilter _local(FilterPolicy::Annotation_Include, locid);
-                    FabricationRule _g(FilterMode::Disjunctive, FabricationPolicy::Apply_Simple,
+                    FabricationRule _g(FilterMode::Conjunctive, FabricationPolicy::Apply_Simple,
                                        smt_eq_f("Int"), _binds, locid);
                     _g.add_filter(_local);
                     fabricator.fabricate(_g);
-                    FabricationRule _h(FilterMode::Disjunctive, FabricationPolicy::Apply_Simple,
+                    FabricationRule _h(FilterMode::Conjunctive, FabricationPolicy::Apply_Simple,
                                        smt_not_f, locid + "n");
                     _h.add_filter(_local);
                     fabricator.fabricate(_h);
@@ -120,7 +129,7 @@ static const GenerationSet loc_generate(const SourceT& source) {
         fabricator.insert(smtlit_t(l.first, from_whyml_type(l.second)), annot_core_magic);
     }
     for (const std::string& ident : parser.getRefs()) {
-        fabricator.annotate(ident, annot_whyml_ref);
+        fabricator.annotate(ident, why3cpp::annot_whyml_ref);
     }
     loc_fabricate(fabricator, parser);
     FiltrationRule bool_filter(FilterMode::Conjunctive);
