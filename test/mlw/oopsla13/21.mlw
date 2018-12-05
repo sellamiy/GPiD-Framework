@@ -8,9 +8,7 @@ module Oopsla21
    requires { n > 0 }
    requires { n < 10 }
    diverges
- = let c1 = ref 4000 in
-   let c2 = ref 2000 in
-   let v = ref 0 in
+ = let v = ref 0 in
    let i = ref 0 in
    let k = ref 0 in
 
@@ -18,7 +16,7 @@ module Oopsla21
          invariant { true }
          i := !i + 1;
          if unknown() then v := 0 else v := 1;
-         if !v = 0 then k := !k + !c1 else k := !k + !c2;
+         if !v = 0 then k := !k + 4000 else k := !k + 2000;
 
    done;
 

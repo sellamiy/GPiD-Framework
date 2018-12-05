@@ -14,7 +14,8 @@ module Oopsla41
 
     let i = ref 0 in let j = ref 0 in
 
-     while !i <= n do invariant { true }
+     while !i <= n do
+      invariant { true }
       i := !i + 1;
       j := !j + !i
      done;

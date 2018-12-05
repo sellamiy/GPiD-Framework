@@ -11,12 +11,14 @@ module Oopsla40
 
  if flag then i := 0;
 
- while unknown1() do invariant { true }
+ while unknown1() do
+  invariant { true }
   i := !i + 2;
   if mod !i 2 = 0 then j := !j + 2 else j := !j + 1
  done;
 
- while unknown2() do invariant { true }
+ while unknown2() do
+  invariant { true }
   a := !a + 1;
   b := !b + (!j - !i)
  done;

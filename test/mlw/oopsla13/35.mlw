@@ -4,7 +4,8 @@ module Oopsla35
 
  let main (n: int) : unit
   diverges = let x = ref 0 in
-  while !x < n do invariant { true }
+  while !x < n do
+   invariant { true }
    x := !x + 1
   done;
   if n > 0 then assert { !x = n }
