@@ -3,29 +3,30 @@
 #include <csignal>
 #include <thread>
 #include <chrono>
-#include <stack>
+#include <list>
 #include <snlog/snlog.hpp>
 #include <gpid/core/system.hpp>
 
-static std::stack<gpid::SystemInterruptionFlags*> sys_flag_locs;
+static std::list<gpid::SystemInterruptionFlags*> sys_flag_locs;
 
 static void systemInterruptHandler(int signum) {
     snlog::l_fatal() << "Interrupted" << snlog::l_end;
     snlog::l_info() << signum << snlog::l_end;
 
-    sys_flag_locs.top()->interrupt(gpid::SystemInterruptionFlags::Reason::__USER);
+    for (gpid::SystemInterruptionFlags* irf : sys_flag_locs)
+        irf->interrupt(gpid::SystemInterruptionFlags::Reason::__USER);
 }
 
 extern void gpid::registerInterruptionHandlers(SystemInterruptionFlags* flags_addr) {
     bool signal_change_required = sys_flag_locs.empty();
-    sys_flag_locs.push(flags_addr);
+    sys_flag_locs.push_back(flags_addr);
     if (signal_change_required) {
         signal(SIGINT, systemInterruptHandler);
     }
 }
 
 extern void gpid::restoreInterruptionHandlers() {
-    sys_flag_locs.pop();
+    sys_flag_locs.pop_back();
     if (sys_flag_locs.empty()) {
         signal(SIGINT, SIG_DFL);
     }

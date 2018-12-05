@@ -86,14 +86,16 @@ namespace gpid {
 
         reset();
 
-        bool assume_proven = true;
+        bool assume_proven = false;
         LoopId loop; StrengthenerId strengthener;
 
-        while (true) {
+        while (!iflags.systemInterrupted()) {
             IchState ichState = pengine.proofCheck();
 
-            if (ichState.proven)
+            if (ichState.proven) {
+                assume_proven = true;
                 break;
+            }
 
             if (!ichState.strengthenable)
                 goto prebacktrack;
@@ -118,7 +120,6 @@ namespace gpid {
             backtrack();
 
             if (level_stack.empty()) {
-                assume_proven = false;
                 snlog::l_error() << "No more strengthening candidates available" << snlog::l_end;
                 break;
             }
