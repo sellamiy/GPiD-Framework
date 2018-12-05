@@ -76,14 +76,10 @@ void FabricationRule::next(param_iterator_set& pset, const smttype_map& src) con
 
 bool FabricationRule::accept_bind(param_iterator_set& pset, const smtannotation_map& annots) const {
     if (policy == FabricationPolicy::Apply_Symmetric) {
-        // TODO: More rejection Stuff
-        snlog::l_warn() << "Not implemented @" << __FILE__ << ":" << __LINE__ << snlog::l_end;
         // Prereject
-        /*
         for (size_t vidx = 0; vidx + 1 < pset.size(); ++vidx)
-            if (pset.at(vidx).second >= pset.at(vidx + 1).second)
+            if (ident(pset.at(vidx)) >= ident(pset.at(vidx + 1)))
                 return false;
-        */
     }
 
     return accept(pset, annots);

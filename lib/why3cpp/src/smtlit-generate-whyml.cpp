@@ -30,12 +30,12 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
         _f0.add_filter(coreConstFilter);
         _f0.add_filter(coreMagicFilter);
         FabricationRule _f1
-            (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_eq_f("Bool"), annot_applied);
+            (FilterMode::Disjunctive, FabricationPolicy::Apply_Symmetric, smt_eq_f("Bool"), annot_applied);
         _f1.add_filter(coreConstFilter);
         _f1.add_filter(coreMagicFilter);
         _f1.add_filter(coreNAMgcFilter);
         FabricationRule _f2
-            (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_neq_f("Bool"), annot_applied);
+            (FilterMode::Disjunctive, FabricationPolicy::Apply_Symmetric, smt_neq_f("Bool"), annot_applied);
         _f2.add_filter(coreConstFilter);
         _f2.add_filter(coreMagicFilter);
         _f2.add_filter(coreNAMgcFilter);
@@ -46,32 +46,32 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
     /* Fabricate integer comparators */
     if (ugly::mapHasValue<std::string, std::string>(parser.getVars(), "int")) {
         FabricationRule _f0
-            (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_eq_f("Int"), annot_applied);
+            (FilterMode::Disjunctive, FabricationPolicy::Apply_Symmetric, smt_eq_f("Int"), annot_applied);
         _f0.add_filter(coreConstFilter);
         _f0.add_filter(coreMagicFilter);
         _f0.add_filter(coreNAMgcFilter);
         FabricationRule _f1
-            (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_neq_f("Int"), annot_applied);
+            (FilterMode::Disjunctive, FabricationPolicy::Apply_Symmetric, smt_neq_f("Int"), annot_applied);
         _f1.add_filter(coreConstFilter);
         _f1.add_filter(coreMagicFilter);
         _f1.add_filter(coreNAMgcFilter);
         FabricationRule _f2
-            (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_leq_f("Int"), annot_applied);
+            (FilterMode::Disjunctive, FabricationPolicy::Apply_Symmetric, smt_leq_f("Int"), annot_applied);
         _f2.add_filter(coreConstFilter);
         _f2.add_filter(coreMagicFilter);
         _f2.add_filter(coreNAMgcFilter);
         FabricationRule _f3
-            (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_geq_f("Int"), annot_applied);
+            (FilterMode::Disjunctive, FabricationPolicy::Apply_Symmetric, smt_geq_f("Int"), annot_applied);
         _f3.add_filter(coreConstFilter);
         _f3.add_filter(coreMagicFilter);
         _f3.add_filter(coreNAMgcFilter);
         FabricationRule _f4
-            (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_lt_f("Int"), annot_applied);
+            (FilterMode::Disjunctive, FabricationPolicy::Apply_Symmetric, smt_lt_f("Int"), annot_applied);
         _f4.add_filter(coreConstFilter);
         _f4.add_filter(coreMagicFilter);
         _f4.add_filter(coreNAMgcFilter);
         FabricationRule _f5
-            (FilterMode::Disjunctive, FabricationPolicy::Apply_Simple, smt_gt_f("Int"), annot_applied);
+            (FilterMode::Disjunctive, FabricationPolicy::Apply_Symmetric, smt_gt_f("Int"), annot_applied);
         _f5.add_filter(coreConstFilter);
         _f5.add_filter(coreMagicFilter);
         _f5.add_filter(coreNAMgcFilter);
