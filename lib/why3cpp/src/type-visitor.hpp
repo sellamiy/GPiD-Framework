@@ -70,9 +70,9 @@ public:
         return typeDeclaration(visitChildren(ctx));
     }
 
-    virtual antlrcpp::Any visitExpr(WhyMLParser::ExprContext *ctx) override {
-        if (ctx->ww_application() != nullptr) {
-            const std::string& appname = ctx->expr(0)->getText();
+    virtual antlrcpp::Any visitPriority_expr_appl(WhyMLParser::Priority_expr_applContext *ctx) override {
+        if (ctx->expr().size() > 0) {
+            const std::string& appname = ctx->priority_expr_brackets()->getText();
             // TODO: The following only deduces type for 1 var applicative types
             // TODO: Should be improved
             return typeApplicationDeduction(appname, visit(ctx->expr(1)));
@@ -81,7 +81,7 @@ public:
     }
 
     virtual antlrcpp::Any visitExpr_r_parentheses(WhyMLParser::Expr_r_parenthesesContext *ctx) override {
-        return visit(ctx->expr());
+        return visit(ctx->priority_expr_let());
     }
 
     virtual antlrcpp::Any visitInteger(WhyMLParser::IntegerContext*) override {

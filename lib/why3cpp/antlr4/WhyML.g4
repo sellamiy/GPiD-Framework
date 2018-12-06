@@ -6,11 +6,12 @@ grammar WhyML;
 /* ----------------------- Parser ---------------------- */
 /* ----------------------------------------------------- */
 // Lexical wrappers
-op
-    : (EQUAL | LOWER | GREATER
-        | TILDA | PLUS | MINUS | STAR | SLASH | PERCENT
-        | EXCLAM | DOLLAR | AMPER | QMARK | ATSYM | CAP | DOT | COLUMN | VBAR | SHARP
-        | MULTIOP) SQUOTE*;
+infixop4 : W_INFIXOP4 SQUOTE* ;
+infixop3 : (STAR | SLASH | PERCENT | W_INFIXOP3) SQUOTE* ;
+infixop2 : (PLUS | MINUS | W_INFIXOP2) SQUOTE* ;
+infixop1 : (EQUAL | LOWER | GREATER | TILDA | W_INFIXOP1) SQUOTE* ;
+tightop : (EXCLAM | QMARK | W_TIGHTOP) SQUOTE* ;
+prefixop : (infixop1 | infixop2 | infixop3 | infixop4) SQUOTE* ;
 
 qualifier : (uident DOT)+ ;
 lqualid : qualifier? lident ;
@@ -57,8 +58,7 @@ term
     | qualid
     | qualifier? OPAR term CPAR
     | qualifier? BEGIN term END
-    | op term
-    | term op term
+    | tightop term
     | OCURLY term_field+ CCURLY
     | OCURLY term WITH term_field+ CCURLY
     | term DOT lqualid
@@ -67,10 +67,15 @@ term
     | term OBRACKET term DOT DOT term CBRACKET SQUOTE*
     | term OBRACKET DOT DOT term CBRACKET SQUOTE*
     | term OBRACKET term DOT DOT CBRACKET SQUOTE*
+    | term infixop4 term
+    | term infixop3 term
+    | term infixop2 term
+    | prefixop term
     | term term+
     | term AT uident
     | AT term SQUOTE uident // 6.6.1 addition
     | OLD term
+    | term infixop1 term
     // Second part of terms
     | NOT term
     | term LOG_AND term
@@ -103,8 +108,12 @@ lident_ext : lident
     ;
 
 ident_op
-    : op
-    | op UNDERSCORE
+    : infixop1
+    | infixop2
+    | infixop3
+    | infixop4
+    | prefixop UNDERSCORE
+    | tightop UNDERSCORE?
     | OBRACKET CBRACKET SQUOTE*
     | OBRACKET LEFTARROW CBRACKET SQUOTE*
     | OBRACKET CBRACKET SQUOTE* LEFTARROW
@@ -151,53 +160,115 @@ param
 /* ----------------------------------------------------- */
 // Program expressions
 expr
-    : integer
-    | real
-    | boolean
-    | OPAR CPAR
-    | qualid
-    | expr_r_parentheses
-    | qualifier? BEGIN expr END
-    | op expr
-    | OCURLY (lqualid EQUAL expr SEMICOLUMN)+ CCURLY
-    | OCURLY expr WITH (lqualid EQUAL expr SEMICOLUMN)+ CCURLY
-    | expr DOT lqualid
-    | expr OBRACKET expr CBRACKET SQUOTE*
-    | expr OBRACKET expr LEFTARROW expr CBRACKET SQUOTE*
-    | expr OBRACKET expr DOT DOT expr CBRACKET SQUOTE*
-    | expr OBRACKET expr DOT DOT CBRACKET SQUOTE*
-    | expr OBRACKET DOT DOT expr CBRACKET SQUOTE*
-    | expr expr+ ww_application
-    | expr op expr
-    | NOT expr
-    | expr PRG_AND expr
-    | expr PRG_OR expr
-    | expr COLUMN expr
-    | attribute+ expr
+    : priority_expr_constructs w_expr_continuation?
     | GHOST expr
-    | expr (COMMA expr)+
-    | expr LEFTARROW expr
-    // Second part of expressions
-    | expr spec+
-    | IF expr THEN expr (ELSE expr)?
-    | MATCH expr WITH (VBAR pattern RIGHTARROW expr)+ END
-    | qualifier? BEGIN spec+ expr END
-    | expr SEMICOLUMN expr
+    // Wrapping part of expressions
+    | assertion
+    ;
+
+w_expr_continuation
+    : (COMMA expr)+
+    | spec+
+    | SEMICOLUMN expr/*_Unsafe*/?
+    ;
+
+priority_expr_constructs
+    : MATCH expr WITH (VBAR pattern RIGHTARROW expr)+ END
+    | qualifier? BEGIN spec* expr END
+    | LOOP invariant* variant? expr END
+    | WHILE expr DO invariant* variant? expr DONE
+    | expr_r_forloop
+    | RAISE uqualid
+    | RAISE OPAR uqualid expr CPAR
+    | TRY expr WITH (VBAR handler)+ END
+    | priority_expr_let
+    ;
+
+priority_expr_let
+    : IF priority_expr_label THEN expr (ELSE expr)?
     | expr_r_letpattern
     | LET fun_defn IN expr
     | LET REC fun_defn (WITH fun_defn)* IN expr
     | FUN param+ spec* RIGHTARROW spec* expr
     | ANY result spec*
-    // Wrapping part of expressions
-    | LOOP invariant* variant? expr END
-    | WHILE expr DO invariant* variant? expr DONE
-    | expr_r_forloop
-    | assertion
-    | RAISE uqualid
-    | RAISE OPAR uqualid expr CPAR
-    | TRY expr WITH (VBAR handler)+ END
-    // Unsafe wraps
-    | expr SEMICOLUMN
+    | priority_expr_label
+    ;
+
+priority_expr_label
+    : attribute+ priority_expr_cast
+    | priority_expr_cast
+    ;
+
+priority_expr_cast
+    : priority_expr_or (COLUMN priority_expr_let)?
+    ;
+
+priority_expr_or
+    : priority_expr_and (PRG_OR priority_expr_let)?
+    ;
+
+priority_expr_and
+    : priority_expr_not (PRG_AND priority_expr_let)?
+    ;
+
+priority_expr_not
+    : NOT priority_expr_eq
+    | priority_expr_eq
+    ;
+
+priority_expr_eq
+    : priority_expr_plus priority_expr_eq_continuation?
+    ;
+
+priority_expr_eq_continuation
+    : LEFTARROW priority_expr_let
+    | infixop1 priority_expr_let
+    ;
+
+priority_expr_plus
+    : priority_expr_mult (infixop2 priority_expr_let)?
+    ;
+
+priority_expr_mult
+    : priority_expr_low (infixop3 priority_expr_let)?
+    ;
+
+priority_expr_low
+    : priority_expr_tight (infixop4 priority_expr_let)?
+    ;
+
+priority_expr_tight
+    : prefixop priority_expr_let
+    | tightop priority_expr_appl
+    | priority_expr_appl
+    ;
+
+priority_expr_appl
+    : priority_expr_brackets expr*
+    ;
+
+priority_expr_brackets
+    : priority_expr_lit priority_expr_brackets_continuation?
+    ;
+
+priority_expr_brackets_continuation
+    : DOT lqualid
+    | OBRACKET expr CBRACKET SQUOTE*
+    | OBRACKET expr LEFTARROW expr CBRACKET SQUOTE*
+    | OBRACKET expr DOT DOT expr CBRACKET SQUOTE*
+    | OBRACKET expr DOT DOT CBRACKET SQUOTE*
+    | OBRACKET DOT DOT expr CBRACKET SQUOTE*
+    ;
+
+priority_expr_lit
+    : integer
+    | real
+    | boolean
+    | OPAR CPAR
+    | qualid
+    | OCURLY (lqualid EQUAL expr SEMICOLUMN)+ CCURLY
+    | OCURLY expr WITH (lqualid EQUAL expr SEMICOLUMN)+ CCURLY
+    | expr_r_parentheses
     ;
 
 fun_defn : fun_head spec* EQUAL spec* expr ;
@@ -238,14 +309,14 @@ variant : term (WITH lqualid)? ;
 
 // Wrappers
 
-expr_r_parentheses : qualifier? OPAR expr CPAR ;
+expr_r_parentheses : qualifier? OPAR priority_expr_let CPAR ;
 
 expr_r_letpattern : LET pattern EQUAL expr IN expr ;
 
 expr_r_forloop : FOR lident EQUAL expr (TO | DOWNTO) expr DO invariant* expr DONE ;
 
 // Wrap handlers
-ww_application : ;
+
 /* ----------------------------------------------------- */
 // Why3 formulas
 formula
@@ -260,8 +331,12 @@ formula
     | formula SO formula
     | NOT formula
     | lqualid
-    | op term
-    | term op term
+    | tightop term
+    | prefixop term
+    | term infixop4 term
+    | term infixop3 term
+    | term infixop2 term
+    | term infixop1 term
     | lqualid term+
     | IF formula THEN formula ELSE formula
     | LET pattern EQUAL term IN formula
@@ -630,9 +705,17 @@ fragment OPCHAR1 : EQUAL | LOWER | GREATER | TILDA ;
 fragment OPCHAR2 : PLUS | MINUS ;
 fragment OPCHAR3 : STAR | SLASH | PERCENT ;
 fragment OPCHAR4 : EXCLAM | DOLLAR | AMPER | QMARK | ATSYM | CAP | DOT | COLUMN | VBAR | SHARP ;
-fragment OPCHAR : OPCHAR1 | OPCHAR2 | OPCHAR3 | OPCHAR4 ;
 
-MULTIOP : OPCHAR OPCHAR+ ;
+fragment OPCHAR1234 : OPCHAR1 | OPCHAR2 | OPCHAR3 | OPCHAR4 ;
+fragment OPCHAR234 : OPCHAR2 | OPCHAR3 | OPCHAR4 ;
+fragment OPCHAR34 : OPCHAR3 | OPCHAR4 ;
+
+W_TIGHTOP : (EXCLAM | QMARK) OPCHAR4* ;
+// PREFIXOP : OPCHAR1234+ ;
+W_INFIXOP4 : OPCHAR4+ ;
+W_INFIXOP3 : OPCHAR34* OPCHAR3 OPCHAR34* ;
+W_INFIXOP2 : OPCHAR234* OPCHAR2 OPCHAR234* ;
+W_INFIXOP1 : OPCHAR1234* OPCHAR1 OPCHAR1234* ;
 /* ----------------------------------------------------- */
 // WS
 ML_COMMENT : '(*' .*? '*)' -> skip ;

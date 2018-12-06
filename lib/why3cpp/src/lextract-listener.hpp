@@ -31,11 +31,15 @@ public:
         lstack.push(pair<string, string>(ctx->REAL()->getText(), REAL_TYPESTR));
     }
 
-    virtual void exitExpr(WhyMLParser::ExprContext* ctx) override {
-        if (!lstack.empty() && ctx->op() != nullptr && ctx->expr().size() == 1) {
+    virtual void exitPriority_expr_tight(WhyMLParser::Priority_expr_tightContext* ctx) override {
+        if (!lstack.empty() && ctx->prefixop() != nullptr) {
             // Prefix operator extraction
-            lstack.top().first = ctx->op()->getText() + lstack.top().first;
-            lstack.top().second = prefixTypeConversion(ctx->op()->getText(), lstack.top().second);
+            lstack.top().first = ctx->prefixop()->getText() + lstack.top().first;
+            lstack.top().second = prefixTypeConversion(ctx->prefixop()->getText(), lstack.top().second);
+        } else if (!lstack.empty() && ctx->tightop() != nullptr) {
+            // Tight operator extraction
+            lstack.top().first = ctx->tightop()->getText() + lstack.top().first;
+            lstack.top().second = prefixTypeConversion(ctx->tightop()->getText(), lstack.top().second);
         } else {
             unstack();
         }
