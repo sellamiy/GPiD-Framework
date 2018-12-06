@@ -34,9 +34,10 @@ lident : LIDENT ;
 uident : UIDENT ;
 /* ----------------------------------------------------- */
 // Type expressions
-type
+type : w_type_lit (RIGHTARROW type)? ;
+
+w_type_lit
     : lqualid type_arg+
-    | type RIGHTARROW type
     | type_arg
     ;
 
@@ -198,16 +199,21 @@ trigger : term (COMMA term)* ;
 
 term_case : VBAR pattern RIGHTARROW term ;
 
-pattern
+pattern : w_pattern_lit w_pattern_continuation? ;
+
+w_pattern_lit
     : binder
     | OPAR CPAR
     | OCURLY (lqualid EQUAL pattern SEMICOLUMN)+ CCURLY
     | uqualid pattern*
     | GHOST pattern
-    | pattern AS GHOST? bound_var
-    | pattern COMMA pattern
-    | pattern VBAR pattern
     | qualifier? OPAR pattern CPAR
+    ;
+
+w_pattern_continuation
+    : AS GHOST? bound_var
+    | COMMA pattern
+    | VBAR pattern
     ;
 
 symbol : lident_ext attribute* ;
