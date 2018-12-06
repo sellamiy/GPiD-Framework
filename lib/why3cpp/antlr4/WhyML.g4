@@ -51,51 +51,113 @@ type_arg
 /* ----------------------------------------------------- */
 // Logical expressions
 term
+    : priority_term_constructs w_term_continuation?
+    | AT term SQUOTE uident // 6.6.1 addition
+    | OLD term
+    ;
+
+w_term_continuation
+    : AT uident
+    | (COMMA term)+
+    ;
+
+priority_term_constructs
+    : MATCH term WITH term_case+ END
+    | QUANTIFIER quant_vars triggers? DOT term
+    | qualifier? BEGIN term END
+    | priority_term_let
+    ;
+
+priority_term_let
+    : IF term THEN term ELSE term
+    | LET pattern EQUAL term IN term
+    | LET symbol param+ EQUAL term IN term
+    | FUN param+ RIGHTARROW term
+    | priority_term_label
+    ;
+
+priority_term_label
+    : attribute+ priority_term_cast
+    | priority_term_cast
+    ;
+
+priority_term_cast
+    : priority_term_equiv (COLUMN type)?
+    ;
+
+priority_term_equiv
+    : priority_term_byso ((RIGHTARROW | EQUIV) priority_term_let)?
+    ;
+
+priority_term_byso
+    : priority_term_or ((BY | SO) priority_term_let)?
+    ;
+
+priority_term_or
+    : priority_term_and ((PRG_OR | LOG_OR) priority_term_let)?
+    ;
+
+priority_term_and
+    : priority_term_not ((PRG_AND | LOG_AND) priority_term_let)?
+    ;
+
+priority_term_not
+    : NOT priority_term_eq
+    | priority_term_eq
+    ;
+
+priority_term_eq
+    : priority_term_plus (infixop1 priority_term_let)?
+    ;
+
+priority_term_plus
+    : priority_term_mult (infixop2 priority_term_let)?
+    ;
+
+priority_term_mult
+    : priority_term_low (infixop3 priority_term_let)?
+    ;
+
+priority_term_low
+    : priority_term_tight (infixop4 priority_term_let)?
+    ;
+
+priority_term_tight
+    : prefixop priority_term_let
+    | tightop priority_term_appl
+    | priority_term_appl
+    ;
+
+priority_term_appl
+    : priority_term_brackets term*
+    ;
+
+priority_term_brackets
+    : priority_term_lit priority_term_brackets_continuation?
+    ;
+
+priority_term_brackets_continuation
+    : DOT lqualid
+    | OBRACKET term CBRACKET SQUOTE*
+    | OBRACKET term LEFTARROW term CBRACKET SQUOTE*
+    | OBRACKET term DOT DOT term CBRACKET SQUOTE*
+    | OBRACKET term DOT DOT CBRACKET SQUOTE*
+    | OBRACKET DOT DOT term CBRACKET SQUOTE*
+    ;
+
+priority_term_lit
     : integer
     | real
     | boolean
     | OPAR CPAR
     | qualid
-    | qualifier? OPAR term CPAR
-    | qualifier? BEGIN term END
-    | tightop term
     | OCURLY term_field+ CCURLY
     | OCURLY term WITH term_field+ CCURLY
-    | term DOT lqualid
-    | term OBRACKET term CBRACKET SQUOTE*
-    | term OBRACKET term LEFTARROW term CBRACKET SQUOTE*
-    | term OBRACKET term DOT DOT term CBRACKET SQUOTE*
-    | term OBRACKET DOT DOT term CBRACKET SQUOTE*
-    | term OBRACKET term DOT DOT CBRACKET SQUOTE*
-    | term infixop4 term
-    | term infixop3 term
-    | term infixop2 term
-    | prefixop term
-    | term term+
-    | term AT uident
-    | AT term SQUOTE uident // 6.6.1 addition
-    | OLD term
-    | term infixop1 term
-    // Second part of terms
-    | NOT term
-    | term LOG_AND term
-    | term PRG_AND term
-    | term LOG_OR term
-    | term PRG_OR term
-    | term BY term
-    | term SO term
-    | term RIGHTARROW term
-    | term EQUIV term
-    | term COLUMN type
-    | attribute+ term
-    | term (COMMA term)+
-    | QUANTIFIER quant_vars triggers? DOT term
-    // Third part of terms
-    | IF term THEN term ELSE term
-    | MATCH term WITH term_case+ END
-    | LET pattern EQUAL term IN term
-    | LET symbol param+ EQUAL term IN term
-    | FUN param+ RIGHTARROW term
+    | priority_term_parentheses
+    ;
+
+priority_term_parentheses
+    : qualifier? OPAR term CPAR
     ;
 
 term_field : lqualid EQUAL term SEMICOLUMN ;
