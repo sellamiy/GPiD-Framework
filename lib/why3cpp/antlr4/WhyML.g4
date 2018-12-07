@@ -314,7 +314,7 @@ priority_expr_tight
     ;
 
 priority_expr_appl
-    : priority_expr_brackets expr*
+    : priority_expr_brackets priority_expr_tight*
     ;
 
 priority_expr_brackets
