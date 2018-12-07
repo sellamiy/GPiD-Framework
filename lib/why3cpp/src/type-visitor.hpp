@@ -81,7 +81,7 @@ public:
     }
 
     virtual antlrcpp::Any visitExpr_r_parentheses(WhyMLParser::Expr_r_parenthesesContext *ctx) override {
-        return visit(ctx->priority_expr_let());
+        return visit(ctx->priority_expr_if());
     }
 
     virtual antlrcpp::Any visitInteger(WhyMLParser::IntegerContext*) override {

@@ -228,16 +228,21 @@ param
 /* ----------------------------------------------------- */
 // Program expressions
 expr
-    : priority_expr_constructs w_expr_continuation?
-    | GHOST expr
-    // Wrapping part of expressions
-    | assertion
+    : GHOST? priority_expr_constructs w_expr_continuation?
+    | w_let_expressions
     ;
 
 w_expr_continuation
     : (COMMA expr)+
     | spec+
     | SEMICOLUMN expr/*_Unsafe*/?
+    ;
+
+w_let_expressions
+    : expr_r_letpattern
+    | LET fun_defn IN expr
+    | LET REC fun_defn (WITH fun_defn)* IN expr
+    | FUN param+ spec* RIGHTARROW spec* expr
     ;
 
 priority_expr_constructs
@@ -249,15 +254,12 @@ priority_expr_constructs
     | RAISE uqualid
     | RAISE OPAR uqualid expr CPAR
     | TRY expr WITH (VBAR handler)+ END
-    | priority_expr_let
+    | assertion
+    | priority_expr_if
     ;
 
-priority_expr_let
-    : IF priority_expr_label THEN expr (ELSE expr)?
-    | expr_r_letpattern
-    | LET fun_defn IN expr
-    | LET REC fun_defn (WITH fun_defn)* IN expr
-    | FUN param+ spec* RIGHTARROW spec* expr
+priority_expr_if
+    : IF priority_expr_label THEN priority_expr_constructs (ELSE priority_expr_constructs)?
     | ANY result spec*
     | priority_expr_label
     ;
@@ -268,15 +270,15 @@ priority_expr_label
     ;
 
 priority_expr_cast
-    : priority_expr_or (COLUMN priority_expr_let)?
+    : priority_expr_or (COLUMN priority_expr_if)?
     ;
 
 priority_expr_or
-    : priority_expr_and (PRG_OR priority_expr_let)?
+    : priority_expr_and (PRG_OR priority_expr_if)?
     ;
 
 priority_expr_and
-    : priority_expr_not (PRG_AND priority_expr_let)?
+    : priority_expr_not (PRG_AND priority_expr_if)?
     ;
 
 priority_expr_not
@@ -289,24 +291,24 @@ priority_expr_eq
     ;
 
 priority_expr_eq_continuation
-    : LEFTARROW priority_expr_let
-    | infixop1 priority_expr_let
+    : LEFTARROW priority_expr_if
+    | infixop1 priority_expr_if
     ;
 
 priority_expr_plus
-    : priority_expr_mult (infixop2 priority_expr_let)?
+    : priority_expr_mult (infixop2 priority_expr_if)?
     ;
 
 priority_expr_mult
-    : priority_expr_low (infixop3 priority_expr_let)?
+    : priority_expr_low (infixop3 priority_expr_if)?
     ;
 
 priority_expr_low
-    : priority_expr_tight (infixop4 priority_expr_let)?
+    : priority_expr_tight (infixop4 priority_expr_if)?
     ;
 
 priority_expr_tight
-    : prefixop priority_expr_let
+    : prefixop priority_expr_if
     | tightop priority_expr_appl
     | priority_expr_appl
     ;
@@ -339,7 +341,7 @@ priority_expr_lit
     | expr_r_parentheses
     ;
 
-fun_defn : fun_head spec* EQUAL spec* expr ;
+fun_defn : fun_head spec* EQUAL spec* priority_expr_if ;
 
 fun_head : GHOST? kind? symbol param+ (COLUMN result)? ;
 
@@ -377,9 +379,9 @@ variant : term (WITH lqualid)? ;
 
 // Wrappers
 
-expr_r_parentheses : qualifier? OPAR priority_expr_let CPAR ;
+expr_r_parentheses : qualifier? OPAR priority_expr_if CPAR ;
 
-expr_r_letpattern : LET pattern EQUAL expr IN expr ;
+expr_r_letpattern : LET pattern EQUAL priority_expr_if IN expr ;
 
 expr_r_forloop : FOR lident EQUAL expr (TO | DOWNTO) expr DO invariant* expr DONE ;
 

@@ -56,7 +56,7 @@ public:
 
     virtual void exitExpr_r_letpattern(WhyMLParser::Expr_r_letpatternContext* ctx) override {
         auto patternNode = ctx->pattern();
-        auto typeNode = ctx->expr(0);
+        auto typeNode = ctx->priority_expr_if();
         if (patternNode == nullptr || typeNode == nullptr)
             snlog::l_internal() << "Unexpected nullptr extracting let pattern" << snlog::l_end;
         vars[patternNode->getText()] = getType(typeNode);
