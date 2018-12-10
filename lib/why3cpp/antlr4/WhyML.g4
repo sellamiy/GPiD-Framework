@@ -120,17 +120,21 @@ priority_term_mult
     ;
 
 priority_term_low
-    : priority_term_tight (infixop4 priority_term_let)?
+    : priority_term_prefix (infixop4 priority_term_let)?
     ;
 
-priority_term_tight
+priority_term_prefix
     : prefixop priority_term_let
-    | tightop priority_term_appl
     | priority_term_appl
     ;
 
 priority_term_appl
-    : priority_term_brackets term*
+    : priority_term_tight term*
+    ;
+
+priority_term_tight
+    : tightop priority_term_brackets
+    | priority_term_brackets
     ;
 
 priority_term_brackets
@@ -304,17 +308,21 @@ priority_expr_mult
     ;
 
 priority_expr_low
-    : priority_expr_tight (infixop4 priority_expr_if)?
+    : priority_expr_prefix (infixop4 priority_expr_if)?
     ;
 
-priority_expr_tight
+priority_expr_prefix
     : prefixop priority_expr_if
-    | tightop priority_expr_appl
     | priority_expr_appl
     ;
 
 priority_expr_appl
-    : priority_expr_brackets priority_expr_tight*
+    : priority_expr_tight priority_expr_tight*
+    ;
+
+priority_expr_tight
+    : tightop priority_expr_brackets
+    | priority_expr_brackets
     ;
 
 priority_expr_brackets

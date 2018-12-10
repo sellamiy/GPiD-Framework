@@ -32,11 +32,7 @@ public:
     }
 
     virtual void exitPriority_expr_tight(WhyMLParser::Priority_expr_tightContext* ctx) override {
-        if (!lstack.empty() && ctx->prefixop() != nullptr) {
-            // Prefix operator extraction
-            lstack.top().first = ctx->prefixop()->getText() + lstack.top().first;
-            lstack.top().second = prefixTypeConversion(ctx->prefixop()->getText(), lstack.top().second);
-        } else if (!lstack.empty() && ctx->tightop() != nullptr) {
+        if (!lstack.empty() && ctx->tightop() != nullptr) {
             // Tight operator extraction
             lstack.top().first = ctx->tightop()->getText() + lstack.top().first;
             lstack.top().second = prefixTypeConversion(ctx->tightop()->getText(), lstack.top().second);

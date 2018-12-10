@@ -71,11 +71,11 @@ public:
     }
 
     virtual antlrcpp::Any visitPriority_expr_appl(WhyMLParser::Priority_expr_applContext *ctx) override {
-        if (ctx->priority_expr_tight().size() > 0) {
-            const std::string& appname = ctx->priority_expr_brackets()->getText();
+        if (ctx->priority_expr_tight().size() > 1) {
+            const std::string& appname = ctx->priority_expr_tight(0)->getText();
             // TODO: The following only deduces type for 1 var applicative types
             // TODO: Should be improved
-            return typeApplicationDeduction(appname, visit(ctx->priority_expr_tight(0)));
+            return typeApplicationDeduction(appname, visit(ctx->priority_expr_tight(1)));
         }
         return typeDeduction(visitChildren(ctx));
     }
