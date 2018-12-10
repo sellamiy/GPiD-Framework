@@ -46,6 +46,8 @@ namespace gpid {
         /** Print informations on the algorithm and its parameters. */
         static void printInfos();
 
+        const std::map<std::string, uint64_t> getEngineCounters() const;
+
     };
 
     /* *** Implementation *** */
@@ -62,6 +64,11 @@ namespace gpid {
     void IlinvaAlgorithm<EngineT>::printInfos() {
         snlog::l_message() << "GPiD framework loop invariant generator "
                            << project_version << snlog::l_end;
+    }
+
+    template<typename EngineT>
+    const std::map<std::string, uint64_t> IlinvaAlgorithm<EngineT>::getEngineCounters() const {
+        return pengine.getCounters();
     }
 
     template<typename EngineT>

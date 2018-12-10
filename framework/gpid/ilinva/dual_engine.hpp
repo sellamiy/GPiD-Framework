@@ -15,6 +15,8 @@ namespace gpid {
     template<typename FCodeHandlerT, typename InterfaceT>
     class DualInvariantEngine {
     public:
+        using counter_t = uint64_t;
+
         using CodeHandlerT = FCodeHandlerT;
         using LoopIdentifierT = typename CodeHandlerT::LoopIdentifierT;
         using StrengthenerT = DualConditionStrengthener<CodeHandlerT, InterfaceT>;
@@ -24,10 +26,19 @@ namespace gpid {
 
         std::map<StrengthenerId, std::shared_ptr<StrengthenerT>> strengtheners;
 
+        struct {
+            counter_t pchecks = 0;
+            counter_t strengthenings = 0;
+            counter_t strengtheners = 0;
+        } counters;
+
     public:
         DualInvariantEngine(CodeHandlerT& source);
 
-        inline IchState proofCheck() { return sourceCode.proofCheck(); }
+        inline IchState proofCheck() {
+            ++counters.pchecks;
+            return sourceCode.proofCheck();
+        }
         inline LoopIdentifierT selectUnprovenLoop() {
             return sourceCode.selectUnprovenBlock();
         }
@@ -48,6 +59,8 @@ namespace gpid {
 
         inline CodeHandlerT& getSourceHandler() const { return sourceCode; }
 
+        const std::map<std::string, uint64_t> getCounters() const;
+
     };
 
     /* *** Implementation *** */
@@ -59,6 +72,7 @@ namespace gpid {
     template<typename CodeHandlerT, typename InterfaceT>
     typename DualInvariantEngine<CodeHandlerT, InterfaceT>::StrengthenerId
     DualInvariantEngine<CodeHandlerT, InterfaceT>::newStrengthener(LoopIdentifierT loop) {
+        ++counters.strengtheners;
         auto loopCtx = sourceCode.generateContext(loop);
         std::shared_ptr<StrengthenerT>
             stren(new StrengthenerT(sourceCode.generateAbductionProblem(loop),
@@ -70,8 +84,19 @@ namespace gpid {
     template<typename CodeHandlerT, typename InterfaceT>
     inline void DualInvariantEngine<CodeHandlerT, InterfaceT>
     ::strengthen(LoopIdentifierT loop, StrengthenerId strengthener) {
+        ++counters.strengthenings;
         StrengthenerT& stren = *strengtheners[strengthener];
         sourceCode.strengthen(loop, stren.nextCandidate());
+    }
+
+    template<typename CodeHandlerT, typename InterfaceT>
+    inline const std::map<std::string, uint64_t> DualInvariantEngine<CodeHandlerT, InterfaceT>
+    ::getCounters() const {
+        std::map<std::string, uint64_t> results;
+        results["code proofs"]    = counters.pchecks;
+        results["strengthenings"] = counters.strengthenings;
+        results["strengtheners"]  = counters.strengtheners;
+        return results;
     }
 
 }

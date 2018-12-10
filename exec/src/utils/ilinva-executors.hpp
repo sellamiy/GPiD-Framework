@@ -22,6 +22,12 @@ static inline void generate_ilnt_x(OptionStorage& opts) {
     opts.control.time.registerTime("generation");
     Generator.execute();
     opts.control.time.registerTime("generation-end");
+
+    opts.control.stats.addStatisticGroup();
+    opts.control.stats.addStatistic("Engine counters", "");
+    for (auto stat : Generator.getEngineCounters()) {
+        opts.control.stats.addStatistic(stat.first, stat.second, 4);
+    }
 }
 
 #endif
