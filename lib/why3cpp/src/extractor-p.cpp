@@ -1,7 +1,6 @@
 #define LIB_WHY3CPP__EXTRACTOR_CPP
 
 #include <snlog/snlog.hpp>
-#include <ugly/Mfff.hpp>
 #include <WhyMLLexer.h>
 #include <why3cpp/extractor-p.hpp>
 
@@ -86,10 +85,6 @@ void why3cpp::whyantlr::Extractor::extract() {
         walker.walk(&aplistener, data);
 
         appls = aplistener.getApplications();
-        // Temporary
-        for (auto& appl : ugly::get_modulo_appls(filename))
-            for (auto& apv : appl.second)
-                appls[appl.first].push_back(apv);
 
         /* Conclude */
         valid = !errl.hasDetectedErrors();
