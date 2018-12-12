@@ -1,6 +1,9 @@
 #ifndef LIB_SMTLIB2_CPP_TOOLS__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__HEADER
 
+#define LIB_SMTLIB2_NAME "Smtlib2 Tools C++ library"
+#cmakedefine LIBSMTLIB2_CPP_VERSION "@LIBSMTLIB2_CPP_VERSION@"
+
 #include <smtlib2tools/smtlib2-annotations.hpp>
 #include <smtlib2tools/smtlib2-functions.hpp>
 

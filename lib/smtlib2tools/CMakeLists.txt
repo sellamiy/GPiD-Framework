@@ -26,10 +26,14 @@ set_target_properties(smtlib2tools-shared PROPERTIES
   OUTPUT_NAME smtlib2tools
   VERSION ${LIBSMTLIB2_CPP_VERSION}
   CLEAN_DIRECT_OUTPUT 1)
-
+# ------------------------------------------------------------------------------
+add_executable(smtlib2-tools "bin/smtlib2-tools.cpp")
+target_link_libraries(smtlib2-tools smtlib2tools-static cxxopts)
+# ------------------------------------------------------------------------------
 install(TARGETS smtlib2tools-static smtlib2tools-shared
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib)
 install(FILES ${LIBSMTLIB2_CPP_HEADERS}
   ${LOCAL_LIB_HEADERS_DIR}/smtlib2tools/smtlib2tools.hpp
   DESTINATION include/smtlib2tools)
+install(TARGETS smtlib2-tools RUNTIME DESTINATION bin)
