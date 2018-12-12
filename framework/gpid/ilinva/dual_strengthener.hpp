@@ -7,7 +7,7 @@
 #ifndef GPID_FRAMEWORK__ILINVA__DUAL_STRENGTHENER_HPP
 #define GPID_FRAMEWORK__ILINVA__DUAL_STRENGTHENER_HPP
 
-#include <atomic>
+#include <stdutils/concurrent-containers.hpp>
 #include <gpid/impgen/guniti.hpp>
 #include <gpid/impgen/advanced_engine.hpp>
 #include <gpid/impgen/algorithm.hpp>
@@ -38,24 +38,23 @@ namespace gpid {
         class ImplicateDisjunctor;
 
         class ImplicateForwarder {
-            std::atomic<bool> readable;
-            std::atomic<bool> writeable;
+            size_t reads;
+            stdutils::ConcurrentVector<ConstraintT> implicants;
 
             typename InterfaceT::ContextManagerT& ictx;
             typename CodeHandlerT::ContextManagerT& ich_ctx;
 
             friend class ImplicateDisjunctor;
-            std::list<ConstraintT> implicants;
         public:
             ImplicateForwarder(typename InterfaceT::ContextManagerT& ictx,
                                typename CodeHandlerT::ContextManagerT& ich_ctx)
-                : readable(false), writeable(true), ictx(ictx), ich_ctx(ich_ctx)
+                : reads(0), ictx(ictx), ich_ctx(ich_ctx)
             {}
 
-            inline constexpr bool isReadable() const { return readable; }
-            inline constexpr bool isWriteable() const { return writeable; }
+            inline constexpr bool isReadable() const { return reads < implicants.size(); }
+            // inline constexpr bool isWriteable() const { return !wlock; }
 
-            inline void unhook() { readable = true; writeable = true; }
+            inline void unhook() { }
 
             void operator()(AbducibleEngine& engine);
             ConstraintT nextImplicant();
@@ -69,8 +68,7 @@ namespace gpid {
             ImplicateDisjunctor() : updated(false) {}
 
             inline void update(ImplicateForwarder& fwder) {
-                source = std::vector<ConstraintT>(std::make_move_iterator(std::begin(fwder.implicants)),
-                                                  std::make_move_iterator(std::end(fwder.implicants)));
+                source = std::vector<ConstraintT>(fwder.implicants.extract());
                 lid = 0; rid = 1;
                 updated = true;
             }
@@ -109,6 +107,8 @@ namespace gpid {
             while (!generator->complete()) {
                 if (forwarder.isReadable()) return true;
             }
+            if (forwarder.isReadable())
+                return true;
             if (!disjunctor.isUpdated()) {
                 disjunctor.update(forwarder);
             }
@@ -116,7 +116,7 @@ namespace gpid {
         }
 
         inline ConstraintT nextCandidate() {
-            if (!generator->complete())
+            if (forwarder.isReadable())
                 return forwarder.nextImplicant();
             else
                 return disjunctor.nextImplicant();
@@ -128,22 +128,13 @@ namespace gpid {
     template<typename CodeHandlerT, typename InterfaceT>
     inline void DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateForwarder
     ::operator()(AbducibleEngine& engine) {
-        while(!writeable);
-        implicants.push_back(ConstraintT(engine.getMapper(), engine.getCurrentImplicate(), ictx));
-        writeable = false;
-        readable = true;
+        implicants.store(ConstraintT(engine.getMapper(), engine.getCurrentImplicate(), ictx));
     }
 
     template<typename CodeHandlerT, typename InterfaceT>
     inline typename DualConditionStrengthener<CodeHandlerT, InterfaceT>::ConstraintT
     DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateForwarder::nextImplicant() {
-        while(!readable);
-        ConstraintT result = implicants.back();
-        // TODO: This copy is necessary for consistency
-        //       Ensure that it is done
-        readable = false;
-        writeable = true;
-        return result;
+        return implicants.access(reads++);
     }
 
     template<typename CodeHandlerT, typename InterfaceT>

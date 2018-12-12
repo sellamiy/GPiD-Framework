@@ -4,5 +4,6 @@
 #include <stdutils/stats-controller.hpp>
 #include <stdutils/traces-bootstrap.hpp>
 #include <stdutils/infoline-bsr.hpp>
+#include <stdutils/concurrent-containers.hpp>
 
 #endif
