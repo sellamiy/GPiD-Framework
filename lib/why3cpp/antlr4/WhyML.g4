@@ -87,19 +87,19 @@ priority_term_cast
     ;
 
 priority_term_equiv
-    : priority_term_byso ((RIGHTARROW | EQUIV) priority_term_let)?
+    : priority_term_byso ((RIGHTARROW | EQUIV) priority_term_equiv)?
     ;
 
 priority_term_byso
-    : priority_term_or ((BY | SO) priority_term_let)?
+    : priority_term_or ((BY | SO) priority_term_byso)?
     ;
 
 priority_term_or
-    : priority_term_and ((PRG_OR | LOG_OR) priority_term_let)?
+    : priority_term_and ((PRG_OR | LOG_OR) priority_term_or)?
     ;
 
 priority_term_and
-    : priority_term_not ((PRG_AND | LOG_AND) priority_term_let)?
+    : priority_term_not ((PRG_AND | LOG_AND) priority_term_and)?
     ;
 
 priority_term_not
@@ -108,19 +108,19 @@ priority_term_not
     ;
 
 priority_term_eq
-    : priority_term_plus (infixop1 priority_term_let)?
+    : priority_term_plus (infixop1 priority_term_eq)?
     ;
 
 priority_term_plus
-    : priority_term_mult (infixop2 priority_term_let)?
+    : priority_term_mult (infixop2 priority_term_plus)?
     ;
 
 priority_term_mult
-    : priority_term_low (infixop3 priority_term_let)?
+    : priority_term_low (infixop3 priority_term_mult)?
     ;
 
 priority_term_low
-    : priority_term_prefix (infixop4 priority_term_let)?
+    : priority_term_prefix (infixop4 priority_term_low)?
     ;
 
 priority_term_prefix
@@ -129,7 +129,7 @@ priority_term_prefix
     ;
 
 priority_term_appl
-    : priority_term_tight term*
+    : priority_term_tight priority_term_tight*
     ;
 
 priority_term_tight
@@ -300,15 +300,15 @@ priority_expr_eq_continuation
     ;
 
 priority_expr_plus
-    : priority_expr_mult (infixop2 priority_expr_if)?
+    : priority_expr_mult (infixop2 priority_expr_plus)?
     ;
 
 priority_expr_mult
-    : priority_expr_low (infixop3 priority_expr_if)?
+    : priority_expr_low (infixop3 priority_expr_mult)?
     ;
 
 priority_expr_low
-    : priority_expr_prefix (infixop4 priority_expr_if)?
+    : priority_expr_prefix (infixop4 priority_expr_low)?
     ;
 
 priority_expr_prefix
@@ -398,29 +398,89 @@ expr_r_forloop : FOR lident EQUAL expr (TO | DOWNTO) expr DO invariant* expr DON
 /* ----------------------------------------------------- */
 // Why3 formulas
 formula
-    : boolean
-    | formula RIGHTARROW formula
-    | formula EQUIV formula
-    | formula LOG_AND formula
-    | formula PRG_AND formula
-    | formula LOG_OR formula
-    | formula PRG_OR formula
-    | formula BY formula
-    | formula SO formula
-    | NOT formula
-    | lqualid
-    | tightop term
-    | prefixop term
-    | term infixop4 term
-    | term infixop3 term
-    | term infixop2 term
-    | term infixop1 term
-    | lqualid term+
-    | IF formula THEN formula ELSE formula
-    | LET pattern EQUAL term IN formula
-    | MATCH term (COMMA term)+ WITH (VBAR formula_case)+ END
+    : priority_formula_constructs
+    ;
+
+priority_formula_constructs
+    : MATCH term (COMMA term)+ WITH (VBAR formula_case)+ END
     | QUANTIFIER binders (COMMA binders)* form_triggers? DOT formula
-    | label formula
+    | priority_formula_let
+    ;
+
+priority_formula_let
+    : IF formula THEN formula ELSE formula
+    | LET pattern EQUAL term IN formula
+    | priority_formula_label
+    ;
+
+priority_formula_label
+    : label formula
+    | priority_formula_cast
+    ;
+
+priority_formula_cast
+    : priority_formula_equiv
+    ;
+
+priority_formula_equiv
+    : priority_formula_byso ((RIGHTARROW | EQUIV) priority_formula_let)?
+    ;
+
+priority_formula_byso
+    : priority_formula_or ((BY | SO) priority_formula_let)?
+    ;
+
+priority_formula_or
+    : priority_formula_and ((PRG_OR | LOG_OR) priority_formula_let)?
+    ;
+
+priority_formula_and
+    : priority_formula_not ((PRG_AND | LOG_AND) priority_formula_let)?
+    ;
+
+priority_formula_not
+    : NOT priority_formula_eq
+    | priority_formula_eq
+    ;
+
+priority_formula_eq
+    : term infixop1 term
+    | priority_formula_plus
+    ;
+
+priority_formula_plus
+    : term infixop2 term
+    | priority_formula_mult
+    ;
+
+priority_formula_mult
+    : term infixop3 term
+    | priority_formula_low
+    ;
+
+priority_formula_low
+    : term infixop4 term
+    | priority_formula_prefix
+    ;
+
+priority_formula_prefix
+    : prefixop term
+    | priority_formula_appl
+    ;
+
+priority_formula_appl
+    : lqualid term+
+    | priority_formula_tight
+    ;
+
+priority_formula_tight
+    : tightop term
+    | priority_formula_lit
+    ;
+
+priority_formula_lit
+    : boolean
+    | lqualid
     | OPAR formula CPAR
     ;
 
@@ -444,9 +504,9 @@ decl
     | PREDICATE predicate_decl (WITH logic_decl)*
     | INDUCTIVE inductive_decl (WITH inductive_decl)*
     | COINDUCTIVE inductive_decl (WITH inductive_decl)*
-    | AXIOM ident_nq COLUMN formula
-    | LEMMA ident_nq COLUMN formula
-    | GOAL ident_nq COLUMN formula
+    | AXIOM ident_nq COLUMN term
+    | LEMMA ident_nq COLUMN term
+    | GOAL ident_nq COLUMN term
     | USE imp_exp tqualid (AS uident)?
     | CLONE  imp_exp tqualid (AS uident)? subst?
     | NAMESPACE IMPORT? uident_nq decl* END
@@ -466,12 +526,12 @@ function_decl
 
 predicate_decl
     : lident_nq label* type_param*
-    | lident_nq label* type_param* EQUAL formula
+    | lident_nq label* type_param* EQUAL term
     ;
 
 inductive_decl : lident_nq label* type_param* EQUAL VBAR? ind_case (VBAR ind_case)* ;
 
-ind_case : ident_nq label* COLUMN formula ;
+ind_case : ident_nq label* COLUMN term ;
 
 imp_exp : (IMPORT | EXPORT)? ;
 
@@ -536,9 +596,9 @@ one_variant : term (WITH variant_rel)? ;
 variant_rel : lqualid ;
 */
 
-invariant : INVARIANT OCURLY formula CCURLY ;
+invariant : INVARIANT OCURLY term CCURLY ;
 
-assertion : (ASSERT | ASSUME | CHECK) OCURLY formula CCURLY | ABSURD ;
+assertion : (ASSERT | ASSUME | CHECK) OCURLY term CCURLY | ABSURD ;
 /* ----------------------------------------------------- */
 // WhyML expressions
 /*
