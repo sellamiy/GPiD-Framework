@@ -3,6 +3,11 @@
 
 #include <WhyMLBaseListener.h>
 
+static inline const std::string deref(const std::string& source) {
+    size_t rloc = source.find("!");
+    return rloc == std::string::npos ? source : source.substr(rloc+1);
+}
+
 class AplextractWhyMLListener : public WhyMLBaseListener {
     map<string, list<vector<string>>> applications;
 
@@ -10,7 +15,7 @@ class AplextractWhyMLListener : public WhyMLBaseListener {
         const std::string& appname = ctx->priority_expr_tight(0)->getText();
         if (appname == "mod") {
             const std::string refname = appname + ctx->priority_expr_tight(2)->getText();
-            applications[refname].push_back({ ctx->priority_expr_tight(1)->getText() });
+            applications[refname].push_back({ deref(ctx->priority_expr_tight(1)->getText()) });
         }
     }
 
