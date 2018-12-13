@@ -30,9 +30,9 @@ namespace gpid {
 
         using CodeConstraintListT = std::list<typename CodeHandlerT::ConstraintT>;
 
-        using ConstraintT = DualConstraintData<CodeHandlerT, InterfaceT, LiteralHypothesis>;
+        using ConstraintT = DualConstraintData<CodeHandlerT, InterfaceT, GunitiHypothesis>;
 
-        using AbducibleEngine = AdvancedAbducibleEngine<InterfaceT>;
+        using AbducibleEngine = GunitiEngine<InterfaceT>;
 
         class ImplicateForwarder;
         class ImplicateDisjunctor;
@@ -80,7 +80,7 @@ namespace gpid {
         };
 
         using ImplicateGenerator =
-            ImpgenAlgorithm<AbducibleEngine,
+            GunitiAlgorithm<InterfaceT,
                             SomehowSmartDualAbducibleGenerator<CodeHandlerT, InterfaceT>,
                             ImplicateForwarder>;
 

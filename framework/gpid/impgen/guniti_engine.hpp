@@ -70,6 +70,9 @@ namespace gpid {
     private:
         SolverInterfaceEngine<InterfaceT> interfaceEngine;
         InterfaceT& solver_contrads;
+        InterfaceT& solver_tmp;
+
+        std::vector<LiteralT> additional_checks;
 
         starray::StaticActivableArray lactive;
         ObjectMapper<LiteralT> lmapper;
@@ -147,6 +150,8 @@ namespace gpid {
 
         inline void prepruneInconsistentLiterals();
 
+        inline void addAdditionalCheckLiteral(typename InterfaceT::LiteralT& cons);
+
         /** Insert the current hypothsis as an implicate in the storage structure. */
         inline void storeCurrentImplicate();
     };
@@ -157,6 +162,7 @@ namespace gpid {
     (size_t size, ContextManagerT& ctx, ImpgenOptions& iopts)
         : interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
+          solver_tmp(interfaceEngine.newInterface()),
           lactive(size),
           storage(interfaceEngine.newInterface(), lmapper),
           skipctrl(iopts)
@@ -170,6 +176,7 @@ namespace gpid {
     (AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts)
         : interfaceEngine(ctx),
           solver_contrads(interfaceEngine.newInterface()),
+          solver_tmp(interfaceEngine.newInterface()),
           lactive(source.count()),
           lmapper(source.getMapper()),
           storage(interfaceEngine.newInterface(), lmapper),
@@ -336,6 +343,23 @@ namespace gpid {
         }
         lactive.reset_iterator();
         selection = lactive.get_first();
+    }
+
+    template<typename InterfaceT>
+    inline void GunitiEngine<InterfaceT>::addAdditionalCheckLiteral
+    (typename InterfaceT::LiteralT& cons) {
+        solver_tmp.push();
+        solver_tmp.addLiteral(cons);
+        bool reject = false;
+        SolverTestStatus status = solver_tmp.check();
+        if (status == SolverTestStatus::ERROR) {
+            reject = true;
+            snlog::l_info() << "Reject additional checker " << cons.str() << snlog::l_end;
+        }
+        solver_tmp.pop();
+        if (!reject) {
+            additional_checks.push_back(cons);
+        }
     }
 
     template<typename InterfaceT>

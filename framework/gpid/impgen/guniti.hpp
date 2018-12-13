@@ -51,6 +51,8 @@ namespace gpid {
         /** Print informations on the algorithm and its parameters. */
         static void printInfos();
 
+        EngineT& getEngine();
+
         /** \return The total number of implicates generated. */
         counter_t getGeneratedImplicatesCount() const;
 
@@ -87,6 +89,12 @@ namespace gpid {
     inline std::map<std::string, GPiDAlgorithm::counter_t>&
     GunitiAlgorithm<InterfaceT, LitGenT, IHandlerT>::getSkippedCounts() {
         return lengine.getSkippedCounts();
+    }
+
+    template<typename InterfaceT, typename LitGenT, typename IHandlerT>
+    inline typename GunitiAlgorithm<InterfaceT, LitGenT, IHandlerT>::EngineT&
+    GunitiAlgorithm<InterfaceT, LitGenT, IHandlerT>::getEngine() {
+        return lengine;
     }
 
     template<typename InterfaceT, typename LitGenT, typename IHandlerT>
