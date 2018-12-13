@@ -103,6 +103,9 @@ select(param_iterator_set& pset, const smttype_map& src, const smtannotation_map
 void SmtLitFabricator::fabricate(const FabricationRule& frule) {
     std::set<smtlit_t> fabricated;
     const std::set<smtparam_size_t> unbounded = frule.unbound();
+    if (unbounded.size() == 0) {
+        fabricated.insert(frule.generate());
+    }
     param_iterator_set itmap;
     for (smtparam_size_t binder : unbounded) {
         const smttype_t& param_type = plist(frule.get_fun()).at(binder);

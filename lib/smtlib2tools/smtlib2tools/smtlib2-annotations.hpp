@@ -8,6 +8,7 @@ namespace smtlib2 {
     static const smtannotation_t annot_core_const = "core-const";
     static const smtannotation_t annot_core_magic = "core-magic";
 
+    static const smtannotation_t annot_prepared = "ant-prepared";
     static const smtannotation_t annot_applied = "application-result";
 
     static const smtannotation_t annot_default = "<?>";

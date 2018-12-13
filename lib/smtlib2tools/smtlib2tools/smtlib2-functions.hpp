@@ -24,6 +24,11 @@ namespace smtlib2 {
 
     static const smtfun_t smt_mod_f = smtfun_t("mod", smt_int, { smt_int, smt_int });
 
+    static inline const smtfun_t smt_plus_f(const smttype_t& type)
+    { return smtfun_t("+", type, { type, type }); }
+    static inline const smtfun_t smt_mult_f(const smttype_t& type)
+    { return smtfun_t("*", type, { type, type }); }
+
     // static const smtfun_t <ident> = smtfun_t("ident", "rtype", { "param1", "param2" });
 
 }

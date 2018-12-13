@@ -76,6 +76,7 @@ namespace smtlib2 {
                                     const smtannotation_map& annots) const;
         inline void update(smtparam_binding_set& binds) const;
         inline smtlit_t generate(const smtparam_binding_set& binds) const;
+        inline smtlit_t generate() const;
         inline const std::set<smtparam_size_t> unbound() const;
     };
 
@@ -168,6 +169,10 @@ namespace smtlib2 {
 
     inline smtlit_t FabricationRule::generate(const smtparam_binding_set& binds) const {
         return apply(fun, binds);
+    }
+
+    inline smtlit_t FabricationRule::generate() const {
+        return apply(fun, default_binds);
     }
 
     inline const std::set<smtlit_t>& SmtLitFabricator::filter(const FiltrationRule& frule, bool reset) {
