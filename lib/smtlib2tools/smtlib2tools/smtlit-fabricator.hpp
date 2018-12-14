@@ -127,10 +127,15 @@ namespace smtlib2 {
 
     template <typename VerifiableT>
     inline bool WorkRule::accept_disj(const VerifiableT& e, const smtannotation_map& annots) const {
-        for (const FabricationFilter& filter : filters)
-            if (filter.accept(e, annots) == FilterResult::Accept)
+        bool only_skips = true;
+        for (const FabricationFilter& filter : filters) {
+            auto accres = filter.accept(e, annots);
+            if (accres == FilterResult::Accept)
                 return true;
-        return false;
+            if (accres == FilterResult::Refuse)
+                only_skips = false;
+        }
+        return only_skips;
     }
 
     inline bool WorkRule::accept(const smtlit_t& l, const smtannotation_map& annots) const {
