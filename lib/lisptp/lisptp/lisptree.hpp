@@ -15,7 +15,7 @@ namespace lisptp {
         const std::string value;
         const bool callstate;
         const std::list<LispTreeNodePtr> leaves;
-        void str(std::stringstream& ss) const;
+        void str(std::stringstream& ss, size_t pad, bool& ep) const;
     public:
         LispTreeNode(const std::string v, bool cs, const std::list<LispTreeNodePtr> ls)
             : value(v), callstate(cs), leaves(ls) {}

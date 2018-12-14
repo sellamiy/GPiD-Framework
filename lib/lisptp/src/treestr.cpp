@@ -6,21 +6,33 @@
 using namespace lisptp;
 using LispTreeNodePtr = std::shared_ptr<LispTreeNode>;
 
-void LispTreeNode::str(std::stringstream& ss) const {
+static inline const std::string pad(size_t padding) {
+    std::string res = "";
+    for (size_t p = 0; p < padding; ++p)
+        res += ' ';
+    return res;
+}
+
+void LispTreeNode::str(std::stringstream& ss, size_t padding, bool& padpars) const {
+    padpars = true;
     if (isCall()) {
-        ss << "(" << value;
+        ss << pad(padding) << '(' << value;
         for (LispTreeNodePtr leaf : leaves) {
-            ss << " ";
-            leaf->str(ss);
+            ss << '\n';
+            leaf->str(ss, padding+1, padpars);
         }
-        ss << ")";
+        if (padpars) ss << pad(padding);
+        ss << ')';
+        padpars = false;
     } else {
-        ss << value;
+        ss << pad(padding) << value << '\n';
     }
 }
 
 const std::string LispTreeNode::str() const {
     std::stringstream ss;
-    str(ss);
+    bool padpars = false;
+    str(ss, 0, padpars);
+    ss << '\n';
     return ss.str();
 }

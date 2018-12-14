@@ -3,6 +3,7 @@
 #include <vector>
 #include <cxxopts.hpp>
 #include <snlog/snlog.hpp>
+#include <lisptp/lisptree.hpp>
 #include <why3cpp/why3cpp.hpp>
 
 using namespace std;
@@ -73,7 +74,9 @@ static inline int whdl_annotate(const Why3ToolsOpts& opts) {
     for (const string& filename : opts.inputs) {
         l_info() << filename << " (annotations)" << l_end;
         parser = shared_ptr<AnnotatorParser>(new AnnotatorParser(filename));
-        parser->write(cout);
+        stringstream ss;
+        parser->write(ss);
+        cout << lisptp::parse(ss.str())->str();
     }
     if (parser->hasFailed())
         return EXIT_FAILURE;
