@@ -27,6 +27,8 @@ namespace gpid {
         std::set<size_t>::iterator invariants_iter;
 
         std::list<W3WML_Constraint> literals;
+
+        std::map<std::string, std::list<std::string>> overrides;
     public:
         using ConstraintT = W3WML_Constraint;
         using ContextManagerT = W3WML_Loop_Ctx;
@@ -54,11 +56,13 @@ namespace gpid {
 
         const std::string generateAbductionProblem(LoopIdentifierT);
 
-        const std::list<ConstraintT>& generateSourceLiterals(LoopIdentifierT);
+        const std::list<ConstraintT>& generateSourceLiterals(LoopIdentifierT, const std::string&);
 
         ContextManagerT generateContext(LoopIdentifierT);
 
         LoopIdentifierT selectUnprovenBlock();
+
+        void loadOverridingAbducibles(const std::string& overrider);
 
         inline void exportSource(const std::string& filename) const {
             problem.save_to(filename, plits.getReferences());

@@ -5,6 +5,7 @@
 #include <snlog/snlog.hpp>
 #include <lisptp/lisptp.hpp>
 #include <why3cpp/why3cpp.hpp>
+#include <gpid/utils/abdparseutils.hpp>
 #include <why3-whyml-ich.hpp>
 
 #define WHYML_TEMPORARY_SOURCEFILE "temp_gpid_ilinva_w3wml.mlw"
@@ -75,10 +76,20 @@ W3WML_ICH::LoopIdentifierT W3WML_ICH::selectUnprovenBlock() {
     return res;
 }
 
-const std::list<W3WML_Constraint>& W3WML_ICH::generateSourceLiterals(LoopIdentifierT) {
+const std::list<W3WML_Constraint>& W3WML_ICH::generateSourceLiterals
+(LoopIdentifierT, const std::string& overrider) {
     if (literals.empty()) {
-        for (const std::string& lit : plits.getLiterals()) {
-            literals.push_back(W3WML_Constraint(lit));
+        if (overrider.empty()) {
+            for (const std::string& lit : plits.getLiterals()) {
+                literals.push_back(W3WML_Constraint(lit));
+            }
+        } else {
+            // Read from overriding file
+            if (overrides[overrider].empty())
+                loadOverridingAbducibles(overrider);
+            for (const std::string& lit : overrides[overrider]) {
+                literals.push_back(W3WML_Constraint(lit));
+            }
         }
     }
     return literals;
@@ -86,6 +97,20 @@ const std::list<W3WML_Constraint>& W3WML_ICH::generateSourceLiterals(LoopIdentif
 
 W3WML_Loop_Ctx W3WML_ICH::generateContext(LoopIdentifierT lid) {
     return W3WML_Loop_Ctx(plits.getReferences(), problem.getInvariant(lid).conj);
+}
+
+struct W_AbdStorerHandler : public AbducibleHandler {
+    std::list<std::string>& storage;
+    W_AbdStorerHandler(std::list<std::string>& storage) : storage(storage) {}
+    virtual void allocate(const std::string, size_t) override {}
+    virtual void handleAbducible(const std::shared_ptr<std::string>& abd) override {
+        storage.push_back(*abd);
+    }
+};
+
+void W3WML_ICH::loadOverridingAbducibles(const std::string& overrider) {
+    W_AbdStorerHandler hdler(overrides[overrider]);
+    loadAbducibles(overrider, hdler);
 }
 
 const W3WML_Constraint W3WML_Loop_Ctx::getCandidateConstraint() {

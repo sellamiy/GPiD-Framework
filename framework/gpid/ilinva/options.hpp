@@ -19,6 +19,8 @@ namespace gpid {
 
         uint32_t max_depth = std::numeric_limits<uint32_t>::max();
 
+        std::string abd_override;
+
     };
 
 }

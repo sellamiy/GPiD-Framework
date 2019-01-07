@@ -48,6 +48,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 
 	parser.add_options("Input")
 	    ("i,input", "Input file", cxxopts::value<std::string>())
+            ("a,override-abducibles", "Abducible file", cxxopts::value<std::string>())
 	    ;
 
 #ifndef SINGLE_SOLVER_ONLY
@@ -108,6 +109,9 @@ static inline OptionStatus handleOptions
 
         if (results.count("output"))
 	    opts.ilinva.output = results["output"].as<std::string>();
+
+        if (results.count("override-abducibles"))
+            opts.ilinva.abd_override = results["override-abducibles"].as<std::string>();
 
 	if (results.count("input")) {
 	    opts.ilinva.input_file = results["input"].as<std::string>();
