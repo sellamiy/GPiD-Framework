@@ -19,6 +19,14 @@ class AplextractWhyMLListener : public WhyMLBaseListener {
         }
     }
 
+    void extractApplication(WhyMLParser::Priority_term_applContext *ctx) {
+        const std::string& appname = ctx->priority_term_tight(0)->getText();
+        if (appname == "mod") {
+            const std::string refname = appname + ctx->priority_term_tight(2)->getText();
+            applications[refname].push_back({ deref(ctx->priority_term_tight(1)->getText()) });
+        }
+    }
+
     void extractOperation(WhyMLParser::Priority_expr_plusContext *ctx) {
         const std::string& opname = ctx->infixop2()->getText();
         if (opname == "+") {
@@ -62,6 +70,13 @@ public:
 
     virtual void enterPriority_expr_appl(WhyMLParser::Priority_expr_applContext *ctx) override {
         if (ctx->priority_expr_tight().size() > 1) {
+            extractApplication(ctx);
+        }
+        enterEveryRule(ctx);
+    }
+
+    virtual void enterPriority_term_appl(WhyMLParser::Priority_term_applContext *ctx) override {
+        if (ctx->priority_term_tight().size() > 1) {
             extractApplication(ctx);
         }
         enterEveryRule(ctx);
