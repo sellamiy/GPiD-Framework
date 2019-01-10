@@ -21,6 +21,8 @@ namespace gpid {
 
         std::string abd_override;
 
+        bool disjunct = true;
+
     };
 
 }

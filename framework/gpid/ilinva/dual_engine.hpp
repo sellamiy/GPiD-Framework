@@ -45,7 +45,9 @@ namespace gpid {
             return sourceCode.selectUnprovenBlock();
         }
 
-        StrengthenerId newStrengthener(LoopIdentifierT loop, const std::string& overrider=GPID_EMPTYSTR);
+        StrengthenerId newStrengthener(LoopIdentifierT loop, const std::string& overrider=GPID_EMPTYSTR,
+                                       bool use_disjunctions=true);
+
         inline bool hasMoreStrengthenings(StrengthenerId strengthener) const {
             return strengtheners.at(strengthener)->hasMoreStrengthenings();
         }
@@ -74,12 +76,13 @@ namespace gpid {
     template<typename CodeHandlerT, typename InterfaceT>
     typename DualInvariantEngine<CodeHandlerT, InterfaceT>::StrengthenerId
     DualInvariantEngine<CodeHandlerT, InterfaceT>::newStrengthener
-    (LoopIdentifierT loop, const std::string& overrider) {
+    (LoopIdentifierT loop, const std::string& overrider, bool use_disjunctions) {
         ++counters.strengtheners;
         auto loopCtx = sourceCode.generateContext(loop);
         std::shared_ptr<StrengthenerT>
             stren(new StrengthenerT(sourceCode.generateAbductionProblem(loop),
-                                    sourceCode.generateSourceLiterals(loop, overrider), loopCtx));
+                                    sourceCode.generateSourceLiterals(loop, overrider), loopCtx,
+                                    use_disjunctions));
         strengtheners[stren->getId()] = stren;
         return stren->getId();
     }

@@ -111,7 +111,7 @@ namespace gpid {
                 goto prebacktrack;
 
             loop = pengine.selectUnprovenLoop();
-            strengthener = pengine.newStrengthener(loop, options.abd_override);
+            strengthener = pengine.newStrengthener(loop, options.abd_override, options.disjunct);
             level_stack.push(level_ids_t(loop, strengthener));
 
             if (pengine.hasMoreStrengthenings(strengthener))

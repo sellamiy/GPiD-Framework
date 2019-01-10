@@ -62,10 +62,11 @@ namespace gpid {
 
         class ImplicateDisjunctor {
             std::vector<ConstraintT> source;
+            bool allowed;
             bool updated;
             size_t lid, rid;
         public:
-            ImplicateDisjunctor() : updated(false) {}
+            ImplicateDisjunctor(bool allowed=true) : allowed(allowed), updated(false) {}
 
             inline void update(ImplicateForwarder& fwder) {
                 source = std::vector<ConstraintT>(fwder.implicants.extract());
@@ -75,7 +76,7 @@ namespace gpid {
 
             inline constexpr bool isUpdated() const { return updated; }
 
-            inline bool canDisjunct() const { return lid + 1 < source.size(); }
+            inline bool canDisjunct() const { return allowed && (lid + 1 < source.size()); }
             ConstraintT nextImplicant();
         };
 
@@ -98,7 +99,8 @@ namespace gpid {
         ImplicateGeneratorPtr generator;
     public:
         DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
-                                  typename CodeHandlerT::ContextManagerT& ich_ctx);
+                                  typename CodeHandlerT::ContextManagerT& ich_ctx,
+                                  bool use_disjunctions=true);
         ~DualConditionStrengthener();
 
         inline constexpr IdentifierT getId() const { return identifier; }
@@ -151,9 +153,11 @@ namespace gpid {
     template<typename CodeHandlerT, typename InterfaceT>
     DualConditionStrengthener<CodeHandlerT, InterfaceT>
     ::DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
-                                typename CodeHandlerT::ContextManagerT& ich_ctx)
+                                typename CodeHandlerT::ContextManagerT& ich_ctx,
+                                bool use_disjunctions)
         : identifier(nextStrengthenerId()),
           forwarder(_problemBuilder.getContextManager(), ich_ctx),
+          disjunctor(use_disjunctions),
           generator(nullptr)
     {
         _problemBuilder.load(pfile, "smt2");
