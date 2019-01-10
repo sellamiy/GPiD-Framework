@@ -83,6 +83,12 @@ namespace gpid {
             LoopId loop = level_stack.top().first;
             pengine.release(loop);
             level_stack.pop();
+            /* Check for another loop to strengthen here */
+            /* TODO |v */
+            /* Use a concept of tested LoopIds at this level to ensure termination
+               We need to try other invariants strengthenings in order to ensure that
+               we cannot obtain an invariant. */
+            /* Backtrack to previous level */
             if (level_stack.empty()) break;
             strengthener = level_stack.top().second;
         }
