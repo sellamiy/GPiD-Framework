@@ -30,11 +30,6 @@ module Oopsla09
     k := !k + 1;
    done;
 
-   while unknown3() do
-    invariant { true }
-    ()
-   done;
-
    n := !i;
    while !j >= !n do
     invariant { true }
