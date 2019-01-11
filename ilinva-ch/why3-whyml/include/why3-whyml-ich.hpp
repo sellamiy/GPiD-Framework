@@ -24,7 +24,7 @@ namespace gpid {
     class W3WML_ICH {
         W3WML_Template problem;
         W3WML_LSet plits;
-        std::set<size_t>::iterator invariants_iter;
+        std::map<size_t, std::set<size_t>::iterator> invariants_iter;
 
         std::list<W3WML_Constraint> literals;
 
@@ -37,8 +37,7 @@ namespace gpid {
 
         W3WML_ICH(const std::string& filename)
             : problem(filename),
-              plits(filename),
-              invariants_iter(problem.getInvariantIds().begin())
+              plits(filename)
         {}
 
         inline void strengthen(LoopIdentifierT id, ConstraintT cons) {
@@ -60,7 +59,7 @@ namespace gpid {
 
         ContextManagerT generateContext(LoopIdentifierT);
 
-        LoopIdentifierT selectUnprovenBlock();
+        LoopIdentifierT selectUnprovenBlock(size_t id);
 
         void loadOverridingAbducibles(const std::string& overrider);
 

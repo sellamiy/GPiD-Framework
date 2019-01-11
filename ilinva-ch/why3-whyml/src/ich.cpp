@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <snlog/snlog.hpp>
+#include <stdutils/collections.hpp>
 #include <lisptp/lisptp.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <gpid/utils/abdparseutils.hpp>
@@ -59,19 +60,23 @@ const std::string W3WML_ICH::generateAbductionProblem(LoopIdentifierT) {
     return SMTV2_TEMPORARY_ABDUCEFILE;
 }
 
-W3WML_ICH::LoopIdentifierT W3WML_ICH::selectUnprovenBlock() {
+W3WML_ICH::LoopIdentifierT W3WML_ICH::selectUnprovenBlock(size_t id) {
     // TODO: Adapt on what follows v|
-    snlog::l_warn() << "For Now, loop invariants cannot be distinguished from" << snlog::l_end;
-    snlog::l_warn() << " their source file. This means that a loop-proof check" << snlog::l_end;
-    snlog::l_warn() << " is equivalent to a file-proof check. This also means" << snlog::l_end;
-    snlog::l_warn() << " that this version actually should not handle programs" << snlog::l_end;
-    snlog::l_warn() << " containing more than one loop." << snlog::l_end;
-    snlog::l_warn() << __FILE__ << " : " << __LINE__ << snlog::l_end;
-    snlog::l_info() << "Using loop-id rotation as a temporary solution" << snlog::l_end;
-    LoopIdentifierT res = *invariants_iter;
-    invariants_iter++;
-    if (invariants_iter == problem.getInvariantIds().end()) {
-        invariants_iter = problem.getInvariantIds().begin();
+    snlog::l_warn() << __FILE__ << " : " << __LINE__ << snlog::l_end
+                    << snlog::l_warn << "**Fnlicd undistinction invariant-proof/file-proof"
+                    << snlog::l_end << snlog::l_info
+                    << "Using loop-id rotation as a temporary solution" << snlog::l_end;
+    LoopIdentifierT res;
+    if (stdutils::inmap(invariants_iter, id)) {
+        res = *invariants_iter.at(id);
+        invariants_iter.at(id)++;
+        if (invariants_iter.at(id) == problem.getInvariantIds().end()) {
+            invariants_iter[id] = problem.getInvariantIds().begin();
+        }
+    } else {
+        invariants_iter[id] = problem.getInvariantIds().begin();
+        res = *invariants_iter.at(id);
+        invariants_iter.at(id)++;
     }
     return res;
 }

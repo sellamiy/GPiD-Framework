@@ -41,8 +41,8 @@ namespace gpid {
             ++counters.pchecks;
             return sourceCode.proofCheck();
         }
-        inline LoopIdentifierT selectUnprovenLoop() {
-            return sourceCode.selectUnprovenBlock();
+        inline LoopIdentifierT selectUnprovenLoop(size_t id) {
+            return sourceCode.selectUnprovenBlock(id);
         }
 
         StrengthenerId newStrengthener(LoopIdentifierT loop, const std::string& overrider=GPID_EMPTYSTR,

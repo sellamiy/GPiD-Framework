@@ -33,7 +33,9 @@ namespace gpid {
         using LoopId = typename EngineT::LoopIdentifierT;
         using StrengthenerId = typename StrengthenerT::IdentifierT;
         using level_ids_t = std::pair<LoopId, StrengthenerId>;
+
         std::stack<level_ids_t> level_stack;
+        std::stack<std::set<LoopId>> tested_lids;
 
         void reset();
         void backtrack();
@@ -83,14 +85,19 @@ namespace gpid {
             LoopId loop = level_stack.top().first;
             pengine.release(loop);
             level_stack.pop();
-            /* Check for another loop to strengthen here */
-            /* TODO |v */
-            /* Use a concept of tested LoopIds at this level to ensure termination
-               We need to try other invariants strengthenings in order to ensure that
-               we cannot obtain an invariant. */
-            /* Backtrack to previous level */
-            if (level_stack.empty()) break;
-            strengthener = level_stack.top().second;
+            /* Check for other strengthenable loops */
+            LoopId loop_t = pengine.selectUnprovenLoop(level_stack.size());
+            if (stdutils::inset(tested_lids.top(), loop_t)) {
+                /* Backtrack */
+                tested_lids.pop();
+                if (level_stack.empty()) break;
+                strengthener = level_stack.top().second;
+            } else {
+                /* Try this other loop */
+                strengthener = pengine.newStrengthener(loop_t, options.abd_override, options.disjunct);
+                level_stack.push(level_ids_t(loop_t, strengthener));
+                tested_lids.top().insert(loop_t);
+            }
         }
     }
 
@@ -116,9 +123,10 @@ namespace gpid {
             if (level_stack.size() >= options.max_depth)
                 goto prebacktrack;
 
-            loop = pengine.selectUnprovenLoop();
+            loop = pengine.selectUnprovenLoop(level_stack.size());
             strengthener = pengine.newStrengthener(loop, options.abd_override, options.disjunct);
             level_stack.push(level_ids_t(loop, strengthener));
+            tested_lids.push({ loop });
 
             if (pengine.hasMoreStrengthenings(strengthener))
                 pengine.strengthen(level_stack.top());
