@@ -64,6 +64,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
             ("d,depth-limit", "Maximal strengthening depth allowed", cxxopts::value<uint32_t>())
             ("c,conjunctive-only", "Only seek conjunctive loop invariants", cxxopts::value<bool>())
             ("max-strengthening-size", "Maximal depth of the abduction", cxxopts::value<uint32_t>())
+            ("smt-time-limit", "Timeout for abduction smt tests (seconds)", cxxopts::value<uint64_t>())
             ;
 
 	parser.add_options("Output")
@@ -114,6 +115,9 @@ static inline OptionStatus handleOptions
 
         if (results.count("max-strengthening-size"))
             opts.ilinva.max_strengthening_size = results["max-strengthening-size"].as<uint32_t>();
+
+        if (results.count("smt-time-limit"))
+            opts.ilinva.smt_time_limit = results["smt-time-limit"].as<uint64_t>();
 
         if (results.count("output"))
 	    opts.ilinva.output = results["output"].as<std::string>();

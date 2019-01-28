@@ -14,6 +14,7 @@ namespace gpid {
 
     class MinisatInterface {
         MinisatContextManager& ctx;
+        const SolverInterfaceOptions& siopts;
         Minisat::SimpSolver solver;
         MinisatModelWrapper iw_mdl;
 
@@ -45,7 +46,7 @@ namespace gpid {
         (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
         void clearUnsafeClauses();
 
-        MinisatInterface(MinisatContextManager& ctx);
+        MinisatInterface(MinisatContextManager& ctx, const SolverInterfaceOptions& siopts);
         MinisatContextManager& getContextManager();
     };
 
@@ -118,6 +119,9 @@ namespace gpid {
     }
 
     inline gpid::SolverTestStatus MinisatInterface::check() {
+        if (siopts.localTimeout > 0)
+            snlog::l_warn() << "Minisat API interface does not handle check-call timeout yet"
+                            << snlog::l_end;
         Minisat::lbool ret = solver.solveLimited(assumps);
         if      (ret == Minisat::l_True)  return gpid::SolverTestStatus::SAT;
         else if (ret == Minisat::l_False) return gpid::SolverTestStatus::UNSAT;

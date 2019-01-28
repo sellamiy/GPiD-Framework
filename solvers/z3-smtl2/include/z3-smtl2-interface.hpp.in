@@ -4,12 +4,15 @@
 #include <gpid/utils/smtlib2solver.hpp>
 
 #cmakedefine Z3_EXECUTABLE "@Z3_EXECUTABLE@"
+#define Z3_TIMEOUT_CLIOPT "-t"
+#define Z3_TIMEOUT_FACTOR 1000
 
 namespace gpid {
 
     struct Z3InterfaceSMTl2CLI : public SMTl2SolverInterface {
-        Z3InterfaceSMTl2CLI(SMTl2SolverManager& manager)
-            : SMTl2SolverInterface(Z3_EXECUTABLE, manager) {}
+        Z3InterfaceSMTl2CLI(SMTl2SolverManager& manager, const SolverInterfaceOptions& siopts)
+            : SMTl2SolverInterface(Z3_EXECUTABLE, manager, siopts,
+                                   Z3_TIMEOUT_CLIOPT, Z3_TIMEOUT_FACTOR) {}
     };
 
 }

@@ -12,6 +12,7 @@ namespace gpid {
 
     class CVC4InterfaceAPI {
         CVC4::ExprManager& ctx;
+        const SolverInterfaceOptions& siopts;
         CVC4::SmtEngine solver;
         CVC4ModelWrapper iw_mdl;
     public:
@@ -39,7 +40,7 @@ namespace gpid {
         (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
         void clearUnsafeClauses();
 
-        CVC4InterfaceAPI(CVC4::ExprManager& ctx);
+        CVC4InterfaceAPI(CVC4::ExprManager& ctx, const SolverInterfaceOptions& siopts);
         CVC4::ExprManager& getContextManager();
     };
 
@@ -106,6 +107,9 @@ namespace gpid {
     }
 
     inline gpid::SolverTestStatus CVC4InterfaceAPI::check() {
+        if (siopts.localTimeout > 0)
+            snlog::l_warn() << "CVC4 API interface does not handle check-call timeout yet"
+                            << snlog::l_end;
         CVC4::Result qres = solver.checkSat();
         if      (qres.isSat() == CVC4::Result::SAT)   return SolverTestStatus::SAT;
         else if (qres.isSat() == CVC4::Result::UNSAT) return SolverTestStatus::UNSAT;

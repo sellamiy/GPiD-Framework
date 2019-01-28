@@ -160,7 +160,7 @@ namespace gpid {
 
     template<typename InterfaceT> GunitiEngine<InterfaceT>::GunitiEngine
     (size_t size, ContextManagerT& ctx, ImpgenOptions& iopts)
-        : interfaceEngine(ctx),
+        : interfaceEngine(ctx, extractInterfaceOptions(iopts)),
           solver_contrads(interfaceEngine.newInterface()),
           solver_tmp(interfaceEngine.newInterface()),
           lactive(size),
@@ -174,7 +174,7 @@ namespace gpid {
     template<typename InterfaceT>
     template<typename AbducibleSource> GunitiEngine<InterfaceT>::GunitiEngine
     (AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts)
-        : interfaceEngine(ctx),
+        : interfaceEngine(ctx, extractInterfaceOptions(iopts)),
           solver_contrads(interfaceEngine.newInterface()),
           solver_tmp(interfaceEngine.newInterface()),
           lactive(source.count()),

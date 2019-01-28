@@ -13,6 +13,7 @@ namespace gpid {
 
     class Z3InterfaceAPI {
         z3::context& ctx;
+        const SolverInterfaceOptions& siopts;
         z3::solver solver;
         Z3ModelWrapper iw_mdl;
     public:
@@ -40,7 +41,7 @@ namespace gpid {
         (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
         void clearUnsafeClauses();
 
-        Z3InterfaceAPI(z3::context& ctx);
+        Z3InterfaceAPI(z3::context& ctx, const SolverInterfaceOptions& siopts);
         z3::context& getContextManager();
     };
 
@@ -102,6 +103,9 @@ namespace gpid {
     }
 
     inline gpid::SolverTestStatus Z3InterfaceAPI::check() {
+        if (siopts.localTimeout > 0)
+            snlog::l_warn() << "Z3 API interface does not handle check-call timeout yet"
+                            << snlog::l_end;
         z3::check_result qres = solver.check();
         switch (qres) {
         case z3::sat:   return SolverTestStatus::SAT;

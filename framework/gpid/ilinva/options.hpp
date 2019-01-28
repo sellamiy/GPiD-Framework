@@ -25,6 +25,8 @@ namespace gpid {
 
         uint32_t max_strengthening_size = std::numeric_limits<uint32_t>::max() - 1;
 
+        uint64_t smt_time_limit = 0;
+
     };
 
 }

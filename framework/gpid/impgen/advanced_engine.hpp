@@ -212,7 +212,7 @@ namespace gpid {
     AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine
     (size_t size, ContextManagerT& ctx, ImpgenOptions& iopts)
         : options(iopts),
-          interfaceEngine(ctx),
+          interfaceEngine(ctx, extractInterfaceOptions(iopts)),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
           lactive(size),
@@ -226,7 +226,7 @@ namespace gpid {
     AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine
     (AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts)
         : options(iopts),
-          interfaceEngine(ctx),
+          interfaceEngine(ctx, extractInterfaceOptions(iopts)),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
           lactive(source.count()),

@@ -88,9 +88,19 @@ static inline void smtlib2_check_cleanup (const std::string script_file) {
     }
 }
 
+static inline const std::string patch_solver_exec
+(const std::string& solver_exec, const SolverInterfaceOptions& siopts,
+ const SMTl2SolverInterface::TimeoutData& tdata) {
+    if (siopts.localTimeout == 0)
+        return solver_exec;
+    const uint64_t factorized_tlim = tdata.factor * siopts.localTimeout;
+    return solver_exec + " " + tdata.cliopt + " " + std::to_string(factorized_tlim);
+}
+
 SolverTestStatus SMTl2SolverInterface::check() {
     write_smtlib2_script(ctx, assertions, level, script_file);
-    SolverTestStatus res = execute_solver_script(ctx, solver_exec, script_file);
+    const std::string patched_solver_exec = patch_solver_exec(solver_exec, siopts, tdata);
+    SolverTestStatus res = execute_solver_script(ctx, patched_solver_exec, script_file);
     smtlib2_check_cleanup(script_file);
     return res;
 }

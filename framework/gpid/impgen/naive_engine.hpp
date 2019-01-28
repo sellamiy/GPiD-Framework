@@ -186,7 +186,7 @@ namespace gpid {
     template<typename InterfaceT>
     NaiveAbducibleEngine<InterfaceT>::NaiveAbducibleEngine
     (size_t size, ContextManagerT& ctx, ImpgenOptions& iopts)
-        : interfaceEngine(ctx),
+        : interfaceEngine(ctx, extractInterfaceOptions(iopts)),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
           skipctrl(iopts),
@@ -197,7 +197,7 @@ namespace gpid {
     template<typename AbducibleSource>
     NaiveAbducibleEngine<InterfaceT>::NaiveAbducibleEngine
     (AbducibleSource& source, ContextManagerT& ctx, ImpgenOptions& iopts)
-        : interfaceEngine(ctx),
+        : interfaceEngine(ctx, extractInterfaceOptions(iopts)),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
           lmapper(source.getMapper()),

@@ -54,6 +54,18 @@ namespace gpid {
             ;
     }
 
+    struct SolverInterfaceOptions {
+        const uint64_t localTimeout;
+
+        SolverInterfaceOptions()
+            : localTimeout(0)
+        {}
+
+        SolverInterfaceOptions(uint64_t localTimeout)
+            : localTimeout(localTimeout)
+        {}
+    };
+
     /** Manager for handling multiple solver interfaces with a shared context. */
     template<typename CInterfaceT>
     class SolverInterfaceEngine {
@@ -68,6 +80,7 @@ namespace gpid {
         using ModelT = typename InterfaceT::ModelT;
     private:
         ContextManagerT& _ctx;
+        SolverInterfaceOptions _siopts;
         using interface_id_t = size_t;
         std::vector<InterfaceT*> _interfaces;
 
@@ -75,7 +88,7 @@ namespace gpid {
         inline InterfaceT& getInterface(interface_id_t id) const;
     public:
         /** Initialization of the multi-interface handler. */
-        SolverInterfaceEngine(ContextManagerT& ctx);
+        SolverInterfaceEngine(ContextManagerT& ctx, const SolverInterfaceOptions& siopts);
         ~SolverInterfaceEngine();
 
         /** Initialize a new interface instance. */
@@ -87,8 +100,9 @@ namespace gpid {
     /* *** Implementations *** */
 
     template<typename CInterfaceT>
-    SolverInterfaceEngine<CInterfaceT>::SolverInterfaceEngine(ContextManagerT& ctx)
-        : _ctx(ctx) {}
+    SolverInterfaceEngine<CInterfaceT>::SolverInterfaceEngine
+    (ContextManagerT& ctx, const SolverInterfaceOptions& siopts)
+        : _ctx(ctx), _siopts(siopts) {}
 
     template<typename CInterfaceT>
     SolverInterfaceEngine<CInterfaceT>::~SolverInterfaceEngine() {
@@ -101,7 +115,7 @@ namespace gpid {
     inline typename SolverInterfaceEngine<CInterfaceT>::interface_id_t
     SolverInterfaceEngine<CInterfaceT>::createInterface() {
         interface_id_t nid = _interfaces.size();
-        _interfaces.push_back(new InterfaceT(_ctx));
+        _interfaces.push_back(new InterfaceT(_ctx, _siopts));
         return nid;
     }
 

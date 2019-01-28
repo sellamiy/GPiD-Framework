@@ -23,17 +23,19 @@ namespace gpid {
     struct DStrOptions {
         const bool disjunctions;
         const uint32_t sizelim;
+        const uint64_t smt_tlim;
 
         explicit DStrOptions()
-            : disjunctions(true), sizelim(1)
+            : disjunctions(true), sizelim(1), smt_tlim(0)
         {}
 
-        DStrOptions(bool disjunctions, uint32_t sizelim)
-            : disjunctions(disjunctions), sizelim(sizelim)
+        DStrOptions(bool disjunctions, uint32_t sizelim, uint64_t smt_tlim)
+            : disjunctions(disjunctions), sizelim(sizelim), smt_tlim(smt_tlim)
         {}
 
         DStrOptions(const IlinvaOptions& iopts)
-            : disjunctions(iopts.disjunct), sizelim(iopts.max_strengthening_size)
+            : disjunctions(iopts.disjunct), sizelim(iopts.max_strengthening_size),
+              smt_tlim(iopts.smt_time_limit)
         {}
     };
 
@@ -185,6 +187,7 @@ namespace gpid {
         abductionOpts.preprune_literals = true;
         abductionOpts.additional_checker = false; // Prevents non redundant literals
         abductionOpts.additional_check_mode = SolverTestStatus::SAT;
+        abductionOpts.smt_time_limit = dopts.smt_tlim;
         generator =
             ImplicateGeneratorPtr(new ImplicateGenerator(_problemBuilder, *abdGenerator, forwarder,
                                                          abductionCoreOpts, abductionOpts));

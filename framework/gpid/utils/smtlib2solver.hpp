@@ -101,9 +101,12 @@ namespace gpid {
         using LiteralT = SMTl2SolverLiteral;
         using ModelT = SMTl2SolverModel;
         using ProblemLoaderT = SMTl2SolverProblemLoader;
+        struct TimeoutData { const std::string cliopt; const uint32_t factor; };
     private:
         const std::string solver_exec;
         ContextManagerT& ctx;
+        const SolverInterfaceOptions& siopts;
+        const TimeoutData tdata;
 
         const std::string script_file;
 
@@ -112,8 +115,10 @@ namespace gpid {
 
         ModelT model;
     public:
-        SMTl2SolverInterface(const std::string solver_exec, ContextManagerT& manager)
-            : solver_exec(solver_exec), ctx(manager),
+        SMTl2SolverInterface(const std::string& solver_exec, ContextManagerT& manager,
+                             const SolverInterfaceOptions& siopts,
+                             const std::string& to_cliopt, uint32_t to_factor)
+            : solver_exec(solver_exec), ctx(manager), siopts(siopts), tdata({ to_cliopt, to_factor }),
               script_file("_ssivc_gpid_temp_" + std::to_string((uintptr_t)this) + ".smt2")
         {}
 

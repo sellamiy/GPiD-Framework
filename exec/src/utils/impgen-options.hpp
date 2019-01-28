@@ -91,6 +91,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
 
             ("t,time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
             ("c,implicate-limit", "Maximal number of implicates to generate", cxxopts::value<uint64_t>())
+
+            ("smt-time-limit", "Timeout for single smt tests (seconds)", cxxopts::value<uint64_t>())
             ;
 
 	parser.add_options("Output")
@@ -205,6 +207,9 @@ static inline OptionStatus handleOptions
             opts.core.time_limit = results["time-limit"].as<uint64_t>();
         if (results.count("implicate-limit"))
             opts.impgen.implicate_limit = results["implicate-limit"].as<uint64_t>();
+
+        if (results.count("smt-time-limit"))
+            opts.impgen.smt_time_limit = results["smt-time-limit"].as<uint64_t>();
 
 	if (results.count("input")) {
 	    opts.input = results["input"].as<std::string>();

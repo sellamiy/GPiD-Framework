@@ -61,7 +61,13 @@ namespace gpid {
         /** If input_type == GENERATOR, id of an hypotheses generator */
         std::string input_generator = "<none>";
 
+        uint64_t smt_time_limit = 0;
+
     };
+
+    static inline const SolverInterfaceOptions extractInterfaceOptions(const ImpgenOptions& iopts) {
+        return SolverInterfaceOptions(iopts.smt_time_limit);
+    }
 
 }
 

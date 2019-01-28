@@ -32,7 +32,7 @@ bool TisiProblemLoader::hasConstraint() { return false; }
 TisiConstraint& TisiProblemLoader::nextConstraint() { return dummyConstraint; }
 
 TisiGenerator::TisiGenerator(TisiProblemLoader&) {}
-TisiInterface::TisiInterface(TisiManager& ) {}
+TisiInterface::TisiInterface(TisiManager&, const SolverInterfaceOptions&) {}
 
 void TisiGenerator::load(std::string filename) {
     std::cerr << "This should load abducible literals from " << filename

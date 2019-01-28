@@ -207,8 +207,9 @@ namespace gpid {
          * \brief Initialize an interface.
          *
          * \param manager Context manager to use for the solver instance.
+         * \param siopts Solver instance options (typically used by check calls)
          */
-        TisiInterface(ContextManagerT& manager);
+        TisiInterface(ContextManagerT& manager, const SolverInterfaceOptions& siopts);
 
         /** \return The underlying context manager. */
         ContextManagerT& getContextManager();

@@ -4,12 +4,15 @@
 #include <gpid/utils/smtlib2solver.hpp>
 
 #cmakedefine CVC4_EXECUTABLE "@CVC4_EXECUTABLE@"
+#define CVC4_TIMEOUT_CLIOPT "--tlimit"
+#define CVC4_TIMEOUT_FACTOR 1000
 
 namespace gpid {
 
     struct CVC4InterfaceSMTl2CLI : public SMTl2SolverInterface {
-        CVC4InterfaceSMTl2CLI(SMTl2SolverManager& manager)
-            : SMTl2SolverInterface(CVC4_EXECUTABLE, manager) {}
+        CVC4InterfaceSMTl2CLI(SMTl2SolverManager& manager, const SolverInterfaceOptions& siopts)
+            : SMTl2SolverInterface(CVC4_EXECUTABLE, manager, siopts,
+                                   CVC4_TIMEOUT_CLIOPT, CVC4_TIMEOUT_FACTOR) {}
     };
 
 }
