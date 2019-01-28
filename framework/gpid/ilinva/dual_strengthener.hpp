@@ -20,6 +20,23 @@ namespace gpid {
         return StrengthenerIdCounter++;
     }
 
+    struct DStrOptions {
+        const bool disjunctions;
+        const uint32_t sizelim;
+
+        explicit DStrOptions()
+            : disjunctions(true), sizelim(1)
+        {}
+
+        DStrOptions(bool disjunctions, uint32_t sizelim)
+            : disjunctions(disjunctions), sizelim(sizelim)
+        {}
+
+        DStrOptions(const IlinvaOptions& iopts)
+            : disjunctions(iopts.disjunct), sizelim(iopts.max_strengthening_size)
+        {}
+    };
+
     template<typename CodeHandlerT, typename InterfaceT>
     class DualConditionStrengthener {
     public:
@@ -30,9 +47,9 @@ namespace gpid {
 
         using CodeConstraintListT = std::list<typename CodeHandlerT::ConstraintT>;
 
-        using ConstraintT = DualConstraintData<CodeHandlerT, InterfaceT, GunitiHypothesis>;
+        using ConstraintT = DualConstraintData<CodeHandlerT, InterfaceT, LiteralHypothesis>;
 
-        using AbducibleEngine = GunitiEngine<InterfaceT>;
+        using AbducibleEngine = AdvancedAbducibleEngine<InterfaceT>;
 
         class ImplicateForwarder;
         class ImplicateDisjunctor;
@@ -81,7 +98,7 @@ namespace gpid {
         };
 
         using ImplicateGenerator =
-            GunitiAlgorithm<InterfaceT,
+            ImpgenAlgorithm<AbducibleEngine,
                             SomehowSmartDualAbducibleGenerator<CodeHandlerT, InterfaceT>,
                             ImplicateForwarder>;
 
@@ -100,7 +117,7 @@ namespace gpid {
     public:
         DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
                                   typename CodeHandlerT::ContextManagerT& ich_ctx,
-                                  bool use_disjunctions=true);
+                                  const DStrOptions& dopts=DStrOptions());
         ~DualConditionStrengthener();
 
         inline constexpr IdentifierT getId() const { return identifier; }
@@ -154,17 +171,17 @@ namespace gpid {
     DualConditionStrengthener<CodeHandlerT, InterfaceT>
     ::DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
                                 typename CodeHandlerT::ContextManagerT& ich_ctx,
-                                bool use_disjunctions)
+                                const DStrOptions& dopts)
         : identifier(nextStrengthenerId()),
           forwarder(_problemBuilder.getContextManager(), ich_ctx),
-          disjunctor(use_disjunctions),
+          disjunctor(dopts.disjunctions),
           generator(nullptr)
     {
         _problemBuilder.load(pfile, "smt2");
         abdGenerator =
             AbdGeneratorPtr(new AbdGeneratorT(cons, _problemBuilder.getContextManager()));
         abductionOpts.unknown_handle = SolverTestStatus::SAT;
-        abductionOpts.max_level = 2; // TODO: As ilinva option
+        abductionOpts.max_level = dopts.sizelim + 1;
         abductionOpts.preprune_literals = true;
         abductionOpts.additional_checker = false; // Prevents non redundant literals
         abductionOpts.additional_check_mode = SolverTestStatus::SAT;

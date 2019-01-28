@@ -63,6 +63,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
             ("t,time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
             ("d,depth-limit", "Maximal strengthening depth allowed", cxxopts::value<uint32_t>())
             ("c,conjunctive-only", "Only seek conjunctive loop invariants", cxxopts::value<bool>())
+            ("max-strengthening-size", "Maximal depth of the abduction", cxxopts::value<uint32_t>())
             ;
 
 	parser.add_options("Output")
@@ -110,6 +111,9 @@ static inline OptionStatus handleOptions
 
         if (results.count("conjunctive-only"))
             opts.ilinva.disjunct = false;
+
+        if (results.count("max-strengthening-size"))
+            opts.ilinva.max_strengthening_size = results["max-strengthening-size"].as<uint32_t>();
 
         if (results.count("output"))
 	    opts.ilinva.output = results["output"].as<std::string>();

@@ -34,6 +34,8 @@ namespace gpid {
         using StrengthenerId = typename StrengthenerT::IdentifierT;
         using level_ids_t = std::pair<LoopId, StrengthenerId>;
 
+        const DStrOptions dstren_opts;
+
         std::stack<level_ids_t> level_stack;
         std::stack<std::set<LoopId>> tested_lids;
 
@@ -59,7 +61,8 @@ namespace gpid {
     IlinvaAlgorithm(CodeHandlerT& ich, GPiDOptions& opts, IlinvaOptions& iopts)
         : GPiDAlgorithm(opts),
           options(iopts),
-          pengine(ich)
+          pengine(ich),
+          dstren_opts(iopts)
     {}
 
     template<typename EngineT>
@@ -94,7 +97,7 @@ namespace gpid {
                 strengthener = level_stack.top().second;
             } else {
                 /* Try this other loop */
-                strengthener = pengine.newStrengthener(loop_t, options.abd_override, options.disjunct);
+                strengthener = pengine.newStrengthener(loop_t, dstren_opts, options.abd_override);
                 level_stack.push(level_ids_t(loop_t, strengthener));
                 tested_lids.top().insert(loop_t);
             }
@@ -124,7 +127,7 @@ namespace gpid {
                 goto prebacktrack;
 
             loop = pengine.selectUnprovenLoop(level_stack.size());
-            strengthener = pengine.newStrengthener(loop, options.abd_override, options.disjunct);
+            strengthener = pengine.newStrengthener(loop, dstren_opts, options.abd_override);
             level_stack.push(level_ids_t(loop, strengthener));
             tested_lids.push({ loop });
 

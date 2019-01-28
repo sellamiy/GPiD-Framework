@@ -23,6 +23,8 @@ namespace gpid {
 
         bool disjunct = true;
 
+        uint32_t max_strengthening_size = std::numeric_limits<uint32_t>::max() - 1;
+
     };
 
 }
