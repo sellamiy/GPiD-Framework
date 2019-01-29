@@ -110,7 +110,8 @@ namespace gpid {
         reset();
 
         bool assume_proven = false;
-        LoopId loop; StrengthenerId strengthener;
+        LoopId loop = -1; // Default (unselected) value
+        StrengthenerId strengthener;
 
         while (!iflags.systemInterrupted()) {
             IchState ichState = pengine.proofCheck();
