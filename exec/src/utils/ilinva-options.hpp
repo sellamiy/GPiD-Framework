@@ -63,7 +63,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
             ("t,time-limit", "Maximal generation time allowed (seconds)", cxxopts::value<uint64_t>())
             ("d,depth-limit", "Maximal strengthening depth allowed", cxxopts::value<uint32_t>())
             ("c,conjunctive-only", "Only seek conjunctive loop invariants", cxxopts::value<bool>())
-            ("max-strengthening-size", "Maximal depth of the abduction", cxxopts::value<uint32_t>())
+            ("s,max-strengthening-size", "Maximal depth of the abduction", cxxopts::value<uint32_t>())
             ("smt-time-limit", "Timeout for abduction smt tests (seconds)", cxxopts::value<uint64_t>())
             ;
 
