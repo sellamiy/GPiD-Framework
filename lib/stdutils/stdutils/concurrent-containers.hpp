@@ -39,7 +39,7 @@ namespace stdutils {
         inline T access(size_t idx);
         inline void store(const T& e);
         inline const std::vector<T>& extract() const { return _data; }
-        inline size_t size() const { return _data.size(); }
+        inline size_t size();
         ConcurrentVector() = default;
         ConcurrentVector(const ConcurrentVector&) = delete;
         ConcurrentVector& operator=(const ConcurrentVector&) = delete;
@@ -74,6 +74,11 @@ namespace stdutils {
         _data.push_back(e);
         mlock.unlock();
         cond.notify_one();
+    }
+
+    template <typename T> inline size_t ConcurrentVector<T>::size() {
+        std::unique_lock<std::mutex> mlock(mtx);
+        return _data.size();
     }
 
 }

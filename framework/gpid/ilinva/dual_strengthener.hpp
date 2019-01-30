@@ -70,7 +70,7 @@ namespace gpid {
                 : reads(0), ictx(ictx), ich_ctx(ich_ctx)
             {}
 
-            inline constexpr bool isReadable() const { return reads < implicants.size(); }
+            inline bool isReadable() { return reads < implicants.size(); }
             // inline constexpr bool isWriteable() const { return !wlock; }
 
             inline void unhook() { }
