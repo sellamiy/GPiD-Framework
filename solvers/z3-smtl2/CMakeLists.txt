@@ -9,18 +9,18 @@ else()
   set(INTERFACE_HEADER "${LOCAL_SOLVER_INTERFACES_INCLUDE}/z3-smtl2-interface.hpp")
   configure_file(${INTERFACE_HEADER_SOURCE} ${INTERFACE_HEADER})
   # ----------------------------------------------------------------------------
-  add_library(z3-smtl2-cli-static INTERFACE)
-  add_library(z3-smtl2-cli-shared INTERFACE)
-  target_sources(z3-smtl2-cli-static INTERFACE ${INTERFACE_HEADER})
-  target_sources(z3-smtl2-cli-shared INTERFACE ${INTERFACE_HEADER})
-  target_include_directories(z3-smtl2-cli-static INTERFACE "${LOCAL_SOLVER_INTERFACES_INCLUDE}")
-  target_include_directories(z3-smtl2-cli-shared INTERFACE "${LOCAL_SOLVER_INTERFACES_INCLUDE}")
-  target_link_libraries(z3-smtl2-cli-static INTERFACE gpid-core-static)
-  target_link_libraries(z3-smtl2-cli-shared INTERFACE gpid-core-shared)
+  add_library(cz3-static INTERFACE)
+  add_library(cz3-shared INTERFACE)
+  target_sources(cz3-static INTERFACE ${INTERFACE_HEADER})
+  target_sources(cz3-shared INTERFACE ${INTERFACE_HEADER})
+  target_include_directories(cz3-static INTERFACE "${LOCAL_SOLVER_INTERFACES_INCLUDE}")
+  target_include_directories(cz3-shared INTERFACE "${LOCAL_SOLVER_INTERFACES_INCLUDE}")
+  target_link_libraries(cz3-static INTERFACE gpid-core-static)
+  target_link_libraries(cz3-shared INTERFACE gpid-core-shared)
   # ----------------------------------------------------------------------------
   include(FrameworkSolverRegistration)
-  generate_interface_config_file(z3-smtl2-cli
+  generate_interface_config_file(cz3
     z3-smtl2-interface.hpp Z3InterfaceSMTl2CLI SMTl2SolverAbducibleGenerator)
   # ----------------------------------------------------------------------------
-  set(LOCAL_INTERFACE_NAME z3-smtl2-cli PARENT_SCOPE)
+  set(LOCAL_INTERFACE_NAME cz3 PARENT_SCOPE)
 endif()

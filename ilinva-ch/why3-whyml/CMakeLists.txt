@@ -28,6 +28,6 @@ generate_ich_config_file(
   HEADER why3-whyml-ich.hpp
   CONVERTERS why3-whyml-converters.hpp
   CLASSNAME W3WML_ICH
-  INTERFACES cvc4-api cvc4-smtl2-cli z3-api z3-smtl2-cli)
+  INTERFACES lcvc4 ccvc4 lz3 cz3)
 # ----------------------------------------------------------------------------
 set(LOCAL_ICH_NAME why3-whyml-ich PARENT_SCOPE)
