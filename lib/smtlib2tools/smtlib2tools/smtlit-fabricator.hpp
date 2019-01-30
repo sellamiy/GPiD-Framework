@@ -101,6 +101,8 @@ namespace smtlib2 {
         std::set<smtlit_t> filtered;
         const std::set<smtident_t> _empty;
     public:
+        SmtLitFabricator() : _empty() {}
+
         inline const smtlit_set& get_lits() const { return lits; }
         inline const std::set<smtlit_t>& get_filtered() const { return filtered; }
         inline const std::set<smtident_t>& get_annotated(const smtannotation_t& annot) const
