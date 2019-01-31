@@ -31,7 +31,7 @@ module Oopsla09
    done;
 
    n := !i;
-   while !j >= !n do
+   while !j < !n do
     invariant { true }
     assert { !k >= 0 };
     k := !k - 1;

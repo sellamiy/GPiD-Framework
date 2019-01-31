@@ -10,7 +10,7 @@ module Oopsla07
   diverges
  = let i = ref 0 in let a = ref 0 in let b = ref 0 in
 
-   while !i < 0 do
+   while !i < n do
     invariant { true }
     if unknown() then begin
      a := !a + 1; b := !b + 2;
