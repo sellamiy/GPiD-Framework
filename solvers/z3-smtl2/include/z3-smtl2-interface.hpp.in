@@ -4,7 +4,7 @@
 #include <gpid/utils/smtlib2solver.hpp>
 
 #cmakedefine Z3_EXECUTABLE "@Z3_EXECUTABLE@"
-#define Z3_TIMEOUT_CLIOPT "-t"
+#define Z3_TIMEOUT_CLIOPT "-t:"
 #define Z3_TIMEOUT_FACTOR 1000
 
 namespace gpid {

@@ -94,7 +94,7 @@ static inline const std::string patch_solver_exec
     if (siopts.localTimeout == 0)
         return solver_exec;
     const uint64_t factorized_tlim = tdata.factor * siopts.localTimeout;
-    return solver_exec + " " + tdata.cliopt + " " + std::to_string(factorized_tlim);
+    return solver_exec + " " + tdata.cliopt + std::to_string(factorized_tlim);
 }
 
 SolverTestStatus SMTl2SolverInterface::check() {

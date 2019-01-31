@@ -4,7 +4,7 @@
 #include <gpid/utils/smtlib2solver.hpp>
 
 #cmakedefine CVC4_EXECUTABLE "@CVC4_EXECUTABLE@"
-#define CVC4_TIMEOUT_CLIOPT "--tlimit"
+#define CVC4_TIMEOUT_CLIOPT "--tlimit="
 #define CVC4_TIMEOUT_FACTOR 1000
 
 namespace gpid {
