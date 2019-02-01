@@ -15,9 +15,9 @@ int main(int argc, char** argv) {
 	return EXIT_SUCCESS;
     }
 
-#ifdef GPID_INSTRUMENTATION
-    instrument::InstrumentController ictrl(opts.instrument);
-    instrument::initialize(opts.instrument, ictrl);
+#ifdef INSTRUMENTATION
+    abdulot::instrument::InstrumentController ictrl(opts.instrument);
+    abdulot::instrument::initialize(opts.instrument, ictrl);
 #endif
 
     l_message() << "start implicate generator..." << l_end;
@@ -27,8 +27,8 @@ int main(int argc, char** argv) {
 
     opts.control.time.registerTime("end");
 
-#ifdef GPID_INSTRUMENTATION
-    instrument::finalize(opts.instrument, ictrl);
+#ifdef INSTRUMENTATION
+    abdulot::instrument::finalize(opts.instrument, ictrl);
 #endif
 
     opts.control.stats.addStatisticGroup();

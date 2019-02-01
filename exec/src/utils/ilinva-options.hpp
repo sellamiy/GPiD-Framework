@@ -203,7 +203,7 @@ static inline OptionStatus detectConflicts
         }
 
         /* Inactive options */
-#ifndef GPID_INSTRUMENTATION
+#ifndef INSTRUMENTATION
         const std::vector<std::string> instr_opts
         { };
         for (uint32_t pc = 0; pc < instr_opts.size(); pc++) {
