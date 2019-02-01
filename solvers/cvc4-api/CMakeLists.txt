@@ -16,8 +16,8 @@ else()
   target_include_directories(lcvc4-shared PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
   set_target_properties(lcvc4-static PROPERTIES OUTPUT_NAME lcvc4-interface CLEAN_DIRECT_OUTPUT 1)
   set_target_properties(lcvc4-shared PROPERTIES OUTPUT_NAME lcvc4-interface CLEAN_DIRECT_OUTPUT 1)
-  target_link_libraries(lcvc4-static cvc4 cvc4parser gpid-core-static)
-  target_link_libraries(lcvc4-shared cvc4 cvc4parser gpid-core-shared)
+  target_link_libraries(lcvc4-static cvc4 cvc4parser abdulot-static)
+  target_link_libraries(lcvc4-shared cvc4 cvc4parser abdulot-shared)
   # ----------------------------------------------------------------------------
   include(FrameworkSolverRegistration)
   generate_interface_config_file(lcvc4

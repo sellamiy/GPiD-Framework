@@ -5,7 +5,7 @@
 #include <why3cpp/why3cpp.hpp>
 #include <smtlib2tools/smtlit-presets.hpp>
 #include <smtlib2tools/smtlib2-annotations.hpp>
-#include <gpid/core/errors.hpp>
+#include <abdulot/core/errors.hpp>
 #include <why3-whyml-source.hpp>
 
 using namespace gpid;
@@ -13,7 +13,7 @@ using namespace gpid;
 void W3WML_Template::save_to(const std::string& filename, const std::set<std::string>& refs) const {
     std::ofstream ofs(filename);
     if (!ofs.is_open())
-        throw InternalError("W3WML_Template could not open tempfile");
+        throw abdulot::InternalError("W3WML_Template could not open tempfile");
     write(ofs, *this, refs);
     ofs.close();
 }
@@ -47,7 +47,7 @@ W3WML_LSet::W3WML_LSet(const std::string& filename) {
         for (const smtlib2::smtlit_t& lit : gset.get_literals())
             literals.push_back(smtlib2::ident(lit));
         references = gset.get_annotated(why3cpp::annot_whyml_ref);
-    } catch (gpid::GPiDError& e) {
+    } catch (abdulot::CoreError& e) {
         snlog::l_error() << "W3WML Mlw literals recovery failed: " << e.what() << snlog::l_end;
     }
 }

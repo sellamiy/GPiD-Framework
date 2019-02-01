@@ -1,7 +1,7 @@
 #ifndef CVC4_API_INTERFACE_FOR_GPID__HPP
 #define CVC4_API_INTERFACE_FOR_GPID__HPP
 
-#include <gpid/core/saitypes.hpp>
+#include <abdulot/core/saitypes.hpp>
 
 #include "cvc4-api-context.hpp"
 #include "cvc4-api-loaders.hpp"
@@ -12,7 +12,7 @@ namespace gpid {
 
     class CVC4InterfaceAPI {
         CVC4::ExprManager& ctx;
-        const SolverInterfaceOptions& siopts;
+        const abdulot::SolverInterfaceOptions& siopts;
         CVC4::SmtEngine solver;
         CVC4ModelWrapper iw_mdl;
     public:
@@ -26,7 +26,7 @@ namespace gpid {
         void pop();
         void addLiteral(LiteralT& lit, bool negate=false);
         void addConstraint(ConstraintT cons);
-        SolverTestStatus check();
+        abdulot::SolverTestStatus check();
         ModelT& getModel();
 
         void printAssertions(bool negated);
@@ -34,13 +34,13 @@ namespace gpid {
 
         template<typename ConjunctionIteratorGetter> static std::ostream& write
         (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
-         const ObjectMapper<CVC4Literal>& mapper, bool negate=false);
+         const abdulot::ObjectMapper<CVC4Literal>& mapper, bool negate=false);
 
         template<typename ClauseIteratorGetter> void addClause
-        (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
+        (ClauseIteratorGetter& h, abdulot::ObjectMapper<LiteralT>& mapper, bool negate=false);
         void clearUnsafeClauses();
 
-        CVC4InterfaceAPI(CVC4::ExprManager& ctx, const SolverInterfaceOptions& siopts);
+        CVC4InterfaceAPI(CVC4::ExprManager& ctx, const abdulot::SolverInterfaceOptions& siopts);
         CVC4::ExprManager& getContextManager();
     };
 
@@ -64,7 +64,7 @@ namespace gpid {
 
     template<typename ClauseIteratorGetter>
     inline void CVC4InterfaceAPI::addClause
-    (ClauseIteratorGetter& h, ObjectMapper<CVC4Literal>& mapper, bool negate) {
+    (ClauseIteratorGetter& h, abdulot::ObjectMapper<CVC4Literal>& mapper, bool negate) {
         auto it = h.begin();
         CVC4::Expr cl = mapper.get(*it).expr;
         if (negate) cl = ctx.mkExpr(CVC4::kind::NOT, cl);
@@ -79,7 +79,7 @@ namespace gpid {
     template<typename ConjunctionIteratorGetter>
     inline std::ostream& CVC4InterfaceAPI::write
     (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
-     const ObjectMapper<CVC4Literal>& mapper, bool negate) {
+     const abdulot::ObjectMapper<CVC4Literal>& mapper, bool negate) {
         auto it = h.begin();
         CVC4::Expr cl = mapper.get(*it).expr;
         while (++it != h.end()) {
@@ -106,14 +106,14 @@ namespace gpid {
         return result.str();
     }
 
-    inline gpid::SolverTestStatus CVC4InterfaceAPI::check() {
+    inline abdulot::SolverTestStatus CVC4InterfaceAPI::check() {
         if (siopts.localTimeout > 0)
             snlog::l_warn() << "CVC4 API interface does not handle check-call timeout yet"
                             << snlog::l_end;
         CVC4::Result qres = solver.checkSat();
-        if      (qres.isSat() == CVC4::Result::SAT)   return SolverTestStatus::SAT;
-        else if (qres.isSat() == CVC4::Result::UNSAT) return SolverTestStatus::UNSAT;
-        else                                          return SolverTestStatus::UNKNOWN;
+        if      (qres.isSat() == CVC4::Result::SAT)   return abdulot::SolverTestStatus::SAT;
+        else if (qres.isSat() == CVC4::Result::UNSAT) return abdulot::SolverTestStatus::UNSAT;
+        else                                          return abdulot::SolverTestStatus::UNKNOWN;
     }
 
 }

@@ -2,9 +2,13 @@
 #define GPID_EXEC__UTILS__ILINVA_OPTIONS_HPP
 
 #include <cxxopts.hpp>
+#include <snlog/snlog.hpp>
 #include <lcdot/dotcommand.hpp>
 #include <stdutils/stats-controller.hpp>
-#include <gpid/gpid.hpp>
+#include <abdulot/core/algorithm.hpp>
+#include <abdulot/reference/version.hpp>
+#include <abdulot/ilinva/options.hpp>
+#include <abdulot/instrument/options.hpp>
 
 /* ===== Structures ===== */
 
@@ -13,14 +17,14 @@
 #endif
 
 /** Local option aggregator for executables. */
-struct OptionStorage : public gpid::GPiDOptions
+struct OptionStorage : public abdulot::AlgorithmOptions
 {
 #ifndef SINGLE_SOLVER_ONLY
     interface_id interface;
 #endif
 
-    gpid::IlinvaOptions ilinva;
-    gpid::instrument::InstrumentOptions instrument;
+    abdulot::ilinva::IlinvaOptions ilinva;
+    abdulot::instrument::InstrumentOptions instrument;
     stdutils::StatisticController control;
 };
 
@@ -39,7 +43,7 @@ static inline OptionStatus detectConflicts
 static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& argv) {
     try {
 
-	cxxopts::Options parser(argv[0], gpid::project_full_name);
+	cxxopts::Options parser(argv[0], abdulot::project_full_name);
 
 	parser.add_options()
 	    ("h,help", "Print this help message")
@@ -100,7 +104,7 @@ static inline OptionStatus handleOptions
 	    return OptionStatus::ENDED;
 	}
 	if (results.count("version")) {
-	    snlog::l_message() << gpid::version_message << snlog::l_end;
+	    snlog::l_message() << abdulot::version_message << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 

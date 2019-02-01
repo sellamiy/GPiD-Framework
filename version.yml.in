@@ -3,14 +3,14 @@ GitGetter:
   type: git
   mode: "@CMAKE_BUILD_TYPE@"
   timestamp: "@PROJECT_CFG_TIMESTAMP@"
-  instrumentation: "@GPID_INSTRUMENTATION@"
+  instrumentation: "@INSTRUMENTATION@"
 
 LocalGetter:
   priority: primary
   type: raw
   mode: "@CMAKE_BUILD_TYPE@"
   timestamp: "@PROJECT_CFG_TIMESTAMP@"
-  instrumentation: "@GPID_INSTRUMENTATION@"
+  instrumentation: "@INSTRUMENTATION@"
   major: 0
   minor: 7
   patch: 0

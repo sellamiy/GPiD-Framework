@@ -1,0 +1,14 @@
+/**
+ * \file abdulot/core/config.hpp
+ * \brief Abdulot Framework Configuration Header.
+ * \author Yanis Sellami
+ * \date 2017
+ */
+#ifndef ABDULOT__CORE__CONFIG_HPP
+#define ABDULOT__CORE__CONFIG_HPP
+
+/* Internal components */
+#cmakedefine DOT_AUTOCOMPILATION
+#cmakedefine INSTRUMENTATION
+
+#endif

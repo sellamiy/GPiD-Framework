@@ -1,10 +1,11 @@
 #ifndef GPID_EXEC__UTILS__ILINVA_WRAPPERS_HPP
 #define GPID_EXEC__UTILS__ILINVA_WRAPPERS_HPP
 
+#include <abdulot/ilinva/engine-dual.hpp>
 #include "ilinva-executors.hpp"
 
 using namespace snlog;
-using namespace gpid;
+using namespace abdulot::ilinva;
 
 enum class ilinvaExecutionStatus { SUCCESS, FAILURE };
 

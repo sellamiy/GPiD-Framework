@@ -1,5 +1,5 @@
-#define GPID_FRAMEWORK__ILINVA__STRENGTHENERS_IDENTIFIERS_CPP
+#define ABDULOT__ILINVA__STRENGTHENERS_IDENTIFIERS_CPP
 
-#include <gpid/ilinva/dual_strengthener.hpp>
+#include <abdulot/ilinva/strengthener-dual.hpp>
 
-uint64_t gpid::StrengthenerIdCounter = 0;
+uint64_t abdulot::ilinva::StrengthenerIdCounter = 0;

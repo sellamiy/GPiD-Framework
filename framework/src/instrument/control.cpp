@@ -1,13 +1,13 @@
-#define GPID_FRAMEWORK__INSTRUMENT__CONTROL_CPP
+#define ABDULOT_FRAMEWORK__INSTRUMENT__CONTROL_CPP
 
 #include <snlog/snlog.hpp>
 #include <lcdot/dotcommand.hpp>
-#include <gpid/instrument/instrument.hpp>
-#include <gpid/instrument/infoline.hpp>
-#include <gpid/instrument/selgraph.hpp>
-#include <gpid/instrument/webtrace.hpp>
+#include <abdulot/instrument/instrument.hpp>
+#include <abdulot/instrument/infoline.hpp>
+#include <abdulot/instrument/graphs.hpp>
+#include <abdulot/instrument/webtrace.hpp>
 
-namespace gpid {
+namespace abdulot {
 namespace instrument {
 
     /* Finalization handlers */

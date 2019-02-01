@@ -1,12 +1,12 @@
-#define GPID_FRAMEWORK__CORE__ALGORITHM_CPP
+#define ABDULOT__CORE__ALGORITHM_CPP
 
 #include <snlog/snlog.hpp>
-#include <gpid/core/algorithm.hpp>
-#include <gpid/instrument/instrument.hpp>
+#include <abdulot/core/algorithm.hpp>
+#include <abdulot/instrument/instrument.hpp>
 
-using namespace gpid;
+using namespace abdulot;
 
-void GPiDAlgorithm::_terminate_execution() {
+void Algorithm::_terminate_execution() {
     _execute();
     stopTimeout();
     restoreInterruptionHandlers();
@@ -14,7 +14,7 @@ void GPiDAlgorithm::_terminate_execution() {
     _execution_complete = true;
 }
 
-void GPiDAlgorithm::execute(bool in_thread) {
+void Algorithm::execute(bool in_thread) {
     registerInterruptionHandlers(&iflags);
     startTimeout(&iflags, options.core.time_limit);
     if (in_thread) {
@@ -25,11 +25,11 @@ void GPiDAlgorithm::execute(bool in_thread) {
     }
 }
 
-void GPiDAlgorithm::interrupt() {
+void Algorithm::interrupt() {
     iflags.interrupt(SystemInterruptionFlags::Reason::__PARENT);
 }
 
-void GPiDAlgorithm::join() {
+void Algorithm::join() {
     if (execution_thread) {
         if (execution_thread->joinable()) {
             execution_thread->join();

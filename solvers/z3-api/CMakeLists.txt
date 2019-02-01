@@ -16,8 +16,8 @@ else()
   target_include_directories(lz3-shared PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
   set_target_properties(lz3-static PROPERTIES OUTPUT_NAME lz3-interface CLEAN_DIRECT_OUTPUT 1)
   set_target_properties(lz3-shared PROPERTIES OUTPUT_NAME lz3-interface CLEAN_DIRECT_OUTPUT 1)
-  target_link_libraries(lz3-static ${Z3_LIBRARIES} gpid-core-static)
-  target_link_libraries(lz3-shared ${Z3_LIBRARIES} gpid-core-shared)
+  target_link_libraries(lz3-static ${Z3_LIBRARIES} abdulot-static)
+  target_link_libraries(lz3-shared ${Z3_LIBRARIES} abdulot-shared)
   # ----------------------------------------------------------------------------
   include(FrameworkSolverRegistration)
   generate_interface_config_file(lz3

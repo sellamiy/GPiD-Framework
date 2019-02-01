@@ -5,6 +5,7 @@
 
 #ifdef ILINVA_CODE_HANDLER_{{ code_handler.name }}
 #include "{{ code_handler.mainheader }}"
+using namespace gpid;
 
 #ifdef SINGLE_SOLVER_ONLY
 
@@ -36,11 +37,11 @@ static inline ilinvaExecutionStatus wrap_generate(OptionStorage& opts) {
         return ilinvaExecutionStatus::FAILURE;
     }
     {% endfor %}
-    catch (gpid::InternalError& e) {
+    catch (abdulot::InternalError& e) {
         snlog::l_internal() << e.what() << snlog::l_end;
         return ilinvaExecutionStatus::FAILURE;
     }
-    catch (gpid::GPiDError& e) {
+    catch (abdulot::CoreError& e) {
         snlog::l_fatal() << e.what() << snlog::l_end;
         return ilinvaExecutionStatus::FAILURE;
     }
@@ -86,11 +87,11 @@ static inline ilinvaExecutionStatus wrap_generate(OptionStorage& opts) {
         return ilinvaExecutionStatus::FAILURE;
         }
         {% endfor %}
-        catch (gpid::InternalError& e) {
+        catch (abdulot::InternalError& e) {
             snlog::l_internal() << e.what() << snlog::l_end;
             return ilinvaExecutionStatus::FAILURE;
         }
-        catch (gpid::GPiDError& e) {
+        catch (abdulot::CoreError& e) {
             snlog::l_fatal() << e.what() << snlog::l_end;
             return ilinvaExecutionStatus::FAILURE;
         }

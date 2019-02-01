@@ -1,12 +1,12 @@
 #ifndef Z3_API_LOADERS_FOR_GPID__HPP
 #define Z3_API_LOADERS_FOR_GPID__HPP
 
-#include <gpid/utils/pblloader.hpp>
+#include <abdulot/saihelpers/ploader.hpp>
 #include "z3-api-context.hpp"
 
 namespace gpid {
 
-    using Z3ContraintsLoader = ProblemConstraintsLoader<Z3Declarations>;
+    using Z3ContraintsLoader = abdulot::saihelpers::ProblemConstraintsLoader<Z3Declarations>;
 
     class Z3ProblemLoader {
         z3::context ctx;

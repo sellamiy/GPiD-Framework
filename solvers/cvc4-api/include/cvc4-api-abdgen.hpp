@@ -2,20 +2,20 @@
 #define CVC4_API_ABDUCIBLE_GENERATION_FOR_GPID__HPP
 
 #include <list>
-#include <gpid/core/memory.hpp>
-#include <gpid/utils/abdparseutils.hpp>
+#include <abdulot/core/memory.hpp>
+#include <abdulot/utils/abducibles-utils.hpp>
 #include "cvc4-api-loaders.hpp"
 
 namespace gpid {
 
-    class CVC4AbducibleHandler : public AbducibleHandler {
+    class CVC4AbducibleHandler : public abdulot::AbducibleHandler {
         CVC4ProblemLoader& pbld;
         uint32_t _cpt;
-        ObjectMapper<CVC4Literal>& mapper;
+        abdulot::ObjectMapper<CVC4Literal>& mapper;
         // std::map<uint32_t, std::list<uint32_t>>& links;
     public:
         CVC4AbducibleHandler
-        (CVC4ProblemLoader& pbld, ObjectMapper<CVC4Literal>& mapper,
+        (CVC4ProblemLoader& pbld, abdulot::ObjectMapper<CVC4Literal>& mapper,
          std::map<uint32_t, std::list<uint32_t>>&)
             : pbld(pbld), _cpt(0), mapper(mapper) {}
         virtual void allocate(const std::string id, size_t size) override;
@@ -26,7 +26,7 @@ namespace gpid {
 
     class CVC4AbducibleLiteralsGenerator {
         CVC4ProblemLoader& pbld;
-        ObjectMapper<CVC4Literal> mapper;
+        abdulot::ObjectMapper<CVC4Literal> mapper;
         std::map<uint32_t, std::list<uint32_t>> links;
         CVC4AbducibleHandler handler;
     public:
@@ -37,7 +37,7 @@ namespace gpid {
 
         size_t count() const;
 
-        inline ObjectMapper<CVC4Literal>& getMapper() { return mapper; }
+        inline abdulot::ObjectMapper<CVC4Literal>& getMapper() { return mapper; }
         inline std::map<uint32_t, std::list<uint32_t>>& getLinks() { return links; }
     };
 

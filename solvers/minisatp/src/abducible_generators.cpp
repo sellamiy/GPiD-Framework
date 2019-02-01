@@ -5,6 +5,7 @@
 #include <stdutils/collections.hpp>
 
 using namespace gpid;
+using namespace abdulot;
 using namespace Minisat;
 
 void MinisatAbducibleHandler::allocate(const std::string id, size_t size) {

@@ -1,11 +1,13 @@
 #ifndef GPID_EXEC__UTILS__IMPGEN_WRAPPERS_HPP
 #define GPID_EXEC__UTILS__IMPGEN_WRAPPERS_HPP
 
+#include <abdulot/gpid/engine-naive.hpp>
+#include <abdulot/gpid/engine-advanced.hpp>
 #include "impgen-executors.hpp"
 #include "guniti-executors.hpp"
 
 using namespace snlog;
-using namespace gpid;
+using namespace abdulot::gpid;
 
 enum class impgenExecutionStatus { SUCCESS, FAILURE };
 

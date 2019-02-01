@@ -1,7 +1,7 @@
 #ifndef MINISAT_PATCHED_INTERFACE_FOR_GPID__HPP
 #define MINISAT_PATCHED_INTERFACE_FOR_GPID__HPP
 
-#include <gpid/core/saitypes.hpp>
+#include <abdulot/core/saitypes.hpp>
 
 #include "minisatp-context.hpp"
 #include "minisatp-loaders.hpp"
@@ -14,7 +14,7 @@ namespace gpid {
 
     class MinisatInterface {
         MinisatContextManager& ctx;
-        const SolverInterfaceOptions& siopts;
+        const abdulot::SolverInterfaceOptions& siopts;
         Minisat::SimpSolver solver;
         MinisatModelWrapper iw_mdl;
 
@@ -32,7 +32,7 @@ namespace gpid {
         void pop();
         void addLiteral(LiteralT& lit, bool negate=false);
         void addConstraint(ConstraintT cons);
-        SolverTestStatus check();
+        abdulot::SolverTestStatus check();
         ModelT& getModel();
 
         void printAssertions(bool negated);
@@ -40,13 +40,13 @@ namespace gpid {
 
         template<typename ConjunctionIteratorGetter> static std::ostream& write
         (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
-         const ObjectMapper<MinisatLiteral>& mapper, bool negate=false);
+         const abdulot::ObjectMapper<MinisatLiteral>& mapper, bool negate=false);
 
         template<typename ClauseIteratorGetter> void addClause
-        (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
+        (ClauseIteratorGetter& h, abdulot::ObjectMapper<LiteralT>& mapper, bool negate=false);
         void clearUnsafeClauses();
 
-        MinisatInterface(MinisatContextManager& ctx, const SolverInterfaceOptions& siopts);
+        MinisatInterface(MinisatContextManager& ctx, const abdulot::SolverInterfaceOptions& siopts);
         MinisatContextManager& getContextManager();
     };
 
@@ -75,7 +75,7 @@ namespace gpid {
 
     template<typename ClauseIteratorGetter>
     inline void MinisatInterface::addClause
-    (ClauseIteratorGetter& h, ObjectMapper<MinisatLiteral>& mapper, bool negate) {
+    (ClauseIteratorGetter& h, abdulot::ObjectMapper<MinisatLiteral>& mapper, bool negate) {
         Minisat::vec<Minisat::Lit> ps;
         for (auto ml : h) {
             Minisat::Lit cl = mapper.get(ml).lit;
@@ -87,7 +87,7 @@ namespace gpid {
     template<typename ConjunctionIteratorGetter>
     inline std::ostream& MinisatInterface::write
     (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter& h,
-     const ObjectMapper<MinisatLiteral>& mapper, bool negate) {
+     const abdulot::ObjectMapper<MinisatLiteral>& mapper, bool negate) {
         Minisat::vec<Minisat::Lit> ps;
         for (auto ml : h) {
             Minisat::Lit cl = mapper.get(ml).lit;
@@ -118,14 +118,14 @@ namespace gpid {
         return result.str();
     }
 
-    inline gpid::SolverTestStatus MinisatInterface::check() {
+    inline abdulot::SolverTestStatus MinisatInterface::check() {
         if (siopts.localTimeout > 0)
             snlog::l_warn() << "Minisat API interface does not handle check-call timeout yet"
                             << snlog::l_end;
         Minisat::lbool ret = solver.solveLimited(assumps);
-        if      (ret == Minisat::l_True)  return gpid::SolverTestStatus::SAT;
-        else if (ret == Minisat::l_False) return gpid::SolverTestStatus::UNSAT;
-        else                              return gpid::SolverTestStatus::UNKNOWN;
+        if      (ret == Minisat::l_True)  return abdulot::SolverTestStatus::SAT;
+        else if (ret == Minisat::l_False) return abdulot::SolverTestStatus::UNSAT;
+        else                              return abdulot::SolverTestStatus::UNKNOWN;
     }
 
 }

@@ -49,8 +49,8 @@ target_include_directories(minisatp-shared
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_BINARY_DIR}/minisat-src")
 set_target_properties(minisatp-static PROPERTIES OUTPUT_NAME minisatp-interface CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(minisatp-shared PROPERTIES OUTPUT_NAME minisatp-interface CLEAN_DIRECT_OUTPUT 1)
-target_link_libraries(minisatp-static minisat-lib-static gpid-core-static)
-target_link_libraries(minisatp-shared minisat-lib-shared gpid-core-shared)
+target_link_libraries(minisatp-static minisat-lib-static abdulot-static)
+target_link_libraries(minisatp-shared minisat-lib-shared abdulot-shared)
 # ------------------------------------------------------------------------------
 include(FrameworkSolverRegistration)
 generate_interface_config_file(minisatp

@@ -1,10 +1,12 @@
 #define GPID_EXEC_GPID_PARSER_CPP
 
+#include <abdulot/core/errors.hpp>
+#include <abdulot/utils/abducibles-core.hpp>
 #include "utils/parser-options.hpp"
 
 using namespace std;
 using namespace snlog;
-using namespace gpid;
+using namespace abdulot;
 
 int main(int argc, char** argv) {
     ParserOptions opts;
@@ -35,7 +37,7 @@ int main(int argc, char** argv) {
             l_fatal() << "errors were raised." << l_end;
             return EXIT_FAILURE;
         }
-    } catch (gpid::GPiDError& e) {
+    } catch (abdulot::CoreError& e) {
         snlog::l_fatal() << e.what() << snlog::l_end;
         return EXIT_FAILURE;
     }

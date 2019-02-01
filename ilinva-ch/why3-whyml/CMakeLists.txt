@@ -17,8 +17,8 @@ set_target_properties(why3-whyml-ich-static PROPERTIES
 set_target_properties(why3-whyml-ich-shared PROPERTIES
   OUTPUT_NAME why3-whyml-ich
   CLEAN_DIRECT_OUTPUT 1)
-target_link_libraries(why3-whyml-ich-static gpid-core-static why3cpp-static)
-target_link_libraries(why3-whyml-ich-shared gpid-core-shared why3cpp-shared)
+target_link_libraries(why3-whyml-ich-static abdulot-static why3cpp-static)
+target_link_libraries(why3-whyml-ich-shared abdulot-shared why3cpp-shared)
 # ----------------------------------------------------------------------------
 include(FrameworkIlinvaRegistration)
 set(oneValueArgs NAME HEADER CLASSNAME)

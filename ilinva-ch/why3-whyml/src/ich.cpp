@@ -6,13 +6,14 @@
 #include <stdutils/collections.hpp>
 #include <lisptp/lisptp.hpp>
 #include <why3cpp/why3cpp.hpp>
-#include <gpid/utils/abdparseutils.hpp>
+#include <abdulot/utils/abducibles-utils.hpp>
 #include <why3-whyml-ich.hpp>
 
 #define WHYML_TEMPORARY_SOURCEFILE "temp_gpid_ilinva_w3wml.mlw"
 #define SMTV2_TEMPORARY_ABDUCEFILE "temp_gpid_ilinva_abduce.smt2"
 
 using namespace gpid;
+using namespace abdulot;
 
 const W3WML_Constraint W3WML_ICH::C_False = W3WML_Constraint("false");
 
@@ -40,12 +41,12 @@ static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
     return true;
 }
 
-IchState W3WML_ICH::proofCheck() {
+ilinva::IchState W3WML_ICH::proofCheck() {
     problem.save_to(WHYML_TEMPORARY_SOURCEFILE, plits.getReferences());
     snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__
                     << " TODO: Select Why3 Prover via Options "<< snlog::l_end;
     why3cpp::ProofResult proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4");
-    return IchState(proofResult.isComplete(), isStrengthenable(proofResult));
+    return ilinva::IchState(proofResult.isComplete(), isStrengthenable(proofResult));
 }
 
 const std::string W3WML_ICH::generateAbductionProblem(LoopIdentifierT) {

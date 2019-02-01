@@ -13,8 +13,8 @@ target_include_directories(tisi-static PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/inclu
 target_include_directories(tisi-shared PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set_target_properties(tisi-static PROPERTIES OUTPUT_NAME tisi-interface CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(tisi-shared PROPERTIES OUTPUT_NAME tisi-interface CLEAN_DIRECT_OUTPUT 1)
-target_link_libraries(tisi-static gpid-core-static)
-target_link_libraries(tisi-shared gpid-core-shared)
+target_link_libraries(tisi-static abdulot-static)
+target_link_libraries(tisi-shared abdulot-shared)
 # ----------------------------------------------------------------------------
 include(FrameworkSolverRegistration)
 generate_interface_config_file(tisi

@@ -15,12 +15,12 @@ else()
   target_sources(cz3-shared INTERFACE ${INTERFACE_HEADER})
   target_include_directories(cz3-static INTERFACE "${LOCAL_SOLVER_INTERFACES_INCLUDE}")
   target_include_directories(cz3-shared INTERFACE "${LOCAL_SOLVER_INTERFACES_INCLUDE}")
-  target_link_libraries(cz3-static INTERFACE gpid-core-static)
-  target_link_libraries(cz3-shared INTERFACE gpid-core-shared)
+  target_link_libraries(cz3-static INTERFACE abdulot-static)
+  target_link_libraries(cz3-shared INTERFACE abdulot-shared)
   # ----------------------------------------------------------------------------
   include(FrameworkSolverRegistration)
   generate_interface_config_file(cz3
-    z3-smtl2-interface.hpp Z3InterfaceSMTl2CLI SMTl2SolverAbducibleGenerator)
+    z3-smtl2-interface.hpp Z3InterfaceSMTl2CLI abdulot::saihelpers::SMTl2SolverAbducibleGenerator)
   # ----------------------------------------------------------------------------
   set(LOCAL_INTERFACE_NAME cz3 PARENT_SCOPE)
 endif()

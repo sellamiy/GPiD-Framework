@@ -3,21 +3,21 @@
 
 #include <map>
 #include <list>
-#include <gpid/core/memory.hpp>
-#include <gpid/utils/abdparseutils.hpp>
+#include <abdulot/core/memory.hpp>
+#include <abdulot/utils/abducibles-utils.hpp>
 #include "minisatp-loaders.hpp"
 
 namespace gpid {
 
-    class MinisatAbducibleHandler : public AbducibleHandler {
+    class MinisatAbducibleHandler : public abdulot::AbducibleHandler {
         // MinisatProblemLoader& pbld;
         uint32_t _cpt;
-        ObjectMapper<MinisatLiteral>& mapper;
+        abdulot::ObjectMapper<MinisatLiteral>& mapper;
         std::map<int,int> linker;
         std::map<uint32_t, std::list<uint32_t>>& links;
     public:
         MinisatAbducibleHandler
-        (MinisatProblemLoader&, ObjectMapper<MinisatLiteral>& mapper,
+        (MinisatProblemLoader&, abdulot::ObjectMapper<MinisatLiteral>& mapper,
          std::map<uint32_t, std::list<uint32_t>>& links)
             : _cpt(0), mapper(mapper), links(links) {}
         virtual void allocate(const std::string id, size_t size) override;
@@ -28,7 +28,7 @@ namespace gpid {
 
     class MinisatLiteralsGenerator {
         MinisatProblemLoader& pbld;
-        ObjectMapper<MinisatLiteral> mapper;
+        abdulot::ObjectMapper<MinisatLiteral> mapper;
         std::map<uint32_t, std::list<uint32_t>> links;
         MinisatAbducibleHandler handler;
     public:
@@ -39,7 +39,7 @@ namespace gpid {
 
         size_t count() const;
 
-        inline ObjectMapper<MinisatLiteral>& getMapper() { return mapper; }
+        inline abdulot::ObjectMapper<MinisatLiteral>& getMapper() { return mapper; }
         inline std::map<uint32_t, std::list<uint32_t>>& getLinks() { return links; }
     };
 

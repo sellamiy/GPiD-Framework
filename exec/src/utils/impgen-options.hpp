@@ -4,7 +4,10 @@
 #include <cxxopts.hpp>
 #include <lcdot/dotcommand.hpp>
 #include <stdutils/stats-controller.hpp>
-#include <gpid/gpid.hpp>
+#include <abdulot/core/algorithm.hpp>
+#include <abdulot/reference/version.hpp>
+#include <abdulot/gpid/options.hpp>
+#include <abdulot/instrument/options.hpp>
 
 /* ===== Structures ===== */
 
@@ -13,7 +16,7 @@
 #endif
 
 /** Local option aggregator for implicate generation executables. */
-struct OptionStorage : public gpid::GPiDOptions
+struct OptionStorage : public abdulot::AlgorithmOptions
 {
     std::string input;
     std::string input_lang;
@@ -21,8 +24,8 @@ struct OptionStorage : public gpid::GPiDOptions
     interface_id interface;
 #endif
 
-    gpid::ImpgenOptions impgen;
-    gpid::instrument::InstrumentOptions instrument;
+    abdulot::gpid::GPiDOptions impgen;
+    abdulot::instrument::InstrumentOptions instrument;
     stdutils::StatisticController control;
     bool naive = false;
     bool guniti_delegation = true;
@@ -43,7 +46,7 @@ static inline OptionStatus detectConflicts
 static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& argv) {
     try {
 
-	cxxopts::Options parser(argv[0], gpid::project_full_name);
+	cxxopts::Options parser(argv[0], abdulot::project_full_name);
 
 	parser.add_options()
 	    ("h,help", "Print this help message")
@@ -142,7 +145,7 @@ static inline OptionStatus handleOptions
 	    return OptionStatus::ENDED;
 	}
 	if (results.count("version")) {
-	    snlog::l_message() << gpid::version_message << snlog::l_end;
+	    snlog::l_message() << abdulot::version_message << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 
@@ -194,11 +197,11 @@ static inline OptionStatus handleOptions
             opts.guniti_delegation = false;
 
         if (results.count("unknown-as-error"))
-            opts.impgen.unknown_handle = gpid::SolverTestStatus::UNKNOWN;
+            opts.impgen.unknown_handle = abdulot::SolverTestStatus::UNKNOWN;
         if (results.count("unknown-as-sat"))
-            opts.impgen.unknown_handle = gpid::SolverTestStatus::SAT;
+            opts.impgen.unknown_handle = abdulot::SolverTestStatus::SAT;
         if (results.count("unknown-as-unsat"))
-            opts.impgen.unknown_handle = gpid::SolverTestStatus::UNSAT;
+            opts.impgen.unknown_handle = abdulot::SolverTestStatus::UNSAT;
 
         if (results.count("implicate-size-limit"))
             opts.impgen.max_level = results["implicate-size-limit"].as<uint32_t>() + 1;
@@ -252,12 +255,12 @@ static inline OptionStatus handleOptions
 #endif
 
         if (results.count("load-abducibles")) {
-            opts.impgen.input_type = gpid::AbducibleInputType::FILE;
+            opts.impgen.input_type = abdulot::gpid::AbducibleInputType::FILE;
             opts.impgen.input_file = results["load-abducibles"].as<std::string>();
         }
 
         if (results.count("autogen-abducibles")) {
-            opts.impgen.input_type = gpid::AbducibleInputType::GENERATOR;
+            opts.impgen.input_type = abdulot::gpid::AbducibleInputType::GENERATOR;
             opts.impgen.input_generator = results["autogen-abducibles"].as<std::string>();
         }
 

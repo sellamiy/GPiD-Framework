@@ -1,10 +1,11 @@
 #ifndef GPID_EXEC__UTILS__GUNITI_EXECUTORS_HPP
 #define GPID_EXEC__UTILS__GUNITI_EXECUTORS_HPP
 
+#include <abdulot/gpid/algorithm-guniti.hpp>
 #include "impgen-options.hpp"
 
 using namespace snlog;
-using namespace gpid;
+using namespace abdulot::gpid;
 
 enum class gunitiExecutionStatus { SUCCESS, FAILURE };
 
@@ -22,7 +23,7 @@ static inline void generate_upai_x(OptionStorage& opts) {
 
     l_message() << "recovering abducible literals..." << l_end;
     LiteralGeneratorT LGenerator(Loader);
-    if (opts.impgen.input_type == gpid::AbducibleInputType::FILE) {
+    if (opts.impgen.input_type == AbducibleInputType::FILE) {
         LGenerator.load(opts.impgen.input_file);
     } else {
         LGenerator.generate(opts.impgen.input_generator);
@@ -44,7 +45,7 @@ static inline void generate_upai_x(OptionStorage& opts) {
                                     Generator.getGeneratedImplicatesCount());
     opts.control.stats.addStatisticGroup();
     opts.control.stats.addStatistic("Nodes skipped", "");
-    for (std::pair<std::string, GPiDAlgorithm::counter_t> p : Generator.getSkippedCounts()) {
+    for (std::pair<std::string, abdulot::Algorithm::counter_t> p : Generator.getSkippedCounts()) {
         opts.control.stats.addStatistic(p.first, p.second, 4);
     }
 }

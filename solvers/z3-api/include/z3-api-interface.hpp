@@ -1,7 +1,7 @@
 #ifndef Z3_API_INTERFACE_FOR_GPID__HPP
 #define Z3_API_INTERFACE_FOR_GPID__HPP
 
-#include <gpid/core/saitypes.hpp>
+#include <abdulot/core/saitypes.hpp>
 #include "z3-api-context.hpp"
 #include "z3-api-loaders.hpp"
 #include "z3-api-printers.hpp"
@@ -13,7 +13,7 @@ namespace gpid {
 
     class Z3InterfaceAPI {
         z3::context& ctx;
-        const SolverInterfaceOptions& siopts;
+        const abdulot::SolverInterfaceOptions& siopts;
         z3::solver solver;
         Z3ModelWrapper iw_mdl;
     public:
@@ -27,7 +27,7 @@ namespace gpid {
         void pop();
         void addLiteral(LiteralT& lit, bool negate=false);
         void addConstraint(ConstraintT cons);
-        SolverTestStatus check();
+        abdulot::SolverTestStatus check();
         ModelT& getModel();
 
         void printAssertions(bool negated);
@@ -35,13 +35,13 @@ namespace gpid {
 
         template<typename ConjunctionIteratorGetter> static std::ostream& write
         (std::ostream& os, ContextManagerT& ctx, ConjunctionIteratorGetter& h,
-         const ObjectMapper<Z3Literal>& mapper, bool negate=false);
+         const abdulot::ObjectMapper<Z3Literal>& mapper, bool negate=false);
 
         template<typename ClauseIteratorGetter> void addClause
-        (ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper, bool negate=false);
+        (ClauseIteratorGetter& h, abdulot::ObjectMapper<LiteralT>& mapper, bool negate=false);
         void clearUnsafeClauses();
 
-        Z3InterfaceAPI(z3::context& ctx, const SolverInterfaceOptions& siopts);
+        Z3InterfaceAPI(z3::context& ctx, const abdulot::SolverInterfaceOptions& siopts);
         z3::context& getContextManager();
     };
 
@@ -61,7 +61,7 @@ namespace gpid {
 
     template<typename ClauseIteratorGetter>
     inline void Z3InterfaceAPI::addClause
-    (ClauseIteratorGetter& h, ObjectMapper<Z3Literal>& mapper, bool negate) {
+    (ClauseIteratorGetter& h, abdulot::ObjectMapper<Z3Literal>& mapper, bool negate) {
         auto it = h.begin();
         z3::expr cl = mapper.get(*it).expr;
         if (negate) cl = !cl;
@@ -76,7 +76,7 @@ namespace gpid {
     template<typename ConjunctionIteratorGetter>
     inline std::ostream& Z3InterfaceAPI::write
     (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter& h,
-     const ObjectMapper<Z3Literal>& mapper, bool negate) {
+     const abdulot::ObjectMapper<Z3Literal>& mapper, bool negate) {
         auto it = h.begin();
         z3::expr cl = mapper.get(*it).expr;
         while (++it != h.end()) {
@@ -102,15 +102,15 @@ namespace gpid {
         return result.str();
     }
 
-    inline gpid::SolverTestStatus Z3InterfaceAPI::check() {
+    inline abdulot::SolverTestStatus Z3InterfaceAPI::check() {
         if (siopts.localTimeout > 0)
             snlog::l_warn() << "Z3 API interface does not handle check-call timeout yet"
                             << snlog::l_end;
         z3::check_result qres = solver.check();
         switch (qres) {
-        case z3::sat:   return SolverTestStatus::SAT;
-        case z3::unsat: return SolverTestStatus::UNSAT;
-        default:        return SolverTestStatus::UNKNOWN;
+        case z3::sat:   return abdulot::SolverTestStatus::SAT;
+        case z3::unsat: return abdulot::SolverTestStatus::UNSAT;
+        default:        return abdulot::SolverTestStatus::UNKNOWN;
         }
     }
 

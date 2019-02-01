@@ -2,6 +2,8 @@
 
 #include <cvc4-api-interface.hpp>
 
+using namespace abdulot;
+
 gpid::CVC4InterfaceAPI::CVC4InterfaceAPI(CVC4::ExprManager& ctx, const SolverInterfaceOptions& siopts)
     : ctx(ctx), siopts(siopts), solver(&ctx), iw_mdl(solver)
 {

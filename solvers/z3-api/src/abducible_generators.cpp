@@ -5,6 +5,7 @@
 #include <z3-api-abdgen.hpp>
 
 using namespace gpid;
+using namespace abdulot;
 
 void Z3AbducibleHandler::allocate(const std::string id, size_t size) {
     memoryRangeAllocation<Z3Literal>(id, size);

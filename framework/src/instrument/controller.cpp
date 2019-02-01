@@ -1,9 +1,9 @@
-#define GPID_FRAMEWORK__INSTRUMENT__CONTROLLER_CPP
+#define ABDULOT_FRAMEWORK__INSTRUMENT__CONTROLLER_CPP
 
 #include <fstream>
-#include <gpid/instrument/controller.hpp>
+#include <abdulot/instrument/controller.hpp>
 
-using namespace gpid;
+using namespace abdulot;
 
 static std::ofstream nullstream;
 

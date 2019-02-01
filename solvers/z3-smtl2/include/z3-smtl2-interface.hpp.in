@@ -1,7 +1,7 @@
 #ifndef Z3_SMTLIB2_CLI_INTERFACE_FOR_GPID__HPP
 #define Z3_SMTLIB2_CLI_INTERFACE_FOR_GPID__HPP
 
-#include <gpid/utils/smtlib2solver.hpp>
+#include <abdulot/saihelpers/smtlib2.hpp>
 
 #cmakedefine Z3_EXECUTABLE "@Z3_EXECUTABLE@"
 #define Z3_TIMEOUT_CLIOPT "-t:"
@@ -9,8 +9,9 @@
 
 namespace gpid {
 
-    struct Z3InterfaceSMTl2CLI : public SMTl2SolverInterface {
-        Z3InterfaceSMTl2CLI(SMTl2SolverManager& manager, const SolverInterfaceOptions& siopts)
+    struct Z3InterfaceSMTl2CLI : public abdulot::saihelpers::SMTl2SolverInterface {
+        Z3InterfaceSMTl2CLI(abdulot::saihelpers::SMTl2SolverManager& manager,
+                            const abdulot::SolverInterfaceOptions& siopts)
             : SMTl2SolverInterface(Z3_EXECUTABLE, manager, siopts,
                                    Z3_TIMEOUT_CLIOPT, Z3_TIMEOUT_FACTOR) {}
     };

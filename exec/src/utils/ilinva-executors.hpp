@@ -1,10 +1,11 @@
 #ifndef GPID_EXEC__UTILS__ILINVA_EXECUTORS_HPP
 #define GPID_EXEC__UTILS__ILINVA_EXECUTORS_HPP
 
+#include <abdulot/ilinva/algorithm-ilinva.hpp>
 #include "ilinva-options.hpp"
 
 using namespace snlog;
-using namespace gpid;
+using namespace abdulot::ilinva;
 
 template<class EngineT>
 static inline void generate_ilnt_x(OptionStorage& opts) {

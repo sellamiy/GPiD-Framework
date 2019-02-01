@@ -2,7 +2,8 @@
 #define GPID_EXEC__UTILS__PARSER_OPTIONS_HPP
 
 #include <cxxopts.hpp>
-#include <gpid/gpid.hpp>
+#include <snlog/snlog.hpp>
+#include <abdulot/reference/version.hpp>
 
 /* ===== Structures ===== */
 
@@ -24,7 +25,7 @@ static inline OptionStatus handleOptions
 static inline OptionStatus parseOptions(ParserOptions& opts, int& argc, char**& argv) {
     try {
 
-	cxxopts::Options parser(argv[0], gpid::project_full_name + "--parser");
+	cxxopts::Options parser(argv[0], abdulot::project_full_name + "--parser");
 
 	parser.add_options()
 	    ("h,help", "Print this help message")
@@ -56,7 +57,7 @@ static inline OptionStatus handleOptions
 	    return OptionStatus::ENDED;
 	}
 	if (results.count("version")) {
-	    snlog::l_message() << gpid::version_message << snlog::l_end;
+	    snlog::l_message() << abdulot::version_message << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 

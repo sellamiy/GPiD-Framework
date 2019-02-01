@@ -7,6 +7,8 @@
 #ifdef SINGLE_SOLVER_{{ interface.name }}
 #include "{{ interface.mainheader }}"
 
+using namespace gpid;
+
 template void generate<{{ interface.classname }}, {{ interface.generationclass }}>(OptionStorage& opts);
 
 static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
@@ -23,11 +25,11 @@ static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
         return impgenExecutionStatus::FAILURE;
     }
     {% endfor %}
-    catch (gpid::InternalError& e) {
+    catch (abdulot::InternalError& e) {
         snlog::l_internal() << e.what() << snlog::l_end;
         return impgenExecutionStatus::FAILURE;
     }
-    catch (gpid::GPiDError& e) {
+    catch (abdulot::CoreError& e) {
         snlog::l_fatal() << e.what() << snlog::l_end;
         return impgenExecutionStatus::FAILURE;
     }
@@ -45,6 +47,7 @@ static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
 
 {% for interface in data.interfaces %}
 #include "{{ interface.mainheader }}"
+using namespace gpid;
 template void generate<{{ interface.classname }}, {{ interface.generationclass }}>(OptionStorage& opts);
 {% endfor %}
 
@@ -65,11 +68,11 @@ static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
             return impgenExecutionStatus::FAILURE;
         }
         {% endfor %}
-        catch (gpid::InternalError& e) {
+        catch (abdulot::InternalError& e) {
             snlog::l_internal() << e.what() << snlog::l_end;
             return impgenExecutionStatus::FAILURE;
         }
-        catch (gpid::GPiDError& e) {
+        catch (abdulot::CoreError& e) {
             snlog::l_fatal() << e.what() << snlog::l_end;
             return impgenExecutionStatus::FAILURE;
         }

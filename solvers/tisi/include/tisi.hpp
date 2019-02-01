@@ -7,8 +7,8 @@
 #define TISI_W_DOC_FOR_GPID__HPP
 
 #include <list>
-#include <gpid/core/memory.hpp>
-#include <gpid/core/saitypes.hpp>
+#include <abdulot/core/memory.hpp>
+#include <abdulot/core/saitypes.hpp>
 
 namespace gpid {
 
@@ -172,9 +172,9 @@ namespace gpid {
          * generated. See its documentation for more details.
          * \return The object mapper for the generated literals.
          */
-        ObjectMapper<TisiLiteral>& getMapper();
+        abdulot::ObjectMapper<TisiLiteral>& getMapper();
         /** Generated literal reference type. */
-        using index_t = typename ObjectMapper<TisiLiteral>::index_t;
+        using index_t = typename abdulot::ObjectMapper<TisiLiteral>::index_t;
 
         /**
          * \brief Literal linkage information.
@@ -209,7 +209,7 @@ namespace gpid {
          * \param manager Context manager to use for the solver instance.
          * \param siopts Solver instance options (typically used by check calls)
          */
-        TisiInterface(ContextManagerT& manager, const SolverInterfaceOptions& siopts);
+        TisiInterface(ContextManagerT& manager, const abdulot::SolverInterfaceOptions& siopts);
 
         /** \return The underlying context manager. */
         ContextManagerT& getContextManager();
@@ -255,7 +255,7 @@ namespace gpid {
          * \param negate If true, add the negation of the clause instead.
          */
         template<typename ClauseIteratorGetter>
-        void addClause(ClauseIteratorGetter& h, ObjectMapper<LiteralT>& mapper,
+        void addClause(ClauseIteratorGetter& h, abdulot::ObjectMapper<LiteralT>& mapper,
                        bool negate=false);
 
         /**
@@ -287,7 +287,7 @@ namespace gpid {
         template<typename ConjunctionIteratorGetter>
         static std::ostream& write(std::ostream& os, ContextManagerT& ctx,
                                    ConjunctionIteratorGetter& h,
-                                   const ObjectMapper<LiteralT>& mapper, bool negate=false);
+                                   const abdulot::ObjectMapper<LiteralT>& mapper, bool negate=false);
 
         /**
          * \brief Push the solver contextual level.
@@ -309,7 +309,7 @@ namespace gpid {
          * and SolverTestStatus::UNKNOWN if the solver cannot answer
          * the query.
          */
-        SolverTestStatus check();
+        abdulot::SolverTestStatus check();
 
         /**
          * \brief Get a string representation of the current assertions.
@@ -323,11 +323,12 @@ namespace gpid {
     };
 
     template<typename ClauseIteratorGetter>
-    void TisiInterface::addClause(ClauseIteratorGetter&, ObjectMapper<LiteralT>&, bool) {}
+    void TisiInterface::addClause(ClauseIteratorGetter&, abdulot::ObjectMapper<LiteralT>&, bool) {}
 
     template<typename ConjunctionIteratorGetter>
     std::ostream& TisiInterface::write
-    (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter&, const ObjectMapper<LiteralT>&, bool)
+    (std::ostream& os, ContextManagerT&, ConjunctionIteratorGetter&,
+     const abdulot::ObjectMapper<LiteralT>&, bool)
     { return os << "*_*"; }
 
 }

@@ -1,11 +1,11 @@
-#define GPID_FRAMEWORK__INSTRUMENT__WEBTRACE_CPP
+#define ABDULOT_FRAMEWORK__INSTRUMENT__WEBTRACE_CPP
 
-#include <gpid/instrument/webtrace.hpp>
+#include <abdulot/instrument/webtrace.hpp>
 
-using namespace gpid;
+using namespace abdulot;
 
 void instrument::WebtraceInstrument::subcall(const std::string selected) {
-    tracelog.traceCallStart("GPiD", selected);
+    tracelog.traceCallStart("Abdulot", selected);
 }
 void instrument::WebtraceInstrument::end_subcall() {
     tracelog.traceCallEnd();
@@ -19,7 +19,7 @@ void instrument::WebtraceInstrument::assign(const std::string k, const std::stri
 
 void instrument::WebtraceInstrument::reset() {
     tracelog.clear();
-    tracelog.traceStart("GPiD");
+    tracelog.traceStart("Abdulot");
 }
 void instrument::WebtraceInstrument::terminate() {
     tracelog.traceStop();

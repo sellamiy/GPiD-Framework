@@ -2,6 +2,8 @@
 
 #include <minisatp-interface.hpp>
 
+using namespace abdulot;
+
 gpid::MinisatInterface::MinisatInterface(MinisatContextManager& ctx, const SolverInterfaceOptions& siopts)
     : ctx(ctx), siopts(siopts), iw_mdl(solver.model)
 {

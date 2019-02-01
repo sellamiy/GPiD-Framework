@@ -1,12 +1,12 @@
 #ifndef CVC4_API_LOADERS_FOR_GPID__HPP
 #define CVC4_API_LOADERS_FOR_GPID__HPP
 
-#include <gpid/utils/pblloader.hpp>
+#include <abdulot/saihelpers/ploader.hpp>
 #include "cvc4-api-context.hpp"
 
 namespace gpid {
 
-    using CVC4ContraintsLoader = ProblemConstraintsLoader<CVC4Declarations>;
+    using CVC4ContraintsLoader = abdulot::saihelpers::ProblemConstraintsLoader<CVC4Declarations>;
 
     class CVC4ProblemLoader {
         CVC4::ExprManager ctx;

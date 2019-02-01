@@ -1,23 +1,23 @@
-#define GPID_FRAMEWORK__SYSTEM_CPP
+#define ABDULOT__SYSTEM_CPP
 
 #include <csignal>
 #include <thread>
 #include <chrono>
 #include <list>
 #include <snlog/snlog.hpp>
-#include <gpid/core/system.hpp>
+#include <abdulot/core/system.hpp>
 
-static std::list<gpid::SystemInterruptionFlags*> sys_flag_locs;
+static std::list<abdulot::SystemInterruptionFlags*> sys_flag_locs;
 
 static void systemInterruptHandler(int signum) {
     snlog::l_fatal() << "Interrupted" << snlog::l_end;
     snlog::l_info() << signum << snlog::l_end;
 
-    for (gpid::SystemInterruptionFlags* irf : sys_flag_locs)
-        irf->interrupt(gpid::SystemInterruptionFlags::Reason::__USER);
+    for (abdulot::SystemInterruptionFlags* irf : sys_flag_locs)
+        irf->interrupt(abdulot::SystemInterruptionFlags::Reason::__USER);
 }
 
-extern void gpid::registerInterruptionHandlers(SystemInterruptionFlags* flags_addr) {
+extern void abdulot::registerInterruptionHandlers(SystemInterruptionFlags* flags_addr) {
     bool signal_change_required = sys_flag_locs.empty();
     sys_flag_locs.push_back(flags_addr);
     if (signal_change_required) {
@@ -25,7 +25,7 @@ extern void gpid::registerInterruptionHandlers(SystemInterruptionFlags* flags_ad
     }
 }
 
-extern void gpid::restoreInterruptionHandlers() {
+extern void abdulot::restoreInterruptionHandlers() {
     sys_flag_locs.pop_back();
     if (sys_flag_locs.empty()) {
         signal(SIGINT, SIG_DFL);
@@ -33,7 +33,7 @@ extern void gpid::restoreInterruptionHandlers() {
 }
 
 class systemTimeoutWaiter {
-    gpid::SystemInterruptionFlags* external_flags_addr;
+    abdulot::SystemInterruptionFlags* external_flags_addr;
     std::chrono::seconds s_time_limit;
     std::chrono::high_resolution_clock::time_point origin_date, current_date;
     bool autostop_flag;
@@ -49,12 +49,12 @@ class systemTimeoutWaiter {
             duration = std::chrono::duration_cast<std::chrono::seconds>(current_date - origin_date);
         }
         snlog::l_fatal() << "Timeout" << snlog::l_end;
-        external_flags_addr->interrupt(gpid::SystemInterruptionFlags::Reason::__TIMEOUT);
+        external_flags_addr->interrupt(abdulot::SystemInterruptionFlags::Reason::__TIMEOUT);
     }
 
     std::thread* sys_timeout_waiter = NULL;
 public:
-    systemTimeoutWaiter(gpid::SystemInterruptionFlags* flags_addr, uint64_t time_limit)
+    systemTimeoutWaiter(abdulot::SystemInterruptionFlags* flags_addr, uint64_t time_limit)
         : external_flags_addr(flags_addr),
           s_time_limit(time_limit),
           autostop_flag(false)
@@ -71,14 +71,14 @@ public:
 
 static systemTimeoutWaiter* sys_timeout_waiter = NULL;
 
-extern void gpid::startTimeout(SystemInterruptionFlags* flags_addr, uint64_t timeout) {
+extern void abdulot::startTimeout(SystemInterruptionFlags* flags_addr, uint64_t timeout) {
     if (timeout > 0) {
         sys_timeout_waiter = new systemTimeoutWaiter(flags_addr, timeout);
         sys_timeout_waiter->start();
     }
 }
 
-extern void gpid::stopTimeout() {
+extern void abdulot::stopTimeout() {
     if (sys_timeout_waiter != NULL) {
         sys_timeout_waiter->stop();
         delete sys_timeout_waiter;

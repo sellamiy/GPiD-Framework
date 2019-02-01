@@ -5,6 +5,7 @@
 #include <stdutils/collections.hpp>
 
 using namespace gpid;
+using namespace abdulot;
 
 void CVC4AbducibleHandler::allocate(const std::string id, size_t size) {
     memoryRangeAllocation<CVC4Literal>(id, size);

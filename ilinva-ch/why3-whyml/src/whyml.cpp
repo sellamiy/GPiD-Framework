@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <sstream>
-#include <gpid/core/errors.hpp>
+#include <abdulot/core/errors.hpp>
 #include <why3-whyml-source.hpp>
 
 using namespace gpid;
@@ -14,7 +14,7 @@ W3WML_Template::W3WML_Template(const std::string& filename) {
     size_t cid = 0;
 
     if (!ifs.is_open())
-        throw DataError("Problem file not found: " + filename);
+        throw abdulot::DataError("Problem file not found: " + filename);
 
     while (getline(ifs, line)) {
         if (size_t loc = line.find("invariant") != std::string::npos) {

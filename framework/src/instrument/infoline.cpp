@@ -1,10 +1,10 @@
-#define GPID_FRAMEWORK__INSTRUMENT__INFOLINE_CPP
+#define ABDULOT_FRAMEWORK__INSTRUMENT__INFOLINE_CPP
 
 #include <snlog/snlog.hpp>
-#include <gpid/instrument/infoline.hpp>
+#include <abdulot/instrument/infoline.hpp>
 #include <stdutils/collections.hpp>
 
-using namespace gpid;
+using namespace abdulot;
 using namespace stdutils;
 
 using wtch_t_counters = std::map<std::string, int64_t>;

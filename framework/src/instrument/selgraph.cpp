@@ -1,8 +1,8 @@
-#define GPID_FRAMEWORK__INSTRUMENT__SELECTION_GRAPH_CPP
+#define ABDULOT_FRAMEWORK__INSTRUMENT__SELECTION_GRAPH_CPP
 
-#include <gpid/instrument/selgraph.hpp>
+#include <abdulot/instrument/graphs.hpp>
 
-using namespace gpid;
+using namespace abdulot;
 
 void instrument::SelectionGrapher::selection(const std::string id) {
     order++;

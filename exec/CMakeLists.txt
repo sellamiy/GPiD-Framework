@@ -54,8 +54,8 @@ foreach(template_name ${ILINVA_SOURCES_TEMPLATES})
   list(APPEND ILINVA_PREPROCESSED_TARGETS ${template_info}-multi)
 endforeach()
 # ==============================================================================
-set(CORE_STATIC_LINK_LIBRARIES gpid-core-static cxxopts Threads::Threads)
-set(CORE_SHARED_LINK_LIBRARIES gpid-core-shared cxxopts Threads::Threads)
+set(CORE_STATIC_LINK_LIBRARIES abdulot-static cxxopts Threads::Threads)
+set(CORE_SHARED_LINK_LIBRARIES abdulot-shared cxxopts Threads::Threads)
 # ------------------------------------------------------------------------------
 function(add_split_exec interface name source)
   set(SEXEC_EXECUTABLE_NAME gpid-${name}-${interface})
@@ -99,9 +99,9 @@ endforeach()
 # ==============================================================================
 add_executable(gpid-parser "src/gpid-parser.cpp")
 if(STATIC_EXECUTABLES)
-  target_link_libraries(gpid-parser gpid-core-static cxxopts)
+  target_link_libraries(gpid-parser abdulot-static cxxopts)
 else()
-  target_link_libraries(gpid-parser gpid-core-shared cxxopts)
+  target_link_libraries(gpid-parser abdulot-shared cxxopts)
 endif()
 install(TARGETS gpid-parser RUNTIME DESTINATION bin)
 # ==============================================================================
