@@ -2,7 +2,7 @@
 #define GPID_EXEC__UTILS__IMPGEN_EXECUTORS_HPP
 
 #include <abdulot/gpid/algorithm-gpid.hpp>
-#include "impgen-options.hpp"
+#include "options.hpp"
 
 using namespace snlog;
 using namespace abdulot::gpid;

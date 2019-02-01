@@ -2,7 +2,7 @@
 #define GPID_EXEC__UTILS__ILINVA_EXECUTORS_HPP
 
 #include <abdulot/ilinva/algorithm-ilinva.hpp>
-#include "ilinva-options.hpp"
+#include "options.hpp"
 
 using namespace snlog;
 using namespace abdulot::ilinva;

@@ -1,9 +1,12 @@
-#ifndef GPID_EXEC__UTILS__PARSER_OPTIONS_HPP
-#define GPID_EXEC__UTILS__PARSER_OPTIONS_HPP
+#define ABDULOT_PARSER_CPP
 
 #include <cxxopts.hpp>
 #include <snlog/snlog.hpp>
+#include <abdulot/core/errors.hpp>
 #include <abdulot/reference/version.hpp>
+#include <abdulot/utils/abducibles-core.hpp>
+
+/* ========== Options ========== */
 
 /* ===== Structures ===== */
 
@@ -77,4 +80,43 @@ static inline OptionStatus handleOptions
     }
 }
 
-#endif
+using namespace std;
+using namespace snlog;
+using namespace abdulot;
+
+/* ========== Main ========== */
+
+int main(int argc, char** argv) {
+    ParserOptions opts;
+    OptionStatus status = parseOptions(opts, argc, argv);
+    if (status == OptionStatus::FAILURE) {
+	return EXIT_FAILURE;
+    } else if (status == OptionStatus::ENDED) {
+	return EXIT_SUCCESS;
+    }
+
+    l_message() << "start abducible parser..." << l_end;
+
+    try {
+        AbducibleParser parser(opts.input);
+        parser.init();
+        t_fatal(!parser.isValid()) << "Parser in broken state; please stop!" << l_end;
+
+        l_notif() << "number of abducibles" << " : " << parser.getAbducibleCount() << l_end;
+
+        for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
+            l_notifg() << "abducible" << " : " << *parser.nextAbducible() << l_end;
+        }
+
+        if (parser.isValid()) {
+            l_message() << "complete." << l_end;
+            return EXIT_SUCCESS;
+        } else {
+            l_fatal() << "errors were raised." << l_end;
+            return EXIT_FAILURE;
+        }
+    } catch (abdulot::CoreError& e) {
+        snlog::l_fatal() << e.what() << snlog::l_end;
+        return EXIT_FAILURE;
+    }
+}

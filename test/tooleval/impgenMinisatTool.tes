@@ -1,5 +1,5 @@
 def impgenMinisat(Tool)
-  executable '../bin/gpid-impgen-minisatp'
+  executable '../bin/gpid-minisatp'
   format '$0 -i $1 --autogen-abducibles all -p --time-unit=extseconds $+'
 
   require &file

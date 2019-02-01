@@ -56,14 +56,14 @@ if(BUILD_TESTS)
   file(GLOB DIMACS_TEST_FILES "dimacs/basic/*.dimacs")
   foreach(filename ${DIMACS_TEST_FILES})
     get_filename_component(mfilename "${filename}" NAME)
-    add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-impgen-minisatp --autogen-abducibles all -i "${filename}")
+    add_test(NAME "${mfilename}:Non-Failure" COMMAND gpid-minisatp --autogen-abducibles all -i "${filename}")
   endforeach()
 
   # == Abducible Parser Targets ==
   file(GLOB ABDUCE_TEST_FILES "abduce/*.abduce")
   foreach(filename ${ABDUCE_TEST_FILES})
     get_filename_component(mfilename "${filename}" NAME)
-    add_test(NAME "${mfilename}:Parse" COMMAND gpid-parser -i "${filename}")
+    add_test(NAME "${mfilename}:Parse" COMMAND abdulot-parser -i "${filename}")
   endforeach()
 
   # == Result Testing Targets == gts-minisat ==

@@ -1,6 +1,6 @@
-#define GPID_EXEC_GPID_IMPGEN_CPP
+#define GPID_EXEC_GPID_ILINVA_CPP
 
-#include "utils/impgen-wrappers.hpp"
+#include "wrappers.hpp"
 
 using namespace std;
 using namespace snlog;
@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     l_message() << "start implicate generator..." << l_end;
     opts.control.time.registerTime("start");
 
-    impgenExecutionStatus gStatus = generate(opts);
+    ilinvaExecutionStatus gStatus = generate(opts);
 
     opts.control.time.registerTime("end");
 
@@ -33,12 +33,13 @@ int main(int argc, char** argv) {
     opts.control.stats.addStatisticGroup();
     opts.control.stats.addStatistic
         ("Total time", opts.control.time.duration("start", "end"));
-    opts.control.stats.addStatistic
-        ("Generation time", opts.control.time.duration("generation", "generation-end"), 4);
-    l_message() << "print generation statistics..."
+    if (gStatus == ilinvaExecutionStatus::SUCCESS)
+        opts.control.stats.addStatistic
+            ("Generation time", opts.control.time.duration("generation", "generation-end"), 4);
+    l_message() << "print generation statistics..." << l_end
                 << l_raw << opts.control.stats
                 << l_message << "complete." << l_end;
 
-    t_error(gStatus != impgenExecutionStatus::SUCCESS) << "errors occured!" << l_end;
-    return gStatus == impgenExecutionStatus::SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
+    t_error(gStatus != ilinvaExecutionStatus::SUCCESS) << "errors occured!" << l_end;
+    return gStatus == ilinvaExecutionStatus::SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
 }

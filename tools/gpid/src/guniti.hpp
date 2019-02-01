@@ -2,7 +2,7 @@
 #define GPID_EXEC__UTILS__GUNITI_EXECUTORS_HPP
 
 #include <abdulot/gpid/algorithm-guniti.hpp>
-#include "impgen-options.hpp"
+#include "options.hpp"
 
 using namespace snlog;
 using namespace abdulot::gpid;

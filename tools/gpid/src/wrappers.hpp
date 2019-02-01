@@ -3,8 +3,8 @@
 
 #include <abdulot/gpid/engine-naive.hpp>
 #include <abdulot/gpid/engine-advanced.hpp>
-#include "impgen-executors.hpp"
-#include "guniti-executors.hpp"
+#include "executors.hpp"
+#include "guniti.hpp"
 
 using namespace snlog;
 using namespace abdulot::gpid;
@@ -23,7 +23,7 @@ static inline void generate(OptionStorage& opts) {
     }
 }
 
-#include "sai/impgen-executors.hpp"
+#include "gpid/generators.hpp"
 
 static inline impgenExecutionStatus generate(OptionStorage& opts) {
     return wrap_generate(opts);

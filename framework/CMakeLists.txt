@@ -61,11 +61,21 @@ target_link_libraries(abdulot-static
 target_link_libraries(abdulot-shared
   stdutils-shared starray-shared lcdot-shared smtlib2tools-shared snlog)
 # ==============================================================================
+# Binary tools
+# ==============================================================================
+add_executable(abdulot-parser "bin/abdulot-parser.cpp")
+if(STATIC_EXECUTABLES)
+  target_link_libraries(abdulot-parser abdulot-static cxxopts)
+else()
+  target_link_libraries(abdulot-parser abdulot-shared cxxopts)
+endif()
+# ==============================================================================
 # Install framework
 # ==============================================================================
-install(TARGETS abdulot-static abdulot-shared
+install(TARGETS abdulot-static abdulot-shared abdulot-parser
   ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib)
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/abdulot
   DESTINATION include FILES_MATCHING PATTERN "*.hpp")
 install(FILES ${LOCAL_FRAMEWORK_HEADERS_DIR}/abdulot/core/config.hpp
