@@ -6,7 +6,7 @@ index 224e45a..b9a1594 100644
  #include "minisat/mtl/Queue.h"
  #include "minisat/core/Solver.h"
  
-+namespace gpid { class MinisatInterface; }
++class MinisatInterface;
  
  namespace Minisat {
  
@@ -16,7 +16,7 @@ index 224e45a..b9a1594 100644
      void          relocAll                 (ClauseAllocator& to);
 +
 +    // GPiD unsafe clauses cleaner check
-+    friend gpid::MinisatInterface;
++    friend MinisatInterface;
  };
  
  

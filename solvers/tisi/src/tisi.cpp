@@ -2,7 +2,6 @@
 
 #include <tisi.hpp>
 
-using namespace gpid;
 using namespace abdulot;
 
 static TisiManager dummyManager;

@@ -7,8 +7,6 @@
 #ifdef SINGLE_SOLVER_{{ interface.name }}
 #include "{{ interface.mainheader }}"
 
-using namespace gpid;
-
 template void generate<{{ interface.classname }}, {{ interface.generationclass }}>(OptionStorage& opts);
 
 static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
@@ -47,7 +45,6 @@ static inline impgenExecutionStatus wrap_generate(OptionStorage& opts) {
 
 {% for interface in data.interfaces %}
 #include "{{ interface.mainheader }}"
-using namespace gpid;
 template void generate<{{ interface.classname }}, {{ interface.generationclass }}>(OptionStorage& opts);
 {% endfor %}
 
