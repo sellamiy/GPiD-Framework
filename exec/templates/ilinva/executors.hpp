@@ -5,7 +5,6 @@
 
 #ifdef ILINVA_CODE_HANDLER_{{ code_handler.name }}
 #include "{{ code_handler.mainheader }}"
-using namespace gpid;
 
 #ifdef SINGLE_SOLVER_ONLY
 

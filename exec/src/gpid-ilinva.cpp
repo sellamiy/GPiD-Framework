@@ -4,7 +4,6 @@
 
 using namespace std;
 using namespace snlog;
-using namespace gpid;
 
 int main(int argc, char** argv) {
     OptionStorage opts;

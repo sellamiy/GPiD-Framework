@@ -5,8 +5,6 @@
 #include <abdulot/core/errors.hpp>
 #include <why3-whyml-source.hpp>
 
-using namespace gpid;
-
 W3WML_Template::W3WML_Template(const std::string& filename) {
     std::ifstream ifs(filename);
     std::string line;

@@ -6,20 +6,15 @@
 #include <abdulot/ilinva/data-dual.hpp>
 #include <abdulot/saihelpers/smtlib2.hpp>
 
-namespace gpid {
-
-    template<typename InterfaceT, typename LiteralHypothesisT>
-    inline W3WML_Constraint convert_w3wml
-    (abdulot::ObjectMapper<typename InterfaceT::LiteralT> const& mapper,
-     LiteralHypothesisT& hyp, typename InterfaceT::ContextManagerT& ctx) {
-        std::stringstream ss;
-        ss << abdulot::hypothesis<InterfaceT>(hyp, mapper, ctx);
-        return W3WML_Constraint(ss.str());
-    }
-
+template<typename InterfaceT, typename LiteralHypothesisT>
+inline W3WML_Constraint convert_w3wml
+(abdulot::ObjectMapper<typename InterfaceT::LiteralT> const& mapper,
+ LiteralHypothesisT& hyp, typename InterfaceT::ContextManagerT& ctx) {
+    std::stringstream ss;
+    ss << abdulot::hypothesis<InterfaceT>(hyp, mapper, ctx);
+    return W3WML_Constraint(ss.str());
 }
 
-using namespace gpid;
 using LiteralHypothesis = abdulot::gpid::LiteralHypothesis;
 using GunitiHypothesis = abdulot::gpid::GunitiHypothesis;
 

@@ -12,7 +12,6 @@
 #define WHYML_TEMPORARY_SOURCEFILE "temp_gpid_ilinva_w3wml.mlw"
 #define SMTV2_TEMPORARY_ABDUCEFILE "temp_gpid_ilinva_abduce.smt2"
 
-using namespace gpid;
 using namespace abdulot;
 
 const W3WML_Constraint W3WML_ICH::C_False = W3WML_Constraint("false");

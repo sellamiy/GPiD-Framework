@@ -69,7 +69,7 @@ include(FrameworkDocumentation)
 add_subdirectory(lib)
 add_subdirectory(framework)
 add_subdirectory(solvers)
-add_subdirectory(ilinva-ch)
+add_subdirectory(icodeh)
 add_subdirectory(exec)
 
 if(BUILD_TESTS)

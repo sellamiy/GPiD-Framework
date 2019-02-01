@@ -8,8 +8,6 @@
 #include <abdulot/core/errors.hpp>
 #include <why3-whyml-source.hpp>
 
-using namespace gpid;
-
 void W3WML_Template::save_to(const std::string& filename, const std::set<std::string>& refs) const {
     std::ofstream ofs(filename);
     if (!ofs.is_open())
@@ -18,8 +16,8 @@ void W3WML_Template::save_to(const std::string& filename, const std::set<std::st
     ofs.close();
 }
 
-std::ostream& gpid::write(std::ostream& out, const W3WML_Template::InvariantElement& e,
-                          const std::set<std::string>& refs) {
+std::ostream& write(std::ostream& out, const W3WML_Template::InvariantElement& e,
+                    const std::set<std::string>& refs) {
     out << "invariant {";
     if (e.conj.empty()) {
         out << " true ";
