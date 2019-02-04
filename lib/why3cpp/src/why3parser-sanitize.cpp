@@ -2,7 +2,10 @@
 
 #include <snlog/snlog.hpp>
 #include <smtlib2tools/parser-command.hpp>
+#include <stdutils/collections.hpp>
 #include <why3cpp/why3proofutils.hpp>
+
+#define TEMPORARY_REPLACEMENT_STRING "____TRS____"
 
 using strptr = std::shared_ptr<std::string>;
 
@@ -10,16 +13,35 @@ namespace why3cpp {
 
     class Sanitizer : public smtlib2::SMTl2CommandHandler {
         std::stringstream ss;
+        std::set<std::string> fundecls;
 
         bool keep(const smtlib2::SMTl2Command& cmd);
         bool sanitize(const smtlib2::SMTl2Command& cmd);
         bool setlogic(const smtlib2::SMTl2Command& cmd);
+        bool sfundecl(const smtlib2::SMTl2Command& cmd);
     public:
         Sanitizer();
 
         inline strptr getSanitizedScript() const
         { return strptr(new std::string(ss.str())); }
+
+        inline const std::set<std::string>& getFunDecls() const
+        { return fundecls; }
     };
+
+    class DeclReorderer : public smtlib2::SMTl2CommandHandler {
+        std::stringstream ss;
+        const std::map<std::string, std::string>& reorders;
+
+        bool substitute(const smtlib2::SMTl2Command& cmd);
+    public:
+        DeclReorderer(const std::map<std::string, std::string>& reorders);
+
+        inline strptr getReorderedScript() const
+        { return strptr(new std::string(ss.str())); }
+    };
+
+    static inline std::map<std::string, std::string> build_reorders(const std::set<std::string>& fundecls);
 
 }
 
@@ -30,7 +52,7 @@ Sanitizer::Sanitizer() {
     handlers["declare-const"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
     handlers["declare-datatype"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
     handlers["declare-datatypes"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["declare-fun"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
+    handlers["declare-fun"] = std::bind(&Sanitizer::sfundecl, this, std::placeholders::_1);
     handlers["declare-sort"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
     handlers["define-fun"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
     handlers["define-fun-rec"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
@@ -60,6 +82,40 @@ Sanitizer::Sanitizer() {
     handlers["set-logic"] = std::bind(&Sanitizer::setlogic, this, std::placeholders::_1);
 }
 
+DeclReorderer::DeclReorderer(const std::map<std::string, std::string>& reorders)
+    : reorders(reorders) {
+    handlers["assert"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["declare-const"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["declare-datatype"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["declare-datatypes"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["declare-fun"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["declare-sort"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["define-fun"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["define-fun-rec"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["define-funs-rec"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["define-sort"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["set-info"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["set-option"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["check-sat"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["check-sat-assuming"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["echo"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["exit"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["get-assertions"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["get-assignment"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["get-info"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["get-model"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["get-option"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["get-proof"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["get-unsat-assumptions"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["get-unsat-core"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["get-value"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["pop"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["push"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["reset"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["reset-assertions"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["set-logic"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+}
+
 bool Sanitizer::keep(const smtlib2::SMTl2Command& cmd) {
     ss << cmd << '\n'; return true;
 }
@@ -72,11 +128,111 @@ bool Sanitizer::setlogic(const smtlib2::SMTl2Command&) {
     ss << "(set-logic ALL)" << '\n' ; return true;
 }
 
+const std::string extract_declname(const strptr data) {
+    size_t dpos = 0;
+    while (data->at(dpos++) == ' ');
+    size_t npos = --dpos;
+    while (data->at(npos++) != ' ');
+    return data->substr(dpos, npos-1-dpos);
+}
+
+bool Sanitizer::sfundecl(const smtlib2::SMTl2Command& cmd) {
+    ss << cmd << '\n';
+    fundecls.insert(extract_declname(cmd.getDataPtr()));
+    return true;
+}
+
+static inline void replace_var(strptr data, const std::string& source, const std::string& target) {
+    std::map<std::string, std::string> vreps;
+    vreps["(" + source + " "] = "(" + target + " ";
+    vreps["(" + source + ")"] = "(" + target + ")";
+    vreps[" " + source + ")"] = " " + target + ")";
+    vreps[" " + source + " "] = " " + target + " ";
+    for (auto vrep : vreps) {
+        size_t pos = data->find(vrep.first);
+        while (pos != std::string::npos) {
+            data->replace(pos, vrep.first.length(), vrep.second);
+            pos = data->find(vrep.first);
+        }
+    }
+    /* Additional pre-preplacements */
+    if (data->find(source + " ") == 0) {
+        data->replace(0, source.length(), target);
+    }
+}
+
+static inline void substitute_pair(strptr data, const std::pair<std::string, std::string>& reop) {
+    replace_var(data, reop.first, TEMPORARY_REPLACEMENT_STRING);
+    replace_var(data, reop.second, reop.first);
+    replace_var(data, TEMPORARY_REPLACEMENT_STRING, reop.second);
+}
+
+bool DeclReorderer::substitute(const smtlib2::SMTl2Command& cmd) {
+    ss << "(" << cmd.getName() << " ";
+    strptr data = cmd.getDataPtr();
+    for (auto srdata : reorders)
+        substitute_pair(data, srdata);
+    ss << *data << ")" << '\n';
+    return true;
+}
+
+struct DisambResult {
+    const std::string source;
+    const uint32_t disamb;
+};
+
+static inline constexpr bool is_num(const char c) {
+    return c == '0' || c == '1' || c == '2' || c == '3' || c == '4'
+        || c == '5' || c == '6' || c == '7' || c == '8' || c == '9';
+}
+
+static inline const DisambResult analyze_disamb(const std::string& val) {
+    size_t dpos = val.length();
+    while (dpos > 0) {
+        if (!is_num(val[--dpos])) {
+            dpos++;
+            break;
+        }
+    }
+    const std::string source = val.substr(0, dpos);
+    const uint32_t disamb = std::atoi(val.substr(dpos, val.length() - dpos).c_str());
+    return DisambResult({ source, disamb });
+}
+
+static inline std::map<std::string, std::string>
+why3cpp::build_reorders(const std::set<std::string>& fundecls) {
+    std::map<std::string, std::set<uint32_t>> disambs;
+    for (const std::string& fname : fundecls) {
+        const DisambResult res = analyze_disamb(fname);
+        if (!stdutils::inmap(disambs, res.source)) {
+            disambs[res.source] = std::set<uint32_t>();
+        }
+        disambs.at(res.source).insert(res.disamb);
+    }
+
+    std::map<std::string, std::string> reorders;
+    for (const std::pair<std::string, std::set<uint32_t>>& dpair : disambs) {
+        if (dpair.second.size() > 1) {
+            uint32_t maxd = *(dpair.second.rbegin());
+            const std::string disambed = dpair.first + std::to_string(maxd);
+            reorders[dpair.first] = disambed;
+        }
+    }
+    return reorders;
+}
+
 extern strptr why3cpp::vc_sanitization(strptr data) {
     smtlib2::StringMemory smem;
     Sanitizer sanitizer;
     smtlib2::SMTl2CommandParser cparser(data, smem);
     cparser.initialize();
     cparser.parse(sanitizer);
-    return sanitizer.getSanitizedScript();
+    auto reorders = build_reorders(sanitizer.getFunDecls());
+    if (reorders.empty())
+        return sanitizer.getSanitizedScript();
+    DeclReorderer reorderer(reorders);
+    smtlib2::SMTl2CommandParser rparser(sanitizer.getSanitizedScript(), smem);
+    rparser.initialize();
+    rparser.parse(reorderer);
+    return reorderer.getReorderedScript();
 }

@@ -45,8 +45,8 @@ foreach(template ${LIBWHY3CPP_HEADERS_TEMPLATES})
   add_dependencies(why3cpp-static ${template_name}-why3-edit)
   add_dependencies(why3cpp-shared ${template_name}-why3-edit)
 endforeach()
-target_link_libraries(why3cpp-static antlr4_static snlog smtlib2tools-static lisptp-static ugly)
-target_link_libraries(why3cpp-shared antlr4_shared snlog smtlib2tools-shared lisptp-shared ugly)
+target_link_libraries(why3cpp-static antlr4_static snlog smtlib2tools-static lisptp-static stdutils-static ugly)
+target_link_libraries(why3cpp-shared antlr4_shared snlog smtlib2tools-shared lisptp-shared stdutils-shared ugly)
 target_include_directories(why3cpp-static
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${LOCAL_LIB_HEADERS_DIR}"
   PRIVATE "${LOCAL_LIB_HEADERS_DIR}/why3cpp/antlr4")
