@@ -73,15 +73,14 @@ W3WML_ICH::LoopIdentifierT W3WML_ICH::selectUnprovenBlock(size_t id) {
                 << "Using loop-id rotation as a temporary solution" );
     LoopIdentifierT res;
     if (stdutils::inmap(invariants_iter, id)) {
-        res = *invariants_iter.at(id);
         invariants_iter.at(id)++;
         if (invariants_iter.at(id) == problem.getInvariantIds().end()) {
             invariants_iter[id] = problem.getInvariantIds().begin();
         }
+        res = *invariants_iter.at(id);
     } else {
         invariants_iter[id] = problem.getInvariantIds().begin();
         res = *invariants_iter.at(id);
-        invariants_iter.at(id)++;
     }
     return res;
 }
