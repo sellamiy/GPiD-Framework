@@ -35,26 +35,27 @@ static inline bool isStrengthenableExplanation(const std::string& expl) {
 
 static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
     for (auto expl : proofResult.getExplanations())
-        if (!isStrengthenableExplanation(expl.second)) {
-            snlog::l_error() << "Unstrengthenable explanation found: " << expl.second << snlog::l_end;
+        if (!isStrengthenableExplanation(expl.second))
             return false;
-        }
     return true;
 }
 
+#define WARN_ONCE_D(lvar, wdata) if (!(lvar)) { snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__ << wdata << snlog::l_end; lvar = true; }
+
+static bool XWARN_535_D = false;
+
 ilinva::IchState W3WML_ICH::proofCheck() {
     problem.save_to(WHYML_TEMPORARY_SOURCEFILE, refs);
-    snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__
-                    << " TODO: Select Why3 Prover via Options "<< snlog::l_end;
+    WARN_ONCE_D(XWARN_535_D, " TODO: Select Why3 Prover via Options ");
     why3cpp::ProofResult proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4");
     return ilinva::IchState(proofResult.isComplete(), isStrengthenable(proofResult));
 }
 
+static bool XWARN_537_D = false;
+
 const std::string W3WML_ICH::generateAbductionProblem(LoopIdentifierT) {
-    snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__
-                    << " TODO: Select Why3 Prover via Options "<< snlog::l_end;
-    snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__
-                    << " TODO: Abduction problem should depend on loop Id "<< snlog::l_end;
+    WARN_ONCE_D(XWARN_535_D, " TODO: Select Why3 Prover via Options ");
+    WARN_ONCE_D(XWARN_537_D, " TODO: Abduction problem should depend on loop Id ");
     std::ofstream ofs;
     ofs.open(SMTV2_TEMPORARY_ABDUCEFILE);
     ofs << why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4").firstUnproven();
@@ -62,12 +63,14 @@ const std::string W3WML_ICH::generateAbductionProblem(LoopIdentifierT) {
     return SMTV2_TEMPORARY_ABDUCEFILE;
 }
 
+static bool XWARN_538_D = false;
+
 W3WML_ICH::LoopIdentifierT W3WML_ICH::selectUnprovenBlock(size_t id) {
     // TODO: Adapt on what follows v|
-    snlog::l_warn() << __FILE__ << " : " << __LINE__ << snlog::l_end
-                    << snlog::l_warn << "**Fnlicd undistinction invariant-proof/file-proof"
-                    << snlog::l_end << snlog::l_info
-                    << "Using loop-id rotation as a temporary solution" << snlog::l_end;
+    WARN_ONCE_D(XWARN_538_D, snlog::l_end
+                << snlog::l_warn << "**Fnlicd undistinction invariant-proof/file-proof"
+                << snlog::l_end << snlog::l_info
+                << "Using loop-id rotation as a temporary solution" );
     LoopIdentifierT res;
     if (stdutils::inmap(invariants_iter, id)) {
         res = *invariants_iter.at(id);
