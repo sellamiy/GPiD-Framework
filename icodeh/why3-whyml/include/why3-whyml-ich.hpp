@@ -41,6 +41,8 @@ public:
 
     inline void strengthen(LoopIdentifierT id, ConstraintT cons) {
         problem.getInvariant(id).conj.push_back(cons);
+        write(snlog::l_message() << "@C[" << id << "]: ",
+              problem.getInvariant(id), refs) << snlog::l_end;
     }
 
     inline void release(LoopIdentifierT id) {
