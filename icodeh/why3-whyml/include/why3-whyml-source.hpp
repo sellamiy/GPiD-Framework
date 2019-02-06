@@ -72,7 +72,7 @@ class W3WML_LSet {
     std::list<std::string> literals;
     std::set<std::string> references;
 public:
-    W3WML_LSet(const std::string& filename);
+    W3WML_LSet(const std::string& filename, bool overriden);
     inline const std::list<std::string>& getLiterals() const { return literals; }
     inline const std::set<std::string>& getReferences() const { return references; }
 };

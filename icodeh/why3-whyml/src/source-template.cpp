@@ -38,7 +38,10 @@ struct W3WML_LSet_LRec {
     inline void handle(const std::string lit) { llist.push_back(lit); }
 };
 
-W3WML_LSet::W3WML_LSet(const std::string& filename) {
+W3WML_LSet::W3WML_LSet(const std::string& filename, bool overriden) {
+    if (overriden)
+        // We do not need to generate abduction literals if we load them
+        return;
     try {
         smtlib2::GenerationSet gset =
             why3cpp::generate_literals_whyml(filename);

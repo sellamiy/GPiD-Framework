@@ -33,9 +33,9 @@ public:
     using LoopIdentifierT = size_t;
     static const W3WML_Constraint C_False;
 
-    W3WML_ICH(const std::string& filename)
+    W3WML_ICH(const std::string& filename, bool overriden)
         : problem(filename),
-          plits(filename)
+          plits(filename, overriden)
     {}
 
     inline void strengthen(LoopIdentifierT id, ConstraintT cons) {

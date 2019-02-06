@@ -14,7 +14,7 @@ static inline void generate_ilnt_x(OptionStorage& opts) {
     IlinvaAlgorithm<EngineT>::printInfos();        
 
     l_message() << "create program engine..." << l_end;
-    typename EngineT::CodeHandlerT ICH(opts.ilinva.input_file);
+    typename EngineT::CodeHandlerT ICH(opts.ilinva.input_file, opts.ilinva.abd_override.length() > 0);
 
     l_message() << "create generation engine..." << l_end;
     IlinvaAlgorithm<EngineT> Generator(ICH, opts, opts.ilinva);
