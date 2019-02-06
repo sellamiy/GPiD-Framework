@@ -69,6 +69,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
             ("c,conjunctive-only", "Only seek conjunctive loop invariants", cxxopts::value<bool>())
             ("s,max-strengthening-size", "Maximal depth of the abduction", cxxopts::value<uint32_t>())
             ("smt-time-limit", "Timeout for abduction smt tests (seconds)", cxxopts::value<uint64_t>())
+            ("u,no-insurance-checks", "Remove abducible literals validity checks", cxxopts::value<bool>())
             ;
 
 	parser.add_options("Output")
@@ -116,6 +117,9 @@ static inline OptionStatus handleOptions
 
         if (results.count("conjunctive-only"))
             opts.ilinva.disjunct = false;
+
+        if (results.count("no-insurance-checks"))
+            opts.ilinva.insurance_checks = false;
 
         if (results.count("max-strengthening-size"))
             opts.ilinva.max_strengthening_size = results["max-strengthening-size"].as<uint32_t>();

@@ -22,21 +22,22 @@ namespace ilinva {
     }
 
     struct DStrOptions {
+        const bool insurance_checks;
         const bool disjunctions;
         const uint32_t sizelim;
         const uint64_t smt_tlim;
 
         explicit DStrOptions()
-            : disjunctions(true), sizelim(1), smt_tlim(0)
+            : insurance_checks(true), disjunctions(true), sizelim(1), smt_tlim(0)
         {}
 
-        DStrOptions(bool disjunctions, uint32_t sizelim, uint64_t smt_tlim)
-            : disjunctions(disjunctions), sizelim(sizelim), smt_tlim(smt_tlim)
+        DStrOptions(bool insurance_checks, bool disjunctions, uint32_t sizelim, uint64_t smt_tlim)
+            : insurance_checks(insurance_checks), disjunctions(disjunctions), sizelim(sizelim), smt_tlim(smt_tlim)
         {}
 
         DStrOptions(const IlinvaOptions& iopts)
-            : disjunctions(iopts.disjunct), sizelim(iopts.max_strengthening_size),
-              smt_tlim(iopts.smt_time_limit)
+            : insurance_checks(iopts.insurance_checks), disjunctions(iopts.disjunct),
+              sizelim(iopts.max_strengthening_size), smt_tlim(iopts.smt_time_limit)
         {}
     };
 
@@ -186,7 +187,7 @@ namespace ilinva {
         abductionOpts.unknown_handle = SolverTestStatus::SAT;
         abductionOpts.max_level = dopts.sizelim + 1;
         abductionOpts.preprune_literals = true;
-        abductionOpts.additional_checker = false; // Prevents non redundant literals
+        abductionOpts.additional_checker = dopts.insurance_checks; // Prevents non redundant literals
         abductionOpts.additional_check_mode = SolverTestStatus::SAT;
         abductionOpts.smt_time_limit = dopts.smt_tlim;
         generator =
