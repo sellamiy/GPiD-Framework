@@ -35,8 +35,10 @@ static inline bool isStrengthenableExplanation(const std::string& expl) {
 
 static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
     for (auto expl : proofResult.getExplanations())
-        if (!isStrengthenableExplanation(expl.second))
+        if (!isStrengthenableExplanation(expl.second)) {
+            snlog::l_error() << "Unstrengthenable explanation found: " << expl.second << snlog::l_end;
             return false;
+        }
     return true;
 }
 
