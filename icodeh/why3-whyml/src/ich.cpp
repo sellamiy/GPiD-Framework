@@ -43,7 +43,7 @@ static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
 }
 
 ilinva::IchState W3WML_ICH::proofCheck() {
-    problem.save_to(WHYML_TEMPORARY_SOURCEFILE, plits.getReferences());
+    problem.save_to(WHYML_TEMPORARY_SOURCEFILE, refs);
     snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__
                     << " TODO: Select Why3 Prover via Options "<< snlog::l_end;
     why3cpp::ProofResult proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4");
@@ -90,6 +90,7 @@ const std::list<W3WML_Constraint>& W3WML_ICH::generateSourceLiterals
             for (const std::string& lit : plits.getLiterals()) {
                 literals.push_back(W3WML_Constraint(lit));
             }
+            refs = plits.getReferences();
         } else {
             // Read from overriding file
             if (overrides[overrider].empty())
@@ -103,21 +104,26 @@ const std::list<W3WML_Constraint>& W3WML_ICH::generateSourceLiterals
 }
 
 W3WML_Loop_Ctx W3WML_ICH::generateContext(LoopIdentifierT lid) {
-    return W3WML_Loop_Ctx(plits.getReferences(), problem.getInvariant(lid).conj);
+    return W3WML_Loop_Ctx(refs, problem.getInvariant(lid).conj);
 }
 
-struct W_AbdStorerHandler : public AbducibleHandler {
+struct W_AbdStorerHandler : public GenericHandler {
     std::list<std::string>& storage;
-    W_AbdStorerHandler(std::list<std::string>& storage) : storage(storage) {}
+    std::set<std::string>& refs;
+    W_AbdStorerHandler(std::list<std::string>& storage, std::set<std::string>& refs)
+        : storage(storage), refs(refs) {}
     virtual void allocate(const std::string, size_t) override {}
     virtual void handleAbducible(const std::shared_ptr<std::string>& abd) override {
         storage.push_back(*abd);
     }
+    virtual void handleReference(const std::shared_ptr<std::string>& ref) override {
+        refs.insert(*ref);
+    }
 };
 
 void W3WML_ICH::loadOverridingAbducibles(const std::string& overrider) {
-    W_AbdStorerHandler hdler(overrides[overrider]);
-    loadAbducibles(overrider, hdler);
+    W_AbdStorerHandler hdler(overrides[overrider], refs);
+    loadAbduceData(overrider, hdler);
 }
 
 const W3WML_Constraint W3WML_Loop_Ctx::getCandidateConstraint() {

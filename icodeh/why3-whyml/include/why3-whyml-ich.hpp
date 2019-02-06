@@ -27,6 +27,7 @@ class W3WML_ICH {
     std::list<W3WML_Constraint> literals;
 
     std::map<std::string, std::list<std::string>> overrides;
+    std::set<std::string> refs;
 public:
     using ConstraintT = W3WML_Constraint;
     using ContextManagerT = W3WML_Loop_Ctx;
@@ -62,10 +63,10 @@ public:
     void loadOverridingAbducibles(const std::string& overrider);
 
     inline void exportSource(const std::string& filename) const {
-        problem.save_to(filename, plits.getReferences());
+        problem.save_to(filename, refs);
     }
     inline void exportSource(std::ostream& out) const {
-        write(out, problem, plits.getReferences());
+        write(out, problem, refs);
     }
 
 };

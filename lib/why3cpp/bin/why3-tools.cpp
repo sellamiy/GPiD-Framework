@@ -15,6 +15,7 @@ enum class Why3Tool { None, Annotator, Tokenizer, Extractor, Literalizer };
 struct Why3ToolsOpts {
     vector<string> inputs;
     Why3Tool tool;
+    unsigned int literal_out_format;
 };
 
 enum class OParseResult { Complete, ToForward, Failed };
@@ -29,8 +30,8 @@ static inline OParseResult parse_opts(Why3ToolsOpts& opts, int& argc, char**& ar
             ("t,tokenize", "Tokenize the source file")
             ("a,annotate", "Annotate the source file")
             ("e,extract", "Extract elements from the source file")
-            ("l,literals", "List smtliterals built from the source file")
-
+            ("l,literals", "List smtliterals built from the source file (format: 0:Raw; 1:Abd)",
+             cxxopts::value<unsigned int>())
             ("input", "Input files", cxxopts::value<vector<string>>(opts.inputs))
             ;
         parser.parse_positional({"input"});
@@ -60,6 +61,7 @@ static inline OParseResult parse_opts(Why3ToolsOpts& opts, int& argc, char**& ar
         }
         if (results.count("literals")) {
             opts.tool = Why3Tool::Literalizer;
+            opts.literal_out_format = results["literals"].as<unsigned int>();
         }
 
         return OParseResult::ToForward;
@@ -137,11 +139,36 @@ static inline int whdl_extract(const Why3ToolsOpts& opts) {
 
 static inline int whdl_literalize(const Why3ToolsOpts& opts) {
     shared_ptr<AnnotatorParser> parser;
+    shared_ptr<ExtractorParser> vparse;
     for (const string& filename : opts.inputs) {
         l_info() << filename << " (smtlib2 literals)" << l_end;
         auto lset = generate_literals_whyml(filename);
-        for (const smtlib2::smtlit_t& lit : lset.get_literals()) {
-            l_message() << smtlib2::ident(lit) << " (" << smtlib2::type(lit) << ")" << l_end;
+        if (opts.literal_out_format == 0) {
+            for (const smtlib2::smtlit_t& lit : lset.get_literals()) {
+                l_message() << smtlib2::ident(lit) << " (" << smtlib2::type(lit) << ")" << l_end;
+            }
+        } else if (opts.literal_out_format == 1) {
+            l_message() << "**** file start ****" << l_end;
+            // Define size
+            std::cout << "(size auto)" << '\n';
+            // List references
+            vparse = shared_ptr<ExtractorParser>(new ExtractorParser(filename));
+            for (const pair<string, string>& var : vparse->getVars()) {
+                if (vparse->getRefs().count(var.first) > 0) {
+                    std::cout << "(reference " << var.second << ")\n";
+                }
+            }
+            // List abducibles
+            for (const smtlib2::smtlit_t& lit : lset.get_literals()) {
+                std::cout << "(abduce " << smtlib2::ident(lit) << ")\n";
+            }
+            l_message() << "***** file end *****" << l_end;
+        } else {
+            l_error() << "Unknown literalizer output format: "
+                      << opts.literal_out_format << l_end
+                      << l_info << "Available formats: 0, 1" << l_end
+                      << l_message << "0 - Raw format" << l_end
+                      << l_message << "1 - Abduce format" << l_end;
         }
     }
     return EXIT_SUCCESS;
