@@ -22,6 +22,8 @@ namespace stdutils {
             res.push_back(tk);
             _0P = _1P += delim.length();
         }
+        tk = src.substr(_0P);
+        res.push_back(tk);
         return res;
     }
 
