@@ -4,6 +4,8 @@
 #include <abdulot/ilinva/ich-core.hpp>
 #include "why3-whyml-source.hpp"
 
+#define WHY3_SOLVER_OPTION_DEFAULT "CVC4"
+
 class W3WML_Loop_Ctx {
     const std::set<std::string>& refs;
     std::list<const std::string>& candidate;
@@ -28,16 +30,30 @@ class W3WML_ICH {
 
     std::map<std::string, std::list<std::string>> overrides;
     std::set<std::string> refs;
+
+    std::map<std::string, std::string> local_opts;
 public:
     using ConstraintT = W3WML_Constraint;
     using ContextManagerT = W3WML_Loop_Ctx;
     using LoopIdentifierT = size_t;
     static const W3WML_Constraint C_False;
 
+    const std::string w3opt_solver = "solver";
+
     W3WML_ICH(const std::string& filename, bool overriden)
         : problem(filename),
           plits(filename, overriden)
-    {}
+    {
+        setOption(w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT); // Set default Why3 solver to CVC4
+    }
+
+    inline void setOption(const std::string& optname, const std::string& optvalue) {
+        local_opts[optname] = optvalue;
+    }
+
+    inline const std::string& getOption(const std::string& optname) const {
+        return local_opts.at(optname);
+    }
 
     inline void strengthen(LoopIdentifierT id, ConstraintT cons) {
         problem.getInvariant(id).conj.push_back(cons);

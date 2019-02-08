@@ -5,6 +5,7 @@
 #include <snlog/snlog.hpp>
 #include <lcdot/dotcommand.hpp>
 #include <stdutils/stats-controller.hpp>
+#include <stdutils/strings.hpp>
 #include <abdulot/core/algorithm.hpp>
 #include <abdulot/reference/version.hpp>
 #include <abdulot/ilinva/options.hpp>
@@ -70,6 +71,8 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
             ("s,max-strengthening-size", "Maximal depth of the abduction", cxxopts::value<uint32_t>())
             ("smt-time-limit", "Timeout for abduction smt tests (seconds)", cxxopts::value<uint64_t>())
             ("u,no-insurance-checks", "Remove abducible literals validity checks", cxxopts::value<bool>())
+            ("H,handler-option", "Forward option to code handler (format optname:optvalue)",
+             cxxopts::value<std::vector<std::string>>())
             ;
 
 	parser.add_options("Output")
@@ -141,6 +144,17 @@ static inline OptionStatus handleOptions
                              << snlog::l_end;
 	    return OptionStatus::FAILURE;
 	}
+
+        if (results.count("handler-option")) {
+            for (const std::string& optdata : results["handler-option"].as<std::vector<std::string>>()) {
+                if (stdutils::count(optdata, ":") != 1) {
+                    snlog::l_error() << "Illegal code handler option format: " << optdata << snlog::l_end;
+                } else {
+                    const auto soptdata = stdutils::split(optdata, ":");
+                    opts.ilinva.handler_options[soptdata[0]] = soptdata[1];
+                }
+            }
+        }
 
 #ifndef SINGLE_SOLVER_ONLY
         if (results.count("generator")) {

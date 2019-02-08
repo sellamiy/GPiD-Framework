@@ -42,23 +42,19 @@ static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
 
 #define WARN_ONCE_D(lvar, wdata) if (!(lvar)) { snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__ << wdata << snlog::l_end; lvar = true; }
 
-static bool XWARN_535_D = false;
-
 ilinva::IchState W3WML_ICH::proofCheck() {
     problem.save_to(WHYML_TEMPORARY_SOURCEFILE, refs);
-    WARN_ONCE_D(XWARN_535_D, " TODO: Select Why3 Prover via Options ");
-    why3cpp::ProofResult proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4");
+    why3cpp::ProofResult proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, getOption(w3opt_solver));
     return ilinva::IchState(proofResult.isComplete(), isStrengthenable(proofResult));
 }
 
 static bool XWARN_537_D = false;
 
 const std::string W3WML_ICH::generateAbductionProblem(LoopIdentifierT) {
-    WARN_ONCE_D(XWARN_535_D, " TODO: Select Why3 Prover via Options ");
     WARN_ONCE_D(XWARN_537_D, " TODO: Abduction problem should depend on loop Id ");
     std::ofstream ofs;
     ofs.open(SMTV2_TEMPORARY_ABDUCEFILE);
-    ofs << why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, "CVC4").firstUnproven();
+    ofs << why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, getOption(w3opt_solver)).firstUnproven();
     ofs.close();
     return SMTV2_TEMPORARY_ABDUCEFILE;
 }

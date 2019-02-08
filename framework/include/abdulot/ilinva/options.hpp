@@ -29,6 +29,7 @@ namespace ilinva {
 
         uint64_t smt_time_limit = 0;
 
+        std::map<std::string, std::string> handler_options;
     };
 
 }
