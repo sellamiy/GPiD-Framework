@@ -7,8 +7,9 @@
 namespace why3cpp {
 
     static inline bool is_anchor(const std::string& line) {
-        return line.find(";; produced by") == 0;
-        // TODO: May add secondary check: ends_with ";;"
+        return line.find(";; produced by") == 0
+            || line == ";;; this is a prelude for Alt-Ergo";
+        // TODO: This is conseq of Why3 drivers; Move this to a template generated from wtf....py
     }
 
 }
