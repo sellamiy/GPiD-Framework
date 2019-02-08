@@ -28,6 +28,6 @@ generate_ich_config_file(
   HEADER why3-whyml-ich.hpp
   CONVERTERS why3-whyml-converters.hpp
   CLASSNAME W3WML_ICH
-  INTERFACES lcvc4 ccvc4 lz3 cz3)
+  INTERFACES lcvc4 ccvc4 lz3 cz3 saltergo)
 # ----------------------------------------------------------------------------
 set(LOCAL_ICH_NAME w3wml PARENT_SCOPE)

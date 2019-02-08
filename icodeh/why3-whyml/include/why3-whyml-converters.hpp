@@ -18,7 +18,7 @@ inline W3WML_Constraint convert_w3wml
 using LiteralHypothesis = abdulot::gpid::LiteralHypothesis;
 using GunitiHypothesis = abdulot::gpid::GunitiHypothesis;
 
-#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_cvc4_tm_api
+#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_lcvc4
 
 // TODO: Add parameter in template for passing why3 refs for these converters
 // TODO: Something like ICHContextManager (?)
@@ -45,7 +45,7 @@ convert<W3WML_ICH, CVC4InterfaceAPI>
 
 #endif
 
-#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_cvc4_tm_smtl2_tm_cli
+#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_ccvc4
 
 template<> inline W3WML_Constraint abdulot::ilinva::
 convert<W3WML_ICH, CVC4InterfaceSMTl2CLI, LiteralHypothesis>
@@ -70,7 +70,7 @@ convert<W3WML_ICH, CVC4InterfaceSMTl2CLI>
 
 #endif
 
-#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_z3_tm_api
+#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_lz3
 
 template<> inline W3WML_Constraint abdulot::ilinva::
 convert<W3WML_ICH, Z3InterfaceAPI, LiteralHypothesis>
@@ -96,7 +96,7 @@ convert<W3WML_ICH, Z3InterfaceAPI>
 
 #endif
 
-#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_z3_tm_smtl2_tm_cli
+#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_cz3
 
 template<> inline W3WML_Constraint abdulot::ilinva::
 convert<W3WML_ICH, Z3InterfaceSMTl2CLI, LiteralHypothesis>
@@ -120,5 +120,31 @@ convert<W3WML_ICH, Z3InterfaceSMTl2CLI>
 }
 
 #endif
+
+#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_saltergo
+
+template<> inline W3WML_Constraint abdulot::ilinva::
+convert<W3WML_ICH, AltErgoPSmt2Interface, LiteralHypothesis>
+(abdulot::ObjectMapper<AltErgoPSmt2Interface::LiteralT> const& mapper, LiteralHypothesis& hyp,
+ AltErgoPSmt2Interface::ContextManagerT& ctx) {
+    return convert_w3wml<AltErgoPSmt2Interface, LiteralHypothesis>(mapper, hyp, ctx);
+}
+
+template<> inline W3WML_Constraint abdulot::ilinva::
+convert<W3WML_ICH, AltErgoPSmt2Interface, GunitiHypothesis>
+(abdulot::ObjectMapper<AltErgoPSmt2Interface::LiteralT> const& mapper, GunitiHypothesis& hyp,
+ AltErgoPSmt2Interface::ContextManagerT& ctx) {
+    return convert_w3wml<AltErgoPSmt2Interface, GunitiHypothesis>(mapper, hyp, ctx);
+}
+
+template<> AltErgoPSmt2Interface::LiteralT abdulot::ilinva::
+convert<W3WML_ICH, AltErgoPSmt2Interface>
+(const W3WML_Constraint& cons, AltErgoPSmt2Interface::ContextManagerT& ctx) {
+    const std::string _cdata = cons;
+    return abdulot::saihelpers::SMTl2SolverLiteral(ctx.memory.alloc(_cdata));
+}
+
+#endif
+
 
 #endif

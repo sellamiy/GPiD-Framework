@@ -1,0 +1,17 @@
+#ifndef ALTERGO_PARTIAL_SMTLIB2_CLI_INTERFACE_FOR_GPID__HPP
+#define ALTERGO_PARTIAL_SMTLIB2_CLI_INTERFACE_FOR_GPID__HPP
+
+#include <abdulot/saihelpers/smtlib2.hpp>
+
+#cmakedefine AltErgo_EXECUTABLE "@AltErgo_EXECUTABLE@"
+#define AltErgo_TIMEOUT_CLIOPT "-timelimit "
+#define AltErgo_TIMEOUT_FACTOR 1
+
+struct AltErgoPSmt2Interface : public abdulot::saihelpers::SMTl2SolverInterface {
+    AltErgoPSmt2Interface(abdulot::saihelpers::SMTl2SolverManager& manager,
+                          const abdulot::SolverInterfaceOptions& siopts)
+        : SMTl2SolverInterface(AltErgo_EXECUTABLE, manager, siopts,
+                               AltErgo_TIMEOUT_CLIOPT, AltErgo_TIMEOUT_FACTOR) {}
+};
+
+#endif
