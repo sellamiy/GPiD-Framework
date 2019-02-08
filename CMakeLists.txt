@@ -44,9 +44,9 @@ set(LOCAL_SOLVER_INTERFACES_CONFIGS "${CMAKE_BINARY_DIR}/local/solver-interfaces
 set(LOCAL_SOLVER_INTERFACES_INCLUDE "${CMAKE_BINARY_DIR}/local/solver-interfaces/include")
 set(LOCAL_SOLVER_INTERFACES_SOURCES "${CMAKE_BINARY_DIR}/local/solver-interfaces/src")
 
-set(LOCAL_ICH_CONFIGS "${CMAKE_BINARY_DIR}/local/ilinva-ch/configs")
-set(LOCAL_ICH_INCLUDE "${CMAKE_BINARY_DIR}/local/ilinva-ch/include")
-set(LOCAL_ICH_SOURCES "${CMAKE_BINARY_DIR}/local/ilinva-ch/src")
+set(LOCAL_ICH_CONFIGS "${CMAKE_BINARY_DIR}/local/icodeh/configs")
+set(LOCAL_ICH_INCLUDE "${CMAKE_BINARY_DIR}/local/icodeh/include")
+set(LOCAL_ICH_SOURCES "${CMAKE_BINARY_DIR}/local/icodeh/src")
 
 set(LOCAL_FRAMEWORK_HEADERS_DIR "${CMAKE_BINARY_DIR}/local/framework/include")
 set(LOCAL_FRAMEWORK_SOURCES_DIR "${CMAKE_BINARY_DIR}/local/framework/cxx")
