@@ -1,7 +1,6 @@
 #ifndef WHY3_WHYML_ICH_FOR_GPID__CONVERTERS__HPP
 #define WHY3_WHYML_ICH_FOR_GPID__CONVERTERS__HPP
 
-#include <snlog/snlog.hpp>
 #include <why3cpp/why3utils.hpp>
 #include <abdulot/ilinva/data-dual.hpp>
 #include <abdulot/saihelpers/smtlib2.hpp>

@@ -4,7 +4,6 @@
 #include <snlog/snlog.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <smtlib2tools/smtlit-presets.hpp>
-#include <smtlib2tools/smtlib2-annotations.hpp>
 #include <abdulot/core/errors.hpp>
 #include <why3-whyml-source.hpp>
 

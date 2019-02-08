@@ -1,6 +1,5 @@
 #define SMTLIB2_LIB_TOOLS_EXECUTABLE_CPP
 
-#include <vector>
 #include <cxxopts.hpp>
 #include <snlog/snlog.hpp>
 #include <smtlib2tools/smtlib2tools.hpp>

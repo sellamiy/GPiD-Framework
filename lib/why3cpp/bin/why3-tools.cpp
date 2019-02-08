@@ -1,9 +1,7 @@
 #define WHYML_P_TOOLS_EXECUTABLE_CPP
 
-#include <vector>
 #include <cxxopts.hpp>
 #include <snlog/snlog.hpp>
-#include <lisptp/lisptree.hpp>
 #include <why3cpp/why3cpp.hpp>
 
 using namespace std;

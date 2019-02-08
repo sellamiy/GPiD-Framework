@@ -1,7 +1,6 @@
 #ifndef LIB_SMTLIB2_CPP_TOOLS__LITERAL_FABRICATOR__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__LITERAL_FABRICATOR__HEADER
 
-#include <smtlib2tools/smtlib2-defs.hpp>
 #include <smtlib2tools/smtlib2-annotations.hpp>
 #include <smtlib2tools/smtlib2-types.hpp>
 

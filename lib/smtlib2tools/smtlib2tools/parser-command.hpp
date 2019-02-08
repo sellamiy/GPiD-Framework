@@ -1,7 +1,6 @@
 #ifndef LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_COMMAND_PARSER_HPP
 #define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_COMMAND_PARSER_HPP
 
-#include <map>
 #include <fstream>
 #include <functional>
 #include <smtlib2tools/string-memory.hpp>

@@ -4,8 +4,6 @@
 #include <sstream>
 #include <snlog/snlog.hpp>
 #include <ugly/ugly.hpp>
-#include <smtlib2tools/smtlib2-annotations.hpp>
-#include <smtlib2tools/smtlib2-types.hpp>
 #include <smtlib2tools/smtlib2-functions.hpp>
 #include <why3cpp/extractor-p.hpp>
 #include <why3cpp/whyml-smtlit.hpp>

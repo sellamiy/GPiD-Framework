@@ -1,10 +1,7 @@
 #define WHY3_WHYML_ICH_FOR_GPID__ICH__CPP
 
-#include <fstream>
-#include <sstream>
 #include <snlog/snlog.hpp>
 #include <stdutils/collections.hpp>
-#include <lisptp/lisptp.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
 #include <why3-whyml-ich.hpp>

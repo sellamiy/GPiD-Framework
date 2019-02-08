@@ -1,6 +1,5 @@
 #define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_STRING_MEMORY_CPP
 
-#include <vector>
 #include <snlog/snlog.hpp>
 #include <smtlib2tools/string-memory.hpp>
 

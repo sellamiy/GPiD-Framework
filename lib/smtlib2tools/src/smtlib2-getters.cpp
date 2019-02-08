@@ -1,6 +1,5 @@
 #define LIB_SMTLIB2_CPP_TOOLS__GETTERS__CPP
 
-#include <smtlib2tools/smtlib2-defs.hpp>
 #include <smtlib2tools/smtlib2-annotations.hpp>
 
 using namespace std;

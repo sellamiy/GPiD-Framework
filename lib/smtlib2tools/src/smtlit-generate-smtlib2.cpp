@@ -1,10 +1,6 @@
 #define LIB_SMTLIB2_CPP_TOOLS__PRESET__SMTLIB2__CPP
 
-#include <fstream>
-#include <sstream>
 #include <snlog/snlog.hpp>
-#include <smtlib2tools/smtlib2-annotations.hpp>
-#include <smtlib2tools/smtlib2-types.hpp>
 #include <smtlib2tools/parser-command.hpp>
 #include <smtlib2tools/parser-tokens.hpp>
 #include <smtlib2tools/smtlit-presets.hpp>
