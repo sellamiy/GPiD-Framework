@@ -46,7 +46,7 @@ class Why3DataRecov:
 
     def _load_drivers(self):
         self.drivers = {
-            'Alt-Ergo' : 'alt_ergo',
+            'Alt-Ergo' : 'alt_ergo_smt2',
             'CVC4' : 'cvc4_15',
             'Psyche' : 'psyche',
             'CVC3' : 'cvc3',
