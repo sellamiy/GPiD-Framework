@@ -153,7 +153,7 @@ static inline int whdl_literalize(const Why3ToolsOpts& opts) {
             vparse = shared_ptr<ExtractorParser>(new ExtractorParser(filename));
             for (const pair<string, string>& var : vparse->getVars()) {
                 if (vparse->getRefs().count(var.first) > 0) {
-                    std::cout << "(reference " << var.second << ")\n";
+                    std::cout << "(reference " << var.first << ")\n";
                 }
             }
             // List abducibles
