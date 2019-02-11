@@ -6,7 +6,8 @@ module Oopsla03
   requires { 0 < l }
  =
   for k = 1 to n - 1 do
-   invariant { true } ();
+   invariant { true }
+   ();
   done;
   for i = l to n - 1 do
    invariant { true }
