@@ -21,6 +21,10 @@ static inline bool is_infix(const std::string& s) {
         ;
 }
 
+static inline bool is_prefix(const std::string& s) {
+    return s == "-";
+}
+
 static inline std::string join(const std::string& jer, const std::list<std::string>& elems) {
     if (elems.size() == 0) return "";
     if (elems.size() == 1) return elems.front();
@@ -46,6 +50,8 @@ std::string Why3Smtl2CV::handle_call(const std::string& op, const std::list<std:
         return parenthize(join(" <> ", lvs));
     if (op == "not" || op == "NOT")
         return parenthize("not " + join("", lvs));
+    if (is_prefix(op))
+        return parenthize(op + " " + lvs.front());
     if (is_infix(op))
         return parenthize(join(space(op), lvs));
     return parenthize(op + " " + join(" ", lvs));
