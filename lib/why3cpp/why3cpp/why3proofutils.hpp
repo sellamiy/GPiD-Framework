@@ -47,7 +47,7 @@ namespace why3cpp {
         const strptr getVC(uint32_t idx) const { return vcs.at(idx); }
     };
 
-    extern strptr vc_sanitization(strptr data);
+    extern strptr vc_sanitization(strptr data, bool reoder=true);
 
 }
 

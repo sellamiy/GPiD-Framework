@@ -221,14 +221,14 @@ why3cpp::build_reorders(const std::set<std::string>& fundecls) {
     return reorders;
 }
 
-extern strptr why3cpp::vc_sanitization(strptr data) {
+extern strptr why3cpp::vc_sanitization(strptr data, bool reoder) {
     smtlib2::StringMemory smem;
     Sanitizer sanitizer;
     smtlib2::SMTl2CommandParser cparser(data, smem);
     cparser.initialize();
     cparser.parse(sanitizer);
     auto reorders = build_reorders(sanitizer.getFunDecls());
-    if (reorders.empty())
+    if (!reoder || reorders.empty())
         return sanitizer.getSanitizedScript();
     DeclReorderer reorderer(reorders);
     smtlib2::SMTl2CommandParser rparser(sanitizer.getSanitizedScript(), smem);

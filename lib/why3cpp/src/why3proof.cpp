@@ -76,7 +76,7 @@ namespace why3cpp {
         return res;
     }
 
-    extern ProofResult prove(const std::string& filename, const std::string& prover) {
+    extern ProofResult prove(const std::string& filename, const std::string& prover, bool vcreorder) {
         vcset_t pending = detect_unverified(filename, prover);
         if (pending.empty()) {
             ProofResult res;
@@ -84,7 +84,7 @@ namespace why3cpp {
         } else {
             std::map<uint32_t, strptr> vcs = extract_vc(filename, prover, pending);
             for (auto it = vcs.begin(); it != vcs.end(); ++it) {
-                it->second = vc_sanitization(it->second);
+                it->second = vc_sanitization(it->second, vcreorder);
             }
             ProofResult res(vcs, pending);
             return res;

@@ -41,7 +41,10 @@ static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
 
 ilinva::IchState W3WML_ICH::proofCheck() {
     problem.save_to(WHYML_TEMPORARY_SOURCEFILE, refs);
-    why3cpp::ProofResult proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE, getOption(w3opt_solver));
+    why3cpp::ProofResult
+        proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE,
+                                     getOption(w3opt_solver),
+                                     getOption_b(w3opt_vcreorder));
     return ilinva::IchState(proofResult.isComplete(), isStrengthenable(proofResult));
 }
 

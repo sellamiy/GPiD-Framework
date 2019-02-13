@@ -32,6 +32,7 @@ class W3WML_ICH {
     std::set<std::string> refs;
 
     std::map<std::string, std::string> local_opts;
+    std::map<std::string, bool> local_bopts;
 public:
     using ConstraintT = W3WML_Constraint;
     using ContextManagerT = W3WML_Loop_Ctx;
@@ -39,20 +40,30 @@ public:
     static const W3WML_Constraint C_False;
 
     const std::string w3opt_solver = "solver";
+    const std::string w3opt_vcreorder = "vcreorder";
 
     W3WML_ICH(const std::string& filename, bool overriden)
         : problem(filename),
           plits(filename, overriden)
     {
         setOption(w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT); // Set default Why3 solver to CVC4
+        setOption(w3opt_vcreorder, true);
     }
 
     inline void setOption(const std::string& optname, const std::string& optvalue) {
         local_opts[optname] = optvalue;
     }
 
+    inline void setOption(const std::string& optname, bool optvalue) {
+        local_bopts[optname] = optvalue;
+    }
+
     inline const std::string& getOption(const std::string& optname) const {
         return local_opts.at(optname);
+    }
+
+    inline bool getOption_b(const std::string& optname) const {
+        return local_bopts.at(optname);
     }
 
     inline void strengthen(LoopIdentifierT id, ConstraintT cons) {
