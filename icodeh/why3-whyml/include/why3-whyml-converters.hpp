@@ -17,6 +17,7 @@ inline W3WML_Constraint convert_w3wml
 using LiteralHypothesis = abdulot::gpid::LiteralHypothesis;
 using GunitiHypothesis = abdulot::gpid::GunitiHypothesis;
 
+/*
 #if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_lcvc4
 
 // TODO: Add parameter in template for passing why3 refs for these converters
@@ -43,6 +44,7 @@ convert<W3WML_ICH, CVC4InterfaceAPI>
 }
 
 #endif
+*/
 
 #if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_ccvc4
 
@@ -69,6 +71,7 @@ convert<W3WML_ICH, CVC4InterfaceSMTl2CLI>
 
 #endif
 
+/*
 #if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_lz3
 
 template<> inline W3WML_Constraint abdulot::ilinva::
@@ -94,6 +97,7 @@ convert<W3WML_ICH, Z3InterfaceAPI>
 }
 
 #endif
+*/
 
 #if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_cz3
 
@@ -144,6 +148,5 @@ convert<W3WML_ICH, AltErgoPSmt2Interface>
 }
 
 #endif
-
 
 #endif
