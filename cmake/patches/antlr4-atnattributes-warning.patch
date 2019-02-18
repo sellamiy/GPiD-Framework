@@ -1,0 +1,13 @@
+diff --git a/runtime/Cpp/runtime/src/atn/ATNState.h b/runtime/Cpp/runtime/src/atn/ATNState.h
+index 6c73d9435..b162a2a5f 100755
+--- a/runtime/Cpp/runtime/src/atn/ATNState.h
++++ b/runtime/Cpp/runtime/src/atn/ATNState.h
+@@ -70,7 +70,7 @@ namespace atn {
+   ///
+   /// <embed src="images/OptionalNonGreedy.svg" type="image/svg+xml"/>
+   /// </summary>
+-  class ANTLR4CPP_PUBLIC ATN;
++  class ATN;
+ 
+   class ANTLR4CPP_PUBLIC ATNState {
+   public:
