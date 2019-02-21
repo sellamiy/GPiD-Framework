@@ -5,6 +5,7 @@
 
 namespace lisptp {
     extern std::shared_ptr<LispTreeNode> parse(const std::string& data);
+    extern std::shared_ptr<LispTreeNode> parse_file(const std::string& fname);
 }
 
 #endif

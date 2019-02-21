@@ -1,5 +1,6 @@
 #define LIB_LISP_TREE_PARSER__CPP
 
+#include <fstream>
 #include <snlog/snlog.hpp>
 #include <lisptp/lisptp.hpp>
 
@@ -63,3 +64,12 @@ extern LispTreeNodePtr lisptp::parse(const std::string& data) {
     return parse_lisp_text(data, pos);
 }
 
+extern LispTreeNodePtr lisptp::parse_file(const std::string& fname) {
+    std::stringstream ss;
+    std::ifstream data(fname);
+    if (data.is_open()) {
+        ss << data.rdbuf();
+        data.close();
+    }
+    return parse(ss.str());
+}
