@@ -37,6 +37,11 @@ if(NOT CMAKE_BUILD_TYPE)
     "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 # ------------------------------------------------------------------------------
+if (APPLE)
+  include_directories(/usr/local/include)
+  link_directories(/usr/local/lib)
+endif()
+# ------------------------------------------------------------------------------
 set(LOCAL_LIB_HEADERS_DIR "${CMAKE_BINARY_DIR}/local/lib/include")
 set(LOCAL_LIB_SOURCES_DIR "${CMAKE_BINARY_DIR}/local/lib/cxx")
 
