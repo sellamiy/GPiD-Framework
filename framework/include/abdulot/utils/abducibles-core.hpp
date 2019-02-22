@@ -8,6 +8,9 @@
 #define ABDULOT__UTILS__ABDPARSER_HPP
 
 #include <list>
+#include <vector>
+#include <set>
+#include <map>
 #include <lisptp/lisptp.hpp>
 
 namespace abdulot {
@@ -27,12 +30,17 @@ namespace abdulot {
         bool ait_init = false;
         bool rit_init = false;
 
+        std::vector<std::string> decls;
+        std::map<std::string, std::set<size_t>> annots;
+
         void _ensure(bool b, const std::string& msg);
 
         void handle_size(const lisptp::LispTreeNode& node);
         void handle_rsize(const lisptp::LispTreeNode& node);
         void handle_abducible(const lisptp::LispTreeNode& node);
         void handle_reference(const lisptp::LispTreeNode& node);
+        void handle_extend(const lisptp::LispTreeNode& node);
+        void handle_declare(const lisptp::LispTreeNode& node);
     public:
         /** Handler constructor */
         AbducibleParserVisitor() {}

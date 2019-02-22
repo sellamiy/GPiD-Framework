@@ -32,6 +32,10 @@ void AbducibleParserVisitor::handle(const lisptp::LispTreeNode& node) {
             handle_abducible(node);
         if (nvalue == "reference" || nvalue == "ref")
             handle_reference(node);
+        if (nvalue == "extend")
+            handle_extend(node);
+        if (nvalue == "declare")
+            handle_declare(node);
     } else {
         // We do not need to handle terms
     }
@@ -67,6 +71,31 @@ void AbducibleParserVisitor::handle_abducible(const lisptp::LispTreeNode& node) 
 void AbducibleParserVisitor::handle_reference(const lisptp::LispTreeNode& node) {
     for (auto leaf : node.getLeaves())
         refdata.push_back(leaf->str(false));
+}
+
+void AbducibleParserVisitor::handle_extend(const lisptp::LispTreeNode& node) {
+    for (auto leaf : node.getLeaves()) {
+        _ensure(!leaf->isCall(), "Annotations must be non calls");
+        for (size_t idx : annots.at(leaf->getValue()))
+            abddata.push_back(decls.at(idx));
+    }
+}
+
+void AbducibleParserVisitor::handle_declare(const lisptp::LispTreeNode& node) {
+    std::set<size_t> adds;
+    bool a_phase = false;
+    for (auto leaf : node.getLeaves()) {
+        if (a_phase) {
+            _ensure(!leaf->isCall(), "Annotations must be non calls");
+            for (size_t alm : adds)
+                annots[leaf->getValue()].insert(alm);
+        } else if (!leaf->isCall() && leaf->getValue() == "as") {
+            a_phase = true;
+        } else {
+            adds.insert(decls.size());
+            decls.push_back(leaf->str(false));
+        }
+    }
 }
 
 uint32_t AbducibleParserVisitor::getSize() {
