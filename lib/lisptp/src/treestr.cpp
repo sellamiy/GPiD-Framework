@@ -13,26 +13,26 @@ static inline const std::string pad(size_t padding) {
     return res;
 }
 
-void LispTreeNode::str(std::stringstream& ss, size_t padding, bool& padpars) const {
+void LispTreeNode::str(std::stringstream& ss, size_t padding, bool& padpars, bool pretty) const {
     padpars = true;
     if (isCall()) {
-        ss << pad(padding) << '(' << value;
+        ss << (pretty ? pad(padding) : "") << '(' << value;
         for (LispTreeNodePtr leaf : leaves) {
-            ss << '\n';
-            leaf->str(ss, padding+1, padpars);
+            ss << (pretty ? '\n' : ' ');
+            leaf->str(ss, padding+1, padpars, pretty);
         }
-        if (padpars) ss << pad(padding);
+        if (pretty && padpars) ss << pad(padding);
         ss << ')';
         padpars = false;
     } else {
-        ss << pad(padding) << value << '\n';
+        ss << (pretty ? pad(padding) : "") << value << (pretty ? "\n" : "");
     }
 }
 
-const std::string LispTreeNode::str() const {
+const std::string LispTreeNode::str(bool pretty) const {
     std::stringstream ss;
     bool padpars = false;
-    str(ss, 0, padpars);
-    ss << '\n';
+    str(ss, 0, padpars, pretty);
+    if (pretty) ss << '\n';
     return ss.str();
 }
