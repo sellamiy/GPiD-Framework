@@ -9,67 +9,75 @@ using namespace abdulot;
 
 /* Command handlers utils */
 
-AbducibleParserCommandHandler::AbducibleParserCommandHandler() {
-    handlers["size"] =
-        std::bind(&AbducibleParserCommandHandler::handleSize,
-                  this, std::placeholders::_1);
-    handlers["autosize"] =
-        std::bind(&AbducibleParserCommandHandler::handleSize,
-                  this, std::placeholders::_1);
-    handlers["abduce"] =
-        std::bind(&AbducibleParserCommandHandler::handleAbducible,
-                  this, std::placeholders::_1);
-    handlers["abducible"] =
-        std::bind(&AbducibleParserCommandHandler::handleAbducible,
-                  this, std::placeholders::_1);
-    handlers["reference"] =
-        std::bind(&AbducibleParserCommandHandler::handleReference,
-                  this, std::placeholders::_1);
-    handlers["ref"] =
-        std::bind(&AbducibleParserCommandHandler::handleReference,
-                  this, std::placeholders::_1);
-}
-
-bool AbducibleParserCommandHandler::handleNothing(const smtlib2::SMTl2Command&)
-{ return true; }
-
-bool AbducibleParserCommandHandler::handleSize(const smtlib2::SMTl2Command& cmd) {
-    if (cmd.getData() == "auto") {
-        return auto_size = true; // p.n.: assignment required
-    } else {
-        size = std::stoi(cmd.getData());
-        return size > 0;
+void AbducibleParserVisitor::_ensure(bool b, const std::string& msg) {
+    if (!b) {
+        snlog::l_error() << "Abducible file contextual error: " << msg << snlog::l_end;
+        valid = false;
     }
 }
 
-bool AbducibleParserCommandHandler::handleRsize(const smtlib2::SMTl2Command& cmd) {
-    if (cmd.getData() == "auto") {
-        return auto_size = true; // p.n.: assignment required
+void AbducibleParserVisitor::handle(const lisptp::LispTreeNode& node) {
+    if (node.isCall()) {
+        const std::string& nvalue = node.getValue();
+        if (nvalue == "") {
+            // Multiple lisp-tree et top level
+            for (auto leaf : node.getLeaves())
+                handle(*leaf);
+        }
+        if (nvalue == "size")
+            handle_size(node);
+        if (nvalue == "rsize")
+            handle_rsize(node);
+        if (nvalue == "abduce" || nvalue == "abducible")
+            handle_abducible(node);
+        if (nvalue == "reference" || nvalue == "ref")
+            handle_reference(node);
     } else {
-        rsize = std::stoi(cmd.getData());
-        return true;
+        // We do not need to handle terms
+    }
+    handled = true;
+}
+
+void AbducibleParserVisitor::handle_size(const lisptp::LispTreeNode& node) {
+    _ensure(node.getLeaves().size() == 1, "<size> command must have one (and only one) argument");
+    auto data = (node.getLeaves().front())->getValue();
+    if (data == "auto") {
+        auto_size = true;
+    } else {
+        size = std::stoi(data);
+        _ensure(size > 0, "forced abducible size must be > 0");
     }
 }
 
-bool AbducibleParserCommandHandler::handleAbducible(const smtlib2::SMTl2Command& cmd) {
-    abddata.push_back(cmd.getDataPtr());
-    return true;
+void AbducibleParserVisitor::handle_rsize(const lisptp::LispTreeNode& node) {
+    _ensure(node.getLeaves().size() == 1, "<rsize> command must have one (and only one) argument");
+    auto data = (node.getLeaves().front())->getValue();
+    if (data == "auto") {
+        auto_size = true;
+    } else {
+        rsize = std::stoi(data);
+    }
 }
 
-bool AbducibleParserCommandHandler::handleReference(const smtlib2::SMTl2Command& cmd) {
-    refdata.push_back(cmd.getDataPtr());
-    return true;
+void AbducibleParserVisitor::handle_abducible(const lisptp::LispTreeNode& node) {
+    for (auto leaf : node.getLeaves())
+        abddata.push_back(leaf->str(false));
 }
 
-uint32_t AbducibleParserCommandHandler::getSize() {
+void AbducibleParserVisitor::handle_reference(const lisptp::LispTreeNode& node) {
+    for (auto leaf : node.getLeaves())
+        refdata.push_back(leaf->str(false));
+}
+
+uint32_t AbducibleParserVisitor::getSize() {
     return auto_size ? abddata.size() : size;
 }
 
-uint32_t AbducibleParserCommandHandler::getRefCount() {
+uint32_t AbducibleParserVisitor::getRefCount() {
     return auto_size ? refdata.size() : rsize;
 }
 
-const std::shared_ptr<std::string>& AbducibleParserCommandHandler::nextAbducible() {
+const std::string& AbducibleParserVisitor::nextAbducible() {
     if (!ait_init) {
         abdit = abddata.begin();
         ait_init = true;
@@ -83,12 +91,12 @@ const std::shared_ptr<std::string>& AbducibleParserCommandHandler::nextAbducible
             << snlog::l_end;
         throw IllegalAccessError("No more abducible literal");
     }
-    const std::shared_ptr<std::string>& res = *abdit;
+    const std::string& res = *abdit;
     ++abdit;
     return res;
 }
 
-const std::shared_ptr<std::string>& AbducibleParserCommandHandler::nextReference() {
+const std::string& AbducibleParserVisitor::nextReference() {
     if (!rit_init) {
         refit = refdata.begin();
         rit_init = true;
@@ -102,49 +110,37 @@ const std::shared_ptr<std::string>& AbducibleParserCommandHandler::nextReference
             << snlog::l_end;
         throw IllegalAccessError("No more reference literal");
     }
-    const std::shared_ptr<std::string>& res = *refit;
+    const std::string& res = *refit;
     ++refit;
     return res;
 }
 
 /* Parser engine utils */
 
-AbducibleParser::AbducibleParser(std::string filename)
-    : cparser(filename, smem)
-{}
-
-void AbducibleParser::init() {
-    cparser.initialize();
-}
-
-bool AbducibleParser::isValid() {
-    return cparser.valid();
+AbducibleParser::AbducibleParser(const std::string& filename) {
+    pdata = lisptp::parse_file(filename);
 }
 
 uint32_t AbducibleParser::getAbducibleCount() {
-    if (!cparser.complete()) {
-        cparser.parse(chandler);
-    }
-    return chandler.getSize();
+    if (!pvisitor.isComplete())
+        pvisitor.handle(*pdata);
+    return pvisitor.getSize();
 }
 
 uint32_t AbducibleParser::getReferenceCount() {
-    if (!cparser.complete()) {
-        cparser.parse(chandler);
-    }
-    return chandler.getRefCount();
+    if (!pvisitor.isComplete())
+        pvisitor.handle(*pdata);
+    return pvisitor.getRefCount();
 }
 
-const std::shared_ptr<std::string>& AbducibleParser::nextAbducible() {
-    if (!cparser.complete()) {
-        cparser.parse(chandler);
-    }
-    return chandler.nextAbducible();
+const std::string& AbducibleParser::nextAbducible() {
+    if (!pvisitor.isComplete())
+        pvisitor.handle(*pdata);
+    return pvisitor.nextAbducible();
 }
 
-const std::shared_ptr<std::string>& AbducibleParser::nextReference() {
-    if (!cparser.complete()) {
-        cparser.parse(chandler);
-    }
-    return chandler.nextReference();
+const std::string& AbducibleParser::nextReference() {
+    if (!pvisitor.isComplete())
+        pvisitor.handle(*pdata);
+    return pvisitor.nextReference();
 }

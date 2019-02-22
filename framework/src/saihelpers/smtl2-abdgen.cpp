@@ -8,8 +8,9 @@ void SMTl2AbducibleHandler::allocate(const std::string id, size_t size) {
     memoryRangeAllocation<SMTl2SolverLiteral>(id, size);
 }
 
-void SMTl2AbducibleHandler::handleAbducible(const std::shared_ptr<std::string>& abd) {
-    memoryObjectAllocation(abducibles_memory_id, _cpt++, mapper, abd);
+void SMTl2AbducibleHandler::handleAbducible(const std::string& abd) {
+    memoryObjectAllocation(abducibles_memory_id, _cpt++, mapper,
+                           std::shared_ptr<std::string>(new std::string(abd)));
 }
 
 void SMTl2SolverAbducibleGenerator::load(std::string filename) {

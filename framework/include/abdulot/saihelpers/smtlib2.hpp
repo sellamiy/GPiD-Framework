@@ -7,6 +7,7 @@
 #ifndef ABDULOT__SAI_HELPERS__SMTLIB2_CLI_SOLVER_INTERFACE_HPP
 #define ABDULOT__SAI_HELPERS__SMTLIB2_CLI_SOLVER_INTERFACE_HPP
 
+#include <smtlib2tools/parser-command.hpp>
 #include <abdulot/core/saitypes.hpp>
 #include <abdulot/core/memory.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
@@ -70,7 +71,7 @@ namespace saihelpers {
             : _cpt(0), mapper(mapper) {}
 
         virtual void allocate(const std::string id, size_t size) override;
-        virtual void handleAbducible(const std::shared_ptr<std::string>& abd) override;
+        virtual void handleAbducible(const std::string& abd) override;
 
         friend class SMTl2SolverAbducibleGenerator;
     };

@@ -8,62 +8,70 @@
 #define ABDULOT__UTILS__ABDPARSER_HPP
 
 #include <list>
-#include <smtlib2tools/parser-command.hpp>
+#include <lisptp/lisptp.hpp>
 
 namespace abdulot {
 
-    /** \brief SMTlib 2 abducible files command handlers */
-    class AbducibleParserCommandHandler : public smtlib2::SMTl2CommandHandler {
+    class AbducibleParserVisitor {
+        bool valid = true;
+        bool handled = false;
+
         uint32_t size = 0;
         uint32_t rsize = 0;
         bool auto_size = false;
 
-        std::list<std::shared_ptr<std::string>> abddata;
-        std::list<std::shared_ptr<std::string>> refdata;
-        typename std::list<std::shared_ptr<std::string>>::iterator abdit;
-        typename std::list<std::shared_ptr<std::string>>::iterator refit;
+        std::list<std::string> abddata;
+        std::list<std::string> refdata;
+        typename std::list<std::string>::iterator abdit;
+        typename std::list<std::string>::iterator refit;
         bool ait_init = false;
         bool rit_init = false;
 
-        bool handleSize(const smtlib2::SMTl2Command& cmd);
-        bool handleRsize(const smtlib2::SMTl2Command& cmd);
-        bool handleAbducible(const smtlib2::SMTl2Command& cmd);
-        bool handleReference(const smtlib2::SMTl2Command& cmd);
-        bool handleNothing(const smtlib2::SMTl2Command&);
+        void _ensure(bool b, const std::string& msg);
+
+        void handle_size(const lisptp::LispTreeNode& node);
+        void handle_rsize(const lisptp::LispTreeNode& node);
+        void handle_abducible(const lisptp::LispTreeNode& node);
+        void handle_reference(const lisptp::LispTreeNode& node);
     public:
         /** Handler constructor */
-        AbducibleParserCommandHandler();
+        AbducibleParserVisitor() {}
+
+        void handle(const lisptp::LispTreeNode& node);
 
         /** \return The number of abducible literals after parsing */
         uint32_t getSize();
         uint32_t getRefCount();
         /** \return The next abducible parsed (after parsing, one time iteration) */
-        const std::shared_ptr<std::string>& nextAbducible();
-        const std::shared_ptr<std::string>& nextReference();
+        const std::string& nextAbducible();
+        const std::string& nextReference();
+
+        inline constexpr bool isValid() const;
+        inline constexpr bool isComplete() const;
     };
 
     /** \brief Parser for abducible files. */
     class AbducibleParser {
-        smtlib2::StringMemory smem;
-        smtlib2::SMTl2CommandParser cparser;
-        AbducibleParserCommandHandler chandler;
+        std::shared_ptr<lisptp::LispTreeNode> pdata;
+        AbducibleParserVisitor pvisitor;
     public:
         /** Create an abducible file parser. */
-        AbducibleParser(std::string filename);
-
-        /** Initialize the parser */
-        void init();
+        AbducibleParser(const std::string& filename);
 
         /** Parse the number of abducibles in the file. */
         uint32_t getAbducibleCount();
         uint32_t getReferenceCount();
         /** Parse the next abducible literal in the file. */
-        const std::shared_ptr<std::string>& nextAbducible();
-        const std::shared_ptr<std::string>& nextReference();
+        const std::string& nextAbducible();
+        const std::string& nextReference();
 
         /** Check if the parser is in a consistent state. */
-        bool isValid();
+        inline constexpr bool isValid() const;
     };
+
+    inline constexpr bool AbducibleParserVisitor::isValid() const { return valid; }
+    inline constexpr bool AbducibleParser::isValid() const { return pvisitor.isValid(); }
+    inline constexpr bool AbducibleParserVisitor::isComplete() const { return handled; }
 
 }
 

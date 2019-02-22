@@ -17,7 +17,7 @@ public:
      std::map<uint32_t, std::list<uint32_t>>&)
         : pbld(pbld), _cpt(0), mapper(mapper) {}
     virtual void allocate(const std::string id, size_t size) override;
-    virtual void handleAbducible(const std::shared_ptr<std::string>& abd) override;
+    virtual void handleAbducible(const std::string& abd) override;
 
     friend class CVC4AbducibleLiteralsGenerator;
 };

@@ -11,7 +11,6 @@ extern const std::string abdulot::references_memory_id = "References";
 
 extern uint32_t abdulot::getAbducibleCount(std::string filename) {
     AbducibleParser parser(filename);
-    parser.init();
     if (parser.isValid()) {
         return parser.getAbducibleCount();
     } else {
@@ -21,7 +20,6 @@ extern uint32_t abdulot::getAbducibleCount(std::string filename) {
 
 extern uint32_t abdulot::getReferenceCount(std::string filename) {
     AbducibleParser parser(filename);
-    parser.init();
     if (parser.isValid()) {
         return parser.getReferenceCount();
     } else {
@@ -34,7 +32,6 @@ extern void abdulot::loadAbducibles(std::string filename, AbducibleHandler& hand
     handler.allocate(abducibles_memory_id, size);
     std::map<int, int> linker;
     AbducibleParser parser(filename);
-    parser.init();
     for (uint32_t i = 0; i < size; i++) {
         if (!parser.isValid()) {
             throw ParseError("Error loading from @file:" + filename);
@@ -48,7 +45,6 @@ extern void abdulot::loadReferences(std::string filename, ReferenceHandler& hand
     handler.allocate(references_memory_id, size);
     std::map<int, int> linker;
     AbducibleParser parser(filename);
-    parser.init();
     for (uint32_t i = 0; i < size; i++) {
         if (!parser.isValid()) {
             throw ParseError("Error loading from @file:" + filename);

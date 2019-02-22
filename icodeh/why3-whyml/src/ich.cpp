@@ -1,5 +1,6 @@
 #define WHY3_WHYML_ICH_FOR_GPID__ICH__CPP
 
+#include <fstream>
 #include <snlog/snlog.hpp>
 #include <stdutils/collections.hpp>
 #include <why3cpp/why3cpp.hpp>
@@ -111,11 +112,11 @@ struct W_AbdStorerHandler : public GenericHandler {
     W_AbdStorerHandler(std::list<std::string>& storage, std::set<std::string>& refs)
         : storage(storage), refs(refs) {}
     virtual void allocate(const std::string, size_t) override {}
-    virtual void handleAbducible(const std::shared_ptr<std::string>& abd) override {
-        storage.push_back(*abd);
+    virtual void handleAbducible(const std::string& abd) override {
+        storage.push_back(abd);
     }
-    virtual void handleReference(const std::shared_ptr<std::string>& ref) override {
-        refs.insert(*ref);
+    virtual void handleReference(const std::string& ref) override {
+        refs.insert(ref);
     }
 };
 

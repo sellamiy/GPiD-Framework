@@ -99,18 +99,17 @@ int main(int argc, char** argv) {
 
     try {
         AbducibleParser parser(opts.input);
-        parser.init();
         t_fatal(!parser.isValid()) << "Parser in broken state; please stop!" << l_end;
 
         l_notif() << "number of abducibles" << " : " << parser.getAbducibleCount() << l_end;
         l_notif() << "number of references" << " : " << parser.getReferenceCount() << l_end;
 
         for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
-            l_notifg() << "abducible" << " : " << *parser.nextAbducible() << l_end;
+            l_notifg() << "abducible" << " : " << parser.nextAbducible() << l_end;
         }
 
         for (uint32_t i = 0; i < parser.getReferenceCount(); i++) {
-            l_notifg() << "reference" << " : " << *parser.nextReference() << l_end;
+            l_notifg() << "reference" << " : " << parser.nextReference() << l_end;
         }
 
         if (parser.isValid()) {

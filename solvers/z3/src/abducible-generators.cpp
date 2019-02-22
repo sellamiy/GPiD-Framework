@@ -10,8 +10,8 @@ void Z3AbducibleHandler::allocate(const std::string id, size_t size) {
     memoryRangeAllocation<Z3Literal>(id, size);
 }
 
-void Z3AbducibleHandler::handleAbducible(const std::shared_ptr<std::string>& abd) {
-    std::string smt_assert = "(assert " + *abd + ")";
+void Z3AbducibleHandler::handleAbducible(const std::string& abd) {
+    std::string smt_assert = "(assert " + abd + ")";
     z3::expr cstl = pbld.getContextManager().parse_string
         (smt_assert.c_str(),
          pbld.getDeclarations().getSortDecls(),
