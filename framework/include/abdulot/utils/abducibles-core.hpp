@@ -33,6 +33,36 @@ namespace abdulot {
         std::vector<std::string> decls;
         std::map<std::string, std::set<size_t>> annots;
 
+        class Lextender {
+            std::map<size_t, size_t> wires;
+            std::vector<std::string> extparts;
+        public:
+            Lextender(const std::vector<std::string>& params, const std::string& extension);
+            const std::string extend(const std::vector<std::string>& params) const;
+        };
+
+        class AbducibleLambda {
+            const std::string name;
+            const size_t pcount;
+            const Lextender extender;
+        public:
+            AbducibleLambda(const std::string& name,
+                            const std::vector<std::string>& params,
+                            const std::string& extension);
+            AbducibleLambda(const AbducibleLambda& o)
+                : name(o.name), pcount(o.pcount), extender(o.extender) {}
+
+            inline const std::string& get_name() const { return name; }
+            inline constexpr size_t get_pcount() const { return pcount; }
+
+            const std::set<std::string> apply
+            (const std::vector<std::set<size_t>>& params,
+             const std::vector<std::string>& decls,
+             const std::set<std::string>& options) const;
+        };
+
+        std::map<std::string, AbducibleLambda> lambdas;
+
         void _ensure(bool b, const std::string& msg);
 
         void handle_size(const lisptp::LispTreeNode& node);
@@ -41,6 +71,8 @@ namespace abdulot {
         void handle_reference(const lisptp::LispTreeNode& node);
         void handle_extend(const lisptp::LispTreeNode& node);
         void handle_declare(const lisptp::LispTreeNode& node);
+        void handle_lambda(const lisptp::LispTreeNode& node);
+        void handle_apply(const lisptp::LispTreeNode& node);
     public:
         /** Handler constructor */
         AbducibleParserVisitor() {}
