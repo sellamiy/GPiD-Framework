@@ -29,6 +29,7 @@ namespace abdulot {
 
         /** Algorithm construction and parametrization. */
         Algorithm(AlgorithmOptions& o) : execution_thread(nullptr), options(o) {}
+        virtual ~Algorithm() = default;
     public:
         /** Counter type for compting things. */
         using counter_t = uint64_t;

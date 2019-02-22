@@ -19,6 +19,7 @@ namespace stdutils {
 
     struct InfoData {
         InfoData(const std::string& dname) : dname(dname) {}
+        virtual ~InfoData() = default;
         const std::string dname;
         virtual std::string str() const = 0;
     };
