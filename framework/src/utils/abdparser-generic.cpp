@@ -1,6 +1,7 @@
 #define GPID_FRAMEWORK__UTIL__ABDPARSER_GENERIC_CPP
 
 #include <snlog/snlog.hpp>
+#include <stdutils/collections.hpp>
 #include <abdulot/core/errors.hpp>
 #include <abdulot/utils/abducibles-core.hpp>
 
@@ -24,6 +25,8 @@ const std::string abdkw_strict = "strict";
 const std::string abdkw_as = "as";
 const std::string abdkw_auto = "auto";
 const std::string abdkw_over = "over";
+
+const std::string abdkw_symmetric = "symmetric";
 
 /* Lambda utils */
 
@@ -67,14 +70,24 @@ AbducibleParserVisitor::AbducibleLambda::AbducibleLambda
 
 static inline bool next
 (std::vector<std::set<size_t>::iterator>& itparams,
- const std::vector<std::set<size_t>>& params,
- const std::set<std::string>& options) {
+ const std::vector<std::set<size_t>>& params) {
     size_t cpos = 0;
     while (cpos < itparams.size() && ++itparams.at(cpos) == params.at(cpos).end()) {
         itparams[cpos] = params.at(cpos).begin();
         ++cpos;
     }
     return cpos < itparams.size();
+}
+
+static inline bool option_check
+(const std::vector<std::string>& values, const std::set<std::string>& options) {
+    if (stdutils::inset(options, abdkw_symmetric)) {
+        for (size_t p = 0; p + 1 < values.size(); ++p)
+            if (values.at(p) >= values.at(p+1))
+                return false;
+    }
+    // TODO: Handle more application options
+    return true;
 }
 
 const std::set<std::string> AbducibleParserVisitor::AbducibleLambda::apply
@@ -87,8 +100,9 @@ const std::set<std::string> AbducibleParserVisitor::AbducibleLambda::apply
     do {
         std::vector<std::string> values;
         for (auto it : itparams) values.push_back(decls.at(*it));
-        res.insert(extender.extend(values));
-    } while (next(itparams, params, options));
+        if (option_check(values, options))
+            res.insert(extender.extend(values));
+    } while (next(itparams, params));
     return res;
 }
 
