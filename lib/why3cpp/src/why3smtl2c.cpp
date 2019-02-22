@@ -25,7 +25,7 @@ static inline bool is_prefix(const std::string& s) {
     return s == "-";
 }
 
-static inline std::string join(const std::string& jer, const std::list<std::string>& elems) {
+static inline std::string join(const std::string& jer, const std::vector<std::string>& elems) {
     if (elems.size() == 0) return "";
     if (elems.size() == 1) return elems.front();
     std::stringstream res;
@@ -41,7 +41,7 @@ static inline std::string join(const std::string& jer, const std::list<std::stri
     return res.str();
 }
 
-std::string Why3Smtl2CV::handle_call(const std::string& op, const std::list<std::string>& lvs) const {
+std::string Why3Smtl2CV::handle_call(const std::string& op, const std::vector<std::string>& lvs) const {
     if (op == "and" || op == "AND")
         return parenthize(join(" /\\ ", lvs));
     if (op == "or" || op == "OR")

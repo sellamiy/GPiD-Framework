@@ -13,7 +13,7 @@ namespace why3cpp {
             return (refs.count(t) > 0 ? "!" : "") + t;
         }
 
-        virtual std::string handle_call(const std::string& op, const std::list<std::string>& lvs)
+        virtual std::string handle_call(const std::string& op, const std::vector<std::string>& lvs)
             const override;
     public:
         Why3Smtl2CV(const std::set<std::string>& refs) : refs(refs) {}

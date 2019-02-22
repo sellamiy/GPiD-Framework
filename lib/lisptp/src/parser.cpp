@@ -36,7 +36,7 @@ static LispTreeNodePtr parse_lisp_text(const std::string& data, size_t& pos) {
     }
     std::string value;
     bool callstate;
-    std::list<LispTreeNodePtr> leaves;
+    std::vector<LispTreeNodePtr> leaves;
     if (isOpar(data.at(pos))) {
         callstate = true;
         ++pos;
