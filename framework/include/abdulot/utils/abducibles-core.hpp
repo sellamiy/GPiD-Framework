@@ -86,8 +86,8 @@ namespace abdulot {
         const std::string& nextAbducible();
         const std::string& nextReference();
 
-        inline constexpr bool isValid() const;
-        inline constexpr bool isComplete() const;
+        inline constexpr bool isValid() const { return valid; }
+        inline constexpr bool isComplete() const { return handled; }
     };
 
     /** \brief Parser for abducible files. */
@@ -106,12 +106,8 @@ namespace abdulot {
         const std::string& nextReference();
 
         /** Check if the parser is in a consistent state. */
-        inline constexpr bool isValid() const;
+        inline constexpr bool isValid() const { return pvisitor.isValid(); }
     };
-
-    inline constexpr bool AbducibleParserVisitor::isValid() const { return valid; }
-    inline constexpr bool AbducibleParser::isValid() const { return pvisitor.isValid(); }
-    inline constexpr bool AbducibleParserVisitor::isComplete() const { return handled; }
 
 }
 
