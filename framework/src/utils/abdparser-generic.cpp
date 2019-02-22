@@ -45,7 +45,7 @@ AbducibleParserVisitor::Lextender::Lextender
     }
     size_t lock = 0;
     size_t spos = 0;
-    for (auto cdata : cuts) {
+    for (auto& cdata : cuts) {
         wires[cdata.second] = lock++;
         extparts.push_back(extension.substr(spos, cdata.first.first - spos));
         spos = cdata.first.first + cdata.first.second;

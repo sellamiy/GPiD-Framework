@@ -12,7 +12,8 @@
 
 /** Local options for the executable. */
 struct ParserOptions {
-    std::string input;
+    std::vector<std::string> inputs;
+    bool abducible = false;
 };
 
 enum class OptionStatus {
@@ -33,11 +34,14 @@ static inline OptionStatus parseOptions(ParserOptions& opts, int& argc, char**& 
 	parser.add_options()
 	    ("h,help", "Print this help message")
 	    ("v,version", "Print framework version")
+
+            ("i,input", "Input files", cxxopts::value<std::vector<std::string>>(opts.inputs))
+
+            ("a,abducible-output", "Output data in abducible format")
 	    ;
 
-	parser.add_options("Input")
-	    ("i,input", "Input file", cxxopts::value<std::string>())
-	    ;
+        parser.parse_positional({"input"});
+        parser.positional_help("<input-file.abd> ...");
 
 	cxxopts::ParseResult results = parser.parse(argc, argv);
 
@@ -56,21 +60,16 @@ static inline OptionStatus handleOptions
     try {
 
 	if (results.count("help")) {
-	    snlog::l_message() << parser.help({"", "Input"}) << snlog::l_end;
+	    snlog::l_message() << parser.help({""}) << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
 	if (results.count("version")) {
 	    snlog::l_message() << abdulot::version_message << snlog::l_end;
 	    return OptionStatus::ENDED;
 	}
-
-	if (results.count("input")) {
-	    opts.input = results["input"].as<std::string>();
-	} else {
-	    snlog::l_fatal() << "No input file provided" << snlog::l_end
-                             << snlog::l_info << parser.help({"Input"}) << snlog::l_end;
-	    return OptionStatus::FAILURE;
-	}
+        if (results.count("abducible-output")) {
+            opts.abducible = true;
+        }
 
 	return OptionStatus::OK;
 
@@ -83,6 +82,49 @@ static inline OptionStatus handleOptions
 using namespace std;
 using namespace snlog;
 using namespace abdulot;
+
+/* ========== Main Helpers ========== */
+
+static int handle_input(const std::string& input, bool abd) {
+    AbducibleParser parser(input);
+    t_fatal(!parser.isValid()) << "Parser in broken state; please stop!" << l_end;
+
+    if (abd) {
+
+        std::cout << "(size " << parser.getAbducibleCount() << ")" << std::endl
+                  << "(rsize " << parser.getReferenceCount() << ")" << std::endl;
+
+        for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
+            std::cout << "(abduce " << parser.nextAbducible() << ")" << std::endl;
+        }
+
+        for (uint32_t i = 0; i < parser.getReferenceCount(); i++) {
+            std::cout << "(reference " << parser.nextReference() << ")" << std::endl;
+        }
+
+    } else {
+
+        l_notif() << "number of abducibles" << " : " << parser.getAbducibleCount() << l_end;
+        l_notif() << "number of references" << " : " << parser.getReferenceCount() << l_end;
+
+        for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
+            l_notifg() << "abducible" << " : " << parser.nextAbducible() << l_end;
+        }
+
+        for (uint32_t i = 0; i < parser.getReferenceCount(); i++) {
+            l_notifg() << "reference" << " : " << parser.nextReference() << l_end;
+        }
+
+    }
+
+    if (parser.isValid()) {
+        l_message() << "complete." << l_end;
+        return EXIT_SUCCESS;
+    } else {
+        l_fatal() << "errors were raised." << l_end;
+        return EXIT_FAILURE;
+    }
+}
 
 /* ========== Main ========== */
 
@@ -98,26 +140,11 @@ int main(int argc, char** argv) {
     l_message() << "start abducible parser..." << l_end;
 
     try {
-        AbducibleParser parser(opts.input);
-        t_fatal(!parser.isValid()) << "Parser in broken state; please stop!" << l_end;
-
-        l_notif() << "number of abducibles" << " : " << parser.getAbducibleCount() << l_end;
-        l_notif() << "number of references" << " : " << parser.getReferenceCount() << l_end;
-
-        for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
-            l_notifg() << "abducible" << " : " << parser.nextAbducible() << l_end;
-        }
-
-        for (uint32_t i = 0; i < parser.getReferenceCount(); i++) {
-            l_notifg() << "reference" << " : " << parser.nextReference() << l_end;
-        }
-
-        if (parser.isValid()) {
-            l_message() << "complete." << l_end;
-            return EXIT_SUCCESS;
-        } else {
-            l_fatal() << "errors were raised." << l_end;
-            return EXIT_FAILURE;
+        for (const std::string& input : opts.inputs) {
+            int rv = handle_input(input, opts.abducible);
+            if (rv != EXIT_SUCCESS) {
+                return EXIT_FAILURE;
+            }
         }
     } catch (abdulot::CoreError& e) {
         snlog::l_fatal() << e.what() << snlog::l_end;
