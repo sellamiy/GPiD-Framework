@@ -25,6 +25,7 @@ const std::string abdkw_strict = "strict";
 const std::string abdkw_as = "as";
 const std::string abdkw_auto = "auto";
 const std::string abdkw_over = "over";
+const std::string abdkw_copy = "copy";
 
 const std::string abdkw_symmetric = "symmetric";
 
@@ -139,6 +140,8 @@ void AbducibleParserVisitor::handle(const lisptp::LispTreeNode& node) {
             handle_lambda(node);
         if (nvalue == abdkw_apply)
             handle_apply(node);
+        if (nvalue == abdkw_copy)
+            handle_copy(node);
     } else {
         // We do not need to handle terms
     }
@@ -197,6 +200,23 @@ void AbducibleParserVisitor::handle_declare(const lisptp::LispTreeNode& node) {
         } else {
             adds.insert(decls.size());
             decls.push_back(leaf->str(false));
+        }
+    }
+}
+
+void AbducibleParserVisitor::handle_copy(const lisptp::LispTreeNode& node) {
+    std::set<std::string> sources;
+    bool a_phase = false;
+    for (auto leaf : node.getLeaves()) {
+        _ensure(!leaf->isCall(), "annotations must be non calls");
+        if (a_phase) {
+            for (const std::string& source : sources)
+                for (size_t elm : annots.at(source))
+                    annots[leaf->getValue()].insert(elm);
+        } else if (leaf->getValue() == abdkw_as) {
+            a_phase = true;
+        } else {
+            sources.insert(leaf->getValue());
         }
     }
 }

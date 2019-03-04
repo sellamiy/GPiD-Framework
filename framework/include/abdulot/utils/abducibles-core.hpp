@@ -73,6 +73,7 @@ namespace abdulot {
         void handle_declare(const lisptp::LispTreeNode& node);
         void handle_lambda(const lisptp::LispTreeNode& node);
         void handle_apply(const lisptp::LispTreeNode& node);
+        void handle_copy(const lisptp::LispTreeNode& node);
     public:
         /** Handler constructor */
         AbducibleParserVisitor() {}
