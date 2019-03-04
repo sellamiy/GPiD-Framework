@@ -25,14 +25,23 @@ else ()
   target_link_libraries(w3wml-shared abdulot-shared why3cpp-shared)
   # --------------------------------------------------------------------------
   include(FrameworkIlinvaRegistration)
-  set(oneValueArgs NAME HEADER CLASSNAME)
-  set(multiValueArgs INTERFACES EXCEPTIONS)
+  set(W3WML_HANDLED_INTERFACES ccvc4 cz3 saltergo)
+  set(W3WML_NOT_AVAILABLE)
+  foreach(interface ${W3WML_HANDLED_INTERFACES})
+    list(FIND SOLVER_TARGETS ${interface} DV_DUMMY)
+    if (${DV_DUMMY} LESS 0)
+      list(APPEND W3WML_NOT_AVAILABLE ${interface})
+    endif()
+  endforeach()
+  if (W3WML_NOT_AVAILABLE)
+    list(REMOVE_ITEM W3WML_HANDLED_INTERFACES ${W3WML_NOT_AVAILABLE})
+  endif()
   generate_ich_config_file(
     NAME w3wml
     HEADER why3-whyml-ich.hpp
     CONVERTERS why3-whyml-converters.hpp
     CLASSNAME W3WML_ICH
-    INTERFACES ccvc4 cz3 saltergo)
+    INTERFACES ${W3WML_HANDLED_INTERFACES})
   # --------------------------------------------------------------------------
   set(LOCAL_ICH_NAME w3wml PARENT_SCOPE)
 endif()
