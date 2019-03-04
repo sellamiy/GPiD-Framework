@@ -252,6 +252,7 @@ void AbducibleParserVisitor::handle_apply(const lisptp::LispTreeNode& node) {
         options.insert(node.getLeaves().at(p)->getValue());
     }
     _ensure(params.size() == lambdas.at(lname).get_pcount(), "incompatible param size");
+    annots[target]; // Target id creation in annots map (necessary if new abd set is empty)
     for (const std::string nabd : lambdas.at(lname).apply(params, decls, options)) {
         annots[target].insert(decls.size());
         decls.push_back(nabd);
