@@ -18,7 +18,7 @@ using LiteralHypothesis = abdulot::gpid::LiteralHypothesis;
 using GunitiHypothesis = abdulot::gpid::GunitiHypothesis;
 
 /*
-#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_lcvc4
+#if defined SOLVER_INTERFACE_lcvc4
 
 // TODO: Add parameter in template for passing why3 refs for these converters
 // TODO: Something like ICHContextManager (?)
@@ -46,7 +46,7 @@ convert<W3WML_ICH, CVC4InterfaceAPI>
 #endif
 */
 
-#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_ccvc4
+#if defined SOLVER_INTERFACE_ccvc4
 
 template<> inline W3WML_Constraint abdulot::ilinva::
 convert<W3WML_ICH, CVC4InterfaceSMTl2CLI, LiteralHypothesis>
@@ -72,7 +72,7 @@ convert<W3WML_ICH, CVC4InterfaceSMTl2CLI>
 #endif
 
 /*
-#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_lz3
+#if defined SOLVER_INTERFACE_lz3
 
 template<> inline W3WML_Constraint abdulot::ilinva::
 convert<W3WML_ICH, Z3InterfaceAPI, LiteralHypothesis>
@@ -99,7 +99,7 @@ convert<W3WML_ICH, Z3InterfaceAPI>
 #endif
 */
 
-#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_cz3
+#if defined SOLVER_INTERFACE_cz3
 
 template<> inline W3WML_Constraint abdulot::ilinva::
 convert<W3WML_ICH, Z3InterfaceSMTl2CLI, LiteralHypothesis>
@@ -124,7 +124,7 @@ convert<W3WML_ICH, Z3InterfaceSMTl2CLI>
 
 #endif
 
-#if !defined SINGLE_SOLVER_ONLY || defined SINGLE_SOLVER_saltergo
+#if defined SOLVER_INTERFACE_saltergo
 
 template<> inline W3WML_Constraint abdulot::ilinva::
 convert<W3WML_ICH, AltErgoPSmt2Interface, LiteralHypothesis>
