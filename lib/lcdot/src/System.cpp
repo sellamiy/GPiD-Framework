@@ -13,6 +13,6 @@ extern void lcdot::system::autocompile(const std::string& source, const std::str
 }
 #else
 extern void lcdot::system::autocompile(const std::string&, const std::string&) {
-    snlog::l_internal << "Dot autocompilation not configured" << snlog::l_end;
+    snlog::l_internal() << "Dot autocompilation not configured" << snlog::l_end;
 }
 #endif
