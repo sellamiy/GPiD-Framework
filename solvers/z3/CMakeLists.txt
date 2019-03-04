@@ -4,6 +4,7 @@
 find_package(Z3)
 if (NOT Z3_FOUND)
   message(WARNING "Z3 not found")
+  set(LOCAL_INTERFACE_NAME "" PARENT_SCOPE)
 else()
   include_directories(${Z3_CXX_INCLUDE_DIRS})
   # ----------------------------------------------------------------------------

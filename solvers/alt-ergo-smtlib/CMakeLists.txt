@@ -4,6 +4,7 @@
 find_package(AltErgo 2.2.0)
 if (NOT AltErgo_FOUND)
   message(WARNING "Alt-Ergo not found")
+  set(LOCAL_INTERFACE_NAME "" PARENT_SCOPE)
 else()
   set(INTERFACE_HEADER_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/include/alt-ergo-smt2-interface.hpp.in")
   set(INTERFACE_HEADER "${LOCAL_SOLVER_INTERFACES_INCLUDE}/alt-ergo-smt2-interface.hpp")

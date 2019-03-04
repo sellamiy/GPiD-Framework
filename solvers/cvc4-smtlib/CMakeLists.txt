@@ -4,6 +4,7 @@
 find_package(CVC4)
 if (NOT CVC4_FOUND)
   message(WARNING "CVC4 not found")
+  set(LOCAL_INTERFACE_NAME "" PARENT_SCOPE)
 else()
   set(INTERFACE_HEADER_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/include/cvc4-smtl2-interface.hpp.in")
   set(INTERFACE_HEADER "${LOCAL_SOLVER_INTERFACES_INCLUDE}/cvc4-smtl2-interface.hpp")

@@ -4,6 +4,7 @@
 find_package(CVC4)
 if (NOT CVC4_FOUND)
   message(WARNING "CVC4 not found")
+  set(LOCAL_INTERFACE_NAME "" PARENT_SCOPE)
 else()
   include_directories(${CVC4_INCLUDE_DIR})
   # ----------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 find_package(Z3)
 if (NOT Z3_FOUND)
   message(WARNING "Z3 not found")
+  set(LOCAL_INTERFACE_NAME "" PARENT_SCOPE)
 else()
   set(INTERFACE_HEADER_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/include/z3-smtl2-interface.hpp.in")
   set(INTERFACE_HEADER "${LOCAL_SOLVER_INTERFACES_INCLUDE}/z3-smtl2-interface.hpp")
