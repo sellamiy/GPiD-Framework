@@ -1,0 +1,22 @@
+module B00
+
+ use int.Int
+ use ref.Ref
+ use int.EuclideanDivision
+ 
+ let main (n: int) (m: int) : unit
+   requires { n <> m /\ (m <> 0) }
+   diverges
+  = let x = ref n in let y = ref m in
+   while !x > !y do
+    invariant { true }
+    x := div !x !y;
+    if !x <> 0 then
+      x := (div !y !x);
+    if !x <> 0 then
+      x := (div (!x + 1) !y)
+   done;
+   
+   assert { !x < !y }
+
+end

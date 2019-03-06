@@ -1,0 +1,38 @@
+module Diamond21
+
+ use int.Int
+ use ref.Ref
+ use int.EuclideanDivision
+ 
+ let main (y0: int) : unit
+  diverges
+ = let x = ref 0 in let y = ref y0 in
+ 
+ while !x < 99 do 
+  invariant { true }
+  
+  if mod !y 2 = 0 then x := !x + 1 else x := !x + 2;
+  
+  if mod !y 2 = 0 then x := !x + 2 else x := !x - 2;
+  
+  if mod !y 2 = 0 then x := !x + 2 else x := !x + 2;
+  
+  if mod !y 2 = 0 then x := !x + 2 else x := !x - 2;
+  
+  if mod !y 2 = 0 then x := !x + 2 else x := !x + 2;
+  
+  if mod !y 2 = 0 then x := !x + 2 else x := !x - 4;
+  
+  if mod !y 2 = 0 then x := !x + 2 else x := !x + 4;
+  
+  if mod !y 2 = 0 then x := !x + 2 else x := !x + 2;
+  
+  if mod !y 2 = 0 then x := !x + 2 else x := !x - 4;
+  
+  if mod !y 2 = 0 then x := !x + 2 else x := !x - 4;
+  
+ done;
+ 
+ assert { (mod !x 2) = (mod !y 2) }
+ 
+end

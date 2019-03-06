@@ -1,0 +1,28 @@
+module SAIV11
+
+ use int.Int
+ use int.EuclideanDivision
+ use array.Array
+ use array.Init
+ use ref.Ref
+ 
+ val zeroi (i: int) : int ensures { result = 0 }
+ 
+ let main (size: int) : unit
+   requires { size > 0 }
+ = let a = init (size) (zeroi) in
+   
+   for index = 0 to size - 1 do
+    invariant { true }
+    a[index] <- mod index 2
+   done;
+   
+   for index = 0 to size - 1 do
+    invariant { true }
+    if mod index 2 = 0 then
+     assert { a[index] = 0 }
+    else
+     assert { a[index] <> 0 }
+   done
+
+end

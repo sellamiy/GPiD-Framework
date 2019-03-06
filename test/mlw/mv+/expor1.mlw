@@ -1,0 +1,28 @@
+module ExpoR1
+
+ use int.Int
+ use ref.Ref
+ use int.EuclideanDivision
+ use int.Power
+ 
+ let main (n: int) (m: int) : int
+  diverges
+  requires { m >= 0 }
+  ensures { result = power n m }
+ = let p = ref 1 in
+   let x = ref n in let y = ref m in
+ 
+  while !y > 1 do
+   invariant { true }
+   if mod !y 2 = 1 then begin
+    p := !p * !x
+   end;
+   
+   y := div !y 2;
+   
+   x := !x * !x;
+  done;
+  
+  !p * !x 
+
+end

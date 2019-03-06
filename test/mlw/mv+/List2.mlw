@@ -1,0 +1,25 @@
+module List2
+
+ use int.Int
+ use ref.Ref
+ use list.List
+ use list.Length
+ use list.HdTlNoOpt
+ use list.NthNoOpt
+ use list.Append
+ 
+ let main (l: list int) (i: int) : unit
+  diverges
+  requires { i < length l }
+  
+ = let p = ref 0 in let ghost dec = ref l in
+ 
+   while !p <> i do
+    invariant { true }
+    dec := tl !dec;
+    p := !p + 1
+   done;
+   
+   assert { hd !dec = nth i l }
+   
+end
