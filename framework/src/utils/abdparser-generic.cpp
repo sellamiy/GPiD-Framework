@@ -28,6 +28,7 @@ const std::string abdkw_over = "over";
 const std::string abdkw_copy = "copy";
 
 const std::string abdkw_symmetric = "symmetric";
+const std::string abdkw_nonself = "nonself";
 
 /* Lambda utils */
 
@@ -86,6 +87,11 @@ static inline bool option_check
         for (size_t p = 0; p + 1 < values.size(); ++p)
             if (values.at(p) >= values.at(p+1))
                 return false;
+    } else if (stdutils::inset(options, abdkw_nonself)) {
+        for (size_t p = 0; p + 1 < values.size(); ++p)
+            for (size_t q = p + 1; q < values.size(); ++q)
+                if (values.at(p) == values.at(q))
+                    return false;
     }
     // TODO: Handle more application options
     return true;
