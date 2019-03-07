@@ -1,0 +1,36 @@
+(size auto)
+
+(lambda eq (l r) (= l r))
+(lambda neq (l r) (distinct l r))
+(lambda ge (l r) (>= l r))
+(lambda gt (l r) (> l r))
+(lambda le (l r) (<= l r))
+(lambda lt (l r) (< l r))
+
+(lambda minus (l r) (- l r))
+(lambda mult (l r) (* l r))
+(lambda plus (l r) (+ l r))
+(lambda div (l r) (div l r))
+(lambda mod (l r) (mod l r))
+(lambda uminus (l) (- l))
+
+(declare flag (not flag) as bf)
+(declare a b x y z w as int)
+(reference a b x y z w)
+(declare 0 1 as int)
+
+(apply mod (over int (strict 2)) int2)
+(apply plus (over int int) int2)
+(apply minus (over int int) int2)
+
+(copy int2 as int)
+
+(apply eq (over int int) bf symmetric)
+(apply neq (over int int) bf symmetric)
+(apply le (over int int) bf nonself)
+(apply ge (over int int) bf nonself)
+(apply lt (over int int) bf nonself)
+(apply gt (over int int) bf nonself)
+
+(extend bf)
+

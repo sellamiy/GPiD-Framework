@@ -1,0 +1,31 @@
+(size auto)
+
+(declare i s n as int)
+(declare a as array)
+
+(declare 0 1 as int)
+
+(lambda plus (l r) (+ l r))
+
+(apply plus (over int int) int symmetric)
+
+(lambda asum (tab src tgt) (sum tab src tgt))
+
+(apply asum (over array int int) int)
+
+(lambda eq (l r) (= l r))
+(lambda neq (l r) (distinct l r))
+(lambda ge (l r) (>= l r))
+(lambda gt (l r) (> l r))
+(lambda le (l r) (<= l r))
+(lambda lt (l r) (< l r))
+
+(apply eq (over int int) bf symmetric)
+(apply neq (over int int) bf symmetric)
+(apply le (over int int) bf nonself)
+(apply ge (over int int) bf nonself)
+(apply lt (over int int) bf nonself)
+(apply gt (over int int) bf nonself)
+
+(extend bf)
+
