@@ -11,7 +11,7 @@ using namespace abdulot::saihelpers;
 using AssertionsT = std::map<uint64_t, std::list<std::shared_ptr<std::string>>>;
 
 static inline void wsl2s_x_context
-(std::ofstream& target, SMTl2SolverInterface::ContextManagerT& ctx) {
+(std::ostream& target, SMTl2SolverInterface::ContextManagerT& ctx) {
     for (smtlib2::SMTl2Command& cmd : ctx.opts) {
         target << cmd << std::endl;
     }
@@ -21,7 +21,7 @@ static inline void wsl2s_x_context
 }
 
 static inline void wsl2s_x_assertions
-(std::ofstream& target, AssertionsT& assertions, uint64_t depth_limit) {
+(std::ostream& target, AssertionsT& assertions, uint64_t depth_limit) {
     for (uint64_t lvl = 0; lvl <= depth_limit; ++lvl) {
         for (std::shared_ptr<std::string> ptr : assertions[lvl]) {
             target << "(assert " << *ptr << ")" << std::endl;
@@ -29,7 +29,7 @@ static inline void wsl2s_x_assertions
     }
 }
 
-static inline void wsl2s_x_query(std::ofstream& target) {
+static inline void wsl2s_x_query(std::ostream& target) {
     target << "(check-sat)" << std::endl;
 }
 
@@ -42,6 +42,13 @@ static inline void write_smtlib2_script
     wsl2s_x_assertions(target, assertions, depth_limit);
     wsl2s_x_query(target);
     target.close();
+    /*
+    auto& dl = snlog::l_internal();
+    wsl2s_x_context(dl, ctx);
+    wsl2s_x_assertions(dl, assertions, depth_limit);
+    wsl2s_x_query(dl);
+    dl << snlog::l_end;
+    */
 }
 
 #define BUFFER_SIZE 128
