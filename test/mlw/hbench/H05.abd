@@ -23,9 +23,7 @@
 (apply eq (over vars vars) bf symmetric)
 (apply neq (over vars vars) bf symmetric)
 (apply le (over vars vars) bf nonself)
-(apply ge (over vars vars) bf nonself)
 (apply lt (over vars vars) bf nonself)
-(apply gt (over vars vars) bf nonself)
 
 (extend bf)
 

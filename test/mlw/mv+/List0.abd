@@ -19,9 +19,7 @@
 (apply eq (over int int) bf symmetric)
 (apply neq (over int int) bf symmetric)
 (apply le (over int int) bf nonself)
-(apply ge (over int int) bf nonself)
 (apply lt (over int int) bf nonself)
-(apply gt (over int int) bf nonself)
 
 (extend bf)
 
