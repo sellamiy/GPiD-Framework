@@ -20,7 +20,10 @@ module Oopsla31
 
      assert { !j >= 0 };
      j := !j + 1;
-     for k = 0 to !j - 1 do invariant { true } () done
+     for k = 0 to !j - 1 do
+      invariant { true }
+      ()
+     done
 
     end else begin
 

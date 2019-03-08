@@ -16,11 +16,13 @@ module Oopsla36
   let z = ref 0 in
   let w = ref 0 in
 
-  while unknown1() do invariant { true }
+  while unknown1() do
+    invariant { true }
     let i = ref !z in
     let j = ref !w in
     let k = ref 0 in
-    while !i < !j do invariant { true }
+    while !i < !j do
+      invariant { true }
       k := !k + 1;
       i := !i + 1;
     done;
@@ -34,7 +36,8 @@ module Oopsla36
       y := !y - 1;
     end;
 
-    while unknown2() do invariant { true } 
+    while unknown2() do
+      invariant { true } 
       if mod !x 2 = 0 then
       begin
         x := !x + 2;
@@ -52,7 +55,8 @@ module Oopsla36
 
   let c = ref 0 in 
   let d = ref 0 in
-  while unknown3() do invariant { true }
+  while unknown3() do
+    invariant { true }
     c := !c + 1;
     d := !d + 1;
     if flag then
