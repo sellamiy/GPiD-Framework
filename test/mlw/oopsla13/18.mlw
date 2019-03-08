@@ -2,12 +2,13 @@ module Oopsla18
  use int.Int
  use ref.Ref
 
- let main (flag: bool) : unit =
-  let j = ref 0 in
+ let main (flag: bool) : unit diverges =
+  let j = ref 0 in let b = ref 0 in
 
-  for b = 0 to 99 do
+  while !b <= 99 do
    invariant { true }
-   if flag then j := !j + 1
+   if flag then j := !j + 1;
+   b := !b + 1
   done;
 
   if flag then assert { !j = 100 }

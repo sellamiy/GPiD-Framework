@@ -15,7 +15,7 @@
 (lambda uminus (l) (- l))
 
 (declare j b as int)
-(reference j)
+(reference j b)
 (declare 0 100 as int)
 (declare flag (not flag) as bf)
 

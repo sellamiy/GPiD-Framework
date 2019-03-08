@@ -15,6 +15,7 @@ module Oopsla28
    done;
 
    while !x <> !n do
+    invariant { true }
     x := !x - 1;
     y := !y - 1;
    done;

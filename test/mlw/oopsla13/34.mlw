@@ -10,6 +10,7 @@ module Oopsla34
    let i = ref 0 in
 
    while !i < n do
+     (* (mod !i 2 = 0 -> !x = !y + !y) /\ (mod !i 2 <> 0 -> !x = !y + !y + 1) *)
      invariant { true }
 
      i := !i + 1;

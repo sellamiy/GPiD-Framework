@@ -5,6 +5,7 @@ module Oopsla35
  let main (n: int) : unit
   diverges = let x = ref 0 in
   while !x < n do
+   (* n > 0 -> !x <= n *)
    invariant { true }
    x := !x + 1
   done;

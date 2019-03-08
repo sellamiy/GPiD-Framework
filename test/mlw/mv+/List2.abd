@@ -9,7 +9,7 @@
 
 (declare i p as int)
 (declare l dec as list)
-(reference i l)
+(reference p dec)
 (declare 0 1 as int)
 
 (lambda length (param) (length param))
