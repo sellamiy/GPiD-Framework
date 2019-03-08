@@ -14,6 +14,7 @@
 struct ParserOptions {
     std::vector<std::string> inputs;
     bool abducible = false;
+    bool countonly = false;
 };
 
 enum class OptionStatus {
@@ -38,6 +39,8 @@ static inline OptionStatus parseOptions(ParserOptions& opts, int& argc, char**& 
             ("i,input", "Input files", cxxopts::value<std::vector<std::string>>(opts.inputs))
 
             ("a,abducible-output", "Output data in abducible format")
+
+            ("c,count-only", "Only give the number of abducibles")
 	    ;
 
         parser.parse_positional({"input"});
@@ -70,6 +73,9 @@ static inline OptionStatus handleOptions
         if (results.count("abducible-output")) {
             opts.abducible = true;
         }
+        if (results.count("count-only")) {
+            opts.countonly = true;
+        }
 
 	return OptionStatus::OK;
 
@@ -85,21 +91,25 @@ using namespace abdulot;
 
 /* ========== Main Helpers ========== */
 
-static int handle_input(const std::string& input, bool abd) {
+static int handle_input(const std::string& input, const ParserOptions& opts) {
     AbducibleParser parser(input);
     t_fatal(!parser.isValid()) << "Parser in broken state; please stop!" << l_end;
 
-    if (abd) {
+    if (opts.abducible) {
 
         std::cout << "(size " << parser.getAbducibleCount() << ")" << std::endl
                   << "(rsize " << parser.getReferenceCount() << ")" << std::endl;
 
-        for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
-            std::cout << "(abduce " << parser.nextAbducible() << ")" << std::endl;
-        }
+        if (!opts.countonly) {
 
-        for (uint32_t i = 0; i < parser.getReferenceCount(); i++) {
-            std::cout << "(reference " << parser.nextReference() << ")" << std::endl;
+            for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
+                std::cout << "(abduce " << parser.nextAbducible() << ")" << std::endl;
+            }
+
+            for (uint32_t i = 0; i < parser.getReferenceCount(); i++) {
+                std::cout << "(reference " << parser.nextReference() << ")" << std::endl;
+            }
+
         }
 
     } else {
@@ -107,12 +117,16 @@ static int handle_input(const std::string& input, bool abd) {
         l_notif() << "number of abducibles" << " : " << parser.getAbducibleCount() << l_end;
         l_notif() << "number of references" << " : " << parser.getReferenceCount() << l_end;
 
-        for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
-            l_notifg() << "abducible" << " : " << parser.nextAbducible() << l_end;
-        }
+        if (!opts.countonly) {
 
-        for (uint32_t i = 0; i < parser.getReferenceCount(); i++) {
-            l_notifg() << "reference" << " : " << parser.nextReference() << l_end;
+            for (uint32_t i = 0; i < parser.getAbducibleCount(); i++) {
+                l_notifg() << "abducible" << " : " << parser.nextAbducible() << l_end;
+            }
+
+            for (uint32_t i = 0; i < parser.getReferenceCount(); i++) {
+                l_notifg() << "reference" << " : " << parser.nextReference() << l_end;
+            }
+
         }
 
     }
@@ -141,7 +155,7 @@ int main(int argc, char** argv) {
 
     try {
         for (const std::string& input : opts.inputs) {
-            int rv = handle_input(input, opts.abducible);
+            int rv = handle_input(input, opts);
             if (rv != EXIT_SUCCESS) {
                 return EXIT_FAILURE;
             }
