@@ -1,18 +1,18 @@
-#ifndef WHY3_WHYML_ICH_FOR_GPID__HPP
-#define WHY3_WHYML_ICH_FOR_GPID__HPP
+#ifndef WHY3_WHYML_IPH_FOR_GPID__HPP
+#define WHY3_WHYML_IPH_FOR_GPID__HPP
 
-#include <abdulot/ilinva/ich-core.hpp>
+#include <abdulot/ilinva/iph-core.hpp>
 #include "why3-whyml-source.hpp"
 
 #define WHY3_SOLVER_OPTION_DEFAULT "CVC4"
 
-class W3WML_Loop_Ctx {
+class W3WML_Prop_Ctx {
     const std::set<std::string>& refs;
     std::list<const std::string>& candidate;
 public:
-    W3WML_Loop_Ctx(const std::set<std::string>& refs, std::list<const std::string>& candidate)
+    W3WML_Prop_Ctx(const std::set<std::string>& refs, std::list<const std::string>& candidate)
         : refs(refs), candidate(candidate) {}
-    W3WML_Loop_Ctx(const W3WML_Loop_Ctx& o)
+    W3WML_Prop_Ctx(const W3WML_Prop_Ctx& o)
         : refs(o.refs), candidate(o.candidate) {}
     inline const std::set<std::string>& getRefs() const { return refs; }
     inline std::list<const std::string>& getCandidate() { return candidate; }
@@ -21,7 +21,7 @@ public:
     const std::list<W3WML_Constraint> getCandidateConstraintDSplit();
 };
 
-class W3WML_ICH {
+class W3WML_IPH {
     W3WML_Template problem;
     W3WML_LSet plits;
     std::map<size_t, std::set<size_t>::iterator> invariants_iter;
@@ -35,14 +35,14 @@ class W3WML_ICH {
     std::map<std::string, bool> local_bopts;
 public:
     using ConstraintT = W3WML_Constraint;
-    using ContextManagerT = W3WML_Loop_Ctx;
-    using LoopIdentifierT = size_t;
+    using ContextManagerT = W3WML_Prop_Ctx;
+    using PropIdentifierT = size_t;
     static const W3WML_Constraint C_False;
 
     const std::string w3opt_solver = "solver";
     const std::string w3opt_vcreorder = "vcreorder";
 
-    W3WML_ICH(const std::string& filename, bool overriden)
+    W3WML_IPH(const std::string& filename, bool overriden)
         : problem(filename),
           plits(filename, overriden)
     {
@@ -66,28 +66,28 @@ public:
         return local_bopts.at(optname);
     }
 
-    inline void strengthen(LoopIdentifierT id, ConstraintT cons) {
+    inline void strengthen(PropIdentifierT id, ConstraintT cons) {
         problem.getInvariant(id).conj.push_back(cons);
         write(snlog::l_message() << "@C[" << id << "]: ",
               problem.getInvariant(id), refs) << snlog::l_end;
     }
 
-    inline void release(LoopIdentifierT id) {
+    inline void release(PropIdentifierT id) {
         // Check required for first strengthening
         if (!problem.getInvariant(id).conj.empty()) {
             problem.getInvariant(id).conj.pop_back();
         }
     }
 
-    abdulot::ilinva::IchState proofCheck();
+    abdulot::ilinva::IphState proofCheck();
 
-    const std::string generateAbductionProblem(LoopIdentifierT);
+    const std::string generateAbductionProblem(PropIdentifierT);
 
-    const std::list<ConstraintT>& generateSourceLiterals(LoopIdentifierT, const std::string&);
+    const std::list<ConstraintT>& generateSourceLiterals(PropIdentifierT, const std::string&);
 
-    ContextManagerT generateContext(LoopIdentifierT);
+    ContextManagerT generateContext(PropIdentifierT);
 
-    LoopIdentifierT selectUnprovenBlock(size_t id);
+    PropIdentifierT selectUnprovenBlock(size_t id);
 
     void loadOverridingAbducibles(const std::string& overrider);
 

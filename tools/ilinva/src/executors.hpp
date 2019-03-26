@@ -22,18 +22,18 @@ static inline void generate_ilnt_x(OptionStorage& opts) {
     IlinvaAlgorithm<EngineT>::printInfos();        
 
     l_message() << "create program engine..." << l_end;
-    typename EngineT::CodeHandlerT ICH(opts.ilinva.input_file, opts.ilinva.abd_override.length() > 0);
+    typename EngineT::ProblemHandlerT IPH(opts.ilinva.input_file, opts.ilinva.abd_override.length() > 0);
     for (const std::pair<std::string, std::string>& hopt : opts.ilinva.handler_options) {
         if (is_str_true(hopt.second))
-            ICH.setOption(hopt.first, true);
+            IPH.setOption(hopt.first, true);
         else if (is_str_false(hopt.second))
-            ICH.setOption(hopt.first, false);
+            IPH.setOption(hopt.first, false);
         else
-            ICH.setOption(hopt.first, hopt.second);
+            IPH.setOption(hopt.first, hopt.second);
     }
 
     l_message() << "create generation engine..." << l_end;
-    IlinvaAlgorithm<EngineT> Generator(ICH, opts, opts.ilinva);
+    IlinvaAlgorithm<EngineT> Generator(IPH, opts, opts.ilinva);
 
     l_message() << "generate loop invariants..." << l_end;
     opts.control.time.registerTime("generation");

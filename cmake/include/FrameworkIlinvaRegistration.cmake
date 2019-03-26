@@ -7,71 +7,71 @@ find_python_module(colorama REQUIRED)
 find_python_module(yaml REQUIRED)
 find_python_module(jinja2 REQUIRED)
 # ==============================================================================
-set(CODEGEN_MULTI_SCRIPT "${CMAKE_SOURCE_DIR}/utils/codegen/multi-ich.py")
-set(CODEGEN_CONFIG_SCRIPT "${CMAKE_SOURCE_DIR}/utils/codegen/config-ich.py")
+set(CODEGEN_MULTI_SCRIPT "${CMAKE_SOURCE_DIR}/utils/codegen/multi-iph.py")
+set(CODEGEN_CONFIG_SCRIPT "${CMAKE_SOURCE_DIR}/utils/codegen/config-iph.py")
 # ==============================================================================
-function(generate_ich_multi_file)
+function(generate_iph_multi_file)
   set(options)
   set(oneValueArgs TARGET TEMPLATE)
-  set(multiValueArgs ICHANDLERS)
-  cmake_parse_arguments(ICHD "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-  set(ICH_CONFIG_FILES)
-  set(ICH_CLI_OPTIONS)
-  foreach(ich_id ${ICHD_ICHANDLERS})
-    list(APPEND ICH_CONFIG_TARGETS ${ich_id}-config-file)
-    list(APPEND ICH_CONFIG_FILES "${LOCAL_ICH_CONFIGS}/${ich_id}.yml")
-    list(APPEND ICH_CLI_OPTIONS "--code-handler=${LOCAL_ICH_CONFIGS}/${ich_id}.yml")
+  set(multiValueArgs IPHANDLERS)
+  cmake_parse_arguments(IPHD "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  set(IPH_CONFIG_FILES)
+  set(IPH_CLI_OPTIONS)
+  foreach(iph_id ${IPHD_IPHANDLERS})
+    list(APPEND IPH_CONFIG_TARGETS ${iph_id}-config-file)
+    list(APPEND IPH_CONFIG_FILES "${LOCAL_IPH_CONFIGS}/${iph_id}.yml")
+    list(APPEND IPH_CLI_OPTIONS "--code-handler=${LOCAL_IPH_CONFIGS}/${iph_id}.yml")
   endforeach()
   add_custom_command(
-    OUTPUT "${ICHD_TARGET}"
-    DEPENDS "${CODEGEN_MULTI_SCRIPT}" "${ICHD_TEMPLATE}" ${ICH_CONFIG_FILES}
+    OUTPUT "${IPHD_TARGET}"
+    DEPENDS "${CODEGEN_MULTI_SCRIPT}" "${IPHD_TEMPLATE}" ${IPH_CONFIG_FILES}
     COMMAND "${PYTHON_EXECUTABLE}" "${CODEGEN_MULTI_SCRIPT}"
-    "--source=${ICHD_TEMPLATE}" "--output=${ICHD_TARGET}" "--process"
-    ${ICH_CLI_OPTIONS})
-  get_filename_component(template_name "${ICHD_TEMPLATE}" NAME_WE)
+    "--source=${IPHD_TEMPLATE}" "--output=${IPHD_TARGET}" "--process"
+    ${IPH_CLI_OPTIONS})
+  get_filename_component(template_name "${IPHD_TEMPLATE}" NAME_WE)
   add_custom_target(${template_name}-multi
-    DEPENDS "${ICHD_TARGET}" "${CODEGEN_MULTI_SCRIPT}" "${ICHD_TEMPLATE}" ${ICH_CONFIG_TARGETS})
+    DEPENDS "${IPHD_TARGET}" "${CODEGEN_MULTI_SCRIPT}" "${IPHD_TEMPLATE}" ${IPH_CONFIG_TARGETS})
 endfunction()
 # ------------------------------------------------------------------------------
-function(generate_ich_config_file)
+function(generate_iph_config_file)
   set(options)
   set(oneValueArgs NAME HEADER CONVERTERS CLASSNAME)
   set(multiValueArgs INTERFACES EXCEPTIONS)
-  cmake_parse_arguments(ICHD "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-  set(ICH_CONFIG_FILE "${LOCAL_ICH_CONFIGS}/${ICHD_NAME}.yml")
-  set(ICH_ADDITIONAL_CLIS)
-  foreach(ich_interface ${ICHD_INTERFACES})
-    list(APPEND ICH_ADDITIONAL_CLIS "--interface=${LOCAL_SOLVER_INTERFACES_CONFIGS}/${ich_interface}.yml")
+  cmake_parse_arguments(IPHD "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  set(IPH_CONFIG_FILE "${LOCAL_IPH_CONFIGS}/${IPHD_NAME}.yml")
+  set(IPH_ADDITIONAL_CLIS)
+  foreach(iph_interface ${IPHD_INTERFACES})
+    list(APPEND IPH_ADDITIONAL_CLIS "--interface=${LOCAL_SOLVER_INTERFACES_CONFIGS}/${iph_interface}.yml")
   endforeach()
-  foreach(ich_exception ${ICHD_EXCEPTIONS})
-    list(APPEND ICH_ADDITIONAL_CLIS "--exception=\"${ich_exception}\"")
+  foreach(iph_exception ${IPHD_EXCEPTIONS})
+    list(APPEND IPH_ADDITIONAL_CLIS "--exception=\"${iph_exception}\"")
   endforeach()
   add_custom_command(
-    OUTPUT "${ICH_CONFIG_FILE}"
+    OUTPUT "${IPH_CONFIG_FILE}"
     DEPENDS "${CODEGEN_CONFIG_SCRIPT}"
     COMMAND "${PYTHON_EXECUTABLE}" "${CODEGEN_CONFIG_SCRIPT}"
-    "--code-handler=${ICHD_NAME}" "--output=${ICH_CONFIG_FILE}"
-    "--mainheader=\"${ICHD_HEADER}\"" "--classname=${ICHD_CLASSNAME}"
-    "--converters=\"${ICHD_CONVERTERS}\""
-    ${ICH_ADDITIONAL_CLIS} "--generate")
-  add_custom_target(${ICHD_NAME}-config-file
-    DEPENDS "${ICH_CONFIG_FILE}" "${CODEGEN_CONFIG_SCRIPT}")
+    "--code-handler=${IPHD_NAME}" "--output=${IPH_CONFIG_FILE}"
+    "--mainheader=\"${IPHD_HEADER}\"" "--classname=${IPHD_CLASSNAME}"
+    "--converters=\"${IPHD_CONVERTERS}\""
+    ${IPH_ADDITIONAL_CLIS} "--generate")
+  add_custom_target(${IPHD_NAME}-config-file
+    DEPENDS "${IPH_CONFIG_FILE}" "${CODEGEN_CONFIG_SCRIPT}")
 endfunction()
 # ==============================================================================
-function(load_ich_directory name)
+function(load_iph_directory name)
   add_subdirectory(${name})
-  # The previous call should set the following variables: LOCAL_ICH_NAME
+  # The previous call should set the following variables: LOCAL_IPH_NAME
   # This variable should contain the base name of the code handler.
-  # This code handler static library must be called ${LOCAL_ICH_NAME}-static
-  # This code handler shared library must be called ${LOCAL_ICH_NAME}-shared
-  # It should also call generate_ich_config_file with the correct parameters
-  #  to create the target for generating the ${LOCAL_ICH_NAME}.yml
-  #  ich configuration file.
-  if ("${LOCAL_ICH_NAME}" EQUAL "")
+  # This code handler static library must be called ${LOCAL_IPH_NAME}-static
+  # This code handler shared library must be called ${LOCAL_IPH_NAME}-shared
+  # It should also call generate_iph_config_file with the correct parameters
+  #  to create the target for generating the ${LOCAL_IPH_NAME}.yml
+  #  iph configuration file.
+  if ("${LOCAL_IPH_NAME}" EQUAL "")
     message(WARNING "Directory ${name} did not provide an code-handler variable!")
   else()
-    list(APPEND ICH_TARGETS ${LOCAL_ICH_NAME})
-    set(ICH_TARGETS ${ICH_TARGETS} PARENT_SCOPE)
+    list(APPEND IPH_TARGETS ${LOCAL_IPH_NAME})
+    set(IPH_TARGETS ${IPH_TARGETS} PARENT_SCOPE)
   endif()
 endfunction()
 # ==============================================================================

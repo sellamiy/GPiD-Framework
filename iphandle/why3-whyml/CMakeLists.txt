@@ -1,18 +1,18 @@
 # ==============================================================================
-# Why3 - WhyML - C++ Wrapper ICH
+# Why3 - WhyML - C++ Wrapper IPH
 # ==============================================================================
 find_package(Why3 1.0.0)
 # TODO: include_directories(**Why3 Stuff**)
 # ------------------------------------------------------------------------------
 if (NOT Why3_FOUND)
   message(WARNING "Why3 not found")
-  set(LOCAL_ICH_NAME "" PARENT_SCOPE)
+  set(LOCAL_IPH_NAME "" PARENT_SCOPE)
 else ()
-  file(GLOB ICH_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
-  file(GLOB ICH_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+  file(GLOB IPH_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp")
+  file(GLOB IPH_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
   # --------------------------------------------------------------------------
-  add_library(w3wml-static STATIC ${ICH_SOURCES})
-  add_library(w3wml-shared SHARED ${ICH_SOURCES})
+  add_library(w3wml-static STATIC ${IPH_SOURCES})
+  add_library(w3wml-shared SHARED ${IPH_SOURCES})
   target_include_directories(w3wml-static PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
   target_include_directories(w3wml-shared PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
   set_target_properties(w3wml-static PROPERTIES
@@ -36,12 +36,12 @@ else ()
   if (W3WML_NOT_AVAILABLE)
     list(REMOVE_ITEM W3WML_HANDLED_INTERFACES ${W3WML_NOT_AVAILABLE})
   endif()
-  generate_ich_config_file(
+  generate_iph_config_file(
     NAME w3wml
-    HEADER why3-whyml-ich.hpp
+    HEADER why3-whyml-iph.hpp
     CONVERTERS why3-whyml-converters.hpp
-    CLASSNAME W3WML_ICH
+    CLASSNAME W3WML_IPH
     INTERFACES ${W3WML_HANDLED_INTERFACES})
   # --------------------------------------------------------------------------
-  set(LOCAL_ICH_NAME w3wml PARENT_SCOPE)
+  set(LOCAL_IPH_NAME w3wml PARENT_SCOPE)
 endif()

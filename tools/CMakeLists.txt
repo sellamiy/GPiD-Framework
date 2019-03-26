@@ -23,10 +23,10 @@ generate_multi_file(
 # ------------------------------------------------------------------------------
 include(FrameworkIlinvaRegistration)
 # ------------------------------------------------------------------------------
-generate_ich_multi_file(
+generate_iph_multi_file(
   TARGET "${LOCAL_EXEC_INCLUDE_DIR}/ilinva/generators.hpp"
   TEMPLATE "${EXEC_CORE_DIR}/ilinva/templates/ilinva-generators.hpp"
-  ICHANDLERS ${ICH_TARGETS})
+  IPHANDLERS ${IPH_TARGETS})
 # ==============================================================================
 set(CORE_STATIC_LINK_LIBRARIES abdulot-static cxxopts Threads::Threads)
 set(CORE_SHARED_LINK_LIBRARIES abdulot-shared cxxopts Threads::Threads)
@@ -71,29 +71,29 @@ endforeach()
 # ==============================================================================
 # Ilinvas - a loop invariant generator
 # ==============================================================================
-foreach(ich ${ICH_TARGETS})
-  set(execname ilinva-${ich})
-  set(ICH_DEF_MACRO ILINVA_CODE_HANDLER_${ich})
-  string(REGEX REPLACE - _tm_ ICH_DEF_MACRO ${ICH_DEF_MACRO})
-  set(ICH_SOLVER_MACROS)
+foreach(iph ${IPH_TARGETS})
+  set(execname ilinva-${iph})
+  set(IPH_DEF_MACRO ILINVA_CODE_HANDLER_${iph})
+  string(REGEX REPLACE - _tm_ IPH_DEF_MACRO ${IPH_DEF_MACRO})
+  set(IPH_SOLVER_MACROS)
   foreach(interface ${SOLVER_TARGETS})
     set(SOLVER_MACRO SOLVER_INTERFACE_${interface})
     string(REGEX REPLACE - _tm_ SOLVER_MACRO ${SOLVER_MACRO})
-    list(APPEND ICH_SOLVER_MACROS ${SOLVER_MACRO})
+    list(APPEND IPH_SOLVER_MACROS ${SOLVER_MACRO})
   endforeach()
   add_executable(${execname} "ilinva/src/ilinva.cpp")
   add_dependencies(${execname} identifiers-multi ilinva-generators-multi)
   target_include_directories(${execname} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
-  target_compile_definitions(${execname} PRIVATE ${ICH_DEF_MACRO})
-  target_compile_definitions(${execname} PRIVATE ${ICH_SOLVER_MACROS})
+  target_compile_definitions(${execname} PRIVATE ${IPH_DEF_MACRO})
+  target_compile_definitions(${execname} PRIVATE ${IPH_SOLVER_MACROS})
   if(STATIC_EXECUTABLES)
     target_link_libraries(${execname}
-      ${ich}-static
+      ${iph}-static
       ${SOLVER_STATIC_TARGETS}
       ${CORE_STATIC_LINK_LIBRARIES})
   else()
     target_link_libraries(${execname}
-      ${ich}-shared
+      ${iph}-shared
       ${SOLVER_SHARED_TARGETS}
       ${CORE_SHARED_LINK_LIBRARIES})
   endif()

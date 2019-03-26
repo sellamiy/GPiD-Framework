@@ -1,4 +1,4 @@
-#define WHY3_WHYML_ICH_FOR_GPID__SOURCE__CPP
+#define WHY3_WHYML_IPH_FOR_GPID__SOURCE__CPP
 
 #include <fstream>
 #include <snlog/snlog.hpp>

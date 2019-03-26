@@ -1,5 +1,5 @@
-#ifndef WHY3_WHYML_ICH_FOR_GPID__SOURCE__HPP
-#define WHY3_WHYML_ICH_FOR_GPID__SOURCE__HPP
+#ifndef WHY3_WHYML_IPH_FOR_GPID__SOURCE__HPP
+#define WHY3_WHYML_IPH_FOR_GPID__SOURCE__HPP
 
 #include <map>
 #include <set>

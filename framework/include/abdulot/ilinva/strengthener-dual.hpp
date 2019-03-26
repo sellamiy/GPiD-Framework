@@ -41,7 +41,7 @@ namespace ilinva {
         {}
     };
 
-    template<typename CodeHandlerT, typename InterfaceT>
+    template<typename ProblemHandlerT, typename InterfaceT>
     class DualConditionStrengthener {
     public:
         using IdentifierT = uint64_t;
@@ -49,9 +49,9 @@ namespace ilinva {
 
         const IdentifierT identifier;
 
-        using CodeConstraintListT = std::list<typename CodeHandlerT::ConstraintT>;
+        using CodeConstraintListT = std::list<typename ProblemHandlerT::ConstraintT>;
 
-        using ConstraintT = DualConstraintData<CodeHandlerT, InterfaceT, gpid::LiteralHypothesis>;
+        using ConstraintT = DualConstraintData<ProblemHandlerT, InterfaceT, gpid::LiteralHypothesis>;
 
         using AbducibleEngine = gpid::AdvancedAbducibleEngine<InterfaceT>;
 
@@ -63,13 +63,13 @@ namespace ilinva {
             stdutils::ConcurrentVector<ConstraintT> implicants;
 
             typename InterfaceT::ContextManagerT& ictx;
-            typename CodeHandlerT::ContextManagerT& ich_ctx;
+            typename ProblemHandlerT::ContextManagerT& iph_ctx;
 
             friend class ImplicateDisjunctor;
         public:
             ImplicateForwarder(typename InterfaceT::ContextManagerT& ictx,
-                               typename CodeHandlerT::ContextManagerT& ich_ctx)
-                : reads(0), ictx(ictx), ich_ctx(ich_ctx)
+                               typename ProblemHandlerT::ContextManagerT& iph_ctx)
+                : reads(0), ictx(ictx), iph_ctx(iph_ctx)
             {}
 
             inline bool isReadable() { return reads < implicants.size(); }
@@ -103,14 +103,14 @@ namespace ilinva {
 
         using ImplicateGenerator =
             gpid::GPiDAlgorithm<AbducibleEngine,
-                                SomehowSmartDualAbducibleGenerator<CodeHandlerT, InterfaceT>,
+                                SomehowSmartDualAbducibleGenerator<ProblemHandlerT, InterfaceT>,
                                 ImplicateForwarder>;
 
         AlgorithmOptions abductionCoreOpts;
         gpid::GPiDOptions abductionOpts;
 
         typename InterfaceT::ProblemLoaderT _problemBuilder;
-        using AbdGeneratorT = SomehowSmartDualAbducibleGenerator<CodeHandlerT, InterfaceT>;
+        using AbdGeneratorT = SomehowSmartDualAbducibleGenerator<ProblemHandlerT, InterfaceT>;
         using AbdGeneratorPtr = std::shared_ptr<AbdGeneratorT>;
         AbdGeneratorPtr abdGenerator;
 
@@ -120,7 +120,7 @@ namespace ilinva {
         ImplicateGeneratorPtr generator;
     public:
         DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
-                                  typename CodeHandlerT::ContextManagerT& ich_ctx,
+                                  typename ProblemHandlerT::ContextManagerT& iph_ctx,
                                   const DStrOptions& dopts=DStrOptions());
         ~DualConditionStrengthener();
 
@@ -148,22 +148,22 @@ namespace ilinva {
 
     /* *** Implementation *** */
 
-    template<typename CodeHandlerT, typename InterfaceT>
-    inline void DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateForwarder
+    template<typename ProblemHandlerT, typename InterfaceT>
+    inline void DualConditionStrengthener<ProblemHandlerT, InterfaceT>::ImplicateForwarder
     ::operator()(AbducibleEngine& engine) {
         implicants.store(ConstraintT(engine.getMapper(), engine.getCurrentImplicate(), ictx));
     }
 
-    template<typename CodeHandlerT, typename InterfaceT>
-    inline typename DualConditionStrengthener<CodeHandlerT, InterfaceT>::ConstraintT
-    DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateForwarder::nextImplicant() {
+    template<typename ProblemHandlerT, typename InterfaceT>
+    inline typename DualConditionStrengthener<ProblemHandlerT, InterfaceT>::ConstraintT
+    DualConditionStrengthener<ProblemHandlerT, InterfaceT>::ImplicateForwarder::nextImplicant() {
         return implicants.access(reads++);
     }
 
-    template<typename CodeHandlerT, typename InterfaceT>
-    inline typename DualConditionStrengthener<CodeHandlerT, InterfaceT>::ConstraintT
-    DualConditionStrengthener<CodeHandlerT, InterfaceT>::ImplicateDisjunctor::nextImplicant() {
-        ConstraintT result = ConstraintT(CodeHandlerT::ConstraintT::disjunct(source[lid], source[rid]));
+    template<typename ProblemHandlerT, typename InterfaceT>
+    inline typename DualConditionStrengthener<ProblemHandlerT, InterfaceT>::ConstraintT
+    DualConditionStrengthener<ProblemHandlerT, InterfaceT>::ImplicateDisjunctor::nextImplicant() {
+        ConstraintT result = ConstraintT(ProblemHandlerT::ConstraintT::disjunct(source[lid], source[rid]));
         rid++;
         if (rid >= source.size()) {
             rid = ++lid + 1;
@@ -171,13 +171,13 @@ namespace ilinva {
         return result;
     }
 
-    template<typename CodeHandlerT, typename InterfaceT>
-    DualConditionStrengthener<CodeHandlerT, InterfaceT>
+    template<typename ProblemHandlerT, typename InterfaceT>
+    DualConditionStrengthener<ProblemHandlerT, InterfaceT>
     ::DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
-                                typename CodeHandlerT::ContextManagerT& ich_ctx,
+                                typename ProblemHandlerT::ContextManagerT& iph_ctx,
                                 const DStrOptions& dopts)
         : identifier(nextStrengthenerId()),
-          forwarder(_problemBuilder.getContextManager(), ich_ctx),
+          forwarder(_problemBuilder.getContextManager(), iph_ctx),
           disjunctor(dopts.disjunctions),
           generator(nullptr)
     {
@@ -193,16 +193,16 @@ namespace ilinva {
         generator =
             ImplicateGeneratorPtr(new ImplicateGenerator(_problemBuilder, *abdGenerator, forwarder,
                                                          abductionCoreOpts, abductionOpts));
-        for (auto c_cons : ich_ctx.getCandidateConstraintDSplit()) {
+        for (auto c_cons : iph_ctx.getCandidateConstraintDSplit()) {
             typename InterfaceT::LiteralT _addlit
-                = convert<CodeHandlerT, InterfaceT>(c_cons, _problemBuilder.getContextManager());
+                = convert<ProblemHandlerT, InterfaceT>(c_cons, _problemBuilder.getContextManager());
             generator->getEngine().addAdditionalCheckLiteral(_addlit);
         }
         generator->execute(true);
     }
 
-    template<typename CodeHandlerT, typename InterfaceT>
-    DualConditionStrengthener<CodeHandlerT, InterfaceT>
+    template<typename ProblemHandlerT, typename InterfaceT>
+    DualConditionStrengthener<ProblemHandlerT, InterfaceT>
     ::~DualConditionStrengthener() {
         forwarder.unhook();
         generator->interrupt();

@@ -10,7 +10,7 @@
 #include <stack>
 
 #include <abdulot/core/algorithm.hpp>
-#include <abdulot/ilinva/ich-core.hpp>
+#include <abdulot/ilinva/iph-core.hpp>
 #include <abdulot/ilinva/options.hpp>
 #include <abdulot/ilinva/strengthener-dual.hpp>
 #include <abdulot/instrument/instrument.hpp>
@@ -30,16 +30,16 @@ namespace ilinva {
         IlinvaOptions& options;
         EngineT pengine;
 
-        using CodeHandlerT = typename EngineT::CodeHandlerT;
+        using ProblemHandlerT = typename EngineT::ProblemHandlerT;
 
-        using LoopId = typename EngineT::LoopIdentifierT;
+        using PropId = typename EngineT::PropIdentifierT;
         using StrengthenerId = typename StrengthenerT::IdentifierT;
-        using level_ids_t = std::pair<LoopId, StrengthenerId>;
+        using level_ids_t = std::pair<PropId, StrengthenerId>;
 
         const DStrOptions dstren_opts;
 
         std::stack<level_ids_t> level_stack;
-        std::stack<std::set<LoopId>> tested_lids;
+        std::stack<std::set<PropId>> tested_lids;
 
         void reset();
         void backtrack();
@@ -47,7 +47,7 @@ namespace ilinva {
 
     public:
         /** Algorithm initialization */
-        IlinvaAlgorithm(CodeHandlerT& ich, AlgorithmOptions& opts, IlinvaOptions& iopts);
+        IlinvaAlgorithm(ProblemHandlerT& iph, AlgorithmOptions& opts, IlinvaOptions& iopts);
 
         /** Print informations on the algorithm and its parameters. */
         static void printInfos();
@@ -60,16 +60,16 @@ namespace ilinva {
 
     template<typename EngineT>
     IlinvaAlgorithm<EngineT>::
-    IlinvaAlgorithm(CodeHandlerT& ich, AlgorithmOptions& opts, IlinvaOptions& iopts)
+    IlinvaAlgorithm(ProblemHandlerT& iph, AlgorithmOptions& opts, IlinvaOptions& iopts)
         : Algorithm(opts),
           options(iopts),
-          pengine(ich),
+          pengine(iph),
           dstren_opts(iopts)
     {}
 
     template<typename EngineT>
     void IlinvaAlgorithm<EngineT>::printInfos() {
-        snlog::l_message() << "GPiD framework loop invariant generator "
+        snlog::l_message() << "Abdulot framework problem strengthener "
                            << project_version << snlog::l_end;
     }
 
@@ -87,21 +87,21 @@ namespace ilinva {
     void IlinvaAlgorithm<EngineT>::backtrack() {
         StrengthenerId strengthener = level_stack.top().second;
         while(!pengine.hasMoreStrengthenings(strengthener)) {
-            LoopId loop = level_stack.top().first;
-            pengine.release(loop);
+            PropId prop = level_stack.top().first;
+            pengine.release(prop);
             level_stack.pop();
-            /* Check for other strengthenable loops */
-            LoopId loop_t = pengine.selectUnprovenLoop(level_stack.size());
-            if (stdutils::inset(tested_lids.top(), loop_t)) {
+            /* Check for other strengthenable props */
+            PropId prop_t = pengine.selectUnprovenProp(level_stack.size());
+            if (stdutils::inset(tested_lids.top(), prop_t)) {
                 /* Backtrack */
                 tested_lids.pop();
                 if (level_stack.empty()) break;
                 strengthener = level_stack.top().second;
             } else {
-                /* Try this other loop */
-                strengthener = pengine.newStrengthener(loop_t, dstren_opts, options.abd_override);
-                level_stack.push(level_ids_t(loop_t, strengthener));
-                tested_lids.top().insert(loop_t);
+                /* Try this other prop */
+                strengthener = pengine.newStrengthener(prop_t, dstren_opts, options.abd_override);
+                level_stack.push(level_ids_t(prop_t, strengthener));
+                tested_lids.top().insert(prop_t);
             }
         }
     }
@@ -112,27 +112,27 @@ namespace ilinva {
         reset();
 
         bool assume_proven = false;
-        LoopId loop = -1; // Default (unselected) value
+        PropId prop = -1; // Default (unselected) value
         StrengthenerId strengthener;
 
         while (!iflags.systemInterrupted()) {
-            IchState ichState = pengine.proofCheck();
+            IphState iphState = pengine.proofCheck();
 
-            if (ichState.proven) {
+            if (iphState.proven) {
                 assume_proven = true;
                 break;
             }
 
-            if (!ichState.strengthenable)
+            if (!iphState.strengthenable)
                 goto prebacktrack;
 
             if (level_stack.size() >= options.max_depth)
                 goto prebacktrack;
 
-            loop = pengine.selectUnprovenLoop(level_stack.size());
-            strengthener = pengine.newStrengthener(loop, dstren_opts, options.abd_override);
-            level_stack.push(level_ids_t(loop, strengthener));
-            tested_lids.push({ loop });
+            prop = pengine.selectUnprovenProp(level_stack.size());
+            strengthener = pengine.newStrengthener(prop, dstren_opts, options.abd_override);
+            level_stack.push(level_ids_t(prop, strengthener));
+            tested_lids.push({ prop });
 
             if (pengine.hasMoreStrengthenings(strengthener))
                 pengine.strengthen(level_stack.top());
@@ -142,7 +142,7 @@ namespace ilinva {
             continue;
 
         prebacktrack:
-            pengine.release(loop);
+            pengine.release(prop);
         backtrack:
             backtrack();
 

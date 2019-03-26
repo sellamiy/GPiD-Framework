@@ -1,18 +1,18 @@
-#define WHY3_WHYML_ICH_FOR_GPID__ICH__CPP
+#define WHY3_WHYML_IPH_FOR_GPID__IPH__CPP
 
 #include <fstream>
 #include <snlog/snlog.hpp>
 #include <stdutils/collections.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
-#include <why3-whyml-ich.hpp>
+#include <why3-whyml-iph.hpp>
 
 #define WHYML_TEMPORARY_SOURCEFILE "temp_gpid_ilinva_w3wml.mlw"
 #define SMTV2_TEMPORARY_ABDUCEFILE "temp_gpid_ilinva_abduce.smt2"
 
 using namespace abdulot;
 
-const W3WML_Constraint W3WML_ICH::C_False = W3WML_Constraint("false");
+const W3WML_Constraint W3WML_IPH::C_False = W3WML_Constraint("false");
 
 static inline bool isStrengthenableExplanation(const std::string& expl) {
     return expl == "expl:postcondition"
@@ -40,18 +40,18 @@ static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
 
 #define WARN_ONCE_D(lvar, wdata) if (!(lvar)) { snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__ << wdata << snlog::l_end; lvar = true; }
 
-ilinva::IchState W3WML_ICH::proofCheck() {
+ilinva::IphState W3WML_IPH::proofCheck() {
     problem.save_to(WHYML_TEMPORARY_SOURCEFILE, refs);
     why3cpp::ProofResult
         proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE,
                                      getOption(w3opt_solver),
                                      getOption_b(w3opt_vcreorder));
-    return ilinva::IchState(proofResult.isComplete(), isStrengthenable(proofResult));
+    return ilinva::IphState(proofResult.isComplete(), isStrengthenable(proofResult));
 }
 
 static bool XWARN_537_D = false;
 
-const std::string W3WML_ICH::generateAbductionProblem(LoopIdentifierT) {
+const std::string W3WML_IPH::generateAbductionProblem(PropIdentifierT) {
     WARN_ONCE_D(XWARN_537_D, " TODO: Abduction problem should depend on loop Id ");
     std::ofstream ofs;
     ofs.open(SMTV2_TEMPORARY_ABDUCEFILE);
@@ -62,13 +62,13 @@ const std::string W3WML_ICH::generateAbductionProblem(LoopIdentifierT) {
 
 static bool XWARN_538_D = false;
 
-W3WML_ICH::LoopIdentifierT W3WML_ICH::selectUnprovenBlock(size_t id) {
+W3WML_IPH::PropIdentifierT W3WML_IPH::selectUnprovenBlock(size_t id) {
     // TODO: Adapt on what follows v|
     WARN_ONCE_D(XWARN_538_D, snlog::l_end
                 << snlog::l_warn << "**Fnlicd undistinction invariant-proof/file-proof"
                 << snlog::l_end << snlog::l_info
                 << "Using loop-id rotation as a temporary solution" );
-    LoopIdentifierT res;
+    PropIdentifierT res;
     if (stdutils::inmap(invariants_iter, id)) {
         invariants_iter.at(id)++;
         if (invariants_iter.at(id) == problem.getInvariantIds().end()) {
@@ -82,8 +82,8 @@ W3WML_ICH::LoopIdentifierT W3WML_ICH::selectUnprovenBlock(size_t id) {
     return res;
 }
 
-const std::list<W3WML_Constraint>& W3WML_ICH::generateSourceLiterals
-(LoopIdentifierT, const std::string& overrider) {
+const std::list<W3WML_Constraint>& W3WML_IPH::generateSourceLiterals
+(PropIdentifierT, const std::string& overrider) {
     if (literals.empty()) {
         if (overrider.empty()) {
             for (const std::string& lit : plits.getLiterals()) {
@@ -102,8 +102,8 @@ const std::list<W3WML_Constraint>& W3WML_ICH::generateSourceLiterals
     return literals;
 }
 
-W3WML_Loop_Ctx W3WML_ICH::generateContext(LoopIdentifierT lid) {
-    return W3WML_Loop_Ctx(refs, problem.getInvariant(lid).conj);
+W3WML_Prop_Ctx W3WML_IPH::generateContext(PropIdentifierT lid) {
+    return W3WML_Prop_Ctx(refs, problem.getInvariant(lid).conj);
 }
 
 struct W_AbdStorerHandler : public GenericHandler {
@@ -120,12 +120,12 @@ struct W_AbdStorerHandler : public GenericHandler {
     }
 };
 
-void W3WML_ICH::loadOverridingAbducibles(const std::string& overrider) {
+void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider) {
     W_AbdStorerHandler hdler(overrides[overrider], refs);
     loadAbduceData(overrider, hdler);
 }
 
-const W3WML_Constraint W3WML_Loop_Ctx::getCandidateConstraint() {
+const W3WML_Constraint W3WML_Prop_Ctx::getCandidateConstraint() {
     std::stringstream ss;
     if (candidate.size() > 0) {
         if (candidate.size() > 1)
@@ -140,7 +140,7 @@ const W3WML_Constraint W3WML_Loop_Ctx::getCandidateConstraint() {
     return W3WML_Constraint(ss.str());
 }
 
-const std::list<W3WML_Constraint> W3WML_Loop_Ctx::getCandidateConstraintDSplit() {
+const std::list<W3WML_Constraint> W3WML_Prop_Ctx::getCandidateConstraintDSplit() {
     std::list<W3WML_Constraint> res;
     for (auto part : candidate) {
         auto ftree = lisptp::parse(part);

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # --------------------------------------
-# Multi-ich/interface ilinva configurator
+# Multi-iph/interface ilinva configurator
 # --------------------------------------
 import sys, os
 import yaml
@@ -8,7 +8,7 @@ import yaml
 from codegencore import pp_warning, pp_error
 from codegencore import prepare_directory, create_template_env, render_template
 # --------------------------------------
-from codegendata import MultiICHData
+from codegendata import MultiIPHData
 # --------------------------------------
 def main(args):
     # ----------
@@ -22,13 +22,13 @@ def main(args):
     # ----------
     stream = open(args.output, 'w')
     template_name = os.path.basename(args.source)
-    data = MultiICHData(args.code_handler)
+    data = MultiIPHData(args.code_handler)
     render_template(tenv, template_name, data, stream)
     stream.close()
 # --------------------------------------
 if __name__ == '__main__':
     from argparse import ArgumentParser
-    ap = ArgumentParser(description='GPiD Framework Multi-ICH/Interface Ilinva Template Code Generator')
+    ap = ArgumentParser(description='GPiD Framework Multi-IPH/Interface Ilinva Template Code Generator')
 
     cd = ap.add_mutually_exclusive_group(required=True)
 

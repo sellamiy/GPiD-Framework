@@ -59,7 +59,7 @@ class MultiInterfaceData:
     def __init__(self, interface_list):
         self.interfaces = [ InterfaceData(iname) for iname in interface_list ] if interface_list else []
 # --------------------------------------
-class ICHData(ConfigLoadableData):
+class IPHData(ConfigLoadableData):
 
     def __init__(self, ifilename):
         super().__init__(ifilename)
@@ -84,8 +84,8 @@ class ICHData(ConfigLoadableData):
         for interface in self.data['interfaces']:
             self.interfaces.append(InterfaceData(interface))
 # --------------------------------------
-class MultiICHData:
+class MultiIPHData:
 
-    def __init__(self, ich_list):
-        self.code_handlers = [ ICHData(ich) for ich in ich_list ] if ich_list else []
+    def __init__(self, iph_list):
+        self.code_handlers = [ IPHData(iph) for iph in iph_list ] if iph_list else []
 # --------------------------------------
