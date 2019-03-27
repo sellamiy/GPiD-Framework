@@ -1,20 +1,25 @@
 #ifndef WHY3_WHYML_IPH_FOR_GPID__HPP
 #define WHY3_WHYML_IPH_FOR_GPID__HPP
 
-#include <abdulot/ilinva/iph-core.hpp>
-#include "why3-whyml-source.hpp"
+#include "why3-whyml-controller.hpp"
 
 #define WHY3_SOLVER_OPTION_DEFAULT "CVC4"
 
 class W3WML_Prop_Ctx {
-    const std::set<std::string>& refs;
+    const std::string pfile;
+    const std::list<W3WML_Constraint>& literals;
     std::list<const std::string>& candidate;
+    const why3cpp::Why3ConvertMap& cmap;
 public:
-    W3WML_Prop_Ctx(const std::set<std::string>& refs, std::list<const std::string>& candidate)
-        : refs(refs), candidate(candidate) {}
+    W3WML_Prop_Ctx(const std::string& pfile, const std::list<W3WML_Constraint>& literals,
+                   std::list<const std::string>& candidate, const why3cpp::Why3ConvertMap& cmap)
+        : pfile(pfile), literals(literals), candidate(candidate), cmap(cmap) {}
     W3WML_Prop_Ctx(const W3WML_Prop_Ctx& o)
-        : refs(o.refs), candidate(o.candidate) {}
-    inline const std::set<std::string>& getRefs() const { return refs; }
+        : pfile(o.pfile), literals(o.literals), candidate(o.candidate), cmap(o.cmap) {}
+
+    inline const std::string& getProblemFile() const { return pfile; }
+    inline const std::list<W3WML_Constraint>& getLiterals() const { return literals; }
+    inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
     inline std::list<const std::string>& getCandidate() { return candidate; }
 
     const W3WML_Constraint getCandidateConstraint();
@@ -22,7 +27,7 @@ public:
 };
 
 class W3WML_IPH {
-    W3WML_Template problem;
+    W3WML_ProblemController problem;
     W3WML_LSet plits;
     std::map<size_t, std::set<size_t>::iterator> invariants_iter;
 
@@ -31,23 +36,21 @@ class W3WML_IPH {
     std::map<std::string, std::list<std::string>> overrides;
     std::set<std::string> refs;
 
-    std::map<std::string, std::string> local_opts;
-    std::map<std::string, bool> local_bopts;
+    stringoptionmap_t local_opts;
+    booloptionmap_t local_bopts;
 public:
     using ConstraintT = W3WML_Constraint;
     using ContextManagerT = W3WML_Prop_Ctx;
-    using PropIdentifierT = size_t;
+    using PropIdentifierT = W3WML_ProblemController::blockid_t;
     static const W3WML_Constraint C_False;
 
-    const std::string w3opt_solver = "solver";
-    const std::string w3opt_vcreorder = "vcreorder";
-
     W3WML_IPH(const std::string& filename, bool overriden)
-        : problem(filename),
+        : problem(filename, local_opts, local_bopts),
           plits(filename, overriden)
     {
-        setOption(w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT); // Set default Why3 solver to CVC4
-        setOption(w3opt_vcreorder, true);
+        // Set default Why3 solver to CVC4
+        setOption(W3WML_ProblemController::w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT);
+        setOption(W3WML_ProblemController::w3opt_vcreorder, true);
     }
 
     inline void setOption(const std::string& optname, const std::string& optvalue) {
@@ -58,45 +61,37 @@ public:
         local_bopts[optname] = optvalue;
     }
 
-    inline const std::string& getOption(const std::string& optname) const {
-        return local_opts.at(optname);
-    }
-
-    inline bool getOption_b(const std::string& optname) const {
-        return local_bopts.at(optname);
-    }
-
     inline void strengthen(PropIdentifierT id, ConstraintT cons) {
-        problem.getInvariant(id).conj.push_back(cons);
-        write(snlog::l_message() << "@C[" << id << "]: ",
-              problem.getInvariant(id), refs) << snlog::l_end;
+        problem.strengthen(id, cons);
     }
 
     inline void release(PropIdentifierT id) {
-        // Check required for first strengthening
-        if (!problem.getInvariant(id).conj.empty()) {
-            problem.getInvariant(id).conj.pop_back();
-        }
+        problem.release(id);
     }
 
-    abdulot::ilinva::IphState proofCheck();
+    inline abdulot::ilinva::IphState proofCheck() {
+        return problem.proofCheck();
+    }
 
-    const std::string generateAbductionProblem(PropIdentifierT);
+    inline bool hasNextUnprovenBlock(size_t id) {
+        return problem.hasNextUnprovenBlock(id);
+    }
 
-    const std::list<ConstraintT>& generateSourceLiterals(PropIdentifierT, const std::string&);
+    inline PropIdentifierT selectUnprovenBlock(size_t id) {
+        return problem.selectUnprovenBlock(id);
+    }
 
-    ContextManagerT generateContext(PropIdentifierT);
-
-    PropIdentifierT selectUnprovenBlock(size_t id);
-
-    void loadOverridingAbducibles(const std::string& overrider);
+    ContextManagerT generateStrengheningContext(PropIdentifierT id, const std::string& overrider);
 
     inline void exportSource(const std::string& filename) const {
-        problem.save_to(filename, refs);
+        problem.exportSource(filename);
     }
+
     inline void exportSource(std::ostream& out) const {
-        write(out, problem, refs);
+        problem.exportSource(out);
     }
+
+    void loadOverridingAbducibles(const std::string& overrider);
 
 };
 

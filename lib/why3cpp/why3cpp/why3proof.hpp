@@ -21,6 +21,10 @@ namespace why3cpp {
 
         inline constexpr bool isComplete() const { return proven; }
 
+        inline const std::string& getSmtFile(index_t vc) const {
+            return *(unproven.at(vc));
+        }
+
         inline const std::string& firstUnproven() const {
             return *(unproven.begin()->second);
         }

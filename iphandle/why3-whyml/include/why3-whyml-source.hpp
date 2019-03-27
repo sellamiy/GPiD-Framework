@@ -5,12 +5,14 @@
 #include <set>
 #include <list>
 #include <memory>
+#include <why3cpp/why3proof.hpp>
+#include <why3cpp/why3utils.hpp>
 #include "why3-whyml-constraint.hpp"
 
 class W3WML_Template {
 public:
     struct Element {
-        enum class ElemType { Code, Invariant };
+        enum class ElemType { Raw, Property };
         const ElemType type;
         virtual ~Element() = default;
     protected:
@@ -18,53 +20,54 @@ public:
     };
     using ElementPtr = std::shared_ptr<Element>;
 
-    struct CodeElement : public Element {
+    struct RawElement : public Element {
         const std::string data;
-        CodeElement(const std::string& d) : Element(ElemType::Code), data(d) {}
+        RawElement(const std::string& d) : Element(ElemType::Raw), data(d) {}
     };
 
-    struct InvariantElement : public Element {
+    struct PropertyElement : public Element {
         std::list<const std::string> conj;
-        InvariantElement() : Element(ElemType::Invariant) {}
+        const std::string type;
+        PropertyElement(const std::string& type) : Element(ElemType::Property), type(type) {}
     };
 private:
     std::map<size_t, ElementPtr> elements;
-    std::set<size_t> invariant_ids;
+    std::set<size_t> prop_ids;
 public:
     W3WML_Template(const std::string& filename);
 
     inline const std::map<size_t, ElementPtr>& getElements() const { return elements; }
-    inline const std::set<size_t>& getInvariantIds() const { return invariant_ids; }
+    inline const std::set<size_t>& getPropertyIds() const { return prop_ids; }
 
     inline Element& getElement(size_t idx) const
     { return *(elements.at(idx)); }
 
-    inline CodeElement& getCode(size_t idx) const
-    { return *(std::dynamic_pointer_cast<CodeElement>(elements.at(idx))); }
-    inline InvariantElement& getInvariant(size_t idx) const
-    { return *(std::dynamic_pointer_cast<InvariantElement>(elements.at(idx))); }
+    inline RawElement& getSource(size_t idx) const
+    { return *(std::dynamic_pointer_cast<RawElement>(elements.at(idx))); }
+    inline PropertyElement& getProperty(size_t idx) const
+    { return *(std::dynamic_pointer_cast<PropertyElement>(elements.at(idx))); }
 
-    void save_to(const std::string& filename, const std::set<std::string>& refs) const;
+    void save_to(const std::string& filename, const why3cpp::Why3ConvertMap& cmap) const;
 };
 
-inline std::ostream& operator<<(std::ostream& out, const W3WML_Template::CodeElement& e) {
+inline std::ostream& operator<<(std::ostream& out, const W3WML_Template::RawElement& e) {
     return out << e.data;
 }
 
-std::ostream& write(std::ostream& out, const W3WML_Template::InvariantElement& e,
-                    const std::set<std::string>& refs);
+std::ostream& write
+(std::ostream& out, const W3WML_Template::PropertyElement& e, const why3cpp::Why3ConvertMap& cmap);
 
-inline std::ostream& write(std::ostream& out, const W3WML_Template::ElementPtr e,
-                           const std::set<std::string>& refs) {
-    if (e->type == W3WML_Template::Element::ElemType::Code)
-        return out << *std::dynamic_pointer_cast<W3WML_Template::CodeElement>(e);
+inline std::ostream& write
+(std::ostream& out, const W3WML_Template::ElementPtr e, const why3cpp::Why3ConvertMap& cmap) {
+    if (e->type == W3WML_Template::Element::ElemType::Raw)
+        return out << *std::dynamic_pointer_cast<W3WML_Template::RawElement>(e);
     else
-        return write(out, *std::dynamic_pointer_cast<W3WML_Template::InvariantElement>(e), refs);
+        return write(out, *std::dynamic_pointer_cast<W3WML_Template::PropertyElement>(e), cmap);
 }
 
-inline std::ostream& write(std::ostream& out, const W3WML_Template& t,
-                           const std::set<std::string>& refs) {
-    for (auto e : t.getElements()) write(out, e.second, refs);
+inline std::ostream& write
+(std::ostream& out, const W3WML_Template& t, const why3cpp::Why3ConvertMap& cmap) {
+    for (auto e : t.getElements()) write(out, e.second, cmap);
     return out;
 }
 

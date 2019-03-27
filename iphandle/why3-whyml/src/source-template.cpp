@@ -7,17 +7,17 @@
 #include <abdulot/core/errors.hpp>
 #include <why3-whyml-source.hpp>
 
-void W3WML_Template::save_to(const std::string& filename, const std::set<std::string>& refs) const {
+void W3WML_Template::save_to(const std::string& filename, const why3cpp::Why3ConvertMap& cmap) const {
     std::ofstream ofs(filename);
     if (!ofs.is_open())
         throw abdulot::InternalError("W3WML_Template could not open tempfile");
-    write(ofs, *this, refs);
+    write(ofs, *this, cmap);
     ofs.close();
 }
 
-std::ostream& write(std::ostream& out, const W3WML_Template::InvariantElement& e,
-                    const std::set<std::string>& refs) {
-    out << "invariant {";
+std::ostream& write
+(std::ostream& out, const W3WML_Template::PropertyElement& e, const why3cpp::Why3ConvertMap& cmap) {
+    out << e.type << " {";
     if (e.conj.empty()) {
         out << " true ";
     } else {
@@ -25,7 +25,7 @@ std::ostream& write(std::ostream& out, const W3WML_Template::InvariantElement& e
         for (auto s : e.conj) {
             if (start) start = false;
             else out << " /\\ ";
-            out << "(" << why3cpp::Smt2Why3(s, refs) << ")";
+            out << "(" << why3cpp::Smt2Why3(s, cmap) << ")";
         }
     }
     return out << "}";

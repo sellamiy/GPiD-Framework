@@ -25,7 +25,7 @@ namespace ilinva {
         using StrengthenerT = DualConditionStrengthener<ProblemHandlerT, InterfaceT>;
         using StrengthenerId = typename StrengthenerT::IdentifierT;
     private:
-        ProblemHandlerT& sourceCode;
+        ProblemHandlerT& ph;
 
         std::map<StrengthenerId, std::shared_ptr<StrengthenerT>> strengtheners;
 
@@ -40,10 +40,15 @@ namespace ilinva {
 
         inline IphState proofCheck() {
             ++counters.pchecks;
-            return sourceCode.proofCheck();
+            return ph.proofCheck();
         }
+
+        inline bool canGenerateVC(size_t id) {
+            return ph.hasNextUnprovenBlock(id);
+        }
+
         inline PropIdentifierT selectUnprovenProp(size_t id) {
-            return sourceCode.selectUnprovenBlock(id);
+            return ph.selectUnprovenBlock(id);
         }
 
         StrengthenerId newStrengthener(PropIdentifierT prop, const DStrOptions& dopts=DStrOptions(),
@@ -59,10 +64,10 @@ namespace ilinva {
         }
 
         inline void release(PropIdentifierT prop) {
-            sourceCode.release(prop);
+            ph.release(prop);
         }
 
-        inline ProblemHandlerT& getSourceHandler() const { return sourceCode; }
+        inline ProblemHandlerT& getSourceHandler() const { return ph; }
 
         const std::map<std::string, uint64_t> getCounters() const;
 
@@ -72,17 +77,16 @@ namespace ilinva {
 
     template<typename ProblemHandlerT, typename InterfaceT>
     DualInvariantEngine<ProblemHandlerT, InterfaceT>::DualInvariantEngine(ProblemHandlerT& source)
-        : sourceCode(source) {}
+        : ph(source) {}
 
     template<typename ProblemHandlerT, typename InterfaceT>
     typename DualInvariantEngine<ProblemHandlerT, InterfaceT>::StrengthenerId
     DualInvariantEngine<ProblemHandlerT, InterfaceT>::newStrengthener
     (PropIdentifierT prop, const DStrOptions& dopts, const std::string& overrider) {
         ++counters.strengtheners;
-        auto propCtx = sourceCode.generateContext(prop);
+        auto propCtx = ph.generateStrengheningContext(prop, overrider);
         std::shared_ptr<StrengthenerT>
-            stren(new StrengthenerT(sourceCode.generateAbductionProblem(prop),
-                                    sourceCode.generateSourceLiterals(prop, overrider), propCtx, dopts));
+            stren(new StrengthenerT(propCtx, dopts));
         strengtheners[stren->getId()] = stren;
         return stren->getId();
     }
@@ -92,7 +96,7 @@ namespace ilinva {
     ::strengthen(PropIdentifierT prop, StrengthenerId strengthener) {
         ++counters.strengthenings;
         StrengthenerT& stren = *strengtheners[strengthener];
-        sourceCode.strengthen(prop, stren.nextCandidate());
+        ph.strengthen(prop, stren.nextCandidate());
     }
 
     template<typename ProblemHandlerT, typename InterfaceT>

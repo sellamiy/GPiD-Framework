@@ -91,14 +91,14 @@ namespace ilinva {
             pengine.release(prop);
             level_stack.pop();
             /* Check for other strengthenable props */
-            PropId prop_t = pengine.selectUnprovenProp(level_stack.size());
-            if (stdutils::inset(tested_lids.top(), prop_t)) {
+            if (!pengine.canGenerateVC(level_stack.size())) {
                 /* Backtrack */
                 tested_lids.pop();
                 if (level_stack.empty()) break;
                 strengthener = level_stack.top().second;
             } else {
                 /* Try this other prop */
+                PropId prop_t = pengine.selectUnprovenProp(level_stack.size());
                 strengthener = pengine.newStrengthener(prop_t, dstren_opts, options.abd_override);
                 level_stack.push(level_ids_t(prop_t, strengthener));
                 tested_lids.top().insert(prop_t);

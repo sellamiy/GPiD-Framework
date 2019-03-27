@@ -7,9 +7,9 @@
 namespace why3cpp {
 
     class Why3ConvertMap {
-        const std::set<std::string>& refs;
+        std::set<std::string> refs;
     public:
-        Why3ConvertMap();
+        Why3ConvertMap() {}
         Why3ConvertMap(const std::set<std::string>& refs) : refs(refs) {}
         Why3ConvertMap(const Why3ConvertMap& o) : refs(o.refs) {}
 

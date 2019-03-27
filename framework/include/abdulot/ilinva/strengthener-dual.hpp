@@ -63,13 +63,13 @@ namespace ilinva {
             stdutils::ConcurrentVector<ConstraintT> implicants;
 
             typename InterfaceT::ContextManagerT& ictx;
-            typename ProblemHandlerT::ContextManagerT& iph_ctx;
+            typename ProblemHandlerT::ContextManagerT& iphctx;
 
             friend class ImplicateDisjunctor;
         public:
             ImplicateForwarder(typename InterfaceT::ContextManagerT& ictx,
-                               typename ProblemHandlerT::ContextManagerT& iph_ctx)
-                : reads(0), ictx(ictx), iph_ctx(iph_ctx)
+                               typename ProblemHandlerT::ContextManagerT& iphctx)
+                : reads(0), ictx(ictx), iphctx(iphctx)
             {}
 
             inline bool isReadable() { return reads < implicants.size(); }
@@ -119,8 +119,7 @@ namespace ilinva {
         using ImplicateGeneratorPtr = std::shared_ptr<ImplicateGenerator>;
         ImplicateGeneratorPtr generator;
     public:
-        DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
-                                  typename ProblemHandlerT::ContextManagerT& iph_ctx,
+        DualConditionStrengthener(typename ProblemHandlerT::ContextManagerT& iphctx,
                                   const DStrOptions& dopts=DStrOptions());
         ~DualConditionStrengthener();
 
@@ -173,17 +172,16 @@ namespace ilinva {
 
     template<typename ProblemHandlerT, typename InterfaceT>
     DualConditionStrengthener<ProblemHandlerT, InterfaceT>
-    ::DualConditionStrengthener(const std::string& pfile, const CodeConstraintListT& cons,
-                                typename ProblemHandlerT::ContextManagerT& iph_ctx,
+    ::DualConditionStrengthener(typename ProblemHandlerT::ContextManagerT& iphctx,
                                 const DStrOptions& dopts)
         : identifier(nextStrengthenerId()),
-          forwarder(_problemBuilder.getContextManager(), iph_ctx),
+          forwarder(_problemBuilder.getContextManager(), iphctx),
           disjunctor(dopts.disjunctions),
           generator(nullptr)
     {
-        _problemBuilder.load(pfile, "smt2");
+        _problemBuilder.load(iphctx.getProblemFile(), "smt2");
         abdGenerator =
-            AbdGeneratorPtr(new AbdGeneratorT(cons, _problemBuilder.getContextManager()));
+            AbdGeneratorPtr(new AbdGeneratorT(iphctx.getLiterals(), _problemBuilder.getContextManager()));
         abductionOpts.unknown_handle = SolverTestStatus::SAT;
         abductionOpts.max_level = dopts.sizelim + 1;
         abductionOpts.preprune_literals = true;
@@ -193,7 +191,7 @@ namespace ilinva {
         generator =
             ImplicateGeneratorPtr(new ImplicateGenerator(_problemBuilder, *abdGenerator, forwarder,
                                                          abductionCoreOpts, abductionOpts));
-        for (auto c_cons : iph_ctx.getCandidateConstraintDSplit()) {
+        for (auto c_cons : iphctx.getCandidateConstraintDSplit()) {
             typename InterfaceT::LiteralT _addlit
                 = convert<ProblemHandlerT, InterfaceT>(c_cons, _problemBuilder.getContextManager());
             generator->getEngine().addAdditionalCheckLiteral(_addlit);
