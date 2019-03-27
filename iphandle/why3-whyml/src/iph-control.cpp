@@ -21,7 +21,7 @@ const std::string W3WML_ProblemController::w3opt_vcreorder = "vcreorder";
 
 void W3WML_ShapeDetector::detectVCShape(const why3cpp::ProofResult& pr) {
     for (auto& expl : pr.getExplanations())
-        vc_shape[expl.first] = expl.second;
+        vc_shape[expl.first] = why3cpp::expl(expl.second);
 }
 
 bool W3WML_ShapeDetector::canGenerateBlock
@@ -80,7 +80,7 @@ static inline bool isStrengthenableExplanation(const std::string& expl) {
 static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
     // TODO: Update this method to switch it with a better one
     for (auto expl : proofResult.getExplanations())
-        if (!isStrengthenableExplanation(expl.second))
+        if (!isStrengthenableExplanation(why3cpp::expl(expl.second)))
             return false;
     return true;
 }
