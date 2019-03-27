@@ -114,11 +114,13 @@ public:
     }
 
     inline void release(blockid_t id) {
-        popcache();
-        auto property = prop_ident(blockmap, id);
-        // Check required for first strengthening
-        if (!sourcedata.getProperty(property).conj.empty()) {
-            sourcedata.getProperty(property).conj.pop_back();
+        if (id != ((blockid_t)(-1))) {
+            popcache();
+            auto property = prop_ident(blockmap, id);
+            // Check required for first strengthening
+            if (!sourcedata.getProperty(property).conj.empty()) {
+                sourcedata.getProperty(property).conj.pop_back();
+            }
         }
     }
 
