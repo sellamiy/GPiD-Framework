@@ -48,7 +48,7 @@ namespace why3cpp {
     }
 
     static bool detect_unverified
-    (const std::string& filename, const std::string& prover, vcset_t res) {
+    (const std::string& filename, const std::string& prover, vcset_t& res) {
         SplitProofParser parser(filename, execute(gen_proof_command(filename, prover)));
         bool proofcomplete = true;
         parser.parse();

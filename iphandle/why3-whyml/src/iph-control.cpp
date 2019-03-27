@@ -20,8 +20,9 @@ const std::string W3WML_ProblemController::w3opt_solver = "solver";
 const std::string W3WML_ProblemController::w3opt_vcreorder = "vcreorder";
 
 void W3WML_ShapeDetector::detectVCShape(const why3cpp::ProofResult& pr) {
-    for (auto& expl : pr.getExplanations())
+    for (auto& expl : pr.getExplanations()) {
         vc_shape[expl.first] = why3cpp::expl(expl.second);
+    }
 }
 
 bool W3WML_ShapeDetector::canGenerateBlock
@@ -35,10 +36,10 @@ static bool WX400 = false;
 block_t W3WML_ShapeDetector::generateBlock
 (const why3cpp::ProofResult& pr, const std::set<block_t>& cached) const {
     WARN_ONCE_D(WX400, "Block generation should not be blind");
-    for (const auto& propd : properties_shape) {
-        if (pr.isProved(propd.first))
+    for (const auto& vcd : vc_shape) {
+        if (pr.isProved(vcd.first))
             continue;
-        for (const auto& vcd : vc_shape) {
+        for (const auto& propd : properties_shape) {
             block_t _dum = block_t(vcd.first, propd.first);
             if (stdutils::ninset(cached, _dum))
                 return _dum;
