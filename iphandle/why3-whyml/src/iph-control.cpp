@@ -30,9 +30,11 @@ bool W3WML_ShapeDetector::canGenerateBlock
     return _dum.first != ILLEGAL_BLOCK_DATA && _dum.second != ILLEGAL_BLOCK_DATA;
 }
 
+static bool WX400 = false;
+
 block_t W3WML_ShapeDetector::generateBlock
 (const why3cpp::ProofResult& pr, const std::set<block_t>& cached) const {
-    snlog::l_warn() << "Block generation should not be blind" << snlog::l_end;
+    WARN_ONCE_D(WX400, "Block generation should not be blind");
     for (const auto& propd : properties_shape) {
         if (pr.isProved(propd.first))
             continue;

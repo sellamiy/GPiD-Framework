@@ -7,6 +7,8 @@
 #include <abdulot/utils/abducibles-utils.hpp>
 #include <why3-whyml-iph.hpp>
 
+#define WARN_ONCE_D(lvar, wdata) if (!(lvar)) { snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__ << wdata << snlog::l_end; lvar = true; }
+
 using namespace abdulot;
 
 const W3WML_Constraint W3WML_IPH::C_False = W3WML_Constraint("false");
@@ -36,13 +38,16 @@ void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider) {
     loadAbduceData(overrider, hdler);
 }
 
+static bool WX300 = false;
+static bool WX301 = false;
+
 void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& overrider) {
+    WARN_ONCE_D(WX300, "Abd Literals should not be forwarded between strengtheners");
     if (literals.empty()) {
-        snlog::l_warn() << "Abd Literals should not be forwarded between strengtheners" << snlog::l_end;
         if (overrider.empty()) {
             for (const std::string& lit : plits.getLiterals()) {
                 // TODO: Here, Sanatize Literal for the problem
-                snlog::l_warn() << "AbdLit not sanitized" << snlog::l_end;
+                WARN_ONCE_D(WX301, "AbdLit not sanitized");
                 literals.push_back(W3WML_Constraint(lit));
             }
             refs = plits.getReferences();
@@ -52,7 +57,7 @@ void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& ov
                 loadOverridingAbducibles(overrider);
             for (const std::string& lit : overrides[overrider]) {
                 // TODO: Here ALSO, Sanatize Literal for the problem
-                snlog::l_warn() << "AbdLit not sanitized" << snlog::l_end;
+                WARN_ONCE_D(WX301, "AbdLit not sanitized");
                 literals.push_back(W3WML_Constraint(lit));
             }
         }
