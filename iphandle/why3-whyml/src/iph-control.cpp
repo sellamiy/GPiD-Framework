@@ -95,14 +95,14 @@ bool W3WML_ProblemController::hasNextUnprovenBlock(size_t id) {
     blockcache.resize(id + 1);
     if (!prcached)
         getWhy3Proof();
-    return shape.canGenerateBlock(getCachedPr(), blockcache.at(id + 1));
+    return shape.canGenerateBlock(getCachedPr(), blockcache.at(id));
 }
 
 size_t W3WML_ProblemController::selectUnprovenBlock(size_t id) {
     blockcache.resize(id + 1);
     if (!prcached)
         getWhy3Proof();
-    block_t bdata = shape.generateBlock(getCachedPr(), blockcache.at(id + 1));
+    block_t bdata = shape.generateBlock(getCachedPr(), blockcache.at(id));
     if (bdata.first == ILLEGAL_BLOCK_DATA || bdata.second == ILLEGAL_BLOCK_DATA)
         snlog::l_internal() << "Generating incorrect proof block" << snlog::l_end;
     blockcache.at(id).insert(bdata);
