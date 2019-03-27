@@ -58,6 +58,7 @@ namespace why3cpp {
                 proofcomplete = proofcomplete && r.isValid();
             }
         } else {
+            proofcomplete = false;
             snlog::l_internal() << "Cannot detect why3 results on empty data" << snlog::l_end;
             res[-1] = vcdata_t(false, "nexpl:error");
         }
@@ -82,7 +83,7 @@ namespace why3cpp {
         for (auto it = vcs.begin(); it != vcs.end(); ++it) {
             it->second = vc_sanitization(it->second, vcreorder);
         }
-        ProofResult res(!dres, vcs, extractall);
+        ProofResult res(dres, vcs, extractall);
         return res;
     }
 
