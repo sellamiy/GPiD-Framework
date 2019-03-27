@@ -11,31 +11,9 @@ using namespace abdulot;
 
 const W3WML_Constraint W3WML_IPH::C_False = W3WML_Constraint("false");
 
-/*
-const std::list<W3WML_Constraint>& W3WML_IPH::generateSourceLiterals
-(PropIdentifierT, const std::string& overrider) {
-    if (literals.empty()) {
-        if (overrider.empty()) {
-            for (const std::string& lit : plits.getLiterals()) {
-                literals.push_back(W3WML_Constraint(lit));
-            }
-            refs = plits.getReferences();
-        } else {
-            // Read from overriding file
-            if (overrides[overrider].empty())
-                loadOverridingAbducibles(overrider);
-            for (const std::string& lit : overrides[overrider]) {
-                literals.push_back(W3WML_Constraint(lit));
-            }
-        }
-    }
-    return literals;
-}
-*/
-
 W3WML_Prop_Ctx W3WML_IPH::generateStrengheningContext(PropIdentifierT id, const std::string& overrider) {
     const std::string filename = problem.generateAbductionProblem(id);
-    problem.generateSourceLiterals(id, literals, overrider, overrides);
+    generateSourceLiterals(id, overrider);
     return W3WML_Prop_Ctx(filename, literals, problem.getCandidateConjunction(id), problem.getCMap());
 }
 
@@ -56,6 +34,29 @@ struct W_AbdStorerHandler : public GenericHandler {
 void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider) {
     W_AbdStorerHandler hdler(overrides[overrider], refs);
     loadAbduceData(overrider, hdler);
+}
+
+void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& overrider) {
+    if (literals.empty()) {
+        snlog::l_warn() << "Abd Literals should not be forwarded between strengtheners" << snlog::l_end;
+        if (overrider.empty()) {
+            for (const std::string& lit : plits.getLiterals()) {
+                // TODO: Here, Sanatize Literal for the problem
+                snlog::l_warn() << "AbdLit not sanitized" << snlog::l_end;
+                literals.push_back(W3WML_Constraint(lit));
+            }
+            refs = plits.getReferences();
+        } else {
+            // Read from overriding file
+            if (overrides[overrider].empty())
+                loadOverridingAbducibles(overrider);
+            for (const std::string& lit : overrides[overrider]) {
+                // TODO: Here ALSO, Sanatize Literal for the problem
+                snlog::l_warn() << "AbdLit not sanitized" << snlog::l_end;
+                literals.push_back(W3WML_Constraint(lit));
+            }
+        }
+    }
 }
 
 const W3WML_Constraint W3WML_Prop_Ctx::getCandidateConstraint() {

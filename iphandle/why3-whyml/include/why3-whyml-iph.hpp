@@ -81,6 +81,8 @@ public:
         return problem.selectUnprovenBlock(id);
     }
 
+    void generateSourceLiterals(PropIdentifierT id, const std::string& overrider);
+
     ContextManagerT generateStrengheningContext(PropIdentifierT id, const std::string& overrider);
 
     inline void exportSource(const std::string& filename) const {

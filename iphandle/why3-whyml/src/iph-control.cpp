@@ -26,13 +26,22 @@ void W3WML_ShapeDetector::detectVCShape(const why3cpp::ProofResult& pr) {
 
 bool W3WML_ShapeDetector::canGenerateBlock
 (const why3cpp::ProofResult& pr, const std::set<block_t>& cached) const {
-    snlog::l_warn() << "NOT IMPLEM CAN GENERATE BLOCK SHAPE DETECTECOR" << snlog::l_end;
-    return false;
+    const block_t _dum = generateBlock(pr, cached);
+    return _dum.first != ILLEGAL_BLOCK_DATA && _dum.second != ILLEGAL_BLOCK_DATA;
 }
 
 block_t W3WML_ShapeDetector::generateBlock
 (const why3cpp::ProofResult& pr, const std::set<block_t>& cached) const {
-    snlog::l_warn() << "NOT IMPLEM GENERATE BLOCK SHAPE DETECTECOR" << snlog::l_end;
+    snlog::l_warn() << "Block generation should not be blind" << snlog::l_end;
+    for (const auto& propd : properties_shape) {
+        if (pr.isProved(propd.first))
+            continue;
+        for (const auto& vcd : vc_shape) {
+            block_t _dum = block_t(vcd.first, propd.first);
+            if (stdutils::ninset(cached, _dum))
+                return _dum;
+        }
+    }
     return block_t(ILLEGAL_BLOCK_DATA, ILLEGAL_BLOCK_DATA);
 }
 
@@ -109,10 +118,4 @@ const std::string W3WML_ProblemController::generateAbductionProblem(blockid_t id
     ofs << getCachedPr().getSmtFile(vc);
     ofs.close();
     return SMTV2_TEMPORARY_ABDUCEFILE;
-}
-
-void W3WML_ProblemController::generateSourceLiterals
-(blockid_t id, std::list<W3WML_Constraint>& literals, const std::string& overrider,
- std::map<std::string, std::list<std::string>>& overrides) {
-    snlog::l_warn() << "NOT IMPLEM GENERATE SOURFC LITERALS POBLEMS CONTROLLER" << snlog::l_end;
 }

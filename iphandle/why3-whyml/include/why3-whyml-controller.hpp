@@ -130,9 +130,6 @@ public:
 
     const std::string generateAbductionProblem(blockid_t id);
 
-    void generateSourceLiterals(blockid_t id, std::list<W3WML_Constraint>& literals,
-                                const std::string& overrider,
-                                std::map<std::string, std::list<std::string>>& overrides);
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <map>
 #include <list>
 #include <memory>
+#include <stdutils/collections.hpp>
 #include <why3cpp/why3config.hpp>
 
 namespace why3cpp {
@@ -24,6 +25,8 @@ namespace why3cpp {
         inline const std::string& getSmtFile(index_t vc) const {
             return *(unproven.at(vc));
         }
+
+        inline bool isProved(index_t vc) const { return stdutils::ninmap(unproven, vc); }
 
         inline const std::string& firstUnproven() const {
             return *(unproven.begin()->second);
