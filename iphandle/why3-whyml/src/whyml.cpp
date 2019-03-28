@@ -18,6 +18,7 @@ W3WML_Template::W3WML_Template(const std::string& filename) {
         if (size_t loc = line.find("invariant") != std::string::npos) {
             buf << line.substr(0, loc);
             elements[cid++] = ElementPtr(new RawElement(buf.str()));
+            prop_ids.insert(cid);
             elements[cid++] = ElementPtr(new PropertyElement("invariant"));
             buf.str(std::string());
             loc = line.find("}", loc);
