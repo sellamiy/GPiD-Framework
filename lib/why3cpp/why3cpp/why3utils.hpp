@@ -13,6 +13,10 @@ namespace why3cpp {
         Why3ConvertMap(const std::set<std::string>& refs) : refs(refs) {}
         Why3ConvertMap(const Why3ConvertMap& o) : refs(o.refs) {}
 
+        inline void addRefs(const std::set<std::string>& _refs) {
+            for (auto& r : _refs) refs.insert(r);
+        }
+
         inline bool isref(const std::string& t) const { return refs.count(t) > 0; }
     };
 

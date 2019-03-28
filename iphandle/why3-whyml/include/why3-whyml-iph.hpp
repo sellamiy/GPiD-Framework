@@ -32,9 +32,9 @@ class W3WML_IPH {
     std::map<size_t, std::set<size_t>::iterator> invariants_iter;
 
     std::list<W3WML_Constraint> literals;
+    why3cpp::Why3ConvertMap cmap;
 
     std::map<std::string, std::list<std::string>> overrides;
-    std::set<std::string> refs;
 
     stringoptionmap_t local_opts;
     booloptionmap_t local_bopts;
@@ -45,7 +45,7 @@ public:
     static const W3WML_Constraint C_False;
 
     W3WML_IPH(const std::string& filename, bool overriden)
-        : problem(filename, local_opts, local_bopts),
+        : problem(filename, cmap, local_opts, local_bopts),
           plits(filename, overriden)
     {
         // Set default Why3 solver to CVC4

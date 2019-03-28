@@ -45,7 +45,7 @@ private:
     W3WML_Template sourcedata;
     W3WML_ShapeDetector shape;
 
-    why3cpp::Why3ConvertMap cmap;
+    why3cpp::Why3ConvertMap& cmap;
 
     blockmap_t blockmap;
     blockcache_t blockcache;
@@ -77,8 +77,8 @@ private:
     why3cpp::ProofResult getWhy3Proof();
 public:
     W3WML_ProblemController
-    (const std::string& filename, stringoptionmap_t& sopts, booloptionmap_t& bopts)
-        : sourcedata(filename), shape(sourcedata),
+    (const std::string& filename, why3cpp::Why3ConvertMap& cmap, stringoptionmap_t& sopts, booloptionmap_t& bopts)
+        : sourcedata(filename), shape(sourcedata), cmap(cmap),
           sopts(sopts), bopts(bopts)
     {}
 

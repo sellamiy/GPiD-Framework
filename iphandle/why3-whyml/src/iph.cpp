@@ -34,8 +34,10 @@ struct W_AbdStorerHandler : public GenericHandler {
 };
 
 void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider) {
+    std::set<std::string> refs;
     W_AbdStorerHandler hdler(overrides[overrider], refs);
     loadAbduceData(overrider, hdler);
+    cmap.addRefs(refs);
 }
 
 static bool WX300 = false;
@@ -50,7 +52,7 @@ void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& ov
                 WARN_ONCE_D(WX301, "AbdLit not sanitized");
                 literals.push_back(W3WML_Constraint(lit));
             }
-            refs = plits.getReferences();
+            cmap.addRefs(plits.getReferences());
         } else {
             // Read from overriding file
             if (overrides[overrider].empty())
