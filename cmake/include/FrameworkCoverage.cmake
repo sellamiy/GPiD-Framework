@@ -11,9 +11,11 @@ if(COVERAGE_TOOLS)
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "/usr/local/include/*")
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "/usr/local/include/cvc4/*/*")
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/*/*")
+  set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/*")
+  set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "/Library/Developer/CommandLineTools/usr/include/c++/v1/*")
 
+  set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/cxxopts-sources/*/*")
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/minisat-src/minisat/*/*")
-
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/googletest-src/*/*/*")
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/googletest-src/*/*/*/*")
   set(COVERAGE_EXCLUDES ${COVERAGE_EXCLUDES} "${CMAKE_BINARY_DIR}/googletest-src/*/*/*/*/*")
