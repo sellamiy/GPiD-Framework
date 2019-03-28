@@ -1,0 +1,23 @@
+module EuclideanAlgorithmIterative
+
+ use mach.int.Int
+ use ref.Ref
+ use number.Gcd
+
+ let euclid (u0 : int) (v0 : int) : int
+
+   requires { u0 >= 0 /\ v0 >= 0 }
+   ensures { result = gcd u0 v0 }
+   diverges
+
+ = let u = ref u0 in let v = ref v0 in
+   while !v <> 0 do
+    invariant { true }
+
+    let tmp = !v in
+     v := !u % !v;
+     u := tmp
+   done;
+   !u
+
+end
