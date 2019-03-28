@@ -38,11 +38,6 @@ namespace why3cpp {
         return Smt2Why3Converter.convert(smtl2data);
     }
 
-    static inline std::string Smt2Why3(const std::string& smtl2data, const std::set<std::string>& refs) {
-        Why3ConvertMap cmap(refs);
-        return Smt2Why3(smtl2data, cmap);
-    }
-
 }
 
 #endif
