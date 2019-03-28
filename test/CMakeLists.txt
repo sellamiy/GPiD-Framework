@@ -47,6 +47,8 @@ if(BUILD_TESTS)
   add_subdirectory(parsers)
   # == Gpid Result Testing Targets ==
   add_subdirectory(gpid)
+  # == Ilinva Result Testing Targets ==
+  add_subdirectory(ilinva)
 
   # ===== Coverage =====
   if (COVERAGE_TOOLS)
