@@ -81,8 +81,9 @@ static inline bool isStrengthenableExplanation(const std::string& expl) {
 static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
     // TODO: Update this method to switch it with a better one
     for (auto expl : proofResult.getExplanations())
-        if (!isStrengthenableExplanation(why3cpp::expl(expl.second)))
-            return false;
+        if (!why3cpp::proved(expl.second))
+            if (!isStrengthenableExplanation(why3cpp::expl(expl.second)))
+                return false;
     return true;
 }
 
