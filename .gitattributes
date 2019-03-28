@@ -1,0 +1,8 @@
+*.dimacs linguist-detectable=false
+*.abduce linguist-detectable=false
+*.abd linguist-detectable=false
+*.1 linguist-detectable=false
+*.2 linguist-detectable=false
+*.3 linguist-detectable=false
+*.smt2 linguist-detectable=false
+*.tes linguist-language=Ruby
