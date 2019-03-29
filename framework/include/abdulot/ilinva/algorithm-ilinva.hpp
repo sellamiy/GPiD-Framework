@@ -42,7 +42,7 @@ namespace ilinva {
         std::stack<std::set<PropId>> tested_lids;
 
         void reset();
-        void backtrack();
+        void backtrack(bool force=false);
         virtual void _execute() override;
 
     public:
@@ -84,26 +84,31 @@ namespace ilinva {
     }
 
     template<typename EngineT>
-    void IlinvaAlgorithm<EngineT>::backtrack() {
+    void IlinvaAlgorithm<EngineT>::backtrack(bool force) {
+        // snlog::l_notifg() << "BACKTRACK" << snlog::l_end;
+        // snlog::l_notifg() << level_stack.size() << snlog::l_end;
         StrengthenerId strengthener = level_stack.top().second;
-        while(!pengine.hasMoreStrengthenings(strengthener)) {
+        while(force || !pengine.hasMoreStrengthenings(strengthener)) {
+            // snlog::l_notifg() << " * In While" << snlog::l_end;
+            force = false;
             PropId prop = level_stack.top().first;
             pengine.release(prop);
             level_stack.pop();
             /* Check for other strengthenable props */
             if (!pengine.canGenerateVC(level_stack.size())) {
+                // snlog::l_notifg() << " * * In If" << snlog::l_end;
                 /* Backtrack */
-                tested_lids.pop();
                 if (level_stack.empty()) break;
                 strengthener = level_stack.top().second;
             } else {
+                // snlog::l_notifg() << " * * In Else" << snlog::l_end;
                 /* Try this other prop */
                 PropId prop_t = pengine.selectUnprovenProp(level_stack.size());
                 strengthener = pengine.newStrengthener(prop_t, dstren_opts, options.abd_override);
                 level_stack.push(level_ids_t(prop_t, strengthener));
-                tested_lids.top().insert(prop_t);
             }
         }
+        // snlog::l_notifg() << "ENDBACKTRACK" << snlog::l_end;
     }
 
     template<typename EngineT>
@@ -123,28 +128,21 @@ namespace ilinva {
                 break;
             }
 
-            if (!iphState.strengthenable)
-                goto prebacktrack;
+            if (!iphState.strengthenable) {
 
-            if (level_stack.size() >= options.max_depth)
-                goto prebacktrack;
+                backtrack(true);
 
-            prop = pengine.selectUnprovenProp(level_stack.size());
-            strengthener = pengine.newStrengthener(prop, dstren_opts, options.abd_override);
-            level_stack.push(level_ids_t(prop, strengthener));
-            tested_lids.push({ prop });
+            } else if (level_stack.size() >= options.max_depth) {
 
-            if (pengine.hasMoreStrengthenings(strengthener))
-                pengine.strengthen(level_stack.top());
-            else
-                goto backtrack;
+                backtrack(true);
 
-            continue;
+            } else {
 
-        prebacktrack:
-            pengine.release(prop);
-        backtrack:
-            backtrack();
+                prop = pengine.selectUnprovenProp(level_stack.size());
+                strengthener = pengine.newStrengthener(prop, dstren_opts, options.abd_override);
+                level_stack.push(level_ids_t(prop, strengthener));
+
+            }
 
             if (level_stack.empty()) {
                 snlog::l_error() << "No more strengthening candidates available" << snlog::l_end;
@@ -152,6 +150,7 @@ namespace ilinva {
             }
 
             pengine.strengthen(level_stack.top());
+
         }
 
         if (assume_proven) {
