@@ -90,15 +90,28 @@ namespace ilinva {
         StrengthenerId strengthener = level_stack.top().second;
         while(force || !pengine.hasMoreStrengthenings(strengthener)) {
             // snlog::l_notifg() << " * In While" << snlog::l_end;
-            force = false;
             PropId prop = level_stack.top().first;
             pengine.release(prop);
+            if (force) {
+                force = false;
+                if (pengine.hasMoreStrengthenings(strengthener)) {
+                    break;
+                }
+                /* Hack: If forced, we should not change the strengthener immediately,
+                   Actually, we should if it is due to the depth limitation,
+                   but this is a TODO for now */
+            }
+            // snlog::l_fatal() << " Level " << level_stack.size() << snlog::l_end;
             level_stack.pop();
+            // snlog::l_fatal() << " Level " << level_stack.size() << snlog::l_end;
             /* Check for other strengthenable props */
             if (!pengine.canGenerateVC(level_stack.size())) {
                 // snlog::l_notifg() << " * * In If" << snlog::l_end;
                 /* Backtrack */
                 if (level_stack.empty()) break;
+                // Release once more
+                PropId prop_t = level_stack.top().first;
+                pengine.release(prop_t);
                 strengthener = level_stack.top().second;
             } else {
                 // snlog::l_notifg() << " * * In Else" << snlog::l_end;
@@ -108,6 +121,7 @@ namespace ilinva {
                 level_stack.push(level_ids_t(prop_t, strengthener));
             }
         }
+        // snlog::l_fatal() << " Level " << level_stack.size() << snlog::l_end;
         // snlog::l_notifg() << "ENDBACKTRACK" << snlog::l_end;
     }
 
@@ -141,7 +155,6 @@ namespace ilinva {
                 prop = pengine.selectUnprovenProp(level_stack.size());
                 strengthener = pengine.newStrengthener(prop, dstren_opts, options.abd_override);
                 level_stack.push(level_ids_t(prop, strengthener));
-
             }
 
             if (level_stack.empty()) {
@@ -149,7 +162,11 @@ namespace ilinva {
                 break;
             }
 
-            pengine.strengthen(level_stack.top());
+            if (pengine.hasMoreStrengthenings(strengthener)) {
+                pengine.strengthen(level_stack.top());
+            } else {
+                backtrack();
+            }
 
         }
 
