@@ -59,6 +59,8 @@ private:
     stringoptionmap_t& sopts;
     booloptionmap_t& bopts;
 
+    std::map<blockid_t, const std::string> filecache;
+
     inline void pushcache() { prcached = false; }
     inline void popcache() {
         if (prcache.size() > 0)
@@ -73,6 +75,10 @@ private:
         prcached = true;
     }
     inline why3cpp::ProofResult& getCachedPr() { return prcache.top(); }
+
+    inline void encacheBlockFile(blockid_t id, const std::string& filename) {
+        filecache.insert(std::pair<blockid_t, const std::string>(id, filename));
+    }
 
     why3cpp::ProofResult getWhy3Proof();
 public:
@@ -123,6 +129,8 @@ public:
             }
         }
     }
+
+    inline const std::string& getBlockFile(blockid_t id) const { return filecache.at(id); }
 
     abdulot::ilinva::IphState proofCheck();
 

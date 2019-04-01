@@ -121,5 +121,6 @@ const std::string W3WML_ProblemController::generateAbductionProblem(blockid_t id
     ofs.open(SMTV2_TEMPORARY_ABDUCEFILE);
     ofs << getCachedPr().getSmtFile(vc);
     ofs.close();
+    encacheBlockFile(id, SMTV2_TEMPORARY_ABDUCEFILE);
     return SMTV2_TEMPORARY_ABDUCEFILE;
 }
