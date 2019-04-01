@@ -43,14 +43,18 @@ void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider) {
 static bool WX300 = false;
 static bool WX301 = false;
 
+const std::string W3WML_IPH::sanitizeLiteral(const std::string& lit) {
+    WARN_ONCE_D(WX301, "TODO: AbdLit not sanitized (No implementation)");
+    return lit;
+}
+
 void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& overrider) {
     WARN_ONCE_D(WX300, "Abd Literals should not be forwarded between strengtheners");
     if (literals.empty()) {
         if (overrider.empty()) {
             for (const std::string& lit : plits.getLiterals()) {
-                // TODO: Here, Sanatize Literal for the problem
-                WARN_ONCE_D(WX301, "AbdLit not sanitized");
-                literals.push_back(W3WML_Constraint(lit));
+                const std::string slit = sanitizeLiteral(lit);
+                literals.push_back(W3WML_Constraint(slit));
             }
             cmap.addRefs(plits.getReferences());
         } else {
@@ -58,9 +62,8 @@ void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& ov
             if (overrides[overrider].empty())
                 loadOverridingAbducibles(overrider);
             for (const std::string& lit : overrides[overrider]) {
-                // TODO: Here ALSO, Sanatize Literal for the problem
-                WARN_ONCE_D(WX301, "AbdLit not sanitized");
-                literals.push_back(W3WML_Constraint(lit));
+                const std::string slit = sanitizeLiteral(lit);
+                literals.push_back(W3WML_Constraint(slit));
             }
         }
     }

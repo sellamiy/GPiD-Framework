@@ -38,6 +38,8 @@ class W3WML_IPH {
 
     stringoptionmap_t local_opts;
     booloptionmap_t local_bopts;
+
+    const std::string sanitizeLiteral(const std::string& lit);
 public:
     using ConstraintT = W3WML_Constraint;
     using ContextManagerT = W3WML_Prop_Ctx;
