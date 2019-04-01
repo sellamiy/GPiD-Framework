@@ -43,7 +43,7 @@ void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider) {
 static bool WX300 = false;
 static bool WX301 = false;
 
-const std::string W3WML_IPH::sanitizeLiteral(const std::string& lit) {
+const std::string W3WML_IPH::sanitizeLiteral(PropIdentifierT id, const std::string& lit) {
     WARN_ONCE_D(WX301, "TODO: AbdLit not sanitized (No implementation)");
     return lit;
 }
@@ -53,7 +53,7 @@ void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& ov
     if (literals.empty()) {
         if (overrider.empty()) {
             for (const std::string& lit : plits.getLiterals()) {
-                const std::string slit = sanitizeLiteral(lit);
+                const std::string slit = sanitizeLiteral(id, lit);
                 literals.push_back(W3WML_Constraint(slit));
             }
             cmap.addRefs(plits.getReferences());
@@ -62,7 +62,7 @@ void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& ov
             if (overrides[overrider].empty())
                 loadOverridingAbducibles(overrider);
             for (const std::string& lit : overrides[overrider]) {
-                const std::string slit = sanitizeLiteral(lit);
+                const std::string slit = sanitizeLiteral(id, lit);
                 literals.push_back(W3WML_Constraint(slit));
             }
         }

@@ -27,6 +27,11 @@ public:
 };
 
 class W3WML_IPH {
+public:
+    using ConstraintT = W3WML_Constraint;
+    using ContextManagerT = W3WML_Prop_Ctx;
+    using PropIdentifierT = W3WML_ProblemController::blockid_t;
+private:
     W3WML_ProblemController problem;
     W3WML_LSet plits;
     std::map<size_t, std::set<size_t>::iterator> invariants_iter;
@@ -39,11 +44,8 @@ class W3WML_IPH {
     stringoptionmap_t local_opts;
     booloptionmap_t local_bopts;
 
-    const std::string sanitizeLiteral(const std::string& lit);
+    const std::string sanitizeLiteral(PropIdentifierT id, const std::string& lit);
 public:
-    using ConstraintT = W3WML_Constraint;
-    using ContextManagerT = W3WML_Prop_Ctx;
-    using PropIdentifierT = W3WML_ProblemController::blockid_t;
     static const W3WML_Constraint C_False;
 
     W3WML_IPH(const std::string& filename, bool overriden)
