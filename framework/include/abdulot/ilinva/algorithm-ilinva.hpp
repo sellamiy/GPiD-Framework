@@ -109,6 +109,9 @@ namespace ilinva {
                 PropId prop_t = level_stack.top().first;
                 pengine.release(prop_t);
                 strengthener = level_stack.top().second;
+                // TODO: This is a hack to force internal cache removal
+                //       This should be done in a better way.
+                pengine.canGenerateVC(level_stack.size() - 1);
             } else {
                 /* Try this other prop */
                 PropId prop_t = pengine.selectUnprovenProp(level_stack.size());
