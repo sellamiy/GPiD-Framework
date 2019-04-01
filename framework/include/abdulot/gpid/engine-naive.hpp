@@ -8,7 +8,7 @@
 #define ABDULOT__GPID__NAIVE_ENGINE_HPP
 
 #include <set>
-#include <list>
+#include <vector>
 
 #include <abdulot/core/memory.hpp>
 #include <abdulot/gpid/skipcontrol.hpp>
@@ -77,7 +77,7 @@ namespace gpid {
 
         ObjectMapper<LiteralT> lmapper;
         using LiteralReference = typename ObjectMapper<LiteralT>::index_t;
-        std::map<index_t, std::list<index_t>> llinks;
+        std::map<index_t, std::vector<index_t>> llinks;
 
         NaiveHypothesis hypothesis;
 

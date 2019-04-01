@@ -12,7 +12,7 @@ namespace instrument {
 
     /* Finalization handlers */
     typedef void (*finalizer) (InstrumentOptions&, InstrumentController&);
-    std::list<finalizer> finalizers;
+    std::vector<finalizer> finalizers;
     extern void finalize(InstrumentOptions& opts, InstrumentController& ctrler) {
         snlog::l_notif() << "finalize instruments..." << snlog::l_end;
         for (void (*finalizer)(InstrumentOptions&, InstrumentController&) : finalizers) {
@@ -22,7 +22,7 @@ namespace instrument {
 
     /* Analyses core handler */
     typedef void (*analyzer) (const std::string);
-    std::map<instloc, std::list<analyzer> > analyzers;
+    std::map<instloc, std::vector<analyzer> > analyzers;
     extern void analyze_data(const idata data, instloc analysis) {
         for (void (*analyzer)(const std::string) : analyzers[analysis]) {
             analyzer(data.get());

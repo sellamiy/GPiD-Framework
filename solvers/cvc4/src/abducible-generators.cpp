@@ -53,7 +53,7 @@ static inline void cvc4_abduciblesUtils_allEq
     p->useDeclarationsFrom(pbld.getDeclarations().getSymbolTable());
 
     /* Building a type table for abducible generation */
-    std::map<CVC4::Type, std::list<CVC4::Expr>> typeTable;
+    std::map<CVC4::Type, std::vector<CVC4::Expr>> typeTable;
     for (const std::string decl : pbld.getDeclarations()) {
         CVC4::Expr fun = p->getFunction(decl);
         if (fun.getType().isFunction()) {
@@ -71,7 +71,7 @@ static inline void cvc4_abduciblesUtils_allEq
 
 static inline size_t abdgen_cvc4_allEq
 (CVC4ProblemLoader& pbld, ObjectMapper<CVC4Literal>& mapper,
- std::map<uint32_t, std::list<uint32_t>>& links) {
+ std::map<uint32_t, std::vector<uint32_t>>& links) {
     CVC4::ExprManager& ctx = pbld.getContextManager();
     std::vector<CVC4::Expr> knownVars;
     cvc4_abduciblesUtils_allEq(pbld, knownVars);
@@ -96,7 +96,7 @@ static inline size_t abdgen_cvc4_allEq
 }
 
 using AbdgenFunctionT = std::function<size_t(CVC4ProblemLoader&, ObjectMapper<CVC4Literal>&,
-                                             std::map<uint32_t, std::list<uint32_t>>&)>;
+                                             std::map<uint32_t, std::vector<uint32_t>>&)>;
 static std::map<std::string, AbdgenFunctionT> abg_cvc4_abdgeneration_table = {
     { "all-eq", AbdgenFunctionT(abdgen_cvc4_allEq) },
     { "default", AbdgenFunctionT(abdgen_cvc4_allEq) }

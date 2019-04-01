@@ -9,7 +9,7 @@ namespace saihelpers {
         SMTl2SolverManager& ctx;
 
         using constraint = std::shared_ptr<std::string>;
-        using constraint_list = std::list<constraint>;
+        using constraint_list = std::vector<constraint>;
 
         constraint_list conslist;
         typename constraint_list::iterator consit;

@@ -19,7 +19,7 @@ namespace why3cpp {
             map<string, string> vars;
             map<string, string> lits;
             set<string> refs;
-            map<string, list<vector<string>>> appls;
+            map<string, vector<vector<string>>> appls;
             bool valid;
             bool extracted;
         public:
@@ -34,7 +34,7 @@ namespace why3cpp {
             inline const map<string, string>& getVars() const { return vars; }
             inline const map<string, string>& getLits() const { return lits; }
             inline const set<string>& getRefs() const { return refs; }
-            inline const map<string, list<vector<string>>>& getAppls() const { return appls; }
+            inline const map<string, vector<vector<string>>>& getAppls() const { return appls; }
         };
 
     }
@@ -126,7 +126,7 @@ const set<string>& why3cpp::ExtractorParser::getRefs() const {
     return parser->getRefs();
 }
 
-const map<string, list<vector<string>>>& why3cpp::ExtractorParser::getAppls() const {
+const map<string, vector<vector<string>>>& why3cpp::ExtractorParser::getAppls() const {
     if (!parser->hasExtract())
         parser->extract();
     return parser->getAppls();

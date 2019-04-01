@@ -7,7 +7,7 @@
 #ifndef ABDULOT__GPID__ADVANCED_ENGINE_HPP
 #define ABDULOT__GPID__ADVANCED_ENGINE_HPP
 
-#include <list>
+#include <vector>
 #include <fstream>
 
 #include <abdulot/core/memory.hpp>
@@ -82,7 +82,7 @@ namespace gpid {
         starray::SequentialActivableArray lactive;
         ObjectMapper<LiteralT> lmapper;
         using LiteralReference = typename ObjectMapper<LiteralT>::index_t;
-        std::map<index_t, std::list<index_t>> llinks;
+        std::map<index_t, std::vector<index_t>> llinks;
 
         AbducibleTree<InterfaceT, LiteralHypothesis> storage;
         LiteralHypothesis hypothesis;
@@ -96,10 +96,10 @@ namespace gpid {
             counter_t additionals = 0;
         } skip_counters;
 
-        std::map<level_t, std::list<index_t> > selection_map;
-        std::map<level_t, std::list<index_t> > pselection_map;
+        std::map<level_t, std::vector<index_t> > selection_map;
+        std::map<level_t, std::vector<index_t> > pselection_map;
 
-        std::map<index_t, std::list<level_t> > pvalues_map;
+        std::map<index_t, std::vector<level_t> > pvalues_map;
 
         std::map<level_t, index_t> limit;
         std::map<level_t, index_t> pointer;

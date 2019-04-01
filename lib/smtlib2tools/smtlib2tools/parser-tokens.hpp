@@ -1,7 +1,7 @@
 #ifndef LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
 #define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
 
-#include <list>
+#include <vector>
 #include <smtlib2tools/smtlib2-defs.hpp>
 
 namespace smtlib2 {
@@ -24,11 +24,11 @@ namespace smtlib2 {
     };
 
     struct SMTlib2TokenList {
-        const std::list<SMTlib2TokenResult> content;
+        const std::vector<SMTlib2TokenResult> content;
         const uint32_t start, end;
 
-        inline std::list<std::string> value() const {
-            std::list<std::string> res;
+        inline std::vector<std::string> value() const {
+            std::vector<std::string> res;
             for (auto tk : content) res.push_back(tk.value());
             return res;
         }
@@ -37,9 +37,9 @@ namespace smtlib2 {
         inline const SMTlib2TokenResult& last() const { return content.back(); }
         inline constexpr size_t size() const { return content.size(); }
 
-        SMTlib2TokenList(const std::list<SMTlib2TokenResult>& tkl)
+        SMTlib2TokenList(const std::vector<SMTlib2TokenResult>& tkl)
             : content(tkl), start(tkl.front().start), end(tkl.back().end) {}
-        SMTlib2TokenList(const std::list<SMTlib2TokenResult>& tkl, uint32_t start, uint32_t end)
+        SMTlib2TokenList(const std::vector<SMTlib2TokenResult>& tkl, uint32_t start, uint32_t end)
             : content(tkl), start(start), end(end) {}
         SMTlib2TokenList(const SMTlib2TokenList& o)
             : content(o.content), start(o.start), end(o.end) {}

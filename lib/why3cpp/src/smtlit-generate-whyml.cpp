@@ -22,7 +22,7 @@ static void loc_fabricate(SmtLitFabricator& fabricator, why3cpp::ExtractorParser
     const FabricationFilter coreMagicFilter(FilterPolicy::Annotation_Include, annot_core_magic);
     const FabricationFilter PreparedFilter(FilterPolicy::Annotation_Include, annot_prepared);
     const FabricationFilter coreNAMgcFilter(FilterPolicy::Annotation_NotAll, annot_core_magic);
-    const std::map<std::string, std::list<std::vector<std::string>>>& papps = parser.getAppls();
+    const std::map<std::string, std::vector<std::vector<std::string>>>& papps = parser.getAppls();
     for (auto papp : papps) {
         if (papp.first == "+") {
             for (auto varapt : papp.second) {

@@ -9,7 +9,7 @@ static TisiConstraint dummyConstraint;
 static TisiModel dummyModel;
 static ObjectMapper<TisiLiteral> dummyMapper;
 static std::map<typename TisiGenerator::index_t,
-                std::list<typename TisiGenerator::index_t>> dummyLinks;
+                std::vector<typename TisiGenerator::index_t>> dummyLinks;
 
 std::string TisiLiteral::str() { return "^_^"; }
 
@@ -48,7 +48,7 @@ size_t TisiGenerator::count() { return 0; }
 
 ObjectMapper<TisiLiteral>& TisiGenerator::getMapper() { return dummyMapper; }
 
-std::map<typename TisiGenerator::index_t, std::list<typename TisiGenerator::index_t>>&
+std::map<typename TisiGenerator::index_t, std::vector<typename TisiGenerator::index_t>>&
 TisiGenerator::getLinks() { return dummyLinks; }
 
 void TisiInterface::addConstraint(TisiConstraint&) {}

@@ -3,7 +3,6 @@
 
 #include <map>
 #include <set>
-#include <list>
 #include <vector>
 #include <memory>
 #include <why3cpp/whyml-parser.hpp>
@@ -21,7 +20,7 @@ namespace why3cpp {
         const std::map<std::string, std::string>& getVars() const;
         const std::map<std::string, std::string>& getLits() const;
         const std::set<std::string>& getRefs() const;
-        const std::map<std::string, std::list<std::vector<std::string>>>& getAppls() const;
+        const std::map<std::string, std::vector<std::vector<std::string>>>& getAppls() const;
 
         bool hasFailed() const;
     };

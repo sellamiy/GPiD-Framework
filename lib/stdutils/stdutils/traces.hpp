@@ -7,7 +7,7 @@
 #define LIB_STANDARD_UTILS__TRACES_CLASS_HPP
 
 #include <string>
-#include <list>
+#include <vector>
 
 namespace stdutils {
 
@@ -113,7 +113,7 @@ namespace stdutils {
 
     /** Execution trace representation. */
     class Trace {
-        std::list<TraceElement*> sequence;
+        std::vector<TraceElement*> sequence;
     public:
         Trace() {}
 

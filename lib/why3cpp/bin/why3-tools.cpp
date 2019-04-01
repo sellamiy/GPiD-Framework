@@ -117,7 +117,7 @@ static inline int whdl_extract(const Why3ToolsOpts& opts) {
         }
 
         l_info() << filename << " (applications)" << l_end;
-        for (const pair<string, list<vector<string>>>& appl : parser->getAppls()) {
+        for (const pair<string, vector<vector<string>>>& appl : parser->getAppls()) {
             l_message() << appl.first << " (to)" << l_end;
             for (const auto& plist : appl.second) {
                 auto& mrs = l_message() << "     ->";

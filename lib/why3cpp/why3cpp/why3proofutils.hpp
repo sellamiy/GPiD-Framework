@@ -2,7 +2,7 @@
 #define LIB_WHY3CPP__PLATFORM_PROOF_UTILS_HEADER
 
 #include <map>
-#include <list>
+#include <vector>
 #include <memory>
 #include <why3cpp/why3config.hpp>
 
@@ -29,12 +29,12 @@ namespace why3cpp {
         const std::string anchor;
         strptr data;
         const bool valid;
-        std::list<SplitProofResult> proof;
+        std::vector<SplitProofResult> proof;
     public:
         SplitProofParser(const std::string& anchor, strptr data)
             : anchor(anchor), data(data), valid(*data != "") {}
         void parse();
-        const std::list<SplitProofResult>& results() const { return proof; }
+        const std::vector<SplitProofResult>& results() const { return proof; }
         inline constexpr bool isValid() const { return valid; }
     };
 

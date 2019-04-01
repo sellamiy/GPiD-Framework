@@ -7,7 +7,7 @@
 #ifndef ABDULOT__UTILS__ABDPARSER_HPP
 #define ABDULOT__UTILS__ABDPARSER_HPP
 
-#include <list>
+#include <vector>
 #include <vector>
 #include <set>
 #include <map>
@@ -23,10 +23,10 @@ namespace abdulot {
         uint32_t rsize = 0;
         bool auto_size = false;
 
-        std::list<std::string> abddata;
-        std::list<std::string> refdata;
-        typename std::list<std::string>::iterator abdit;
-        typename std::list<std::string>::iterator refit;
+        std::vector<std::string> abddata;
+        std::vector<std::string> refdata;
+        typename std::vector<std::string>::iterator abdit;
+        typename std::vector<std::string>::iterator refit;
         bool ait_init = false;
         bool rit_init = false;
 

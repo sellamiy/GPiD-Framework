@@ -6,7 +6,7 @@
 #ifndef ABDULOT__ILINVA__DUAL_SOMEHOW_SMART_ABDUCIBLE_GENERATION_HPP
 #define ABDULOT__ILINVA__DUAL_SOMEHOW_SMART_ABDUCIBLE_GENERATION_HPP
 
-#include <list>
+#include <vector>
 #include <abdulot/ilinva/data-dual.hpp>
 
 namespace abdulot {
@@ -14,10 +14,10 @@ namespace ilinva {
 
     template<typename CodeHandlerT, typename InterfaceT>
     class SomehowSmartDualAbducibleGenerator {
-        using CodeConstraintListT = std::list<typename CodeHandlerT::ConstraintT>;
+        using CodeConstraintListT = std::vector<typename CodeHandlerT::ConstraintT>;
 
         ObjectMapper<typename InterfaceT::LiteralT> mapper;
-        std::map<uint32_t, std::list<uint32_t>> links;
+        std::map<uint32_t, std::vector<uint32_t>> links;
     public:
         SomehowSmartDualAbducibleGenerator
         (const CodeConstraintListT& constraints, typename InterfaceT::ContextManagerT& ctx) {
@@ -41,7 +41,7 @@ namespace ilinva {
         inline ObjectMapper<typename InterfaceT::LiteralT>& getMapper() {
             return mapper;
         }
-        inline std::map<uint32_t, std::list<uint32_t>>& getLinks() {
+        inline std::map<uint32_t, std::vector<uint32_t>>& getLinks() {
             return links;
         }
     };

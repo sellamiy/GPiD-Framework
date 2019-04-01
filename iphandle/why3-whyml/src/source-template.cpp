@@ -32,8 +32,8 @@ std::ostream& write
 }
 
 struct W3WML_LSet_LRec {
-    std::list<std::string>& llist;
-    W3WML_LSet_LRec(std::list<std::string>& llist) : llist(llist) {}
+    std::vector<std::string>& llist;
+    W3WML_LSet_LRec(std::vector<std::string>& llist) : llist(llist) {}
     inline void handle(const std::string lit) { llist.push_back(lit); }
 };
 

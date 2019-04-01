@@ -3,11 +3,11 @@
 #include <csignal>
 #include <thread>
 #include <chrono>
-#include <list>
+#include <vector>
 #include <snlog/snlog.hpp>
 #include <abdulot/core/system.hpp>
 
-static std::list<abdulot::SystemInterruptionFlags*> sys_flag_locs;
+static std::vector<abdulot::SystemInterruptionFlags*> sys_flag_locs;
 
 static void systemInterruptHandler(int signum) {
     snlog::l_fatal() << "Interrupted" << snlog::l_end;

@@ -35,7 +35,7 @@ void Z3AbducibleLiteralsGenerator::load(const std::string filename) {
 #include <map>
 
 static inline size_t abdgen_z3_constAllEq
-(Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, std::list<uint32_t>>& links) {
+(Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, std::vector<uint32_t>>& links) {
     uint32_t l_gvr = pbld.getDeclarations().getFunDecls().size();
     size_t size = l_gvr > 1 ? l_gvr * (l_gvr - 1) : 0;
     memoryRangeAllocation<Z3Literal>(abducibles_memory_id, size);
@@ -56,7 +56,7 @@ static inline size_t abdgen_z3_constAllEq
 }
 
 static inline size_t abdgen_z3_constAllComp
-(Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, std::list<uint32_t>>& links) {
+(Z3ProblemLoader& pbld, ObjectMapper<Z3Literal>& mapper, std::map<uint32_t, std::vector<uint32_t>>& links) {
     uint32_t l_gvr = pbld.getDeclarations().getFunDecls().size();
     size_t size = l_gvr > 1 ? l_gvr * (l_gvr - 1) * 2 : 0;
     memoryRangeAllocation<Z3Literal>(abducibles_memory_id, size);
@@ -99,7 +99,7 @@ static inline size_t abdgen_z3_constAllComp
 }
 
 using AbdgenFunctionT = std::function<size_t(Z3ProblemLoader&, ObjectMapper<Z3Literal>&,
-                                             std::map<uint32_t, std::list<uint32_t>>&)>;
+                                             std::map<uint32_t, std::vector<uint32_t>>&)>;
 static std::map<std::string, AbdgenFunctionT> abg_z3_abdgeneration_table = {
     { "const-all-eq", AbdgenFunctionT(abdgen_z3_constAllEq) },
     { "const-all-comp", AbdgenFunctionT(abdgen_z3_constAllComp) },

@@ -9,7 +9,7 @@
 
 #include <cstdint>
 #include <string>
-#include <list>
+#include <vector>
 #include <iostream>
 #include <sstream>
 
@@ -42,7 +42,7 @@ namespace stdutils {
         const std::string StatisticsFooter =
             "\n----------------------------------------------------\n";
         /** \brief Statistics to print */
-        std::list<StatisticData> stats;
+        std::vector<StatisticData> stats;
         /** \brief Add a new statistic to the current group. */
         inline void addStatistic(const StatisticData& s) { stats.push_back(s); }
         /** \brief Create a new group of statistics. */
@@ -66,7 +66,7 @@ namespace stdutils {
         return out << "(*) " << d.key << " : " << d.data << std::endl;
     }
 
-    inline std::ostream& operator<<(std::ostream& out, const std::list<StatisticData>& l) {
+    inline std::ostream& operator<<(std::ostream& out, const std::vector<StatisticData>& l) {
         for (StatisticData d : l) out << d;
         return out;
     }

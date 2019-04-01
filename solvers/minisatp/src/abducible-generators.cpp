@@ -42,7 +42,7 @@ void MinisatLiteralsGenerator::load(const std::string filename) {
 
 static inline size_t abdgen_minisat_all
 (MinisatProblemLoader& pbld, ObjectMapper<MinisatLiteral>& mapper,
- std::map<uint32_t, std::list<uint32_t>>& links) {
+ std::map<uint32_t, std::vector<uint32_t>>& links) {
     size_t size = 2*pbld.getContextManager().nVars;
     memoryRangeAllocation<MinisatLiteral>(abducibles_memory_id, size);
     for (uint32_t i = 0; i < size; i++) {
@@ -55,7 +55,7 @@ static inline size_t abdgen_minisat_all
 }
 
 using AbdgenFunctionT = std::function<size_t(MinisatProblemLoader&, ObjectMapper<MinisatLiteral>&,
-                                             std::map<uint32_t, std::list<uint32_t>>&)>;
+                                             std::map<uint32_t, std::vector<uint32_t>>&)>;
 static std::map<std::string, AbdgenFunctionT> abg_minisat_abdgeneration_table = {
     { "all", AbdgenFunctionT(abdgen_minisat_all) },
     { "default", AbdgenFunctionT(abdgen_minisat_all) }

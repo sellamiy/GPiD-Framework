@@ -25,8 +25,8 @@ namespace saihelpers {
 
     struct SMTl2SolverManager {
         smtlib2::StringMemory memory;
-        std::list<smtlib2::SMTl2Command> opts;
-        std::list<smtlib2::SMTl2Command> decls;
+        std::vector<smtlib2::SMTl2Command> opts;
+        std::vector<smtlib2::SMTl2Command> decls;
     };
 
     struct SMTl2SolverLiteral {
@@ -63,11 +63,11 @@ namespace saihelpers {
         // SMTl2SolverProblemLoader& pbloader;
         uint32_t _cpt;
         ObjectMapper<SMTl2SolverLiteral>& mapper;
-        // std::map<uint32_t, std::list<uint32_t>>& links;
+        // std::map<uint32_t, std::vector<uint32_t>>& links;
     public:
         SMTl2AbducibleHandler(SMTl2SolverProblemLoader&,
                               ObjectMapper<SMTl2SolverLiteral>& mapper,
-                              std::map<uint32_t, std::list<uint32_t>>&)
+                              std::map<uint32_t, std::vector<uint32_t>>&)
             : _cpt(0), mapper(mapper) {}
 
         virtual void allocate(const std::string id, size_t size) override;
@@ -82,7 +82,7 @@ namespace saihelpers {
     private:
         // SMTl2SolverProblemLoader& pbloader;
         ObjectMapper<SMTl2SolverLiteral> mapper;
-        std::map<uint32_t, std::list<uint32_t>> links;
+        std::map<uint32_t, std::vector<uint32_t>> links;
         SMTl2AbducibleHandler handler;
     public:
         SMTl2SolverAbducibleGenerator(SMTl2SolverProblemLoader& loader)
@@ -94,7 +94,7 @@ namespace saihelpers {
         size_t count();
 
         inline ObjectMapper<SMTl2SolverLiteral>& getMapper() { return mapper; }
-        inline std::map<index_t, std::list<index_t>>& getLinks() { return links; }
+        inline std::map<index_t, std::vector<index_t>>& getLinks() { return links; }
     };
 
     class SMTl2SolverInterface {
@@ -113,7 +113,7 @@ namespace saihelpers {
         const std::string script_file;
 
         uint64_t level = 0;
-        std::map<uint64_t, std::list<std::shared_ptr<std::string>>> assertions;
+        std::map<uint64_t, std::vector<std::shared_ptr<std::string>>> assertions;
 
         ModelT model;
     public:

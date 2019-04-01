@@ -35,7 +35,7 @@ namespace abdulot {
         using LiteralRefT = typename ObjectMapper<typename InterfaceT::LiteralT>::index_t;
         std::map<anidx_t, std::map<LiteralRefT, anidx_t>> nodes;
         std::set<anidx_t> tnodes;
-        std::list<std::pair<anidx_t, LiteralRefT>> rmpending;
+        std::vector<std::pair<anidx_t, LiteralRefT>> rmpending;
 
         inline void insertLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it);
         inline bool containsLocal(anidx_t idx, HypothesisT& h, typename HypothesisT::iterator& it) const;

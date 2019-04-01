@@ -172,7 +172,7 @@ namespace smtlib2 {
         if (source[nstart] != '(')
             return SMTlib2TokenList({}, start, start);
         uint32_t pos = skipWhitespaces(source, nstart + 1);
-        std::list<SMTlib2TokenResult> plist;
+        std::vector<SMTlib2TokenResult> plist;
         while (source[pos] != ')') {
             plist.push_back(nextSort(source, pos));
             pos = skipWhitespaces(source, plist.back().end);
@@ -184,7 +184,7 @@ namespace smtlib2 {
         if (source.empty()) return SMTlib2TokenList({}, start, start);
         uint32_t nstart = skipWhitespaces(source, start);
         uint32_t pos = nstart;
-        std::list<SMTlib2TokenResult> plist;
+        std::vector<SMTlib2TokenResult> plist;
         while (pos < source.length() && source[pos] != ')') {
             plist.push_back(nextSort(source, pos));
             pos = skipWhitespaces(source, plist.back().end);

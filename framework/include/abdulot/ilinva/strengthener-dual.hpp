@@ -49,7 +49,7 @@ namespace ilinva {
 
         const IdentifierT identifier;
 
-        using CodeConstraintListT = std::list<typename ProblemHandlerT::ConstraintT>;
+        using CodeConstraintListT = std::vector<typename ProblemHandlerT::ConstraintT>;
 
         using ConstraintT = DualConstraintData<ProblemHandlerT, InterfaceT, gpid::LiteralHypothesis>;
 

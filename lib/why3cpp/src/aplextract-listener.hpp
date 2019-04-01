@@ -9,7 +9,7 @@ static inline const std::string deref(const std::string& source) {
 }
 
 class AplextractWhyMLListener : public WhyMLBaseListener {
-    map<string, list<vector<string>>> applications;
+    map<string, vector<vector<string>>> applications;
 
     void extractApplication(WhyMLParser::Priority_expr_applContext *ctx) {
         const std::string& appname = ctx->priority_expr_tight(0)->getText();
@@ -66,7 +66,7 @@ class AplextractWhyMLListener : public WhyMLBaseListener {
 public:
     AplextractWhyMLListener() {}
 
-    inline const map<string, list<vector<string>>>& getApplications() const { return applications; }
+    inline const map<string, vector<vector<string>>>& getApplications() const { return applications; }
 
     virtual void enterPriority_expr_appl(WhyMLParser::Priority_expr_applContext *ctx) override {
         if (ctx->priority_expr_tight().size() > 1) {

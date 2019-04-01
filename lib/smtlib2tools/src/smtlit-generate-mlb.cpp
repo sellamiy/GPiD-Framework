@@ -13,7 +13,7 @@ class MlbHandler : public SMTl2CommandHandler {
     SmtLitFabricator& fabricator;
     SmtFunStorage& funstorage;
 
-    inline const std::list<smtfun_t> get_funs(const smtident_t& ident);
+    inline const std::vector<smtfun_t> get_funs(const smtident_t& ident);
 
     inline bool handleConst(const SMTl2Command& cmd);
     inline bool handleFun(const SMTl2Command& cmd);
@@ -61,8 +61,8 @@ inline bool MlbHandler::handleFun(const SMTl2Command& cmd) {
     return true;
 }
 
-inline const std::list<smtfun_t> MlbHandler::get_funs(const smtident_t& ident) {
-    std::list<smtfun_t> res;
+inline const std::vector<smtfun_t> MlbHandler::get_funs(const smtident_t& ident) {
+    std::vector<smtfun_t> res;
     if (funstorage.get_funs().count(ident) > 0) {
         res.push_back(funstorage.get_funs().at(ident));
     } else {

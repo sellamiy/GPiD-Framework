@@ -6,7 +6,7 @@
 #ifndef TISI_W_DOC_FOR_GPID__HPP
 #define TISI_W_DOC_FOR_GPID__HPP
 
-#include <list>
+#include <vector>
 #include <abdulot/core/memory.hpp>
 #include <abdulot/core/saitypes.hpp>
 
@@ -180,7 +180,7 @@ public:
      * Literals may be linked to others.
      * \return Literal linkage information.
      */
-    std::map<index_t, std::list<index_t>>& getLinks();
+    std::map<index_t, std::vector<index_t>>& getLinks();
 };
 
 /**

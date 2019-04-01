@@ -3,7 +3,7 @@
 
 #include <map>
 #include <set>
-#include <list>
+#include <vector>
 #include <memory>
 #include <why3cpp/why3proof.hpp>
 #include <why3cpp/why3utils.hpp>
@@ -26,7 +26,7 @@ public:
     };
 
     struct PropertyElement : public Element {
-        std::list<const std::string> conj;
+        std::vector<const std::string> conj;
         const std::string type;
         PropertyElement(const std::string& type) : Element(ElemType::Property), type(type) {}
     };
@@ -72,11 +72,11 @@ inline std::ostream& write
 }
 
 class W3WML_LSet {
-    std::list<std::string> literals;
+    std::vector<std::string> literals;
     std::set<std::string> references;
 public:
     W3WML_LSet(const std::string& filename, bool overriden);
-    inline const std::list<std::string>& getLiterals() const { return literals; }
+    inline const std::vector<std::string>& getLiterals() const { return literals; }
     inline const std::set<std::string>& getReferences() const { return references; }
 };
 

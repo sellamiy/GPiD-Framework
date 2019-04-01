@@ -21,9 +21,9 @@ W3WML_Prop_Ctx W3WML_IPH::generateStrengheningContext(PropIdentifierT id, const 
 }
 
 struct W_AbdStorerHandler : public GenericHandler {
-    std::list<std::string>& storage;
+    std::vector<std::string>& storage;
     std::set<std::string>& refs;
-    W_AbdStorerHandler(std::list<std::string>& storage, std::set<std::string>& refs)
+    W_AbdStorerHandler(std::vector<std::string>& storage, std::set<std::string>& refs)
         : storage(storage), refs(refs) {}
     virtual void allocate(const std::string, size_t) override {}
     virtual void handleAbducible(const std::string& abd) override {
@@ -118,8 +118,8 @@ const W3WML_Constraint W3WML_Prop_Ctx::getCandidateConstraint() {
     return W3WML_Constraint(ss.str());
 }
 
-const std::list<W3WML_Constraint> W3WML_Prop_Ctx::getCandidateConstraintDSplit() {
-    std::list<W3WML_Constraint> res;
+const std::vector<W3WML_Constraint> W3WML_Prop_Ctx::getCandidateConstraintDSplit() {
+    std::vector<W3WML_Constraint> res;
     for (auto& part : candidate) {
         auto ftree = lisptp::parse(part);
         if (ftree->isCall() && (ftree->getValue() == "or" || ftree->getValue() == "OR"))

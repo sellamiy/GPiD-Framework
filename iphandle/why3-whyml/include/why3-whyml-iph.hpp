@@ -7,23 +7,23 @@
 
 class W3WML_Prop_Ctx {
     const std::string pfile;
-    const std::list<W3WML_Constraint>& literals;
-    std::list<const std::string>& candidate;
+    const std::vector<W3WML_Constraint>& literals;
+    std::vector<const std::string>& candidate;
     const why3cpp::Why3ConvertMap& cmap;
 public:
-    W3WML_Prop_Ctx(const std::string& pfile, const std::list<W3WML_Constraint>& literals,
-                   std::list<const std::string>& candidate, const why3cpp::Why3ConvertMap& cmap)
+    W3WML_Prop_Ctx(const std::string& pfile, const std::vector<W3WML_Constraint>& literals,
+                   std::vector<const std::string>& candidate, const why3cpp::Why3ConvertMap& cmap)
         : pfile(pfile), literals(literals), candidate(candidate), cmap(cmap) {}
     W3WML_Prop_Ctx(const W3WML_Prop_Ctx& o)
         : pfile(o.pfile), literals(o.literals), candidate(o.candidate), cmap(o.cmap) {}
 
     inline const std::string& getProblemFile() const { return pfile; }
-    inline const std::list<W3WML_Constraint>& getLiterals() const { return literals; }
+    inline const std::vector<W3WML_Constraint>& getLiterals() const { return literals; }
     inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
-    inline std::list<const std::string>& getCandidate() { return candidate; }
+    inline std::vector<const std::string>& getCandidate() { return candidate; }
 
     const W3WML_Constraint getCandidateConstraint();
-    const std::list<W3WML_Constraint> getCandidateConstraintDSplit();
+    const std::vector<W3WML_Constraint> getCandidateConstraintDSplit();
 };
 
 class W3WML_IPH {
@@ -36,10 +36,10 @@ private:
     W3WML_LSet plits;
     std::map<size_t, std::set<size_t>::iterator> invariants_iter;
 
-    std::list<W3WML_Constraint> literals;
+    std::vector<W3WML_Constraint> literals;
     why3cpp::Why3ConvertMap cmap;
 
-    std::map<std::string, std::list<std::string>> overrides;
+    std::map<std::string, std::vector<std::string>> overrides;
 
     stringoptionmap_t local_opts;
     booloptionmap_t local_bopts;

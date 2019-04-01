@@ -8,7 +8,7 @@
 using namespace abdulot;
 using namespace abdulot::saihelpers;
 
-using AssertionsT = std::map<uint64_t, std::list<std::shared_ptr<std::string>>>;
+using AssertionsT = std::map<uint64_t, std::vector<std::shared_ptr<std::string>>>;
 
 static inline void wsl2s_x_context
 (std::ostream& target, SMTl2SolverInterface::ContextManagerT& ctx) {

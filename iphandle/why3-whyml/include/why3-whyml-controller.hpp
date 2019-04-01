@@ -106,7 +106,7 @@ public:
         return bopts.at(optname);
     }
 
-    inline std::list<const std::string>& getCandidateConjunction(blockid_t id) {
+    inline std::vector<const std::string>& getCandidateConjunction(blockid_t id) {
         auto property = prop_ident(blockmap, id);
         return sourcedata.getProperty(property).conj;
     }
