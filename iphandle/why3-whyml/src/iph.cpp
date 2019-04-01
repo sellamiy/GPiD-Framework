@@ -41,7 +41,6 @@ void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider) {
     cmap.addRefs(refs);
 }
 
-static bool WX300 = false;
 static bool WX301 = false;
 
 struct LitSanatizer_X101 : public lisptp::LispTreeVisitor<bool> {
