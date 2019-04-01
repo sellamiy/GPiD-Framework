@@ -51,6 +51,8 @@ namespace smtlib2 {
 
     extern bool is_reserved(const smtident_t& ident);
 
+    extern bool is_literal(const smtident_t& ident);
+
 }
 
 #endif

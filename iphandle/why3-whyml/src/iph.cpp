@@ -3,6 +3,7 @@
 #include <fstream>
 #include <snlog/snlog.hpp>
 #include <stdutils/collections.hpp>
+#include <smtlib2tools/smtlib2-fileutils.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
 #include <why3-whyml-iph.hpp>
@@ -43,29 +44,63 @@ void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider) {
 static bool WX300 = false;
 static bool WX301 = false;
 
-const std::string W3WML_IPH::sanitizeLiteral(PropIdentifierT id, const std::string& lit) {
-    WARN_ONCE_D(WX301, "TODO: AbdLit not sanitized (No implementation)");
-    return lit;
+struct LitSanatizer_X101 : public lisptp::LispTreeVisitor<bool> {
+    const smtlib2::smtfile_decls& symbols;
+    LitSanatizer_X101(const smtlib2::smtfile_decls& symbols) : symbols(symbols) {}
+protected:
+    virtual bool handle_term(const std::string& t) const {
+        return symbols.is_declared(t) || smtlib2::is_literal(t);
+    }
+    virtual bool handle_call(const std::string&, const std::vector<bool>& lvs) const {
+        // TODO: check lvs accesses in range for readability of errors
+        // TODO: Add usual logics declarations (from the selogic I suppose)
+        // TODO: Better decl tests (quatified vars, etc.)
+        // TODO: Handle function names declarations actually
+        for (bool b : lvs) if (!b) return false;
+        return true;
+    }
+};
+
+/* Checker for which the visit function returns true iff
+   all the elements of the visited tree are declared symbols */
+using SymbolChecker = LitSanatizer_X101;
+
+template<> const std::string W3WML_IPH::sanitizeLiteral<SymbolChecker>
+(const std::string& lit, PropIdentifierT id, const SymbolChecker& schecker) {
+    WARN_ONCE_D(WX301, "TODO: Performing patial literal sanitization only");
+    if (schecker.visit(lisptp::parse(lit)))
+        return lit;
+    else
+        return "";
 }
 
 void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& overrider) {
-    WARN_ONCE_D(WX300, "Abd Literals should not be forwarded between strengtheners");
-    if (literals.empty()) {
-        if (overrider.empty()) {
-            for (const std::string& lit : plits.getLiterals()) {
-                const std::string slit = sanitizeLiteral(id, lit);
+    const std::string& pfile = problem.getBlockFile(id);
+    smtlib2::smtfile_decls sdecls = smtlib2::extract_declarations(pfile);
+    SymbolChecker schecker(sdecls);
+    if (!literals.empty()) {
+        literals.clear();
+    }
+    if (overrider.empty()) {
+        for (const std::string& lit : plits.getLiterals()) {
+            const std::string slit = sanitizeLiteral(lit, id, schecker);
+            if (slit.length() > 0)
                 literals.push_back(W3WML_Constraint(slit));
-            }
-            cmap.addRefs(plits.getReferences());
-        } else {
-            // Read from overriding file
-            if (overrides[overrider].empty())
-                loadOverridingAbducibles(overrider);
-            for (const std::string& lit : overrides[overrider]) {
-                const std::string slit = sanitizeLiteral(id, lit);
-                literals.push_back(W3WML_Constraint(slit));
-            }
         }
+        cmap.addRefs(plits.getReferences());
+    } else {
+        // Read from overriding file
+        if (overrides[overrider].empty())
+            loadOverridingAbducibles(overrider);
+        for (const std::string& lit : overrides[overrider]) {
+            const std::string slit = sanitizeLiteral(lit, id, schecker);
+            if (slit.length() > 0)
+                literals.push_back(W3WML_Constraint(slit));
+        }
+    }
+    if (literals.empty()) {
+        snlog::l_fatal() << "Abducible literal generation for block " << id
+                         << " did not generate any literal!" << snlog::l_end;
     }
 }
 

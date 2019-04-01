@@ -44,7 +44,9 @@ private:
     stringoptionmap_t local_opts;
     booloptionmap_t local_bopts;
 
-    const std::string sanitizeLiteral(PropIdentifierT id, const std::string& lit);
+    template<typename InternalT>
+    const std::string sanitizeLiteral
+    (const std::string& lit, PropIdentifierT id, const InternalT& o);
 public:
     static const W3WML_Constraint C_False;
 

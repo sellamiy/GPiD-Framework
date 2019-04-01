@@ -2,7 +2,7 @@
 # Smtlib2 C++ tools library - local library target
 # ==============================================================================
 project(libsmtlib2tools LANGUAGES CXX)
-set(LIBSMTLIB2_CPP_VERSION "0.2.1")
+set(LIBSMTLIB2_CPP_VERSION "0.2.2")
 # ------------------------------------------------------------------------------
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/smtlib2tools/smtlib2tools.hpp.in
   ${LOCAL_LIB_HEADERS_DIR}/smtlib2tools/smtlib2tools.hpp)
@@ -12,8 +12,8 @@ file(GLOB LIBSMTLIB2_CPP_SOURCES "src/*.cpp")
 # ------------------------------------------------------------------------------
 add_library(smtlib2tools-static STATIC ${LIBSMTLIB2_CPP_SOURCES})
 add_library(smtlib2tools-shared SHARED ${LIBSMTLIB2_CPP_SOURCES})
-target_link_libraries(smtlib2tools-static snlog)
-target_link_libraries(smtlib2tools-shared snlog)
+target_link_libraries(smtlib2tools-static snlog lisptp-static stdutils-static)
+target_link_libraries(smtlib2tools-shared snlog lisptp-shared stdutils-shared)
 target_include_directories(smtlib2tools-static PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}" "${LOCAL_LIB_HEADERS_DIR}" ${PYTHON_INCLUDE_DIRS})
 target_include_directories(smtlib2tools-shared PUBLIC
