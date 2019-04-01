@@ -159,6 +159,13 @@ namespace ilinva {
                 backtrack();
             }
 
+            // Rebreak here if necessary
+            // TODO: Improve the structure of this loop, it is in beurk status
+            if (level_stack.empty()) {
+                snlog::l_error() << "No more strengthening candidates available" << snlog::l_end;
+                break;
+            }
+
             pengine.strengthen(level_stack.top());
 
         }
