@@ -6,13 +6,13 @@
 
 using namespace smtlib2;
 
-struct Smt2DeclLTV : public lisptp::LispTreeVisitor<const std::string> {
+struct Smt2DeclLTV : public lisptp::LispTreeVisitor<std::string> {
     smtfile_decls& coredata;
     Smt2DeclLTV(smtfile_decls& coredata) : coredata(coredata) {}
 protected:
-    virtual const std::string handle_term(const std::string& t) const { return t; }
-    virtual const std::string handle_call
-    (const std::string& op, const std::vector<const std::string>& lvs) const {
+    virtual std::string handle_term(const std::string& t) const { return t; }
+    virtual std::string handle_call
+    (const std::string& op, const std::vector<std::string>& lvs) const {
         // TODO: check lvs accesses in range for readability of errors
         if (op == "declare-const") {
             coredata.add_symbol(lvs.front());
