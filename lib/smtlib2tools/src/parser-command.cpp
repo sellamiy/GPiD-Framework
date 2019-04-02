@@ -1,220 +1,58 @@
 #define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_COMMAND_PARSE_ENGINE_CPP
 
 #include <snlog/snlog.hpp>
+#include <stdutils/collections.hpp>
+#include <stdutils/strings.hpp>
+#include <lisptp/lisptp.hpp>
 #include <smtlib2tools/parser-command.hpp>
 
-namespace smtlib2 {
+using namespace smtlib2;
+using namespace lisptp;
 
-    static inline constexpr bool isWhitespace(char c) {
-        return c == '\t' || c == '\n' || c == '\r' || c == ' ' ;
-    }
+class Smt2CommandParserHandler {
+    const SMTl2CommandHandler& handler;
+    bool _visit(const LispTreeNode& node);
+    bool status = true;
+public:
+    Smt2CommandParserHandler(const SMTl2CommandHandler& handler) : handler(handler) {}
+    inline bool visit(const LispTreeNode& node) { return _visit(node); }
+    inline bool visit(std::shared_ptr<LispTreeNode> node) { return _visit(*node); }
+};
 
-    static inline constexpr bool isParenthesis(char c) {
-        return c == '(' || c == ')' ;
-    }
-
-    class SMTl2CParseEngine {
-
-        StringMemory& allocator;
-
-        enum class EngineState { UNINITIALIZED, OPENED, CLOSED, COMPLETE, ERROR };
-        enum class source_t { File, Data };
-
-        source_t source;
-        std::string fsource;
-        std::shared_ptr<std::string> dsource;
-
-        std::ifstream sfsource;
-        std::istringstream sssource;
-        std::istream& ssource;
-        struct fpostracker { int line, col; } spos;
-
-        EngineState state;
-
-        SMTl2Command lastCommand;
-
-        void start();
-
-        void openSource();
-        void closeSource();
-
-        void handleError(std::string msg);
-
-        char nextChar();
-
-        void updatePositionTracker(char c);
-
-        void parseComment();
-
-        void nextCommand();
-
-    public:
-        SMTl2CParseEngine(const std::string& fsource, StringMemory& allocator);
-        SMTl2CParseEngine(std::shared_ptr<std::string> dsource, StringMemory& allocator);
-        ~SMTl2CParseEngine();
-
-        constexpr bool valid() const {
-            return state != EngineState::ERROR;
-        }
-        constexpr bool complete() const {
-            return state == EngineState::COMPLETE;
-        }
-
-        friend class SMTl2CommandParser;
-    };
-
-    SMTl2CParseEngine::SMTl2CParseEngine
-    (const std::string& fsource, StringMemory& allocator)
-        : allocator(allocator),
-          source(source_t::File),
-          fsource(fsource),
-          ssource(sfsource),
-          spos({0,0}),
-          state(EngineState::UNINITIALIZED),
-          lastCommand("nope", std::shared_ptr<std::string>(nullptr))
-    {}
-
-    SMTl2CParseEngine::SMTl2CParseEngine
-    (std::shared_ptr<std::string> dsource, StringMemory& allocator)
-        : allocator(allocator),
-          source(source_t::Data),
-          dsource(dsource),
-          ssource(sssource),
-          spos({0,0}),
-          state(EngineState::UNINITIALIZED),
-          lastCommand("nope", std::shared_ptr<std::string>(nullptr))
-    {}
-
-    SMTl2CParseEngine::~SMTl2CParseEngine() {
-        if (state == EngineState::OPENED) closeSource();
-    }
-
-    void SMTl2CParseEngine::start() {
-        openSource();
-    }
-
-    void SMTl2CParseEngine::handleError(std::string msg) {
-        std::stringstream buf;
-        snlog::l_error() << "Parsing failure: "
-                         << "@file:" << (source == source_t::File ? fsource : "*data")
-                         << ":" << std::to_string(spos.line)
-                         << ":" << std::to_string(spos.col)
-                         << " : " << msg
-                         << snlog::l_end;
-        if (state == EngineState::OPENED) closeSource();
-        state = EngineState::ERROR;
-    }
-
-    void SMTl2CParseEngine::openSource() {
-        snlog::t_internal(state != EngineState::UNINITIALIZED)
-            << "Opening already opened abducible parser" << snlog::l_end;
-        if (source == source_t::File) {
-            sfsource = std::ifstream(fsource);
-            if (!sfsource.is_open()) handleError("Could not open source file");
+bool Smt2CommandParserHandler::_visit(const LispTreeNode& node) {
+    if (node.isCall()) {
+        if (node.getValue() == global_name_wrapper || node.getValue() == "") {
+            for (auto leaf: node.getLeaves())
+                _visit(*leaf);
         } else {
-            sssource = std::istringstream(*dsource);
+            std::vector<std::string> lvstr(node.getLeaves().size());
+            for (auto leaf: node.getLeaves())
+                lvstr.push_back(leaf->str());
+            status = status && handler.handle(node.getValue(), stdutils::join(" ", lvstr));
         }
-        if (state != EngineState::ERROR) state = EngineState::OPENED;
+    } else {
+        status = false;
     }
-
-    void SMTl2CParseEngine::closeSource() {
-        snlog::t_internal(state != EngineState::OPENED && state != EngineState::COMPLETE)
-            << "Closing non opened abducible parser" << snlog::l_end;
-        if (source == source_t::File)
-            sfsource.close();
-        if (state == EngineState::OPENED || state == EngineState::COMPLETE)
-            state = EngineState::CLOSED;
-    }
-
-    void SMTl2CParseEngine::nextCommand() {
-        snlog::t_internal(state != EngineState::OPENED)
-            << "Reading on uninitialized SMTlib2 parser" << snlog::l_end;
-        std::stringstream cmdbuf;
-        std::stringstream databuf;
-        char c;
-        uint64_t depth = 0;
-        bool cwritten = false;
-        bool ondata = false;
-        while (ssource.get(c)) {
-            updatePositionTracker(c);
-            if (c == ';') { parseComment(); continue; }
-            if (c == '(') depth++;
-            if (c == ')') depth--;
-            if (depth == 0 && cwritten) break;
-            if (depth == 1) {
-                if (!ondata && isWhitespace(c)) {
-                    ondata = true;
-                    continue;
-                }
-                if (!ondata && !isParenthesis(c)) {
-                    cmdbuf << c;
-                    if (!cwritten) cwritten = true;
-                }
-                if (ondata)
-                    databuf << c;
-            }
-            if (depth >= 2)
-                databuf << c;
-        }
-        if (!cwritten) {
-            state = EngineState::COMPLETE;
-        }
-        if (depth != 0) {
-            state = EngineState::ERROR;
-        }
-        std::shared_ptr<std::string> dataptr = allocator.alloc(databuf);
-        lastCommand = SMTl2Command(cmdbuf.str(), dataptr);
-    }
-
-    void SMTl2CParseEngine::parseComment() {
-        char c;
-        while(ssource.get(c)) {
-            updatePositionTracker(c);
-            if (c == '\n') break;
-        }
-    }
-
-    void SMTl2CParseEngine::updatePositionTracker(char c) {
-        if (c == '\n') { spos.line++; spos.col = 0; }
-        else { spos.col++; }
-    }
-
-    bool SMTl2CommandHandler::handle(const SMTl2Command& cmd) {
-        if (handlers.find(cmd.getName()) != handlers.end()) {
-            return handlers[cmd.getName()](cmd);
-        } else {
-            snlog::l_error() << "Unknown command: " << cmd.getName() << snlog::l_end;
-            return false;
-        }
-    }
-
-    SMTl2CommandParser::SMTl2CommandParser(const std::string& filename, StringMemory& allocator)
-        : engine(new SMTl2CParseEngine(filename, allocator)) {}
-    SMTl2CommandParser::SMTl2CommandParser(std::shared_ptr<std::string> data, StringMemory& allocator)
-        : engine(new SMTl2CParseEngine(data, allocator)) {}
-    SMTl2CommandParser::~SMTl2CommandParser() {}
-
-    void SMTl2CommandParser::initialize() {
-        engine->start();
-    }
-
-    void SMTl2CommandParser::parse(SMTl2CommandHandler& handler) {
-        bool start = true;
-        while (valid() && !complete()) {
-            if (start) {
-                start = false;
-            } else {
-                handler.handle(engine->lastCommand);
-            }
-            engine->nextCommand();
-        }
-    }
-
-    bool SMTl2CommandParser::complete() const {
-        return engine->complete();
-    }
-    bool SMTl2CommandParser::valid() const {
-        return engine->valid();
-    }
-
+    return status;
 }
+
+bool smtlib2::SMTl2CommandHandler::handle(const std::string& cmd, const std::string& cmddata) const {
+    if (stdutils::inmap<const std::string>(handlers, cmd)) {
+        return handlers.at(cmd)(cmd, cmddata);
+    } else {
+        snlog::l_error() << "Unknown command: " << cmd << snlog::l_end;
+        return false;
+    }
+}
+
+void smtlib2::SMTl2CommandParser::parse(const SMTl2CommandHandler& handler) {
+    Smt2CommandParserHandler phandler(handler);
+    if (mode == ParserMode::File) {
+        valid = phandler.visit(lisptp::parse_file(filename));
+    } else {
+        valid = phandler.visit(lisptp::parse(*data));
+    }
+    complete = true;
+}
+
+

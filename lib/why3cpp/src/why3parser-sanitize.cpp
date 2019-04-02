@@ -15,10 +15,10 @@ namespace why3cpp {
         std::stringstream ss;
         std::set<std::string> fundecls;
 
-        bool keep(const smtlib2::SMTl2Command& cmd);
-        bool sanitize(const smtlib2::SMTl2Command& cmd);
-        bool setlogic(const smtlib2::SMTl2Command& cmd);
-        bool sfundecl(const smtlib2::SMTl2Command& cmd);
+        bool keep(const std::string& cmd, const std::string& data);
+        bool sanitize(const std::string& cmd, const std::string& data);
+        bool setlogic(const std::string& cmd, const std::string& data);
+        bool sfundecl(const std::string& cmd, const std::string& data);
     public:
         Sanitizer();
 
@@ -33,7 +33,7 @@ namespace why3cpp {
         std::stringstream ss;
         const std::map<std::string, std::string>& reorders;
 
-        bool substitute(const smtlib2::SMTl2Command& cmd);
+        bool substitute(const std::string& cmd, const std::string& data);
     public:
         DeclReorderer(const std::map<std::string, std::string>& reorders);
 
@@ -48,131 +48,131 @@ namespace why3cpp {
 using namespace why3cpp;
 
 Sanitizer::Sanitizer() {
-    handlers["assert"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["declare-const"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["declare-datatype"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["declare-datatypes"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["declare-fun"] = std::bind(&Sanitizer::sfundecl, this, std::placeholders::_1);
-    handlers["declare-sort"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["define-fun"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["define-fun-rec"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["define-funs-rec"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["define-sort"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["set-info"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
-    handlers["set-option"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1);
+    handlers["assert"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-const"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-datatype"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-datatypes"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-fun"] = std::bind(&Sanitizer::sfundecl, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-sort"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["define-fun"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["define-fun-rec"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["define-funs-rec"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["define-sort"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["set-info"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["set-option"] = std::bind(&Sanitizer::keep, this, std::placeholders::_1, std::placeholders::_2);
 
-    handlers["check-sat"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["check-sat-assuming"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["echo"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["exit"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["get-assertions"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["get-assignment"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["get-info"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["get-model"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["get-option"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["get-proof"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["get-unsat-assumptions"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["get-unsat-core"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["get-value"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["pop"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["push"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["reset"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
-    handlers["reset-assertions"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1);
+    handlers["check-sat"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["check-sat-assuming"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["echo"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["exit"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-assertions"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-assignment"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-info"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-model"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-option"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-proof"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-unsat-assumptions"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-unsat-core"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-value"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["pop"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["push"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["reset"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["reset-assertions"] = std::bind(&Sanitizer::sanitize, this, std::placeholders::_1, std::placeholders::_2);
 
-    handlers["set-logic"] = std::bind(&Sanitizer::setlogic, this, std::placeholders::_1);
+    handlers["set-logic"] = std::bind(&Sanitizer::setlogic, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 DeclReorderer::DeclReorderer(const std::map<std::string, std::string>& reorders)
     : reorders(reorders) {
-    handlers["assert"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["declare-const"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["declare-datatype"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["declare-datatypes"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["declare-fun"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["declare-sort"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["define-fun"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["define-fun-rec"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["define-funs-rec"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["define-sort"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["set-info"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["set-option"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["check-sat"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["check-sat-assuming"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["echo"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["exit"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["get-assertions"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["get-assignment"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["get-info"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["get-model"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["get-option"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["get-proof"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["get-unsat-assumptions"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["get-unsat-core"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["get-value"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["pop"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["push"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["reset"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["reset-assertions"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
-    handlers["set-logic"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1);
+    handlers["assert"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-const"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-datatype"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-datatypes"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-fun"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["declare-sort"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["define-fun"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["define-fun-rec"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["define-funs-rec"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["define-sort"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["set-info"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["set-option"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["check-sat"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["check-sat-assuming"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["echo"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["exit"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-assertions"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-assignment"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-info"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-model"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-option"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-proof"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-unsat-assumptions"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-unsat-core"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["get-value"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["pop"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["push"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["reset"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["reset-assertions"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
+    handlers["set-logic"] = std::bind(&DeclReorderer::substitute, this, std::placeholders::_1, std::placeholders::_2);
 }
 
-bool Sanitizer::keep(const smtlib2::SMTl2Command& cmd) {
-    ss << cmd << '\n'; return true;
+bool Sanitizer::keep(const std::string& cmd, const std::string& data) {
+    ss << smtlib2::SMTl2CommandWrapper(cmd, data) << '\n'; return true;
 }
 
-bool Sanitizer::sanitize(const smtlib2::SMTl2Command&) {
+bool Sanitizer::sanitize(const std::string&, const std::string&) {
     return true;
 }
 
-bool Sanitizer::setlogic(const smtlib2::SMTl2Command&) {
+bool Sanitizer::setlogic(const std::string&, const std::string&) {
     ss << "(set-logic ALL)" << '\n' ; return true;
 }
 
-const std::string extract_declname(const strptr data) {
+const std::string extract_declname(const std::string& data) {
     size_t dpos = 0;
-    while (data->at(dpos++) == ' ');
+    while (data.at(dpos++) == ' ');
     size_t npos = --dpos;
-    while (data->at(npos++) != ' ');
-    return data->substr(dpos, npos-1-dpos);
+    while (data.at(npos++) != ' ');
+    return data.substr(dpos, npos-1-dpos);
 }
 
-bool Sanitizer::sfundecl(const smtlib2::SMTl2Command& cmd) {
-    ss << cmd << '\n';
-    fundecls.insert(extract_declname(cmd.getDataPtr()));
+bool Sanitizer::sfundecl(const std::string& cmd, const std::string& data) {
+    ss << smtlib2::SMTl2CommandWrapper(cmd, data) << '\n';
+    fundecls.insert(extract_declname(data));
     return true;
 }
 
-static inline void replace_var(strptr data, const std::string& source, const std::string& target) {
+static inline void replace_var(std::string& data, const std::string& source, const std::string& target) {
     std::map<std::string, std::string> vreps;
     vreps["(" + source + " "] = "(" + target + " ";
     vreps["(" + source + ")"] = "(" + target + ")";
     vreps[" " + source + ")"] = " " + target + ")";
     vreps[" " + source + " "] = " " + target + " ";
     for (auto vrep : vreps) {
-        size_t pos = data->find(vrep.first);
+        size_t pos = data.find(vrep.first);
         while (pos != std::string::npos) {
-            data->replace(pos, vrep.first.length(), vrep.second);
-            pos = data->find(vrep.first);
+            data.replace(pos, vrep.first.length(), vrep.second);
+            pos = data.find(vrep.first);
         }
     }
     /* Additional pre-preplacements */
-    if (data->find(source + " ") == 0) {
-        data->replace(0, source.length(), target);
+    if (data.find(source + " ") == 0) {
+        data.replace(0, source.length(), target);
     }
 }
 
-static inline void substitute_pair(strptr data, const std::pair<std::string, std::string>& reop) {
+static inline void substitute_pair(std::string& data, const std::pair<std::string, std::string>& reop) {
     replace_var(data, reop.first, TEMPORARY_REPLACEMENT_STRING);
     replace_var(data, reop.second, reop.first);
     replace_var(data, TEMPORARY_REPLACEMENT_STRING, reop.second);
 }
 
-bool DeclReorderer::substitute(const smtlib2::SMTl2Command& cmd) {
-    ss << "(" << cmd.getName() << " ";
-    strptr data = cmd.getDataPtr();
+bool DeclReorderer::substitute(const std::string& cmd, const std::string& data) {
+    ss << "(" << cmd << " ";
+    std::string workable = data;
     for (auto srdata : reorders)
-        substitute_pair(data, srdata);
-    ss << *data << ")" << '\n';
+        substitute_pair(workable, srdata);
+    ss << workable << ")" << '\n';
     return true;
 }
 
@@ -222,17 +222,14 @@ why3cpp::build_reorders(const std::set<std::string>& fundecls) {
 }
 
 extern strptr why3cpp::vc_sanitization(strptr data, bool reoder) {
-    smtlib2::StringMemory smem;
     Sanitizer sanitizer;
-    smtlib2::SMTl2CommandParser cparser(data, smem);
-    cparser.initialize();
+    smtlib2::SMTl2CommandParser cparser(data);
     cparser.parse(sanitizer);
     auto reorders = build_reorders(sanitizer.getFunDecls());
     if (!reoder || reorders.empty())
         return sanitizer.getSanitizedScript();
     DeclReorderer reorderer(reorders);
-    smtlib2::SMTl2CommandParser rparser(sanitizer.getSanitizedScript(), smem);
-    rparser.initialize();
+    smtlib2::SMTl2CommandParser rparser(sanitizer.getSanitizedScript());
     rparser.parse(reorderer);
     return reorderer.getReorderedScript();
 }

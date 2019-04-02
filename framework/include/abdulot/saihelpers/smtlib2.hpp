@@ -25,8 +25,8 @@ namespace saihelpers {
 
     struct SMTl2SolverManager {
         smtlib2::StringMemory memory;
-        std::vector<smtlib2::SMTl2Command> opts;
-        std::vector<smtlib2::SMTl2Command> decls;
+        std::vector<std::pair<const std::string, const std::string>> opts;
+        std::vector<std::pair<const std::string, const std::string>> decls;
     };
 
     struct SMTl2SolverLiteral {

@@ -7,46 +7,42 @@
 
 namespace smtlib2 {
 
-    class SMTl2Command {
-        std::string name;
-        std::shared_ptr<std::string> data;
-    public:
-        SMTl2Command(const std::string& n, const std::shared_ptr<std::string>& d)
-            : name(n), data(d) {}
-        SMTl2Command(const SMTl2Command& o)
-            : name(o.name), data(o.data) {}
-
-        inline std::string getName() const { return name; }
-        inline std::string getData() const { return *data; }
-        inline const std::shared_ptr<std::string>& getDataPtr() const { return data; }
-    };
-
-    inline std::ostream& operator<<(std::ostream& os, const SMTl2Command& cmd) {
-        return os << "(" << cmd.getName() << " " << cmd.getData() << ")";
-    }
-
     class SMTl2CommandHandler {
     protected:
-        using CommandHandlerT = std::function<bool(const SMTl2Command& cmd)>;
+        using CommandHandlerT = std::function<bool(const std::string& cmd, const std::string& cmddata)>;
         std::map<const std::string, CommandHandlerT> handlers;
     public:
-        bool handle(const SMTl2Command& cmd);
+        bool handle(const std::string& cmd, const std::string& cmddata) const;
     };
 
-    class SMTl2CParseEngine;
+    struct SMTl2CommandWrapper {
+        const std::string& cmd; const std::string& data;
+        SMTl2CommandWrapper(const std::string& cmd, const std::string& data) : cmd(cmd), data(data) {}
+    };
+
+    inline std::ostream& operator<<(std::ostream& os, const SMTl2CommandWrapper& cmd) {
+        return os << '(' << cmd.cmd << ' ' << cmd.data << ')';
+    }
 
     class SMTl2CommandParser {
-        std::unique_ptr<SMTl2CParseEngine> engine;
+        bool valid = true;
+        bool complete = false;
+
+        const std::string filename;
+        const std::shared_ptr<std::string> data;
+        enum class ParserMode { File, Data };
+        const ParserMode mode;
     public:
-        SMTl2CommandParser(const std::string& filename, StringMemory& allocator);
-        SMTl2CommandParser(std::shared_ptr<std::string> data, StringMemory& allocator);
-        ~SMTl2CommandParser();
+        SMTl2CommandParser(const std::string& filename)
+            : filename(filename), mode(ParserMode::File) {}
+        SMTl2CommandParser(std::shared_ptr<std::string> data)
+            : data(data), mode(ParserMode::Data) {}
+        ~SMTl2CommandParser() {}
 
-        void initialize();
-        void parse(SMTl2CommandHandler& handler);
+        void parse(const SMTl2CommandHandler& handler);
 
-        bool complete() const;
-        bool valid() const;
+        inline constexpr bool isComplete() const { return complete; }
+        inline constexpr bool isValid() const { return valid; }
     };
 
 }

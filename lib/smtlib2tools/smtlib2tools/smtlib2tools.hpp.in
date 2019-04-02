@@ -12,6 +12,5 @@
 #include <smtlib2tools/smtlit-presets.hpp>
 
 #include <smtlib2tools/parser-command.hpp>
-#include <smtlib2tools/parser-tokens.hpp>
 
 #endif

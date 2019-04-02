@@ -8,7 +8,7 @@ namespace saihelpers {
     class SMTl2PCH_ProblemLoader : public smtlib2::SMTl2CommandHandler {
         SMTl2SolverManager& ctx;
 
-        using constraint = std::shared_ptr<std::string>;
+        using constraint = std::string;
         using constraint_list = std::vector<constraint>;
 
         constraint_list conslist;
@@ -17,174 +17,174 @@ namespace saihelpers {
 
         void ensure_iteration();
 
-        bool handleAssert(const smtlib2::SMTl2Command& cmd);
-        bool handleDeclaration(const smtlib2::SMTl2Command& cmd);
-        bool handleSetting(const smtlib2::SMTl2Command& cmd);
-        bool handleNope(const smtlib2::SMTl2Command&);
-        bool handleSkip(const smtlib2::SMTl2Command& cmd);
-        bool handleEcho(const smtlib2::SMTl2Command& cmd);
-        bool handleExit(const smtlib2::SMTl2Command&);
-        bool handleReset(const smtlib2::SMTl2Command& cmd);
-        bool handleResetAssertions(const smtlib2::SMTl2Command&);
-        bool handleGetAssertions(const smtlib2::SMTl2Command&);
-        bool handleGetSetting(const smtlib2::SMTl2Command& cmd);
+        bool handleAssert(const std::string& cmd, const std::string& data);
+        bool handleDeclaration(const std::string& cmd, const std::string& data);
+        bool handleSetting(const std::string& cmd, const std::string& data);
+        bool handleNope(const std::string&, const std::string&);
+        bool handleSkip(const std::string& cmd, const std::string& data);
+        bool handleEcho(const std::string& cmd, const std::string& data);
+        bool handleExit(const std::string&, const std::string&);
+        bool handleReset(const std::string& cmd, const std::string& data);
+        bool handleResetAssertions(const std::string&, const std::string&);
+        bool handleGetAssertions(const std::string&, const std::string&);
+        bool handleGetSetting(const std::string& cmd, const std::string& data);
     public:
         SMTl2PCH_ProblemLoader(SMTl2SolverManager& ctx) : ctx(ctx) {
             handlers["assert"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleAssert,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["check-sat"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["check-sat-assuming"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["declare-const"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleDeclaration,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["declare-datatype"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleDeclaration,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["declare-datatypes"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleDeclaration,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["declare-fun"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleDeclaration,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["declare-sort"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleDeclaration,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["define-fun"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleDeclaration,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["define-fun-rec"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleDeclaration,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["define-funs-rec"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleDeclaration,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["define-sort"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleDeclaration,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["echo"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleEcho,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["exit"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleExit,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["get-assertions"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleGetAssertions,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["get-assignment"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["get-info"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleGetSetting,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["get-model"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["get-option"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleGetSetting,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["get-proof"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["get-unsat-assumptions"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["get-unsat-core"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["get-value"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["pop"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["push"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSkip,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["reset"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleReset,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["reset-assertions"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleResetAssertions,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["set-info"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSetting,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["set-logic"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSetting,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
             handlers["set-option"] =
                 std::bind(&SMTl2PCH_ProblemLoader::handleSetting,
-                          this, std::placeholders::_1);
+                          this, std::placeholders::_1, std::placeholders::_2);
         }
 
         bool hasNext();
-        constraint next();
+        constraint& next();
     };
 
-    bool SMTl2PCH_ProblemLoader::handleAssert(const smtlib2::SMTl2Command& cmd) {
-        conslist.push_back(cmd.getDataPtr());
+    bool SMTl2PCH_ProblemLoader::handleAssert(const std::string&, const std::string& data) {
+        conslist.push_back(data);
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleDeclaration(const smtlib2::SMTl2Command& cmd) {
-        ctx.decls.push_back(cmd);
+    bool SMTl2PCH_ProblemLoader::handleDeclaration(const std::string& cmd, const std::string& data) {
+        ctx.decls.push_back(std::pair<const std::string, const std::string>(cmd,data));
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleSetting(const smtlib2::SMTl2Command& cmd) {
-        ctx.opts.push_back(cmd);
+    bool SMTl2PCH_ProblemLoader::handleSetting(const std::string& cmd, const std::string& data) {
+        ctx.opts.push_back(std::pair<const std::string, const std::string>(cmd,data));
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleNope(const smtlib2::SMTl2Command&) {
+    bool SMTl2PCH_ProblemLoader::handleNope(const std::string&, const std::string&) {
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleSkip(const smtlib2::SMTl2Command& cmd) {
+    bool SMTl2PCH_ProblemLoader::handleSkip(const std::string& cmd, const std::string&) {
         snlog::l_warn()
             << "Unauthorized SMTlib2 command in problem file (skipped): "
-            << cmd.getName() << snlog::l_end;
+            << cmd << snlog::l_end;
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleEcho(const smtlib2::SMTl2Command& cmd) {
-        snlog::l_message() << cmd.getData() << snlog::l_end;
+    bool SMTl2PCH_ProblemLoader::handleEcho(const std::string&, const std::string& data) {
+        snlog::l_message() << data << snlog::l_end;
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleExit(const smtlib2::SMTl2Command&) {
+    bool SMTl2PCH_ProblemLoader::handleExit(const std::string&, const std::string&) {
         snlog::l_info() << "Instructed to exit through the problem" << snlog::l_end;
         return false;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleReset(const smtlib2::SMTl2Command& cmd) {
-        handleResetAssertions(cmd);
+    bool SMTl2PCH_ProblemLoader::handleReset(const std::string& cmd, const std::string& data) {
+        handleResetAssertions(cmd, data);
         ctx.opts.clear();
         ctx.decls.clear();
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleResetAssertions(const smtlib2::SMTl2Command&) {
+    bool SMTl2PCH_ProblemLoader::handleResetAssertions(const std::string&, const std::string&) {
         conslist.clear();
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleGetAssertions(const smtlib2::SMTl2Command&) {
+    bool SMTl2PCH_ProblemLoader::handleGetAssertions(const std::string&, const std::string&) {
         for (constraint asptr : conslist) {
-            snlog::l_message() << *asptr << snlog::l_end;
+            snlog::l_message() << asptr << snlog::l_end;
         }
         return true;
     }
 
-    bool SMTl2PCH_ProblemLoader::handleGetSetting(const smtlib2::SMTl2Command& cmd) {
-        for (smtlib2::SMTl2Command& setting : ctx.opts) {
-            if (setting.getData().find(cmd.getData()) != std::string::npos) {
-                snlog::l_message() << setting.getData() << snlog::l_end;
+    bool SMTl2PCH_ProblemLoader::handleGetSetting(const std::string&, const std::string& data) {
+        for (auto& setting : ctx.opts) {
+            if (setting.second.find(data) != std::string::npos) {
+                snlog::l_message() << setting.second << snlog::l_end;
                 return true;
             }
         }
@@ -204,9 +204,9 @@ namespace saihelpers {
         return consit != conslist.end();
     }
 
-    std::shared_ptr<std::string> SMTl2PCH_ProblemLoader::next() {
+    std::string& SMTl2PCH_ProblemLoader::next() {
         ensure_iteration();
-        constraint res = *consit;
+        constraint& res = *consit;
         ++consit;
         return res;
     }
@@ -223,10 +223,9 @@ void SMTl2SolverProblemLoader::load(std::string filename, std::string language) 
                         << "Bruteforcing input file..." << snlog::l_end;
     }
     parser = std::unique_ptr<smtlib2::SMTl2CommandParser>
-        (new smtlib2::SMTl2CommandParser(filename, ctx.memory));
-    parser->initialize();
+        (new smtlib2::SMTl2CommandParser(filename));
     parser->parse(*handler);
-    if (!parser->valid()) {
+    if (!parser->isValid()) {
         snlog::l_fatal() << "Problem parsing error!" << snlog::l_end;
     }
 }
@@ -243,6 +242,6 @@ bool SMTl2SolverProblemLoader::hasConstraint() {
 
 SMTl2SolverConstraint& SMTl2SolverProblemLoader::nextConstraint() {
     auto dc_handler = static_cast<SMTl2PCH_ProblemLoader*>(handler.get());
-    curr = SMTl2SolverConstraint(dc_handler->next());
+    curr = SMTl2SolverConstraint(std::shared_ptr<std::string>(&(dc_handler->next())));
     return curr;
 }
