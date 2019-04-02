@@ -42,17 +42,23 @@ static inline std::string join(const std::string& jer, const std::vector<std::st
 }
 
 std::string Why3Smtl2CV::handle_call(const std::string& op, const std::vector<std::string>& lvs) const {
-    if (op == "and" || op == "AND")
+    const std::string& ops = cmap.hasForwardMapping(op) ? cmap.forwardMapping(op) : op;
+    if (ops == "and" || ops == "AND")
         return parenthize(join(" /\\ ", lvs));
-    if (op == "or" || op == "OR")
+    if (ops == "or" || ops == "OR")
         return parenthize(join(" \\/ ", lvs));
-    if (op == "distinct" || op == "DISTINCT")
+    if (ops == "distinct" || ops == "DISTINCT")
         return parenthize(join(" <> ", lvs));
-    if (op == "not" || op == "NOT")
+    if (ops == "not" || ops == "NOT")
         return parenthize("not " + join("", lvs));
-    if (is_prefix(op))
-        return parenthize(op + " " + lvs.front());
-    if (is_infix(op))
-        return parenthize(join(space(op), lvs));
-    return parenthize(op + " " + join(" ", lvs));
+    if (is_prefix(ops))
+        return parenthize(ops + " " + lvs.front());
+    if (is_infix(ops))
+        return parenthize(join(space(ops), lvs));
+    return parenthize(ops + " " + join(" ", lvs));
+}
+
+std::string BackwardSmtl2CV::handle_call(const std::string& op, const std::vector<std::string>& lvs) const {
+    const std::string& ops = cmap.hasBackwardMapping(op) ? cmap.backwardMapping(op) : op;
+    return parenthize(ops + " " + join(" ", lvs));
 }

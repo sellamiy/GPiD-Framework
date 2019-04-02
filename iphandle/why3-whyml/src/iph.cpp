@@ -45,8 +45,6 @@ void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider, bool shuf
         stdutils::shuffle(hdler.storage);
 }
 
-static bool WX301 = false;
-
 struct LitSanatizer_X101 : public lisptp::LispTreeVisitor<bool> {
     const smtlib2::smtfile_decls& symbols;
     LitSanatizer_X101(const smtlib2::smtfile_decls& symbols) : symbols(symbols) {}
@@ -70,7 +68,6 @@ using SymbolChecker = LitSanatizer_X101;
 
 template<> const std::string W3WML_IPH::sanitizeLiteral<SymbolChecker>
 (const std::string& lit, PropIdentifierT id, const SymbolChecker& schecker) {
-    WARN_ONCE_D(WX301, "TODO: Performing patial literal sanitization only");
     if (schecker.visit(lisptp::parse(lit)))
         return lit;
     else

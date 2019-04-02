@@ -9,6 +9,8 @@ namespace why3cpp {
 
     class Why3ConvertMap {
         std::set<std::string> refs;
+        /* Forward conversion: smtlib2 (obtained from whyml) -> whyml */
+        /* Backward conversion: whyml -> smtlib2 || unsanitized smtlib2 -> smtlib2 */
         stdutils::pair_storage<std::string, std::string> smap_table;
     public:
         Why3ConvertMap() {}
@@ -68,6 +70,28 @@ namespace why3cpp {
     static inline std::string Smt2Why3(const std::string& smtl2data, const Why3ConvertMap& cmap) {
         Why3Smtl2CV Smt2Why3Converter(cmap);
         return Smt2Why3Converter.convert(smtl2data);
+    }
+
+    class BackwardSmtl2CV : public lisptp::LispTreeVisitor<std::string> {
+        const Why3ConvertMap& cmap;
+    protected:
+        inline virtual std::string handle_term(const std::string& t) const override {
+            return t;
+        }
+
+        virtual std::string handle_call(const std::string& op, const std::vector<std::string>& lvs)
+            const override;
+    public:
+        BackwardSmtl2CV(const Why3ConvertMap& cmap) : cmap(cmap) {}
+
+        inline std::string convert(const std::string& smtl2data) const {
+            return visit(lisptp::parse(smtl2data));
+        }
+    };
+
+    static inline std::string SmtBackwardConvert(const std::string& smtl2data, const Why3ConvertMap& cmap) {
+        BackwardSmtl2CV converter(cmap);
+        return converter.convert(smtl2data);
     }
 
 }
