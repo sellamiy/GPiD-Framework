@@ -25,11 +25,13 @@ W3WML_Prop_Ctx W3WML_IPH::generateStrengheningContext
 struct W_AbdStorerHandler : public GenericHandler {
     std::vector<std::string>& storage;
     std::set<std::string>& refs;
-    W_AbdStorerHandler(std::vector<std::string>& storage, std::set<std::string>& refs)
-        : storage(storage), refs(refs) {}
+    const why3cpp::Why3ConvertMap& cmap;
+    W_AbdStorerHandler(std::vector<std::string>& storage, std::set<std::string>& refs,
+                       const why3cpp::Why3ConvertMap& cmap)
+        : storage(storage), refs(refs), cmap(cmap) {}
     virtual void allocate(const std::string, size_t) override {}
     virtual void handleAbducible(const std::string& abd) override {
-        storage.push_back(abd);
+        storage.push_back(why3cpp::SmtBackwardConvert(abd, cmap));
     }
     virtual void handleReference(const std::string& ref) override {
         refs.insert(ref);
@@ -38,7 +40,7 @@ struct W_AbdStorerHandler : public GenericHandler {
 
 void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider, bool shuffle) {
     std::set<std::string> refs;
-    W_AbdStorerHandler hdler(overrides[overrider], refs);
+    W_AbdStorerHandler hdler(overrides[overrider], refs, cmap);
     loadAbduceData(overrider, hdler);
     cmap.addRefs(refs);
     if (shuffle)

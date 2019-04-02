@@ -52,7 +52,7 @@ public:
 
     W3WML_IPH(const std::string& filename, bool overriden, bool shuffle)
         : problem(filename, cmap, local_opts, local_bopts),
-          plits(filename, overriden, shuffle)
+          plits(filename, cmap, overriden, shuffle)
     {
         // Set default Why3 solver to CVC4
         setOption(W3WML_ProblemController::w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT);

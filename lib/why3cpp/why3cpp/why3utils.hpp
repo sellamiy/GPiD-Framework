@@ -31,6 +31,8 @@ namespace why3cpp {
 
         inline bool isref(const std::string& t) const { return refs.count(t) > 0; }
 
+        inline bool emptySymbolMap() const { return smap_table.empty(); }
+
         inline void addSymbolMapping(const std::string& fwd, const std::string bck) {
             smap_table.insert(fwd, bck);
         }
@@ -90,6 +92,8 @@ namespace why3cpp {
     };
 
     static inline std::string SmtBackwardConvert(const std::string& smtl2data, const Why3ConvertMap& cmap) {
+        if (cmap.emptySymbolMap())
+            return smtl2data;
         BackwardSmtl2CV converter(cmap);
         return converter.convert(smtl2data);
     }

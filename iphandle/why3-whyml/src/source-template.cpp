@@ -38,7 +38,8 @@ struct W3WML_LSet_LRec {
     inline void handle(const std::string lit) { llist.push_back(lit); }
 };
 
-W3WML_LSet::W3WML_LSet(const std::string& filename, bool overriden, bool shuffle) {
+W3WML_LSet::W3WML_LSet
+(const std::string& filename, const why3cpp::Why3ConvertMap& cmap, bool overriden, bool shuffle) {
     if (overriden)
         // We do not need to generate abduction literals if we load them
         return;
@@ -46,7 +47,7 @@ W3WML_LSet::W3WML_LSet(const std::string& filename, bool overriden, bool shuffle
         smtlib2::GenerationSet gset =
             why3cpp::generate_literals_whyml(filename);
         for (const smtlib2::smtlit_t& lit : gset.get_literals())
-            literals.push_back(smtlib2::ident(lit));
+            literals.push_back(why3cpp::SmtBackwardConvert(smtlib2::ident(lit), cmap));
         references = gset.get_annotated(why3cpp::annot_whyml_ref);
     } catch (abdulot::CoreError& e) {
         snlog::l_error() << "W3WML Mlw literals recovery failed: " << e.what() << snlog::l_end;
