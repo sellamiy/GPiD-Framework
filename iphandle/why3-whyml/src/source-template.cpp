@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <snlog/snlog.hpp>
+#include <stdutils/random.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <smtlib2tools/smtlit-presets.hpp>
 #include <abdulot/core/errors.hpp>
@@ -37,7 +38,7 @@ struct W3WML_LSet_LRec {
     inline void handle(const std::string lit) { llist.push_back(lit); }
 };
 
-W3WML_LSet::W3WML_LSet(const std::string& filename, bool overriden) {
+W3WML_LSet::W3WML_LSet(const std::string& filename, bool overriden, bool shuffle) {
     if (overriden)
         // We do not need to generate abduction literals if we load them
         return;
@@ -50,4 +51,6 @@ W3WML_LSet::W3WML_LSet(const std::string& filename, bool overriden) {
     } catch (abdulot::CoreError& e) {
         snlog::l_error() << "W3WML Mlw literals recovery failed: " << e.what() << snlog::l_end;
     }
+    if (shuffle)
+        stdutils::shuffle(literals);
 }

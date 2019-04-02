@@ -24,19 +24,23 @@ namespace ilinva {
     struct DStrOptions {
         const bool insurance_checks;
         const bool disjunctions;
+        const bool shuffle;
         const uint32_t sizelim;
         const uint64_t smt_tlim;
 
         explicit DStrOptions()
-            : insurance_checks(true), disjunctions(true), sizelim(1), smt_tlim(0)
+            : insurance_checks(true), disjunctions(true), shuffle(false), sizelim(1), smt_tlim(0)
         {}
 
-        DStrOptions(bool insurance_checks, bool disjunctions, uint32_t sizelim, uint64_t smt_tlim)
-            : insurance_checks(insurance_checks), disjunctions(disjunctions), sizelim(sizelim), smt_tlim(smt_tlim)
+        DStrOptions(bool insurance_checks, bool disjunctions, bool shuffle,
+                    uint32_t sizelim, uint64_t smt_tlim)
+            : insurance_checks(insurance_checks), disjunctions(disjunctions), shuffle(shuffle),
+              sizelim(sizelim), smt_tlim(smt_tlim)
         {}
 
         DStrOptions(const IlinvaOptions& iopts)
             : insurance_checks(iopts.insurance_checks), disjunctions(iopts.disjunct),
+              shuffle(iopts.shuffle_literals),
               sizelim(iopts.max_strengthening_size), smt_tlim(iopts.smt_time_limit)
         {}
     };

@@ -50,9 +50,9 @@ private:
 public:
     static const W3WML_Constraint C_False;
 
-    W3WML_IPH(const std::string& filename, bool overriden)
+    W3WML_IPH(const std::string& filename, bool overriden, bool shuffle)
         : problem(filename, cmap, local_opts, local_bopts),
-          plits(filename, overriden)
+          plits(filename, overriden, shuffle)
     {
         // Set default Why3 solver to CVC4
         setOption(W3WML_ProblemController::w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT);
@@ -87,9 +87,10 @@ public:
         return problem.selectUnprovenBlock(id);
     }
 
-    void generateSourceLiterals(PropIdentifierT id, const std::string& overrider);
+    void generateSourceLiterals(PropIdentifierT id, const std::string& overrider, bool shuffle);
 
-    ContextManagerT generateStrengheningContext(PropIdentifierT id, const std::string& overrider);
+    ContextManagerT generateStrengheningContext
+    (PropIdentifierT id, const std::string& overrider, bool shuffle);
 
     inline void exportSource(const std::string& filename) const {
         problem.exportSource(filename);
@@ -99,7 +100,7 @@ public:
         problem.exportSource(out);
     }
 
-    void loadOverridingAbducibles(const std::string& overrider);
+    void loadOverridingAbducibles(const std::string& overrider, bool shuffle);
 
 };
 

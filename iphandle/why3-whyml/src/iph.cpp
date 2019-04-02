@@ -3,6 +3,7 @@
 #include <fstream>
 #include <snlog/snlog.hpp>
 #include <stdutils/collections.hpp>
+#include <stdutils/random.hpp>
 #include <smtlib2tools/smtlib2-fileutils.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
@@ -14,9 +15,10 @@ using namespace abdulot;
 
 const W3WML_Constraint W3WML_IPH::C_False = W3WML_Constraint("false");
 
-W3WML_Prop_Ctx W3WML_IPH::generateStrengheningContext(PropIdentifierT id, const std::string& overrider) {
+W3WML_Prop_Ctx W3WML_IPH::generateStrengheningContext
+(PropIdentifierT id, const std::string& overrider, bool shuffle) {
     const std::string filename = problem.generateAbductionProblem(id);
-    generateSourceLiterals(id, overrider);
+    generateSourceLiterals(id, overrider, shuffle);
     return W3WML_Prop_Ctx(filename, literals, problem.getCandidateConjunction(id), problem.getCMap());
 }
 
@@ -34,11 +36,13 @@ struct W_AbdStorerHandler : public GenericHandler {
     }
 };
 
-void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider) {
+void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider, bool shuffle) {
     std::set<std::string> refs;
     W_AbdStorerHandler hdler(overrides[overrider], refs);
     loadAbduceData(overrider, hdler);
     cmap.addRefs(refs);
+    if (shuffle)
+        stdutils::shuffle(hdler.storage);
 }
 
 static bool WX301 = false;
@@ -73,7 +77,8 @@ template<> const std::string W3WML_IPH::sanitizeLiteral<SymbolChecker>
         return "";
 }
 
-void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& overrider) {
+void W3WML_IPH::generateSourceLiterals
+(PropIdentifierT id, const std::string& overrider, bool shuffle) {
     const std::string& pfile = problem.getBlockFile(id);
     smtlib2::smtfile_decls sdecls = smtlib2::extract_declarations(pfile);
     SymbolChecker schecker(sdecls);
@@ -90,7 +95,7 @@ void W3WML_IPH::generateSourceLiterals(PropIdentifierT id, const std::string& ov
     } else {
         // Read from overriding file
         if (overrides[overrider].empty())
-            loadOverridingAbducibles(overrider);
+            loadOverridingAbducibles(overrider, shuffle);
         for (const std::string& lit : overrides[overrider]) {
             const std::string slit = sanitizeLiteral(lit, id, schecker);
             if (slit.length() > 0)

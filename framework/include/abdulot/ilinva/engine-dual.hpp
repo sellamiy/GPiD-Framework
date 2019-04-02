@@ -84,7 +84,7 @@ namespace ilinva {
     DualInvariantEngine<ProblemHandlerT, InterfaceT>::newStrengthener
     (PropIdentifierT prop, const DStrOptions& dopts, const std::string& overrider) {
         ++counters.strengtheners;
-        auto propCtx = ph.generateStrengheningContext(prop, overrider);
+        auto propCtx = ph.generateStrengheningContext(prop, overrider, dopts.shuffle);
         std::shared_ptr<StrengthenerT>
             stren(new StrengthenerT(propCtx, dopts));
         strengtheners[stren->getId()] = stren;

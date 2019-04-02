@@ -22,7 +22,8 @@ static inline void generate_ilnt_x(OptionStorage& opts) {
     IlinvaAlgorithm<EngineT>::printInfos();        
 
     l_message() << "create program engine..." << l_end;
-    typename EngineT::ProblemHandlerT IPH(opts.ilinva.input_file, opts.ilinva.abd_override.length() > 0);
+    typename EngineT::ProblemHandlerT IPH
+        (opts.ilinva.input_file, opts.ilinva.abd_override.length() > 0, opts.ilinva.shuffle_literals);
     for (const std::pair<std::string, std::string>& hopt : opts.ilinva.handler_options) {
         if (is_str_true(hopt.second))
             IPH.setOption(hopt.first, true);
