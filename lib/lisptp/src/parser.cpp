@@ -61,7 +61,7 @@ static LispTreeNodePtr parse_lisp_text(const std::string& data, size_t& pos) {
 
 extern LispTreeNodePtr lisptp::parse(const std::string& data) {
     size_t pos = 0;
-    LispTreeNodePtr global = parse_lisp_text("(_glb_ " + data + ")", pos);
+    LispTreeNodePtr global = parse_lisp_text("(" + global_name_wrapper + " " + data + ")", pos);
     if (global->getLeaves().size() == 1)
         return global->getLeaves().front();
     return LispTreeNodePtr(new LispTreeNode("", true, global->getLeaves()));

@@ -29,6 +29,8 @@ namespace lisptp {
         const std::string str(bool pretty=true) const;
     };
 
+    static const std::string global_name_wrapper = "_glb_";
+
 }
 
 #endif
