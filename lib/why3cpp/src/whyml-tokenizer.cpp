@@ -2,11 +2,11 @@
 
 #include <snlog/snlog.hpp>
 #include <WhyMLLexer.h>
-#include <why3cpp/tokenizer-p.hpp>
+#include <why3cpp/whyml-tokenizer.hpp>
 
 using namespace std;
 
-#include "error-listener.hpp"
+#include "whyml-error-listener.hpp"
 
 namespace why3cpp {
     namespace whyantlr {

@@ -3,7 +3,7 @@
 
 #include <WhyMLBaseListener.h>
 
-#include "type-visitor.hpp"
+#include "whyml-type-visitor.hpp"
 
 class VextractWhyMLListener : public WhyMLBaseListener {
     map<string, string> vars;

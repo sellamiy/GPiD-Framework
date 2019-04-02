@@ -5,7 +5,7 @@
 #include <snlog/snlog.hpp>
 #include <ugly/ugly.hpp>
 #include <smtlib2tools/smtlib2-functions.hpp>
-#include <why3cpp/extractor-p.hpp>
+#include <why3cpp/whyml-extractor.hpp>
 #include <why3cpp/whyml-smtlit.hpp>
 
 using namespace smtlib2;

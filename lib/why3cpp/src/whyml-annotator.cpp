@@ -3,11 +3,11 @@
 #include <snlog/snlog.hpp>
 #include <WhyMLLexer.h>
 #include <WhyMLParser.h>
-#include <why3cpp/annotator-p.hpp>
+#include <why3cpp/whyml-annotator.hpp>
 
 using namespace std;
 
-#include "error-listener.hpp"
+#include "whyml-error-listener.hpp"
 
 namespace why3cpp {
     namespace whyantlr {

@@ -2,7 +2,7 @@
 # Why3 C++ library - local library target
 # ==============================================================================
 project(libwhy3cpp LANGUAGES CXX)
-set(LIBWHY3CPP_VERSION "0.3.1")
+set(LIBWHY3CPP_VERSION "0.4.0")
 # ------------------------------------------------------------------------------
 find_package(Antlr4 4.7.1 EXACT REQUIRED)
 find_package(Why3 REQUIRED)
@@ -49,10 +49,10 @@ target_link_libraries(why3cpp-static antlr4_static snlog smtlib2tools-static lis
 target_link_libraries(why3cpp-shared antlr4_shared snlog smtlib2tools-shared lisptp-shared stdutils-shared ugly)
 target_include_directories(why3cpp-static
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${LOCAL_LIB_HEADERS_DIR}"
-  PRIVATE "${LOCAL_LIB_HEADERS_DIR}/why3cpp/antlr4")
+  PRIVATE "${LOCAL_LIB_HEADERS_DIR}/why3cpp/antlr4" "${CMAKE_CURRENT_SOURCE_DIR}/private")
 target_include_directories(why3cpp-shared
   PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${LOCAL_LIB_HEADERS_DIR}"
-  PRIVATE "${LOCAL_LIB_HEADERS_DIR}/why3cpp/antlr4")
+  PRIVATE "${LOCAL_LIB_HEADERS_DIR}/why3cpp/antlr4" "${CMAKE_CURRENT_SOURCE_DIR}/private")
 set_target_properties(why3cpp-static PROPERTIES
   OUTPUT_NAME why3cpp
   VERSION ${LIBWHY3CPP_VERSION}

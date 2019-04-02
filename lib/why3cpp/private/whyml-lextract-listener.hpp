@@ -3,7 +3,7 @@
 
 #include <WhyMLBaseListener.h>
 
-#include "type-visitor.hpp"
+#include "whyml-type-visitor.hpp"
 
 class LextractWhyMLListener : public WhyMLBaseListener {
     map<string, string> literals;

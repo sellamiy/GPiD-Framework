@@ -2,14 +2,14 @@
 
 #include <snlog/snlog.hpp>
 #include <WhyMLLexer.h>
-#include <why3cpp/extractor-p.hpp>
+#include <why3cpp/whyml-extractor.hpp>
 
 using namespace std;
 
-#include "error-listener.hpp"
-#include "vextract-listener.hpp"
-#include "lextract-listener.hpp"
-#include "aplextract-listener.hpp"
+#include "whyml-error-listener.hpp"
+#include "whyml-vextract-listener.hpp"
+#include "whyml-lextract-listener.hpp"
+#include "whyml-aplextract-listener.hpp"
 
 namespace why3cpp {
     namespace whyantlr {
