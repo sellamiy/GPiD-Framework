@@ -8,6 +8,7 @@
 #define LIB_STANDARD_UTILS__STRINGS_HPP
 
 #include <string>
+#include <sstream>
 #include <vector>
 
 namespace stdutils {
@@ -35,6 +36,22 @@ namespace stdutils {
             _0P += tgt.length();
         }
         return occ;
+    }
+
+    static inline std::string join(const std::string& jer, const std::vector<std::string>& elems) {
+        if (elems.size() == 0) return "";
+        if (elems.size() == 1) return elems.front();
+        std::stringstream res;
+        bool start = true;
+        for (auto elem : elems) {
+            if (start) {
+                res << elem;
+                start = false;
+            } else {
+                res << jer << elem;
+            }
+        }
+        return res.str();
     }
 
 }

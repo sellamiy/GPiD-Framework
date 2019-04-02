@@ -2,7 +2,7 @@
 # Standard C++ Utils Library - local library target
 # ==============================================================================
 project(libstdutils LANGUAGES CXX)
-set(LIBSTDUTILS_VERSION "0.3.3")
+set(LIBSTDUTILS_VERSION "0.3.4")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/stdutils/stdutils.hpp.in
   ${LOCAL_LIB_HEADERS_DIR}/stdutils/stdutils.hpp)
