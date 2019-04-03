@@ -240,8 +240,17 @@ bool SMTl2SolverProblemLoader::hasConstraint() {
     return dc_handler->hasNext();
 }
 
+// Local hack empty deleter for smart pointer
+/* Explanation: The shared_pointer holding assertion data created by the function nextCOnstraint below
+   happens to be destructed After the related ProblemLoader is, which normally means that this will
+   produce a double free. We replace its deleter by this to prevent this error.
+   Theoretically, it does not create any additional issues as the contraints are not used after
+   the destruction of the problembuilder */
+// TODO: Find a better structure for this
+static auto l_del_stdstr300 = [](std::string*){};
+
 SMTl2SolverConstraint& SMTl2SolverProblemLoader::nextConstraint() {
     auto dc_handler = static_cast<SMTl2PCH_ProblemLoader*>(handler.get());
-    curr = SMTl2SolverConstraint(std::shared_ptr<std::string>(&(dc_handler->next())));
+    curr = SMTl2SolverConstraint(std::shared_ptr<std::string>(&(dc_handler->next()), l_del_stdstr300));
     return curr;
 }
