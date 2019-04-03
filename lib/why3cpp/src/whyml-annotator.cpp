@@ -64,8 +64,12 @@ why3cpp::whyantlr::Annotator::~Annotator() {
 }
 
 void why3cpp::whyantlr::Annotator::annotate(std::ostream& output) {
-    if (isValid()) output << data->toStringTree(parser) << endl;
+    if (isValid())
+        for (const char& c : data->toStringTree(parser))
+            if (c == ';') output << "';'";
+            else output << c;
     else snlog::l_error() << "Annotator used after parse error" << snlog::l_end;
+    output << endl;
 }
 
 why3cpp::AnnotatorParser::AnnotatorParser(const std::string& filename)
