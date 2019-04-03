@@ -15,18 +15,30 @@ static inline constexpr bool isOpar(char c) { return c == '('; }
 static inline constexpr bool isCpar(char c) { return c == ')'; }
 static inline constexpr bool isPar(char c) { return isOpar(c) || isCpar(c); }
 
+static inline constexpr bool isCommentStart(char c) { return c == ';'; }
+
 /*
 static inline void nextWSC(const std::string& data, size_t& pos) {
     while (pos < data.length() && !isWSC(data.at(pos))) ++pos;
 }
 */
 
+static inline void skipComment(const std::string& data, size_t& pos) {
+    while (pos < data.length() && data.at(pos) != '\n') ++pos;
+}
+
 static inline void nextHookC(const std::string& data, size_t& pos) {
-    while (pos < data.length() && !isWSC(data.at(pos)) && !isPar(data.at(pos))) ++pos;
+    while (pos < data.length() && !isWSC(data.at(pos)) && !isPar(data.at(pos))) {
+        if (isCommentStart(data.at(pos))) skipComment(data, pos);
+        ++pos;
+    }
 }
 
 static inline void nextNonWSC(const std::string& data, size_t& pos) {
-    while (pos < data.length() && isWSC(data.at(pos))) ++pos;
+    while (pos < data.length() && isWSC(data.at(pos))) {
+        if (isCommentStart(data.at(pos))) skipComment(data, pos);
+        ++pos;
+    }
 }
 
 static LispTreeNodePtr parse_lisp_text(const std::string& data, size_t& pos) {
