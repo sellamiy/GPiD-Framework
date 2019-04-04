@@ -116,7 +116,7 @@ public:
     inline void strengthen(blockid_t id, W3WML_Constraint cons) {
         pushcache();
         auto property = prop_ident(blockmap, id);
-        sourcedata.getProperty(property).conj.push_back(cons);
+        sourcedata.getProperty(property).conj.push_back(cons.str());
         write(snlog::l_message() << "@C[" << id << "]: ", sourcedata.getProperty(property), cmap)
             << snlog::l_end;
     }
