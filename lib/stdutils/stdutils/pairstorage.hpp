@@ -63,12 +63,16 @@ namespace stdutils {
         }
 
         inline iterator               begin()         noexcept { return forward_map.begin();   }
+        inline const_iterator         begin()   const noexcept { return forward_map.begin();   }
         inline const_iterator         cbegin()  const noexcept { return forward_map.cbegin();  }
         inline iterator               end()           noexcept { return forward_map.end();     }
+        inline const_iterator         end()     const noexcept { return forward_map.end();     }
         inline const_iterator         cend()    const noexcept { return forward_map.cend();    }
         inline reverse_iterator       rbegin()        noexcept { return backward_map.begin();  }
+        inline reverse_const_iterator rbegin()  const noexcept { return backward_map.begin();  }
         inline reverse_const_iterator crbegin() const noexcept { return backward_map.cbegin(); }
         inline reverse_iterator       rend()          noexcept { return backward_map.end();    }
+        inline reverse_const_iterator rend()    const noexcept { return backward_map.end();    }
         inline reverse_const_iterator crend()   const noexcept { return backward_map.cend();   }
 
         inline bool empty() const noexcept { return forward_map.empty(); }
