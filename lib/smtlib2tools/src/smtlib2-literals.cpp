@@ -52,7 +52,8 @@ namespace smtlib2 {
                 break;
 
             case LSM_SE::Int:
-                if (c == '.') state = LSM_SE::Dec;                
+                if (c == '.') state = LSM_SE::Dec;
+                [[fallthrough]];
             case LSM_SE::Dec:
                 if (!isdigit(c)) return false;
                 break;
