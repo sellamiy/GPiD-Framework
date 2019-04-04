@@ -51,6 +51,9 @@ namespace stdutils {
         backward_map_type backward_map;
     public:
         explicit pair_storage() {}
+        pair_storage(const forward_map_type& m) : forward_map(m) {
+            for (const auto& p : m) backward_map[p.second] = p.first;
+        }
         pair_storage(const pair_storage& o)
             : forward_map(o.forward_map), backward_map(o.backward_map) {}
 
