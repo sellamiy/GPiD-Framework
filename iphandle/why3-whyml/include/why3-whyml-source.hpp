@@ -26,7 +26,7 @@ public:
     };
 
     struct PropertyElement : public Element {
-        std::vector<const std::string> conj;
+        std::vector<std::string> conj;
         const std::string type;
         PropertyElement(const std::string& type) : Element(ElemType::Property), type(type) {}
     };
