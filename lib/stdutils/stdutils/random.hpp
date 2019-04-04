@@ -10,6 +10,7 @@
 #include <random>
 #include <chrono>
 #include <vector>
+#include <algorithm>
 
 namespace stdutils {
 
