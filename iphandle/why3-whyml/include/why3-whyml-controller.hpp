@@ -41,6 +41,8 @@ public:
 
     static const std::string w3opt_solver;
     static const std::string w3opt_vcreorder;
+
+    static const std::string w3opt_cmapmode;
 private:
     W3WML_Template sourcedata;
     W3WML_ShapeDetector shape;

@@ -14,6 +14,7 @@ namespace why3cpp {
         stdutils::pair_storage<std::string, std::string> smap_table;
     public:
         Why3ConvertMap() {}
+        Why3ConvertMap(const std::string& optstr);
         Why3ConvertMap(const std::set<std::string>& refs) : refs(refs) {}
         Why3ConvertMap(const stdutils::pair_storage<std::string, std::string>& smap_table)
             : smap_table(smap_table) {}

@@ -5,6 +5,8 @@
 
 #define WHY3_SOLVER_OPTION_DEFAULT "CVC4"
 
+#define WHY3_CMAP_MODE_DEFAULT "auto"
+
 class W3WML_Prop_Ctx {
     const std::string pfile;
     const std::vector<W3WML_Constraint>& literals;
@@ -26,14 +28,22 @@ public:
     const std::vector<W3WML_Constraint> getCandidateConstraintDSplit();
 };
 
+struct W3WML_Opthelpers {
+    static inline bool is_str_true(const std::string& s) {
+        return s == "true" || s == "TRUE" || s == "True";
+    }
+
+    static inline bool is_str_false(const std::string& s) {
+        return s == "false" || s == "FALSE" || s == "False";
+    }
+};
+
 class W3WML_IPH {
 public:
     using ConstraintT = W3WML_Constraint;
     using ContextManagerT = W3WML_Prop_Ctx;
     using PropIdentifierT = W3WML_ProblemController::blockid_t;
 private:
-    W3WML_ProblemController problem;
-    W3WML_LSet plits;
     std::map<size_t, std::set<size_t>::iterator> invariants_iter;
 
     std::vector<W3WML_Constraint> literals;
@@ -44,19 +54,34 @@ private:
     stringoptionmap_t local_opts;
     booloptionmap_t local_bopts;
 
+    W3WML_ProblemController problem;
+    W3WML_LSet plits;
+
     template<typename InternalT>
     const std::string sanitizeLiteral
     (const std::string& lit, PropIdentifierT id, const InternalT& o);
 public:
     static const W3WML_Constraint C_False;
 
-    W3WML_IPH(const std::string& filename, bool overriden, bool shuffle)
-        : problem(filename, cmap, local_opts, local_bopts),
+    W3WML_IPH(const std::string& filename, bool overriden, bool shuffle,
+              const std::map<std::string, std::string>& hopts)
+        : cmap(stdutils::inmap(hopts, W3WML_ProblemController::w3opt_cmapmode) ?
+               hopts.at(W3WML_ProblemController::w3opt_cmapmode) : WHY3_CMAP_MODE_DEFAULT),
+          problem(filename, cmap, local_opts, local_bopts),
           plits(filename, cmap, overriden, shuffle)
     {
         // Set default Why3 solver to CVC4
         setOption(W3WML_ProblemController::w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT);
         setOption(W3WML_ProblemController::w3opt_vcreorder, true);
+
+        for (const std::pair<std::string, std::string>& hopt : hopts) {
+            if (W3WML_Opthelpers::is_str_true(hopt.second))
+                setOption(hopt.first, true);
+            else if (W3WML_Opthelpers::is_str_false(hopt.second))
+                setOption(hopt.first, false);
+            else
+                setOption(hopt.first, hopt.second);
+        }
     }
 
     inline void setOption(const std::string& optname, const std::string& optvalue) {

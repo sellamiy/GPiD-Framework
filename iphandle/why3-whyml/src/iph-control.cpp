@@ -19,6 +19,8 @@ using namespace abdulot;
 const std::string W3WML_ProblemController::w3opt_solver = "solver";
 const std::string W3WML_ProblemController::w3opt_vcreorder = "vcreorder";
 
+const std::string W3WML_ProblemController::w3opt_cmapmode = "cmapmode";
+
 void W3WML_ShapeDetector::detectVCShape(const why3cpp::ProofResult& pr) {
     for (auto& expl : pr.getExplanations()) {
         vc_shape[expl.first] = why3cpp::expl(expl.second);
