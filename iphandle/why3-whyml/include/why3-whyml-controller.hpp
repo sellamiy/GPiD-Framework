@@ -20,6 +20,7 @@ using booloptionmap_t = std::map<std::string, bool>;
 class W3WML_ShapeDetector {
     std::map<size_t, std::string> properties_shape;
     std::map<size_t, std::string> vc_shape;
+    std::map<size_t, size_t> maxp_shape;
 public:
     W3WML_ShapeDetector(const W3WML_Template& sourcedata) {
         for (size_t pid : sourcedata.getPropertyIds())
