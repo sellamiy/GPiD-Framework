@@ -69,7 +69,7 @@ protected:
 using SymbolChecker = LitSanatizer_X101;
 
 template<> const std::string W3WML_IPH::sanitizeLiteral<SymbolChecker>
-(const std::string& lit, PropIdentifierT id, const SymbolChecker& schecker) {
+(const std::string& lit, PropIdentifierT, const SymbolChecker& schecker) {
     if (schecker.visit(lisptp::parse(lit)))
         return lit;
     else
