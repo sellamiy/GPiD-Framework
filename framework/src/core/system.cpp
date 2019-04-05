@@ -4,7 +4,9 @@
 #include <thread>
 #include <chrono>
 #include <vector>
+#include <map>
 #include <snlog/snlog.hpp>
+#include <stdutils/collections.hpp>
 #include <abdulot/core/system.hpp>
 
 static std::vector<abdulot::SystemInterruptionFlags*> sys_flag_locs;
@@ -69,18 +71,19 @@ public:
     }
 };
 
-static systemTimeoutWaiter* sys_timeout_waiter = NULL;
+static std::map<abdulot::SystemInterruptionFlags*, systemTimeoutWaiter*> sys_timeout_waiters;
 
 extern void abdulot::startTimeout(SystemInterruptionFlags* flags_addr, uint64_t timeout) {
     if (timeout > 0) {
-        sys_timeout_waiter = new systemTimeoutWaiter(flags_addr, timeout);
-        sys_timeout_waiter->start();
+        sys_timeout_waiters[flags_addr] = new systemTimeoutWaiter(flags_addr, timeout);
+        sys_timeout_waiters.at(flags_addr)->start();
     }
 }
 
-extern void abdulot::stopTimeout() {
-    if (sys_timeout_waiter != NULL) {
-        sys_timeout_waiter->stop();
-        delete sys_timeout_waiter;
+extern void abdulot::stopTimeout(SystemInterruptionFlags* flags_addr) {
+    if (stdutils::inmap(sys_timeout_waiters, flags_addr)
+        && sys_timeout_waiters.at(flags_addr) != NULL) {
+        sys_timeout_waiters.at(flags_addr)->stop();
+        delete sys_timeout_waiters.at(flags_addr);
     }
 }

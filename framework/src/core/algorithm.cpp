@@ -8,7 +8,7 @@ using namespace abdulot;
 
 void Algorithm::_terminate_execution() {
     _execute();
-    stopTimeout();
+    stopTimeout(&iflags);
     restoreInterruptionHandlers();
     insthandle(instrument::idata(), instrument::instloc::end);
     _execution_complete = true;

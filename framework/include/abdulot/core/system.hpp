@@ -59,7 +59,7 @@ namespace abdulot {
      */
     extern void startTimeout(SystemInterruptionFlags* flags_addr, uint64_t timeout);
     /** \brief Stop the current timeout evolution. */
-    extern void stopTimeout();
+    extern void stopTimeout(SystemInterruptionFlags* flags_addr);
 
 }
 
