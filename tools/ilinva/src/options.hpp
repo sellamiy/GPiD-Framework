@@ -71,6 +71,7 @@ static inline OptionStatus parseOptions(OptionStorage& opts, int& argc, char**& 
             ("r,randomize-literals", "Randomize (once) the abducible literals", cxxopts::value<bool>())
             ("s,max-strengthening-size", "Maximal depth of the abduction", cxxopts::value<uint32_t>())
             ("smt-time-limit", "Timeout for abduction smt tests (seconds)", cxxopts::value<uint64_t>())
+            ("small-smt-time-limit", "Same as smt-time-limit, with float handle", cxxopts::value<double>())
             ("u,no-insurance-checks", "Remove abducible literals validity checks", cxxopts::value<bool>())
             ("H,handler-option", "Forward option to code handler (format optname:optvalue)",
              cxxopts::value<std::vector<std::string>>())
@@ -133,6 +134,9 @@ static inline OptionStatus handleOptions
 
         if (results.count("smt-time-limit"))
             opts.ilinva.smt_time_limit = results["smt-time-limit"].as<uint64_t>();
+
+        if (results.count("small-smt-time-limit"))
+            opts.ilinva.small_smt_time_limit = results["small-smt-time-limit"].as<double>();
 
         if (results.count("output"))
 	    opts.ilinva.output = results["output"].as<std::string>();
@@ -209,6 +213,7 @@ static inline OptionStatus detectConflicts
         /* Incompatible options */
         const std::vector<std::vector<std::string>> p_illeg
         {
+            { "small-smt-time-limit", "smt-time-limit" }
             // { "opt1", "opt2" }
         };
 

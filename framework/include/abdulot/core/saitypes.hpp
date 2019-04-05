@@ -56,13 +56,18 @@ namespace abdulot {
 
     struct SolverInterfaceOptions {
         const uint64_t localTimeout;
+        const double smallLocalTimeout;
 
         SolverInterfaceOptions()
-            : localTimeout(0)
+            : localTimeout(0), smallLocalTimeout(0)
         {}
 
         SolverInterfaceOptions(uint64_t localTimeout)
-            : localTimeout(localTimeout)
+            : localTimeout(localTimeout), smallLocalTimeout(0)
+        {}
+
+        SolverInterfaceOptions(double smallLocalTimeout)
+            : localTimeout(0), smallLocalTimeout(smallLocalTimeout)
         {}
     };
 

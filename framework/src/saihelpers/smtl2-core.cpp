@@ -99,10 +99,15 @@ static inline void smtlib2_check_cleanup (const std::string script_file) {
 static inline const std::string patch_solver_exec
 (const std::string& solver_exec, const SolverInterfaceOptions& siopts,
  const SMTl2SolverInterface::TimeoutData& tdata) {
-    if (siopts.localTimeout == 0)
-        return solver_exec;
-    const uint64_t factorized_tlim = tdata.factor * siopts.localTimeout;
-    return solver_exec + " " + tdata.cliopt + std::to_string(factorized_tlim);
+    if (siopts.localTimeout != 0) {
+        const uint64_t factorized_tlim = tdata.factor * siopts.localTimeout;
+        return solver_exec + " " + tdata.cliopt + std::to_string(factorized_tlim);
+    }
+    if (siopts.smallLocalTimeout != 0) {
+        const uint64_t factorized_tlim = static_cast<uint64_t>(tdata.factor * siopts.smallLocalTimeout);
+        return solver_exec + " " + tdata.cliopt + std::to_string(factorized_tlim);
+    }
+    return solver_exec;
 }
 
 SolverTestStatus SMTl2SolverInterface::check() {

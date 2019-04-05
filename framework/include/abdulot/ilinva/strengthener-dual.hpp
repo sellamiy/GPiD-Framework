@@ -27,21 +27,24 @@ namespace ilinva {
         const bool shuffle;
         const uint32_t sizelim;
         const uint64_t smt_tlim;
+        const double sml_smt_tlim;
 
         explicit DStrOptions()
-            : insurance_checks(true), disjunctions(true), shuffle(false), sizelim(1), smt_tlim(0)
+            : insurance_checks(true), disjunctions(true), shuffle(false),
+              sizelim(1), smt_tlim(0), sml_smt_tlim(0)
         {}
 
         DStrOptions(bool insurance_checks, bool disjunctions, bool shuffle,
-                    uint32_t sizelim, uint64_t smt_tlim)
+                    uint32_t sizelim, uint64_t smt_tlim, double sml_smt_tlim)
             : insurance_checks(insurance_checks), disjunctions(disjunctions), shuffle(shuffle),
-              sizelim(sizelim), smt_tlim(smt_tlim)
+              sizelim(sizelim), smt_tlim(smt_tlim), sml_smt_tlim(sml_smt_tlim)
         {}
 
         DStrOptions(const IlinvaOptions& iopts)
             : insurance_checks(iopts.insurance_checks), disjunctions(iopts.disjunct),
               shuffle(iopts.shuffle_literals),
-              sizelim(iopts.max_strengthening_size), smt_tlim(iopts.smt_time_limit)
+              sizelim(iopts.max_strengthening_size),
+              smt_tlim(iopts.smt_time_limit), sml_smt_tlim(iopts.small_smt_time_limit)
         {}
     };
 
@@ -192,6 +195,7 @@ namespace ilinva {
         abductionOpts.additional_checker = dopts.insurance_checks; // Prevents non redundant literals
         abductionOpts.additional_check_mode = SolverTestStatus::SAT;
         abductionOpts.smt_time_limit = dopts.smt_tlim;
+        abductionOpts.small_smt_time_limit = dopts.sml_smt_tlim;
         generator =
             ImplicateGeneratorPtr(new ImplicateGenerator(_problemBuilder, *abdGenerator, forwarder,
                                                          abductionCoreOpts, abductionOpts));

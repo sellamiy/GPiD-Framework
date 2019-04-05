@@ -30,6 +30,7 @@ namespace ilinva {
         uint32_t max_strengthening_size = std::numeric_limits<uint32_t>::max() - 1;
 
         uint64_t smt_time_limit = 0;
+        double small_smt_time_limit = 0;
 
         std::map<std::string, std::string> handler_options;
     };

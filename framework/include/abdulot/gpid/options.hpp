@@ -63,11 +63,14 @@ namespace gpid {
         std::string input_generator = "<none>";
 
         uint64_t smt_time_limit = 0;
+        double small_smt_time_limit = 0;
 
     };
 
     static inline const SolverInterfaceOptions extractInterfaceOptions(const GPiDOptions& iopts) {
-        return SolverInterfaceOptions(iopts.smt_time_limit);
+        return iopts.small_smt_time_limit > 0 ?
+            SolverInterfaceOptions(iopts.small_smt_time_limit)
+            : SolverInterfaceOptions(iopts.smt_time_limit);
     }
 
 }
