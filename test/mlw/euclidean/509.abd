@@ -10,16 +10,17 @@
 (lambda le (l r) (<= l r))
 (lambda lt (l r) (< l r))
 
+(apply le (over vars vars) bf nonself)
+(apply lt (over vars vars) bf nonself)
+
 (lambda gcd (a b) (gcd a b))
 
 (apply gcd (over vars vars) vars symmetric)
 
 (declare 0 as vars)
 
-(apply eq (over vars vars) bf symmetric)
 (apply neq (over vars vars) bf symmetric)
-(apply le (over vars vars) bf nonself)
-(apply lt (over vars vars) bf nonself)
+(apply eq (over vars vars) bf symmetric)
 
 (extend bf)
 
