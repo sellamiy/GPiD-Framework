@@ -2,16 +2,24 @@
 #define LIB_WHY3CPP__PLATFORM_GENERAL_UTILS_HEADER
 
 #include <set>
+#include <snlog/snlog.hpp>
 #include <stdutils/pairstorage.hpp>
 #include <lisptp/lisptp.hpp>
 
 namespace why3cpp {
+
+    using transfermap_t = std::map<std::string, std::vector<std::string>>;
 
     class Why3ConvertMap {
         std::set<std::string> refs;
         /* Forward conversion: smtlib2 (obtained from whyml) -> whyml */
         /* Backward conversion: whyml -> smtlib2 || unsanitized smtlib2 -> smtlib2 */
         stdutils::pair_storage<std::string, std::string> smap_table;
+
+        transfermap_t transfermap;
+        std::map<std::pair<std::string, size_t>, std::string> transfer_cache;
+
+        size_t localid;
     public:
         Why3ConvertMap() {}
         Why3ConvertMap(const std::string& optstr);
@@ -32,6 +40,9 @@ namespace why3cpp {
 
         inline bool isref(const std::string& t) const { return refs.count(t) > 0; }
 
+        inline void setLocalId(const size_t& s) { localid = s; }
+        inline constexpr size_t getLocalId() const { return localid; }
+
         inline bool emptySymbolMap() const { return smap_table.empty(); }
 
         inline void addSymbolMapping(const std::string& fwd, const std::string bck) {
@@ -50,6 +61,30 @@ namespace why3cpp {
         }
         inline const std::string& backwardMapping(const std::string& s) const {
             return smap_table.rat(s);
+        }
+
+        inline void changeTransferMap(const transfermap_t& tm) {
+            transfermap = tm;
+        }
+
+        inline const std::string& transfer(const std::string& s) {
+            if (stdutils::inmap(transfermap, s)) {
+                const std::string& res = transfermap.at(s).back();
+                const auto cdata = std::pair<std::string, size_t>(res, localid);
+                transfer_cache[cdata] = s;
+                return res;
+            } else {
+                return s;
+            }
+        }
+
+        inline const std::string& backTransfer(const std::string& s) const {
+            const auto cdata = std::pair<std::string, size_t>(s, localid);
+            if (stdutils::inmap(transfer_cache, cdata)) {
+                return transfer_cache.at(cdata);
+            } else {
+                return s;
+            }
         }
     };
 
@@ -93,8 +128,9 @@ namespace why3cpp {
     };
 
     static inline std::string SmtBackwardConvert(const std::string& smtl2data, const Why3ConvertMap& cmap) {
-        if (cmap.emptySymbolMap())
+        if (cmap.emptySymbolMap()) {
             return smtl2data;
+        }
         BackwardSmtl2CV converter(cmap);
         return converter.convert(smtl2data);
     }

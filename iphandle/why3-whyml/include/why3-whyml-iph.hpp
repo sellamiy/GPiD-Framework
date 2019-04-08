@@ -93,6 +93,7 @@ public:
     }
 
     inline void strengthen(PropIdentifierT id, ConstraintT cons) {
+        cmap.setLocalId(id);
         problem.strengthen(id, cons);
     }
 
