@@ -8,7 +8,10 @@ using namespace why3cpp;
 using wcm_map_t = std::map<std::string, std::string>;
 using wcm_pst_t = stdutils::pair_storage<std::string, std::string>;
 
-static const wcm_map_t WCM_001_Core_Map;
+static const wcm_map_t WCM_001_Core_Map
+(
+ { { "length1", "length" }, { "hd1", "hd" }, { "tl1", "tl" }, { "nth1", "nth" } }
+);
 static const wcm_pst_t WCM_001_Core(WCM_001_Core_Map);
 
 static inline void
