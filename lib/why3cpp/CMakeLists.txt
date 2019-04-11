@@ -62,7 +62,7 @@ set_target_properties(why3cpp-shared PROPERTIES
   VERSION ${LIBWHY3CPP_VERSION}
   CLEAN_DIRECT_OUTPUT 1)
 # ------------------------------------------------------------------------------
-add_executable(why3-tools "bin/why3-tools.cpp")
+register_executable(why3-tools "bin/why3-tools.cpp")
 target_link_libraries(why3-tools why3cpp-static cxxopts)
 # ------------------------------------------------------------------------------
 install(TARGETS why3cpp-static why3cpp-shared

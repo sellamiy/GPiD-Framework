@@ -63,7 +63,7 @@ target_link_libraries(abdulot-shared
 # ==============================================================================
 # Binary tools
 # ==============================================================================
-add_executable(abdulot-parser "bin/abdulot-parser.cpp")
+register_executable(abdulot-parser "bin/abdulot-parser.cpp")
 if(STATIC_EXECUTABLES)
   target_link_libraries(abdulot-parser abdulot-static cxxopts)
 else()

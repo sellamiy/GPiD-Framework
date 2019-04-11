@@ -27,7 +27,7 @@ set_target_properties(smtlib2tools-shared PROPERTIES
   VERSION ${LIBSMTLIB2_CPP_VERSION}
   CLEAN_DIRECT_OUTPUT 1)
 # ------------------------------------------------------------------------------
-add_executable(smtlib2-tools "bin/smtlib2-tools.cpp")
+register_executable(smtlib2-tools "bin/smtlib2-tools.cpp")
 target_link_libraries(smtlib2-tools smtlib2tools-static cxxopts)
 # ------------------------------------------------------------------------------
 install(TARGETS smtlib2tools-static smtlib2tools-shared

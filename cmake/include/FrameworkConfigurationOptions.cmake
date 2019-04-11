@@ -10,6 +10,7 @@ option(COVERAGE_TOOLS "Configure and compile for code coverage reports" OFF)
 option(INSTRUMENTATION "Activate gpid instrumentation toolset" OFF)
 option(BUILD_DOC "Build documentation" ON)
 option(STATIC_EXECUTABLES "Build executables using static librairies" ON)
+option(BUILD_GLOBAL_WRAPPER "Build a global executable wrapping them all" ON)
 # ==============================================================================
 # Additional cosystems
 # ==============================================================================

@@ -37,7 +37,7 @@ function(add_split_exec interface name source) # ARGN: Dependencies
   string(REGEX REPLACE - _tm_ SEXEC_SSOLVER_MACRO ${SEXEC_SSOLVER_MACRO})
   set(SEXEC_STATIC_LINK ${interface}-static)
   set(SEXEC_SHARED_LINK ${interface}-shared)
-  add_executable(${SEXEC_EXECUTABLE_NAME} "${source}")
+  register_executable(${SEXEC_EXECUTABLE_NAME} "${source}")
   add_dependencies(${SEXEC_EXECUTABLE_NAME} ${ARGN})
   target_include_directories(${SEXEC_EXECUTABLE_NAME} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
   target_compile_definitions(${SEXEC_EXECUTABLE_NAME} PRIVATE
@@ -53,7 +53,7 @@ endfunction()
 # ==============================================================================
 # ImpGen - an implicate generator
 # ==============================================================================
-add_executable(gpid "gpid/src/gpid.cpp")
+register_executable(gpid "gpid/src/gpid.cpp")
 add_dependencies(gpid identifiers-multi gpid-generators-multi)
 target_include_directories(gpid PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
 if(STATIC_EXECUTABLES)
@@ -81,7 +81,7 @@ foreach(iph ${IPH_TARGETS})
     string(REGEX REPLACE - _tm_ SOLVER_MACRO ${SOLVER_MACRO})
     list(APPEND IPH_SOLVER_MACROS ${SOLVER_MACRO})
   endforeach()
-  add_executable(${execname} "ilinva/src/ilinva.cpp")
+  register_executable(${execname} "ilinva/src/ilinva.cpp")
   add_dependencies(${execname} identifiers-multi ilinva-generators-multi)
   target_include_directories(${execname} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
   target_compile_definitions(${execname} PRIVATE ${IPH_DEF_MACRO})

@@ -68,6 +68,18 @@ include(ExternalProject)
 include(FrameworkCoverage)
 include(FrameworkCosystems)
 include(FrameworkDocumentation)
+include(FrameworkExecWrapping)
+# ------------------------------------------------------------------------------
+if(NOT FRAMEWORK_WRAPPING_LANGUAGE)
+  set(FRAMEWORK_WRAPPING_LANGUAGE "Python3" CACHE STRING
+    "Choose the language of the framework global wrapper" FORCE)
+endif()
+set(FRAMEWORK_WRAPPING_EXECUTABLES CACHE INTERNAL "Wrapped executables")
+function(register_executable name)
+  add_executable(${name} ${ARGN})
+  list(APPEND FRAMEWORK_WRAPPING_EXECUTABLES ${name})
+  set(FRAMEWORK_WRAPPING_EXECUTABLES ${FRAMEWORK_WRAPPING_EXECUTABLES} CACHE INTERNAL "Wrapped executables")
+endfunction()
 # ==============================================================================
 # Targets
 # ==============================================================================
@@ -84,6 +96,12 @@ endif()
 
 if(BUILD_UTILITIES)
   add_subdirectory(utils)
+endif()
+
+if(BUILD_GLOBAL_WRAPPER)
+  generate_wrapper(TARGET "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/abdulot-select"
+    LANGUAGE ${FRAMEWORK_WRAPPING_LANGUAGE}
+    EXECUTABLES ${FRAMEWORK_WRAPPING_EXECUTABLES})
 endif()
 
 add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_SOURCE_DIR}/cmake/modules/Uninstall.cmake")
