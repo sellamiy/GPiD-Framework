@@ -44,7 +44,7 @@ class WrapForward:
     def execute(self):
         ename = self._find_executable()
         sys.stdout.write('--- starting {} ---\n'.format(ename))
-        os.execvp(ename, self.args)
+        os.execvp(ename, [ename] + self.args)
 
     def _find_executable(self):
         wauto = which(self.name)
