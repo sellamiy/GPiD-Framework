@@ -22,7 +22,7 @@ const std::string W3WML_ProblemController::w3opt_vcreorder = "vcreorder";
 const std::string W3WML_ProblemController::w3opt_cmapmode = "cmapmode";
 
 static inline bool is_property_bypasser_expl(const std::string& expl) {
-    return expl == "expl:precondition" || expl == "expl:loop invariant init";
+    return expl == "expl:loop invariant init";
 }
 
 void W3WML_ShapeDetector::detectVCShape(const why3cpp::ProofResult& pr) {
