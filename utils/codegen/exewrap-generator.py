@@ -8,7 +8,8 @@ from codegencore import pp_warning, pp_error
 from codegencore import prepare_directory, create_template_env, render_template
 # --------------------------------------
 WrappersTable = {
-    'Python3' : 'wrapper.py3'
+    'Python3' : 'wrapper.py3',
+    'Sh' : 'wrapper.sh'
 }
 # --------------------------------------
 def main(args):
