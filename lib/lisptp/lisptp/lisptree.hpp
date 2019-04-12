@@ -8,10 +8,11 @@
 
 namespace lisptp {
 
+    class LispTreeNode;
+
+    using LispTreeNodePtr = std::shared_ptr<LispTreeNode>;
+
     class LispTreeNode {
-    public:
-        using LispTreeNodePtr = std::shared_ptr<LispTreeNode>;
-    private:
         const std::string value;
         const bool callstate;
         const std::vector<LispTreeNodePtr> leaves;
@@ -28,6 +29,11 @@ namespace lisptp {
 
         const std::string str(bool pretty=true) const;
     };
+
+    static inline LispTreeNodePtr alloc_ltn_ptr
+    (const std::string v, bool cs, const std::vector<LispTreeNodePtr> ls) {
+        return LispTreeNodePtr(new LispTreeNode(v, cs, ls));
+    }
 
     static const std::string global_name_wrapper = "_glb_";
 

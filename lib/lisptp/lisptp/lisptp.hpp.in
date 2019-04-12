@@ -2,6 +2,7 @@
 #define LIB_LISP_TREE_PARSER__MAIN_HEADER
 
 #include <lisptp/lisptreevisitor.hpp>
+#include <lisptp/lisptreetranslate.hpp>
 
 namespace lisptp {
     extern std::shared_ptr<LispTreeNode> parse(const std::string& data);

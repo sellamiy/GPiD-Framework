@@ -2,7 +2,7 @@
 # Lisp Tree Parser library - local library target
 # ==============================================================================
 project(liblisptp LANGUAGES CXX)
-set(LIBLISPTP_VERSION "0.2.3")
+set(LIBLISPTP_VERSION "0.2.4")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lisptp/lisptp.hpp.in
   ${LOCAL_LIB_HEADERS_DIR}/lisptp/lisptp.hpp)
