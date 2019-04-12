@@ -9,6 +9,9 @@ namespace smtlib2 {
     class smtfile_decls {
         std::set<smtident_t> symbols;
     public:
+        inline const std::set<smtident_t>& get_set() const {
+            return symbols;
+        }
         inline void add_symbol(const smtident_t& s) {
             symbols.insert(s);
         }

@@ -12,17 +12,22 @@ class W3WML_Prop_Ctx {
     const std::vector<W3WML_Constraint>& literals;
     const std::vector<std::string>& candidate;
     const why3cpp::Why3ConvertMap& cmap;
+    const std::map<std::string, std::string>& translations;
 public:
     W3WML_Prop_Ctx(const std::string& pfile, const std::vector<W3WML_Constraint>& literals,
-                   const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap)
-        : pfile(pfile), literals(literals), candidate(candidate), cmap(cmap) {}
+                   const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap,
+                   const std::map<std::string, std::string>& translations)
+        : pfile(pfile), literals(literals), candidate(candidate),
+          cmap(cmap), translations(translations) {}
     W3WML_Prop_Ctx(const W3WML_Prop_Ctx& o)
-        : pfile(o.pfile), literals(o.literals), candidate(o.candidate), cmap(o.cmap) {}
+        : pfile(o.pfile), literals(o.literals), candidate(o.candidate),
+          cmap(o.cmap), translations(o.translations) {}
 
     inline const std::string& getProblemFile() const { return pfile; }
     inline const std::vector<W3WML_Constraint>& getLiterals() const { return literals; }
     inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
-    inline const std::vector<std::string>& getCandidate() { return candidate; }
+    inline const std::vector<std::string>& getCandidate() const { return candidate; }
+    inline const std::map<std::string, std::string>& getTranslationMap() const { return translations; }
 
     const W3WML_Constraint getCandidateConstraint();
     const std::vector<W3WML_Constraint> getCandidateConstraintDSplit();
@@ -48,6 +53,7 @@ private:
 
     std::vector<W3WML_Constraint> literals;
     why3cpp::Why3ConvertMap cmap;
+    std::map<std::string, std::string> translations;
 
     std::map<std::string, std::vector<std::string>> overrides;
 

@@ -65,12 +65,14 @@ namespace gpid {
         uint64_t smt_time_limit = 0;
         double small_smt_time_limit = 0;
 
+        std::map<std::string, std::string> translation_map;
+
     };
 
     static inline const SolverInterfaceOptions extractInterfaceOptions(const GPiDOptions& iopts) {
         return iopts.small_smt_time_limit > 0 ?
-            SolverInterfaceOptions(iopts.small_smt_time_limit)
-            : SolverInterfaceOptions(iopts.smt_time_limit);
+            SolverInterfaceOptions(iopts.small_smt_time_limit, iopts.translation_map)
+            : SolverInterfaceOptions(iopts.smt_time_limit, iopts.translation_map);
     }
 
 }

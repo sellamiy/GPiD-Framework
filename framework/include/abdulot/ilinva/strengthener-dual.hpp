@@ -196,6 +196,7 @@ namespace ilinva {
         abductionOpts.additional_check_mode = SolverTestStatus::SAT;
         abductionOpts.smt_time_limit = dopts.smt_tlim;
         abductionOpts.small_smt_time_limit = dopts.sml_smt_tlim;
+        abductionOpts.translation_map = iphctx.getTranslationMap();
         generator =
             ImplicateGeneratorPtr(new ImplicateGenerator(_problemBuilder, *abdGenerator, forwarder,
                                                          abductionCoreOpts, abductionOpts));

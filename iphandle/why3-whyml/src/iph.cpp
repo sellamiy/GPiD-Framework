@@ -7,6 +7,7 @@
 #include <smtlib2tools/smtlib2-fileutils.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
+#include <ugly/PineapplePrefix.hpp>
 #include <why3-whyml-iph.hpp>
 
 #define WARN_ONCE_D(lvar, wdata) if (!(lvar)) { snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__ << wdata << snlog::l_end; lvar = true; }
@@ -19,7 +20,7 @@ W3WML_Prop_Ctx W3WML_IPH::generateStrengheningContext
 (PropIdentifierT id, const std::string& overrider, bool shuffle) {
     const std::string filename = problem.generateAbductionProblem(id);
     generateSourceLiterals(id, overrider, shuffle);
-    return W3WML_Prop_Ctx(filename, literals, problem.getCandidateConjunction(id), problem.getCMap());
+    return W3WML_Prop_Ctx(filename, literals, problem.getCandidateConjunction(id), cmap, translations);
 }
 
 struct W_AbdStorerHandler : public GenericHandler {
@@ -76,10 +77,19 @@ template<> const std::string W3WML_IPH::sanitizeLiteral<SymbolChecker>
         return "";
 }
 
+static void generateTranslationMap
+(const smtlib2::smtfile_decls& sdecls, std::map<std::string, std::string>& translations) {
+    translations.clear();
+    ugly::pineapple_squeeze_autostore(sdecls.get_set(), translations);
+    // for (const auto& tm : translations)
+    //     snlog::l_notif() << tm.first << " ---> " << tm.second << snlog::l_end;
+}
+
 void W3WML_IPH::generateSourceLiterals
 (PropIdentifierT id, const std::string& overrider, bool shuffle) {
     const std::string& pfile = problem.getBlockFile(id);
     smtlib2::smtfile_decls sdecls = smtlib2::extract_declarations(pfile);
+    generateTranslationMap(sdecls, translations);
     SymbolChecker schecker(sdecls);
     if (!literals.empty()) {
         literals.clear();
