@@ -4,5 +4,6 @@
 #include <ugly/SetOfSets.hpp>
 #include <ugly/BeurkTables.hpp>
 #include <ugly/MapUtils.hpp>
+#include <ugly/PineapplePrefix.hpp>
 
 #endif
