@@ -49,6 +49,8 @@ inline void CVC4InterfaceAPI::push() { solver.push(); }
 inline void CVC4InterfaceAPI::pop() { solver.pop(); }
 
 inline void CVC4InterfaceAPI::addLiteral(CVC4Literal& literal, bool negate) {
+    if (!siopts.translationMap.empty())
+        snlog::l_warn() << "CVC4 API Interface does not handle translation maps yet" << snlog::l_end;
     if (negate) {
         solver.assertFormula(ctx.mkExpr(CVC4::kind::NOT, literal.expr));
     } else {

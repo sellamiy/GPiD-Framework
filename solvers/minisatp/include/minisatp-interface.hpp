@@ -63,6 +63,8 @@ inline void MinisatInterface::pop() {
 }
 
 inline void MinisatInterface::addLiteral(MinisatLiteral& literal, bool negate) {
+    if (!siopts.translationMap.empty())
+        snlog::l_warn() << "Z3 API Interface does not handle translation maps yet" << snlog::l_end;
     loc_ass.push_back(literal);
     assumps.push(negate ? ~literal.lit : literal.lit);
 }

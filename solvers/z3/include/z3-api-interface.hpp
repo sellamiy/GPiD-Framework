@@ -50,6 +50,8 @@ inline void Z3InterfaceAPI::push() { solver.push(); }
 inline void Z3InterfaceAPI::pop() { solver.pop(); }
 
 inline void Z3InterfaceAPI::addLiteral(Z3Literal& literal, bool negate) {
+    if (!siopts.translationMap.empty())
+        snlog::l_warn() << "Z3 API Interface does not handle translation maps yet" << snlog::l_end;
     solver.add(negate ? (!literal.expr) : literal.expr);
 }
 

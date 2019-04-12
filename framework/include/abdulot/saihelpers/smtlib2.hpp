@@ -151,10 +151,18 @@ namespace saihelpers {
     }
 
     inline void SMTl2SolverInterface::addLiteral(LiteralT& lit, bool negate) {
-        if (negate) {
-            assertions[level].push_back(ctx.memory.alloc("(not " + lit.str() + ")"));
+        if (siopts.translationMap.empty()) {
+            if (negate)
+                assertions[level].push_back(ctx.memory.alloc("(not " + lit.str() + ")"));
+            else
+                assertions[level].push_back(lit.data);
         } else {
-            assertions[level].push_back(lit.data);
+            auto translator = lisptp::LispTreeTranslator(siopts.translationMap);
+            auto translation = translator.translate(lisptp::parse(lit.str()));
+            if (negate)
+                assertions[level].push_back(ctx.memory.alloc("(not " + translation->str(false) + ")"));
+            else
+                assertions[level].push_back(ctx.memory.alloc(translation->str(false)));
         }
     }
 
