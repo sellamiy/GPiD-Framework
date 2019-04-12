@@ -7,6 +7,7 @@
 
 #include <set>
 #include <string>
+#include <algorithm>
 #include <snlog/snlog.hpp>
 #include <ugly/MapUtils.hpp>
 
