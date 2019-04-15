@@ -5,6 +5,8 @@ module ExpoR1
  use int.EuclideanDivision
  use int.Power
  
+ axiom Power_0_I : forall x: int. power x 0 = 1
+ 
  let main (n: int) (m: int) : int
   diverges
   requires { m >= 0 }
@@ -12,8 +14,8 @@ module ExpoR1
  = let p = ref 1 in
    let x = ref n in let y = ref m in
  
-  while !y > 1 do
-   invariant { true }
+  while !y > 0 do
+   invariant { power n m = !p * power !x !y /\ !y >= 0 /\ !p >= 0 }
    if mod !y 2 = 1 then begin
     p := !p * !x
    end;
@@ -23,6 +25,6 @@ module ExpoR1
    x := !x * !x;
   done;
   
-  !p * !x 
+  !p
 
 end

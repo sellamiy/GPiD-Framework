@@ -1,0 +1,24 @@
+module Real0
+
+ use int.Int
+ use real.RealInfix
+ use real.FromInt
+ use ref.Ref
+ 
+ let main (unit) : unit
+  diverges
+ =
+ 
+ let tick = 1.0 /. 10.0 in
+ let time = ref 0.0 in
+ let i = ref 0 in
+ 
+ while !i < 10 do
+  invariant { !time <=. tick *. (from_int !i) /\ !i <= 10 }
+  time := !time +. tick;
+  i := !i + 1
+ done;
+ 
+ assert { !time <=. 1.0 }
+ 
+end

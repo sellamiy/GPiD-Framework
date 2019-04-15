@@ -1,0 +1,28 @@
+module List3
+
+ use int.Int
+ use ref.Ref
+ use list.List
+ use list.Length
+ use list.HdTlNoOpt
+ use list.NthNoOpt
+ use list.Append
+ 
+ let main (l: list int) (e: int) : unit
+  diverges
+  
+ = let p = ref 0 in let ghost dec = ref Nil in
+ 
+   while !p < length l do
+    invariant { length !dec = !p /\ !p <= length l }
+    (* Should need depth 2 + altErgo *)
+    dec := Cons (nth !p l) !dec;
+    p := !p + 1
+   done;
+   
+   dec := Cons e !dec;
+   
+   assert { length !dec = (length l) + 1 };
+   assert { hd !dec = e }
+   
+end

@@ -1,0 +1,29 @@
+(size auto)
+
+(lambda eq (l r) (= l r))
+(lambda neq (l r) (distinct l r))
+(lambda ge (l r) (>= l r))
+(lambda gt (l r) (> l r))
+(lambda le (l r) (<= l r))
+(lambda lt (l r) (< l r))
+
+(declare p t i j as int)
+(declare l dec as list)
+(reference p t dec)
+(declare 0 as int)
+
+(lambda length (param) (length param))
+(lambda hd (param) (hd param))
+(lambda nth (loc lis) (nth loc lis))
+
+(apply nth (over int list) int)
+(apply length (over list) int)
+;(apply hd (over list) int)
+
+(apply eq (over int int) bf symmetric)
+(apply neq (over int int) bf symmetric)
+(apply le (over int int) bf nonself)
+(apply lt (over int int) bf nonself)
+
+(extend bf)
+

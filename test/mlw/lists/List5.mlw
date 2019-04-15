@@ -1,0 +1,29 @@
+module List5
+
+ use int.Int
+ use ref.Ref
+ use list.List
+ use list.Length
+ use list.HdTlNoOpt
+ use list.NthNoOpt
+ use list.Append
+ 
+ let main (l: list int) (i: int) : unit
+  diverges
+  requires { i < length l /\ i >= 0 }
+  
+ = let p = ref 0 in let ghost s = ref l in let ghost r = ref Nil in
+ 
+   while !p <= i do
+    invariant { true }
+    if !p = i then
+      r := !r ++ (tl !s)
+    else
+      r := (Cons (hd !s) Nil) ++ !r;
+    p := !p + 1;
+    s := tl !s;
+   done;
+   
+   assert { length !s = length !r + 1 }
+   
+end

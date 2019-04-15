@@ -10,12 +10,13 @@ module List2
  
  let main (l: list int) (i: int) : unit
   diverges
-  requires { i < length l }
+  requires { i < length l /\ length l > 0 /\ i >= 0 }
   
  = let p = ref 0 in let ghost dec = ref l in
+   (* Fails ; May be wrong *)
  
    while !p <> i do
-    invariant { true }
+    invariant { hd !dec = nth !p l }
     dec := tl !dec;
     p := !p + 1
    done;

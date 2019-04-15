@@ -13,7 +13,7 @@ module ExpoR0
    let w = ref 0 in
  
   while !w < m do
-   invariant { true }
+   invariant { !p = power n !w /\ !w <= m /\ !w >= 0}
     p := !p * n;
     w := !w + 1
   done;

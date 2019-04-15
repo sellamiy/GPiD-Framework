@@ -15,7 +15,8 @@ module List0
  = let i = ref 0 in let res = ref Nil in
  
    while !i < n do
-     invariant { true }
+     invariant { !i = length !res /\ !i <= n }
+     (* Failure reason: Z3 cannot make proof *)
       res := !res ++ Cons !i Nil;
       i := !i + 1
    done;

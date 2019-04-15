@@ -15,7 +15,7 @@ module List1
  = let i = ref 1 in let l = ref (Cons 1 Nil) in
  
    while unknown() do
-    invariant { true }
+    invariant { hd !l = !i /\ !i = length !l}
     i := !i + 1;
     l := Cons !i !l
    done;
