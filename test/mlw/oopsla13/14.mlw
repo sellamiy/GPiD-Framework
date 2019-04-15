@@ -7,10 +7,12 @@ module Oopsla14
  let main (m: int) : unit
   requires { m > 0 }
  = let a = ref 0 in
+   let j = ref 1 in
 
-   for j = 1 to m do
+   while !j <= m do
     invariant { true }
-    if unknown() then a := !a + 1 else a := !a - 1
+    if unknown() then a := !a + 1 else a := !a - 1;
+    j := !j + 1
    done;
 
    assert { !a >= -m };

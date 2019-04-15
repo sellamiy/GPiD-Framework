@@ -1,5 +1,5 @@
 (size auto)
-(reference j)
+(reference i j)
 (reference x)
 (abduce (< (* x 2) (+ j 2)))
 (abduce (< (* x 2) 0))

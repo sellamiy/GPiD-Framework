@@ -4,11 +4,13 @@ module Oopsla11
 
  let main (void) : unit =
   let j = ref 0 in
+  let i = ref 0 in
   let x = ref 100 in
 
-  for i = 0 to !x - 1 do
+  while !i < !x do
    invariant { true }
-   j := !j + 2
+   j := !j + 2;
+   i := !i + 1
   done;
 
   assert { !j = !x * 2 }

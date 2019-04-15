@@ -2,20 +2,20 @@ module Oopsla09
  use int.Int
  use ref.Ref
 
- val unknown1 (unit) : bool
- val unknown2 (unit) : bool
- val unknown3 (unit) : bool
+ val unknowna (unit) : bool
+ val unknownb (unit) : bool
+ val unknownc (unit) : bool
 
- let main (pvlen0: int) : unit
+ let main (pvlen_init: int) : unit
   diverges
  = let i = ref 0 in
-   let pvlen = ref pvlen0 in
+   let pvlen = ref pvlen_init in
    let t = ref 0 in
    let j = ref 0 in
    let k = ref 0 in
    let n = ref 0 in
 
-   while unknown1() do
+   while unknowna() do
     invariant { true }
     i := !i + 1;
    done;
@@ -23,7 +23,7 @@ module Oopsla09
    if !i > !pvlen then pvlen := !i;
    i := 0;
 
-   while unknown2() do
+   while unknownb() do
     invariant { true }
     t := !i;
     i := !i + 1;
