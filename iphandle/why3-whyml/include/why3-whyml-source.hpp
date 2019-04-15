@@ -1,10 +1,6 @@
 #ifndef WHY3_WHYML_IPH_FOR_GPID__SOURCE__HPP
 #define WHY3_WHYML_IPH_FOR_GPID__SOURCE__HPP
 
-#include <map>
-#include <set>
-#include <vector>
-#include <memory>
 #include <why3cpp/why3proof.hpp>
 #include <why3cpp/why3utils.hpp>
 #include "why3-whyml-constraint.hpp"

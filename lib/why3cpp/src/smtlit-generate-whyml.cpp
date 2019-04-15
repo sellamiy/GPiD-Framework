@@ -2,7 +2,6 @@
 
 #include <fstream>
 #include <sstream>
-#include <snlog/snlog.hpp>
 #include <ugly/ugly.hpp>
 #include <smtlib2tools/smtlib2-functions.hpp>
 #include <why3cpp/whyml-extractor.hpp>

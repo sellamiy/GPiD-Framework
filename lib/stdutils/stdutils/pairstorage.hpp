@@ -7,7 +7,6 @@
 #ifndef LIB_STANDARD_UTILS__PAIR_STORAGE_HPP
 #define LIB_STANDARD_UTILS__PAIR_STORAGE_HPP
 
-#include <map>
 #include <stdutils/collections.hpp>
 
 namespace stdutils {

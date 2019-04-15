@@ -1,7 +1,6 @@
 #define WHY3_WHYML_IPH_FOR_GPID__WHYML_HANDLER__CPP
 
 #include <fstream>
-#include <sstream>
 #include <abdulot/core/errors.hpp>
 #include <why3-whyml-source.hpp>
 

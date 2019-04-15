@@ -1,3 +1,9 @@
+/**
+ * \file smtlib2tools/parser-command.hpp
+ * \brief Smtlib2 command parser.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_COMMAND_PARSER_HPP
 #define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_COMMAND_PARSER_HPP
 

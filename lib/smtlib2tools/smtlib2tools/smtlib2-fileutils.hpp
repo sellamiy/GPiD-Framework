@@ -1,3 +1,9 @@
+/**
+ * \file smtlib2tools/smtlib2-fileutils.hpp
+ * \brief Utilities for handling smtlib2 files.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_SMTLIB2_CPP_TOOLS__FILE_UTILS__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__FILE_UTILS__HEADER
 

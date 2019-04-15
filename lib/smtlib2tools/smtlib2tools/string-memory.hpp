@@ -1,3 +1,9 @@
+/**
+ * \file smtlib2tools/string-memory.hpp
+ * \brief String allocator for smtlib data.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_STRING_MEMORY_HPP
 #define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_STRING_MEMORY_HPP
 

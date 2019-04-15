@@ -1,7 +1,6 @@
 #ifndef LIB_WHY3CPP__PLATFORM_GENERAL_UTILS_HEADER
 #define LIB_WHY3CPP__PLATFORM_GENERAL_UTILS_HEADER
 
-#include <set>
 #include <snlog/snlog.hpp>
 #include <stdutils/pairstorage.hpp>
 #include <lisptp/lisptp.hpp>

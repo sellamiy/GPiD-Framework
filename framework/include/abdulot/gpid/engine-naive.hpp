@@ -8,7 +8,6 @@
 #define ABDULOT__GPID__NAIVE_ENGINE_HPP
 
 #include <set>
-#include <vector>
 
 #include <abdulot/core/memory.hpp>
 #include <abdulot/gpid/skipcontrol.hpp>

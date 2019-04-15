@@ -1,8 +1,6 @@
 #define WHY3_WHYML_IPH_FOR_GPID__IPH_CONTROL__CPP
 
 #include <fstream>
-#include <snlog/snlog.hpp>
-#include <stdutils/collections.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
 #include <why3-whyml-controller.hpp>

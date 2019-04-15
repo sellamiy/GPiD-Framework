@@ -1,3 +1,9 @@
+/**
+ * \file smtlib2tools/smtlib2-types.hpp
+ * \brief Minimal smtlib2 type definitions.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_SMTLIB2_CPP_TOOLS__TYPES__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__TYPES__HEADER
 

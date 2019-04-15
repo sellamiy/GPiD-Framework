@@ -11,9 +11,7 @@
 
 #include <abdulot/core/algorithm.hpp>
 #include <abdulot/ilinva/iph-core.hpp>
-#include <abdulot/ilinva/options.hpp>
 #include <abdulot/ilinva/strengthener-dual.hpp>
-#include <abdulot/instrument/instrument.hpp>
 
 namespace abdulot {
 namespace ilinva {

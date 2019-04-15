@@ -1,7 +1,12 @@
+/**
+ * \file smtlib2tools/parser-tokens.hpp
+ * \brief Smtlib2 token parser.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
 #define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
 
-#include <vector>
 #include <smtlib2tools/smtlib2-defs.hpp>
 
 namespace smtlib2 {

@@ -1,3 +1,9 @@
+/**
+ * \file lisptp/lisptreetranslate.hpp
+ * \brief Generic translator for the lisptree.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_LISP_TREE_PARSER__LISP_TREE_TRANSLATE_HEADER
 #define LIB_LISP_TREE_PARSER__LISP_TREE_TRANSLATE_HEADER
 

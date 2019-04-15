@@ -1,3 +1,9 @@
+/**
+ * \file smtlib2tools/smtlib2-defs.hpp
+ * \brief Core smtlib2 definitions.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_SMTLIB2_CPP_TOOLS__CORE__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__CORE__HEADER
 

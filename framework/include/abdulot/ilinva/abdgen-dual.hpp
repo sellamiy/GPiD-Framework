@@ -6,7 +6,6 @@
 #ifndef ABDULOT__ILINVA__DUAL_SOMEHOW_SMART_ABDUCIBLE_GENERATION_HPP
 #define ABDULOT__ILINVA__DUAL_SOMEHOW_SMART_ABDUCIBLE_GENERATION_HPP
 
-#include <vector>
 #include <abdulot/ilinva/data-dual.hpp>
 
 namespace abdulot {

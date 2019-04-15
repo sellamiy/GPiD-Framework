@@ -68,7 +68,8 @@ INPUT_ENCODING         = UTF-8
 RECURSIVE              = YES
 
 EXCLUDE                = @CMAKE_CURRENT_SOURCE_DIR@/framework/include/abdulot/instrument \
-                         @CMAKE_CURRENT_SOURCE_DIR@/framework/src/instrument
+                         @CMAKE_CURRENT_SOURCE_DIR@/framework/src/instrument \
+                         @CMAKE_CURRENT_BINARY_DIR@/local/lib/include/why3cpp/antlr4
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =

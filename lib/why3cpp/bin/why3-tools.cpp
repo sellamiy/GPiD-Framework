@@ -1,7 +1,6 @@
 #define WHYML_P_TOOLS_EXECUTABLE_CPP
 
 #include <cxxopts.hpp>
-#include <snlog/snlog.hpp>
 #include <why3cpp/why3cpp.hpp>
 
 using namespace std;

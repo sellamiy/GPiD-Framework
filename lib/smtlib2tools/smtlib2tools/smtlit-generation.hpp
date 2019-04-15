@@ -1,3 +1,9 @@
+/**
+ * \file smtlib2tools/smtlit-generation.hpp
+ * \brief Literal generation core.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_SMTLIB2_CPP_TOOLS__LITERALS_GENERATION__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__LITERALS_GENERATION__HEADER
 

@@ -1,3 +1,9 @@
+/**
+ * \file smtlib2tools/smtlib2-annotations.hpp
+ * \brief Smtlib2 annotation library.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_SMTLIB2_CPP_TOOLS__ANNOTATIONS__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__ANNOTATIONS__HEADER
 

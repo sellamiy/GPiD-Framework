@@ -1,3 +1,9 @@
+/**
+ * \file lisptp/lisptreevisitor.hpp
+ * \brief Generic vistor for the lisptree.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_LISP_TREE_PARSER__LISP_TREE_VISITOR_HEADER
 #define LIB_LISP_TREE_PARSER__LISP_TREE_VISITOR_HEADER
 

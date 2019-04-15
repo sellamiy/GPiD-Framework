@@ -1,3 +1,9 @@
+/**
+ * \file lisptp/lisptp.hpp
+ * \brief Lisp tree parse library header.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_LISP_TREE_PARSER__MAIN_HEADER
 #define LIB_LISP_TREE_PARSER__MAIN_HEADER
 
@@ -5,7 +11,17 @@
 #include <lisptp/lisptreetranslate.hpp>
 
 namespace lisptp {
+    /**
+     * \brief Parse lisp data.
+     * \param data Data to parse.
+     * \returns the AST of the lisp tree in data.
+     */
     extern std::shared_ptr<LispTreeNode> parse(const std::string& data);
+    /**
+     * \brief Parse lisp file.
+     * \param fname Filename/location of the file to parse.
+     * \returns the AST of the lisp data contained in fname.
+     */
     extern std::shared_ptr<LispTreeNode> parse_file(const std::string& fname);
 }
 

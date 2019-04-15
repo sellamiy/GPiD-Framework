@@ -1,3 +1,9 @@
+/**
+ * \file lisptp/lisptree.hpp
+ * \brief Lisp AST.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_LISP_TREE_PARSER__LISP_TREE_HEADER
 #define LIB_LISP_TREE_PARSER__LISP_TREE_HEADER
 
@@ -10,8 +16,10 @@ namespace lisptp {
 
     class LispTreeNode;
 
+    /** Pointer to AST Node */
     using LispTreeNodePtr = std::shared_ptr<LispTreeNode>;
 
+    /** Lisp AST Node */
     class LispTreeNode {
         const std::string value;
         const bool callstate;
@@ -30,6 +38,10 @@ namespace lisptp {
         const std::string str(bool pretty=true) const;
     };
 
+    /**
+     * Allocator for AST nodes.
+     * \returns a pointer to a newly allocated AST node built with the data provided.
+     */
     static inline LispTreeNodePtr alloc_ltn_ptr
     (const std::string v, bool cs, const std::vector<LispTreeNodePtr> ls) {
         return LispTreeNodePtr(new LispTreeNode(v, cs, ls));

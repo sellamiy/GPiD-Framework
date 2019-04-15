@@ -7,7 +7,6 @@
 #ifndef ABDULOT__GPID__ADVANCED_ENGINE_HPP
 #define ABDULOT__GPID__ADVANCED_ENGINE_HPP
 
-#include <vector>
 #include <fstream>
 
 #include <abdulot/core/memory.hpp>

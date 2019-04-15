@@ -1,6 +1,5 @@
 #define LIB_WHY3CPP__PLATFORM_PROOF_CPP
 
-#include <set>
 #include <array>
 #include <sstream>
 #include <snlog/snlog.hpp>

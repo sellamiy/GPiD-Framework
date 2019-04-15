@@ -1,7 +1,6 @@
 #ifndef LIB_WHY3CPP__PLATFORM_PROOF_HEADER
 #define LIB_WHY3CPP__PLATFORM_PROOF_HEADER
 
-#include <map>
 #include <list>
 #include <memory>
 #include <stdutils/collections.hpp>

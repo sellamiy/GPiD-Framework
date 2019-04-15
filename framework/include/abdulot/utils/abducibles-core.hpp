@@ -7,10 +7,7 @@
 #ifndef ABDULOT__UTILS__ABDPARSER_HPP
 #define ABDULOT__UTILS__ABDPARSER_HPP
 
-#include <vector>
-#include <vector>
 #include <set>
-#include <map>
 #include <lisptp/lisptp.hpp>
 
 namespace abdulot {

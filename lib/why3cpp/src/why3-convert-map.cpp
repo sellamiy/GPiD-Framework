@@ -1,6 +1,5 @@
 #define LIB_WHY3CPP__CONVERT_MAP_CPP
 
-#include <snlog/snlog.hpp>
 #include <why3cpp/why3utils.hpp>
 
 using namespace why3cpp;

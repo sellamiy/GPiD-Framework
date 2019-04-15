@@ -1,7 +1,6 @@
 #define WHY3_WHYML_IPH_FOR_GPID__SOURCE__CPP
 
 #include <fstream>
-#include <snlog/snlog.hpp>
 #include <stdutils/random.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <smtlib2tools/smtlit-presets.hpp>

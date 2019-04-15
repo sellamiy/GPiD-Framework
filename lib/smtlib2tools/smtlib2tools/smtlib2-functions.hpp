@@ -1,3 +1,9 @@
+/**
+ * \file smtlib2tools/smtlib2-functions.hpp
+ * \brief Minimal smtlib2 function definitions.
+ * \author Yanis Sellami
+ * \date 2019
+ */
 #ifndef LIB_SMTLIB2_CPP_TOOLS__FUNCTIONS__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__FUNCTIONS__HEADER
 
