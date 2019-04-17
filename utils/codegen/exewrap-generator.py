@@ -9,7 +9,8 @@ from codegencore import prepare_directory, create_template_env, render_template
 # --------------------------------------
 WrappersTable = {
     'Python3' : 'wrapper.py3',
-    'Sh' : 'wrapper.sh'
+    'Sh' : 'wrapper.sh',
+    'Sh-Ilinva-Readin' : 'wrapper.ilinva.readin.sh'
 }
 # --------------------------------------
 def main(args):
