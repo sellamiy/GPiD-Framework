@@ -18,7 +18,13 @@ W3WML_Prop_Ctx W3WML_IPH::generateStrengheningContext
 (PropIdentifierT id, const std::string& overrider, bool shuffle) {
     const std::string filename = problem.generateAbductionProblem(id);
     generateSourceLiterals(id, overrider, shuffle);
-    return W3WML_Prop_Ctx(filename, literals, problem.getCandidateConjunction(id), cmap, translations);
+    return W3WML_Prop_Ctx
+        (filename, literals,
+         problem.getCandidateConjunction(id),
+         cmap, translations, problem.getInternalPropertyIdentitifer(id),
+         problem.getStringOption(W3WML_ProblemController::w3opt_solver),
+         problem.getBoolOption(W3WML_ProblemController::w3opt_vcreorder),
+         problem.getSourceCopy());
 }
 
 struct W_AbdStorerHandler : public GenericHandler {

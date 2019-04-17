@@ -91,6 +91,10 @@ public:
           sopts(sopts), bopts(bopts)
     {}
 
+    inline std::shared_ptr<W3WML_Template> getSourceCopy() const {
+        return std::shared_ptr<W3WML_Template>(new W3WML_Template(sourcedata));
+    }
+
     inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
 
     inline void exportSource(const std::string& filename) const {
@@ -112,6 +116,10 @@ public:
     inline const std::vector<std::string>& getCandidateConjunction(blockid_t id) {
         auto property = prop_ident(blockmap, id);
         return sourcedata.getProperty(property).conj;
+    }
+
+    inline size_t getInternalPropertyIdentitifer(blockid_t id) const {
+        return prop_ident(blockmap, id);
     }
 
     inline void strengthen(blockid_t id, W3WML_Constraint cons) {

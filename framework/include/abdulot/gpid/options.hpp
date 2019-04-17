@@ -46,6 +46,8 @@ namespace gpid {
         bool additional_checker = false;
         SolverTestStatus additional_check_mode = SolverTestStatus::UNSAT;
 
+        bool external_checker = false;
+
         /** Treat unknown solver */
         SolverTestStatus unknown_handle = SolverTestStatus::UNKNOWN;
 

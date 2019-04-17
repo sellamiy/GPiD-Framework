@@ -12,6 +12,7 @@
 #include <abdulot/core/memory.hpp>
 #include <abdulot/containers/atrees.hpp>
 #include <abdulot/gpid/skipcontrol.hpp>
+#include <abdulot/gpid/implicates.hpp>
 #include <abdulot/instrument/instrument.hpp>
 
 namespace abdulot {
@@ -53,7 +54,9 @@ namespace gpid {
     };
 
     /** \brief Class for handling abducible literals. \ingroup gpidcorelib */
-    template<class InterfaceT>
+    template
+    <class InterfaceT,
+     typename ExternalChecker=AutoforwardExternalChecker<LiteralHypothesis, typename InterfaceT::LiteralT>>
     class AdvancedAbducibleEngine {
     public:
         /** Context manager type of the underlying interface. */
@@ -64,6 +67,7 @@ namespace gpid {
         using ModelT = typename InterfaceT::ModelT;
         /** Problem loading type of the underlying interface. */
         using ProblemLoaderT = typename InterfaceT::ProblemLoaderT;
+        using ExternalCheckerT = ExternalChecker;
         /** Element counter type. */
         using counter_t = uint64_t;
         /** Abducible indexing type. */
@@ -77,6 +81,7 @@ namespace gpid {
         InterfaceT& solver_contrads;
         InterfaceT& solver_consistency;
         std::vector<LiteralT> additional_checks;
+        ExternalCheckerT externalChecker;
 
         starray::SequentialActivableArray lactive;
         ObjectMapper<LiteralT> lmapper;
@@ -93,6 +98,7 @@ namespace gpid {
             counter_t consistency = 0;
             counter_t consequence = 0;
             counter_t additionals = 0;
+            counter_t external    = 0;
         } skip_counters;
 
         std::map<level_t, std::vector<index_t> > selection_map;
@@ -124,6 +130,7 @@ namespace gpid {
         inline bool isConsistent(LiteralReference h);
 
         inline bool passAdditionalChecks(LiteralReference h);
+        inline bool passExternalChecks(LiteralReference h);
 
         inline bool isConsequence(LiteralReference h);
 
@@ -131,10 +138,12 @@ namespace gpid {
         inline index_t getCurrentIndex();
     public:
         /** Create an abducible engine. */
-        AdvancedAbducibleEngine(size_t size, ContextManagerT& ctx, GPiDOptions& iopts);
+        AdvancedAbducibleEngine(size_t size, ContextManagerT& ctx, GPiDOptions& iopts,
+                                const ExternalCheckerT& externalChecker=ExternalCheckerT());
         /** Create an abducible engine. */
         template<typename AbducibleSource>
-        AdvancedAbducibleEngine(AbducibleSource& source, ContextManagerT& ctx, GPiDOptions& iopts);
+        AdvancedAbducibleEngine(AbducibleSource& source, ContextManagerT& ctx, GPiDOptions& iopts,
+                                const ExternalCheckerT& externalChecker=ExternalCheckerT());
 
         /** Reinitialize the abducible engine. */
         inline void reinit();
@@ -208,27 +217,31 @@ namespace gpid {
         _lmapping[lkey].clear();
     }
 
-    template<typename InterfaceT>
-    AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine
-    (size_t size, ContextManagerT& ctx, GPiDOptions& iopts)
+    template<typename InterfaceT, typename ExternalCheckerT>
+    AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::AdvancedAbducibleEngine
+    (size_t size, ContextManagerT& ctx, GPiDOptions& iopts,
+     const ExternalCheckerT& externalChecker)
         : options(iopts),
           interfaceEngine(ctx, extractInterfaceOptions(iopts)),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
+          externalChecker(externalChecker),
           lactive(size),
           storage(interfaceEngine.newInterface(), lmapper),
           hypothesis(size),
           skipctrl(iopts)
     { reinit(); }
 
-    template<typename InterfaceT>
+    template<typename InterfaceT, typename ExternalCheckerT>
     template<typename AbducibleSource>
-    AdvancedAbducibleEngine<InterfaceT>::AdvancedAbducibleEngine
-    (AbducibleSource& source, ContextManagerT& ctx, GPiDOptions& iopts)
+    AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::AdvancedAbducibleEngine
+    (AbducibleSource& source, ContextManagerT& ctx, GPiDOptions& iopts,
+     const ExternalCheckerT& externalChecker)
         : options(iopts),
           interfaceEngine(ctx, extractInterfaceOptions(iopts)),
           solver_contrads(interfaceEngine.newInterface()),
           solver_consistency(interfaceEngine.newInterface()),
+          externalChecker(externalChecker),
           lactive(source.count()),
           lmapper(source.getMapper()),
           llinks(source.getLinks()),
@@ -237,23 +250,23 @@ namespace gpid {
           skipctrl(iopts)
     { reinit(); }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::reinit() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::reinit() {
         clevel = 0;
         limit[0] = 0;
         pointer[0] = lactive.get_maximal_size();
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::initializeSolvers(ProblemLoaderT& pbld) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::initializeSolvers(ProblemLoaderT& pbld) {
         pbld.prepareReader();
         while (pbld.hasConstraint()) {
             solver_contrads.addConstraint(pbld.nextConstraint());
         }
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::addAdditionalCheckLiteral
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::addAdditionalCheckLiteral
     (typename InterfaceT::LiteralT& cons) {
         solver_consistency.push();
         solver_consistency.addLiteral(cons);
@@ -269,65 +282,66 @@ namespace gpid {
         }
     }
 
-    template<typename InterfaceT>
-    inline constexpr uint32_t AdvancedAbducibleEngine<InterfaceT>::getSourceSize() const {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline constexpr uint32_t AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::getSourceSize() const {
         return lactive.get_maximal_size();
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::mapLiteral(index_t idx, LiteralT* hyp) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::mapLiteral(index_t idx, LiteralT* hyp) {
         lmapper.map(idx, hyp);
     }
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::mapLink(index_t idx, index_t tgt_idx) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::mapLink(index_t idx, index_t tgt_idx) {
         llinks[idx].push_back(tgt_idx);
     }
-    template<typename InterfaceT>
+    template<typename InterfaceT, typename ExternalCheckerT>
     inline const ObjectMapper<typename InterfaceT::LiteralT>&
-    AdvancedAbducibleEngine<InterfaceT>::getMapper() const {
+    AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::getMapper() const {
         return lmapper;
     }
 
-    template<typename InterfaceT>
-    inline std::map<std::string, uint64_t>& AdvancedAbducibleEngine<InterfaceT>::getSkippedCounts() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline std::map<std::string, uint64_t>& AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::getSkippedCounts() {
         counts_wrap["storage"]      = skip_counters.storage;
         counts_wrap["level depth"]  = skip_counters.level_depth;
         counts_wrap["consistency"]  = skip_counters.consistency;
         counts_wrap["consequences"] = skip_counters.consequence;
         counts_wrap["additionals"]  = skip_counters.additionals;
+        counts_wrap["external"]     = skip_counters.external;
         return counts_wrap;
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::printCurrentImplicate() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::printCurrentImplicate() {
         printlh(implicate<InterfaceT>(hypothesis, lmapper, interfaceEngine.getContextManager()));
     }
 
-    template<typename InterfaceT>
+    template<typename InterfaceT, typename ExternalCheckerT>
     inline LiteralHypothesis&
-    AdvancedAbducibleEngine<InterfaceT>::getCurrentImplicate() {
+    AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::getCurrentImplicate() {
         return hypothesis;
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::printStorage() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::printStorage() {
         storage.print();
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::exportStorage(const std::string& filename) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::exportStorage(const std::string& filename) {
         std::ofstream outstr(filename);
         storage.exportGraph(outstr);
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::accessLevel(level_t level) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::accessLevel(level_t level) {
         if (level > clevel) increaseLevel(level);
         else                decreaseLevel(level);
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::deactivateLiteral(index_t idx) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::deactivateLiteral(index_t idx) {
         if (lactive.is_active(idx)) {
             selection_map[clevel].push_back(idx);
         } else if (lactive.is_paused(idx)) {
@@ -338,8 +352,8 @@ namespace gpid {
 
 /** Macro stress for the minimum of two things */
 #define MIN(a,b) (a) < (b) ? (a) : (b)
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::increaseLevel(level_t target) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::increaseLevel(level_t target) {
         while (clevel < target) {
             /* The hack +1 to is necessary to access the first active when
              * asking to get downward. However, this is tragically unsafe.
@@ -354,8 +368,8 @@ namespace gpid {
     }
 #undef MIN
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::decreaseLevel(level_t target) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::decreaseLevel(level_t target) {
         while (clevel > target) {
             unselectLevel();
             solver_contrads.pop();
@@ -364,8 +378,8 @@ namespace gpid {
         }
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::deactivateSequents(index_t ub) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::deactivateSequents(index_t ub) {
         index_t curr = ub;
         index_t next = lactive.get_downward(curr);
         while (curr != next) {
@@ -382,8 +396,8 @@ namespace gpid {
         }
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::selectCurrentLiteral() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::selectCurrentLiteral() {
         index_t selected = getCurrentIndex();
         deactivateLiteral(selected);
         for (index_t linked : llinks[selected]) {
@@ -394,22 +408,22 @@ namespace gpid {
         hypothesis.addLiteral(getCurrentIndex(), clevel);
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::addSolverLiteral(index_t idx) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::addSolverLiteral(index_t idx) {
         solver_contrads.addLiteral(getLiteral(idx));
         solver_consistency.addLiteral(getLiteral(idx));
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::clearSolversCurrentLevel() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::clearSolversCurrentLevel() {
         solver_contrads.pop();
         solver_contrads.push();
         solver_consistency.pop();
         solver_consistency.push();
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::unselectLevel() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::unselectLevel() {
         hypothesis.removeLiterals(clevel);
         clearSolversCurrentLevel();
         for (index_t skipped : selection_map[clevel]) {
@@ -426,8 +440,8 @@ namespace gpid {
         pselection_map[clevel].clear();
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::prepruneLiterals() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::prepruneLiterals() {
         std::set<index_t> _todeact;
         for (index_t h : lactive) {
             solver_consistency.push();
@@ -443,8 +457,8 @@ namespace gpid {
             lactive.deactivate(h);
     }
 
-    template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsistent(LiteralReference h) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline bool AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::isConsistent(LiteralReference h) {
         solver_consistency.push();
         solver_consistency.addLiteral(lmapper.get(h));
         SolverTestStatus status = solver_consistency.check();
@@ -455,8 +469,8 @@ namespace gpid {
         return isSatResult(status, options.unknown_handle);
     }
 
-    template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::passAdditionalChecks(LiteralReference h) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline bool AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::passAdditionalChecks(LiteralReference h) {
         for (LiteralT& checker : additional_checks) {
             solver_consistency.push();
             solver_consistency.addLiteral(checker, false);
@@ -476,14 +490,23 @@ namespace gpid {
         return true;
     }
 
-    template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::isConsequence(LiteralReference) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline bool AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::passExternalChecks(LiteralReference h) {
+        const size_t _hook = 1;
+        hypothesis.addLiteral(h, clevel + _hook);
+        const bool res = externalChecker(hypothesis, getMapper());
+        hypothesis.removeLiterals(clevel + _hook);
+        return res;
+    }
+
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline bool AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::isConsequence(LiteralReference) {
         snlog::l_warn() << "isConsequence not implemented" << snlog::l_end; // TODO
         return false;
     }
 
-    template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::canBeSkipped(LiteralReference h) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline bool AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::canBeSkipped(LiteralReference h) {
         if (skipctrl.max_level <= clevel) {
             skip_counters.level_depth++;
             insthandle(instrument::idata(lmapper.get(h).str() + ":depth"),
@@ -514,17 +537,23 @@ namespace gpid {
                        instrument::instloc::skip);
             return true;
         }
+        if (skipctrl.external && !passExternalChecks(h)) {
+            skip_counters.external++;
+            insthandle(instrument::idata(lmapper.get(h).str() + ":external"),
+                       instrument::instloc::skip);
+            return true;
+        }
         return false;
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::backtrack(level_t level) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::backtrack(level_t level) {
         accessLevel(level);
         clearSolversCurrentLevel();
     }
 
-    template<typename InterfaceT>
-    inline bool AdvancedAbducibleEngine<InterfaceT>::searchNextLiteral(level_t level) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline bool AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::searchNextLiteral(level_t level) {
         accessLevel(level);
         unselectLevel();
         while (true) {
@@ -545,26 +574,26 @@ namespace gpid {
         }
     }
 
-    template<typename InterfaceT>
+    template<typename InterfaceT, typename ExternalCheckerT>
     inline typename InterfaceT::LiteralT&
-    AdvancedAbducibleEngine<InterfaceT>::getLiteral(index_t idx) {
+    AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::getLiteral(index_t idx) {
         return lmapper.get(idx);
     }
 
-    template<typename InterfaceT>
-    inline typename AdvancedAbducibleEngine<InterfaceT>::index_t
-    AdvancedAbducibleEngine<InterfaceT>::getCurrentIndex() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline typename AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::index_t
+    AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::getCurrentIndex() {
         return pointer[clevel];
     }
 
-    template<typename InterfaceT>
+    template<typename InterfaceT, typename ExternalCheckerT>
     inline typename InterfaceT::LiteralT&
-    AdvancedAbducibleEngine<InterfaceT>::getCurrentLiteral() {
+    AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::getCurrentLiteral() {
         return getLiteral(getCurrentIndex());
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::modelCleanUp() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::modelCleanUp() {
         const ModelT& model = solver_contrads.getModel();
         for (index_t idx : lactive) {
             if (!lactive.is_active(idx)) continue;
@@ -579,14 +608,14 @@ namespace gpid {
         }
     }
 
-    template<typename InterfaceT>
-    inline void AdvancedAbducibleEngine<InterfaceT>::storeCurrentImplicate() {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline void AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::storeCurrentImplicate() {
         storage.bwdSubsumesRemove(hypothesis);
         storage.insert(hypothesis);
     }
 
-    template<typename InterfaceT>
-    inline SolverTestStatus AdvancedAbducibleEngine<InterfaceT>::testHypothesis(level_t level) {
+    template<typename InterfaceT, typename ExternalCheckerT>
+    inline SolverTestStatus AdvancedAbducibleEngine<InterfaceT, ExternalCheckerT>::testHypothesis(level_t level) {
         accessLevel(level);
         insthandle(instrument::idata(solver_consistency.getPrintableAssertions(false)),
                    instrument::instloc::ismt_test);

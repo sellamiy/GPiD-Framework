@@ -10,7 +10,8 @@ SkipController::SkipController(const GPiDOptions& opts) :
     max_level(opts.max_level),
     inconsistencies(opts.allow_inconsistencies),
     consequences(opts.detect_consequences),
-    additionals(opts.additional_checker)
+    additionals(opts.additional_checker),
+    external(opts.external_checker)
 { }
 
 SkipController::SkipController(const SkipController& ctrler) :
@@ -18,5 +19,6 @@ SkipController::SkipController(const SkipController& ctrler) :
     max_level(ctrler.max_level),
     inconsistencies(ctrler.inconsistencies),
     consequences(ctrler.consequences),
-    additionals(ctrler.additionals)
+    additionals(ctrler.additionals),
+    external(ctrler.external)
 { }

@@ -9,6 +9,7 @@
 
 #include <abdulot/core/errors.hpp>
 #include <abdulot/core/saitypes.hpp>
+#include <abdulot/core/memory.hpp>
 #include <abdulot/ilinva/options.hpp>
 
 namespace abdulot {

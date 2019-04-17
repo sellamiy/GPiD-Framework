@@ -29,6 +29,8 @@ namespace gpid {
         const bool consequences;
 
         const bool additionals;
+
+        const bool external;
     };
 
 }

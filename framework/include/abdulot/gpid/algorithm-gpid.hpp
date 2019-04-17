@@ -58,7 +58,10 @@ namespace gpid {
     public:
         /** Algorithm initialization */
         GPiDAlgorithm(ProblemLoaderT& pbld, LitGenT& lgen, IHandlerT& ihdl,
-                        AlgorithmOptions& opts, GPiDOptions& iopts);
+                      AlgorithmOptions& opts, GPiDOptions& iopts);
+        GPiDAlgorithm(ProblemLoaderT& pbld, LitGenT& lgen, IHandlerT& ihdl,
+                      AlgorithmOptions& opts, GPiDOptions& iopts,
+                      typename EngineT::ExternalCheckerT& echecker);
 
         /** Print informations on the algorithm and its parameters. */
         static void printInfos();
@@ -83,6 +86,18 @@ namespace gpid {
         : Algorithm(opts),
           options(iopts),
           lengine(lgen, pbld.getContextManager(), iopts),
+          pbloader(pbld),
+          imphandler(ihdl)
+    {}
+
+    template<typename EngineT, typename LitGenT, typename IHandlerT>
+    GPiDAlgorithm<EngineT, LitGenT, IHandlerT>::
+    GPiDAlgorithm(ProblemLoaderT& pbld, LitGenT& lgen, IHandlerT& ihdl,
+                  AlgorithmOptions& opts, GPiDOptions& iopts,
+                  typename EngineT::ExternalCheckerT& echecker)
+        : Algorithm(opts),
+          options(iopts),
+          lengine(lgen, pbld.getContextManager(), iopts, echecker),
           pbloader(pbld),
           imphandler(ihdl)
     {}

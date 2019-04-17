@@ -28,24 +28,44 @@ namespace ilinva {
         const uint32_t sizelim;
         const uint64_t smt_tlim;
         const double sml_smt_tlim;
+        const bool use_external_checker;
 
         explicit DStrOptions()
-            : insurance_checks(true), disjunctions(true), shuffle(false),
-              sizelim(1), smt_tlim(0), sml_smt_tlim(0)
+            : insurance_checks(true), disjunctions(false), shuffle(false),
+              sizelim(1), smt_tlim(0), sml_smt_tlim(0), use_external_checker(false)
         {}
 
         DStrOptions(bool insurance_checks, bool disjunctions, bool shuffle,
                     uint32_t sizelim, uint64_t smt_tlim, double sml_smt_tlim)
             : insurance_checks(insurance_checks), disjunctions(disjunctions), shuffle(shuffle),
-              sizelim(sizelim), smt_tlim(smt_tlim), sml_smt_tlim(sml_smt_tlim)
+              sizelim(sizelim), smt_tlim(smt_tlim), sml_smt_tlim(sml_smt_tlim),
+              use_external_checker(sizelim > 1 && !disjunctions)
         {}
 
         DStrOptions(const IlinvaOptions& iopts)
             : insurance_checks(iopts.insurance_checks), disjunctions(iopts.disjunct),
               shuffle(iopts.shuffle_literals),
               sizelim(iopts.max_strengthening_size),
-              smt_tlim(iopts.smt_time_limit), sml_smt_tlim(iopts.small_smt_time_limit)
+              smt_tlim(iopts.smt_time_limit), sml_smt_tlim(iopts.small_smt_time_limit),
+              use_external_checker(sizelim > 1 && !disjunctions)
         {}
+    };
+
+    template<typename ProblemHandlerT, typename InterfaceT, typename LiteralBrowserT>
+    class ExternalExplorationChecker {
+        using ConstraintT = DualConstraintData<ProblemHandlerT, InterfaceT, LiteralBrowserT>;
+        typename InterfaceT::ContextManagerT& ictx;
+        typename ProblemHandlerT::ContextManagerT iphctx;
+    public:
+        ExternalExplorationChecker
+        (typename InterfaceT::ContextManagerT& ictx, typename ProblemHandlerT::ContextManagerT& iphctx)
+            : ictx(ictx), iphctx(iphctx) {}
+
+        bool operator()
+        (LiteralBrowserT& browser, const ObjectMapper<typename InterfaceT::LiteralT>& mapper) {
+            ConstraintT constraint(mapper, browser, ictx);
+            return ProblemHandlerT::acceptContextualConstraint(constraint, iphctx);
+        }
     };
 
     template<typename ProblemHandlerT, typename InterfaceT>
@@ -60,7 +80,10 @@ namespace ilinva {
 
         using ConstraintT = DualConstraintData<ProblemHandlerT, InterfaceT, gpid::LiteralHypothesis>;
 
-        using AbducibleEngine = gpid::AdvancedAbducibleEngine<InterfaceT>;
+        using ExternalChecker =
+            ExternalExplorationChecker<ProblemHandlerT, InterfaceT, gpid::LiteralHypothesis>;
+
+        using AbducibleEngine = gpid::AdvancedAbducibleEngine<InterfaceT, ExternalChecker>;
 
         class ImplicateForwarder;
         class ImplicateDisjunctor;
@@ -120,6 +143,8 @@ namespace ilinva {
         using AbdGeneratorT = SomehowSmartDualAbducibleGenerator<ProblemHandlerT, InterfaceT>;
         using AbdGeneratorPtr = std::shared_ptr<AbdGeneratorT>;
         AbdGeneratorPtr abdGenerator;
+
+        ExternalChecker extChecker;
 
         ImplicateForwarder forwarder;
         ImplicateDisjunctor disjunctor;
@@ -182,6 +207,7 @@ namespace ilinva {
     ::DualConditionStrengthener(typename ProblemHandlerT::ContextManagerT& iphctx,
                                 const DStrOptions& dopts)
         : identifier(nextStrengthenerId()),
+          extChecker(_problemBuilder.getContextManager(), iphctx),
           forwarder(_problemBuilder.getContextManager(), iphctx),
           disjunctor(dopts.disjunctions),
           generator(nullptr)
@@ -194,12 +220,13 @@ namespace ilinva {
         abductionOpts.preprune_literals = true;
         abductionOpts.additional_checker = dopts.insurance_checks; // Prevents non redundant literals
         abductionOpts.additional_check_mode = SolverTestStatus::SAT;
+        abductionOpts.external_checker = dopts.use_external_checker;
         abductionOpts.smt_time_limit = dopts.smt_tlim;
         abductionOpts.small_smt_time_limit = dopts.sml_smt_tlim;
         abductionOpts.translation_map = iphctx.getTranslationMap();
         generator =
             ImplicateGeneratorPtr(new ImplicateGenerator(_problemBuilder, *abdGenerator, forwarder,
-                                                         abductionCoreOpts, abductionOpts));
+                                                         abductionCoreOpts, abductionOpts, extChecker));
         for (auto c_cons : iphctx.getCandidateConstraintDSplit()) {
             typename InterfaceT::LiteralT _addlit
                 = convert<ProblemHandlerT, InterfaceT>(c_cons, _problemBuilder.getContextManager());

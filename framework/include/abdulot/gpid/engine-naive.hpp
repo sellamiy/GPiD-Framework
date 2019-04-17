@@ -11,6 +11,7 @@
 
 #include <abdulot/core/memory.hpp>
 #include <abdulot/gpid/skipcontrol.hpp>
+#include <abdulot/gpid/implicates.hpp>
 #include <abdulot/instrument/instrument.hpp>
 #include <abdulot/utils/hprinters.hpp>
 
@@ -63,6 +64,7 @@ namespace gpid {
         using ModelT = typename InterfaceT::ModelT;
         /** Problem loading type of the underlying interface. */
         using ProblemLoaderT = typename InterfaceT::ProblemLoaderT;
+        using ExternalCheckerT = AutoforwardExternalChecker<NaiveHypothesis, LiteralT>;
         /** Element counter type. */
         using counter_t = uint64_t;
         /** Abducible indexing type. */

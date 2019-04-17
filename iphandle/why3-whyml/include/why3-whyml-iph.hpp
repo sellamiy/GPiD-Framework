@@ -13,21 +13,36 @@ class W3WML_Prop_Ctx {
     const std::vector<std::string>& candidate;
     const why3cpp::Why3ConvertMap& cmap;
     const std::map<std::string, std::string>& translations;
+
+    const size_t propid;
+    const std::string solverid;
+    const bool preorder;
+
+    std::shared_ptr<W3WML_Template> sourceCopy;
 public:
     W3WML_Prop_Ctx(const std::string& pfile, const std::vector<W3WML_Constraint>& literals,
                    const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap,
-                   const std::map<std::string, std::string>& translations)
+                   const std::map<std::string, std::string>& translations, size_t propid,
+                   const std::string& solverid, bool preorder,
+                   const std::shared_ptr<W3WML_Template>& source)
         : pfile(pfile), literals(literals), candidate(candidate),
-          cmap(cmap), translations(translations) {}
+          cmap(cmap), translations(translations), propid(propid),
+          solverid(solverid), preorder(preorder), sourceCopy(source) {}
     W3WML_Prop_Ctx(const W3WML_Prop_Ctx& o)
         : pfile(o.pfile), literals(o.literals), candidate(o.candidate),
-          cmap(o.cmap), translations(o.translations) {}
+          cmap(o.cmap), translations(o.translations), propid(o.propid),
+          solverid(o.solverid), preorder(o.preorder), sourceCopy(o.sourceCopy) {}
 
     inline const std::string& getProblemFile() const { return pfile; }
     inline const std::vector<W3WML_Constraint>& getLiterals() const { return literals; }
     inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
     inline const std::vector<std::string>& getCandidate() const { return candidate; }
     inline const std::map<std::string, std::string>& getTranslationMap() const { return translations; }
+    inline constexpr size_t getPropertyIdentifier() const { return propid; }
+    inline const std::string& getWhy3Solver() const { return solverid; }
+    inline constexpr bool performReorder() const { return preorder; }
+
+    inline W3WML_Template& accessSourceCopy() { return *sourceCopy; }
 
     const W3WML_Constraint getCandidateConstraint();
     const std::vector<W3WML_Constraint> getCandidateConstraintDSplit();
@@ -68,6 +83,8 @@ private:
     (const std::string& lit, PropIdentifierT id, const InternalT& o);
 public:
     static const W3WML_Constraint C_False;
+
+    static bool acceptContextualConstraint(const W3WML_Constraint& constraint, W3WML_Prop_Ctx& iphctx);
 
     W3WML_IPH(const std::string& filename, bool overriden, bool shuffle,
               const std::map<std::string, std::string>& hopts)

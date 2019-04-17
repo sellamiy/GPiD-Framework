@@ -1,6 +1,7 @@
 #ifndef LIB_WHY3CPP__PROVERS_CONFIG_HEADER
 #define LIB_WHY3CPP__PROVERS_CONFIG_HEADER
 
+#include <string>
 #include <why3cpp/why3config.hpp>
 
 namespace why3cpp {

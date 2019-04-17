@@ -25,12 +25,15 @@ public:
         std::vector<std::string> conj;
         const std::string type;
         PropertyElement(const std::string& type) : Element(ElemType::Property), type(type) {}
+        PropertyElement(const std::string& type, const std::vector<std::string>& conj)
+            : Element(ElemType::Property), conj(conj), type(type) {}
     };
 private:
     std::map<size_t, ElementPtr> elements;
     std::set<size_t> prop_ids;
 public:
     W3WML_Template(const std::string& filename);
+    W3WML_Template(const W3WML_Template& source);
 
     inline const std::map<size_t, ElementPtr>& getElements() const { return elements; }
     inline const std::set<size_t>& getPropertyIds() const { return prop_ids; }

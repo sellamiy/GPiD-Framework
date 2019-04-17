@@ -25,6 +25,13 @@ namespace gpid {
         void operator()(EngineT& engine);
     };
 
+    template<typename LiteralBrowserT, typename LiteralT>
+    class AutoforwardExternalChecker {
+    public:
+        bool operator()(const LiteralBrowserT&, const ObjectMapper<LiteralT>&) const
+        { return true; }
+    };
+
     /* Implementation */
 
     template<typename EngineT>
