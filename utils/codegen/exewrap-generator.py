@@ -10,7 +10,7 @@ from codegencore import prepare_directory, create_template_env, render_template
 WrappersTable = {
     'Python3' : 'wrapper.py3',
     'Sh' : 'wrapper.sh',
-    'Sh-Ilinva-Readin' : 'wrapper.ilinva.readin.sh'
+    'Bash-Ilinva-Readin' : 'wrapper.ilinva.readin.bash'
 }
 # --------------------------------------
 def main(args):

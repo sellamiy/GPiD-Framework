@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bassh
 # --------------------------------------
 # Ilinva Wrapper for Readin (minimal) (AUTO)
 # --------------------------------------
