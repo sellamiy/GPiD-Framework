@@ -40,13 +40,24 @@ static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
     return true;
 }
 
+/* TODO: This is a hardcoded copy of iph-control.cpp; Remove copy */
+static inline size_t tlim_contract(const std::string& tlim) {
+    size_t loc = tlim.find('.');
+    if (loc == std::string::npos) {
+        return std::stoi(tlim);
+    } else {
+        return std::stoi(tlim.substr(0, loc));
+    }
+}
+
 bool W3WML_IPH::acceptContextualConstraint(const W3WML_Constraint& cons, W3WML_Prop_Ctx& iphctx) {
     size_t property = iphctx.getPropertyIdentifier();
     const std::string filename = newFilename();
     iphctx.accessSourceCopy().getProperty(property).conj.push_back(cons.str());
     iphctx.accessSourceCopy().save_to(filename, iphctx.getCMap());
     why3cpp::ProofResult proofResult
-        = why3cpp::prove(filename, iphctx.getWhy3Solver(), iphctx.performReorder());
+        = why3cpp::prove(filename, iphctx.getWhy3Solver(), iphctx.performReorder(),
+                         tlim_contract(iphctx.getTlim()));
     iphctx.accessSourceCopy().getProperty(property).conj.pop_back();
     return isStrengthenable(proofResult);
 }

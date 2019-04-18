@@ -31,9 +31,10 @@ namespace why3cpp {
     }
 
     static const std::string gen_proof_command
-    (const std::string& filename, const std::string& prover) {
+    (const std::string& filename, const std::string& prover, const size_t tlim) {
         std::stringstream cmd;
         cmd << WHY3_EXECUTABLE << " prove -a split_vc --debug print_attributes --debug transform "
+            << "--timelimit " << tlim << " "
             << "-P " << prover << " " << filename
             << " 2>&1";
         return cmd.str();
@@ -47,8 +48,8 @@ namespace why3cpp {
     }
 
     static bool detect_unverified
-    (const std::string& filename, const std::string& prover, vcset_t& res) {
-        SplitProofParser parser(filename, execute(gen_proof_command(filename, prover)));
+    (const std::string& filename, const std::string& prover, vcset_t& res, const size_t tlim) {
+        SplitProofParser parser(filename, execute(gen_proof_command(filename, prover, tlim)));
         bool proofcomplete = true;
         parser.parse();
         if (parser.isValid()) {
@@ -75,9 +76,10 @@ namespace why3cpp {
         return res;
     }
 
-    extern ProofResult prove(const std::string& filename, const std::string& prover, bool vcreorder) {
+    extern ProofResult prove
+    (const std::string& filename, const std::string& prover, bool vcreorder, const size_t tlim) {
         vcset_t extractall;
-        const bool dres = detect_unverified(filename, prover, extractall);
+        const bool dres = detect_unverified(filename, prover, extractall, tlim);
         std::map<uint32_t, strptr> vcs = extract_vc(filename, prover, extractall);
         for (auto it = vcs.begin(); it != vcs.end(); ++it) {
             it->second = vc_sanitization(it->second, vcreorder);

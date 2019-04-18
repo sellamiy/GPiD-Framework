@@ -16,6 +16,7 @@ using namespace abdulot;
 
 const std::string W3WML_ProblemController::w3opt_solver = "solver";
 const std::string W3WML_ProblemController::w3opt_vcreorder = "vcreorder";
+const std::string W3WML_ProblemController::w3opt_tlim = "tlim";
 
 const std::string W3WML_ProblemController::w3opt_cmapmode = "cmapmode";
 
@@ -73,12 +74,22 @@ block_t W3WML_ShapeDetector::generateBlock
     return block_t(ILLEGAL_BLOCK_DATA, ILLEGAL_BLOCK_DATA);
 }
 
+static inline size_t tlim_contract(const std::string& tlim) {
+    size_t loc = tlim.find('.');
+    if (loc == std::string::npos) {
+        return std::stoi(tlim);
+    } else {
+        return std::stoi(tlim.substr(0, loc));
+    }
+}
+
 why3cpp::ProofResult W3WML_ProblemController::getWhy3Proof() {
     sourcedata.save_to(WHYML_TEMPORARY_SOURCEFILE, cmap);
     why3cpp::ProofResult
         proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE,
                                      getStringOption(w3opt_solver),
-                                     getBoolOption(w3opt_vcreorder));
+                                     getBoolOption(w3opt_vcreorder),
+                                     tlim_contract(getStringOption(w3opt_tlim)));
     if (!shape.isVCShaped()) {
         shape.detectVCShape(proofResult);
     }

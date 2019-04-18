@@ -6,6 +6,8 @@
 #error WHY3_EXECUTABLE must be defined (pointing to the location of the Why3 executable)
 #endif
 
+#define WHY3_DEFAULT_SOLVER_TLIM 5
+
 #include <why3cpp/why3provers.hpp>
 
 #endif

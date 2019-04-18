@@ -38,11 +38,14 @@ namespace why3cpp {
         // TODO: Add an iterator on unprovens
     };
 
-    extern ProofResult prove(const std::string& filename, const std::string& prover, bool vcreorder=true);
+    extern ProofResult prove
+    (const std::string& filename, const std::string& prover, bool vcreorder=false,
+     const size_t tlim=WHY3_DEFAULT_SOLVER_TLIM);
 
-    static inline ProofResult
-    prove(const std::string& filename, Why3ConfiguredProver prover, bool vcreorder=true) {
-        return prove(filename, str(prover), vcreorder);
+    static inline ProofResult prove
+    (const std::string& filename, Why3ConfiguredProver prover, bool vcreorder=false,
+     const size_t tlim=WHY3_DEFAULT_SOLVER_TLIM) {
+        return prove(filename, str(prover), vcreorder, tlim);
     }
 
 }

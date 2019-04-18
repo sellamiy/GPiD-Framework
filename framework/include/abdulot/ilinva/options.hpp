@@ -6,6 +6,7 @@
 #ifndef ABDULOT__ILINVA__OPTIONS_HPP
 #define ABDULOT__ILINVA__OPTIONS_HPP
 
+#include <map>
 #include <string>
 #include <limits>
 

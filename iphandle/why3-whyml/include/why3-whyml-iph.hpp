@@ -1,6 +1,7 @@
 #ifndef WHY3_WHYML_IPH_FOR_GPID__HPP
 #define WHY3_WHYML_IPH_FOR_GPID__HPP
 
+#include <abdulot/ilinva/options.hpp>
 #include "why3-whyml-controller.hpp"
 
 #define WHY3_SOLVER_OPTION_DEFAULT "CVC4"
@@ -16,6 +17,7 @@ class W3WML_Prop_Ctx {
 
     const size_t propid;
     const std::string solverid;
+    const std::string tlim;
     const bool preorder;
 
     std::shared_ptr<W3WML_Template> sourceCopy;
@@ -23,15 +25,15 @@ public:
     W3WML_Prop_Ctx(const std::string& pfile, const std::vector<W3WML_Constraint>& literals,
                    const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap,
                    const std::map<std::string, std::string>& translations, size_t propid,
-                   const std::string& solverid, bool preorder,
+                   const std::string& solverid, bool preorder, const std::string& tlim,
                    const std::shared_ptr<W3WML_Template>& source)
         : pfile(pfile), literals(literals), candidate(candidate),
           cmap(cmap), translations(translations), propid(propid),
-          solverid(solverid), preorder(preorder), sourceCopy(source) {}
+          solverid(solverid), tlim(tlim), preorder(preorder), sourceCopy(source) {}
     W3WML_Prop_Ctx(const W3WML_Prop_Ctx& o)
         : pfile(o.pfile), literals(o.literals), candidate(o.candidate),
           cmap(o.cmap), translations(o.translations), propid(o.propid),
-          solverid(o.solverid), preorder(o.preorder), sourceCopy(o.sourceCopy) {}
+          solverid(o.solverid), tlim(o.tlim), preorder(o.preorder), sourceCopy(o.sourceCopy) {}
 
     inline const std::string& getProblemFile() const { return pfile; }
     inline const std::vector<W3WML_Constraint>& getLiterals() const { return literals; }
@@ -40,6 +42,7 @@ public:
     inline const std::map<std::string, std::string>& getTranslationMap() const { return translations; }
     inline constexpr size_t getPropertyIdentifier() const { return propid; }
     inline const std::string& getWhy3Solver() const { return solverid; }
+    inline const std::string& getTlim() const { return tlim; }
     inline constexpr bool performReorder() const { return preorder; }
 
     inline W3WML_Template& accessSourceCopy() { return *sourceCopy; }
@@ -84,6 +87,8 @@ private:
 public:
     static const W3WML_Constraint C_False;
 
+    static void configure(abdulot::ilinva::IlinvaOptions& opts);
+
     static bool acceptContextualConstraint(const W3WML_Constraint& constraint, W3WML_Prop_Ctx& iphctx);
 
     W3WML_IPH(const std::string& filename, bool overriden, bool shuffle,
@@ -95,7 +100,8 @@ public:
     {
         // Set default Why3 solver to CVC4
         setOption(W3WML_ProblemController::w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT);
-        setOption(W3WML_ProblemController::w3opt_vcreorder, true);
+        setOption(W3WML_ProblemController::w3opt_vcreorder, false);
+        setOption(W3WML_ProblemController::w3opt_tlim, WHY3_DEFAULT_SOLVER_TLIM);
 
         for (const std::pair<std::string, std::string>& hopt : hopts) {
             if (W3WML_Opthelpers::is_str_true(hopt.second))

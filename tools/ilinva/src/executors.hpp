@@ -14,6 +14,7 @@ static inline void generate_ilnt_x(OptionStorage& opts) {
     IlinvaAlgorithm<EngineT>::printInfos();        
 
     l_message() << "create program engine..." << l_end;
+    EngineT::ProblemHandlerT::configure(opts.ilinva);
     typename EngineT::ProblemHandlerT IPH
         (opts.ilinva.input_file,
          opts.ilinva.abd_override.length() > 0,

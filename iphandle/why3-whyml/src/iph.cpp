@@ -24,6 +24,7 @@ W3WML_Prop_Ctx W3WML_IPH::generateStrengheningContext
          cmap, translations, problem.getInternalPropertyIdentitifer(id),
          problem.getStringOption(W3WML_ProblemController::w3opt_solver),
          problem.getBoolOption(W3WML_ProblemController::w3opt_vcreorder),
+         problem.getStringOption(W3WML_ProblemController::w3opt_tlim),
          problem.getSourceCopy());
 }
 
