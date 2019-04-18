@@ -4,13 +4,13 @@ module EuclideanAlgorithmIterative
  use ref.Ref
  use number.Gcd
 
- let euclid (u0 : int) (v0 : int) : int
+ let euclid (us : int) (vs : int) : int
 
-   requires { u0 >= 0 /\ v0 >= 0 }
-   ensures { result = gcd u0 v0 }
+   requires { us >= 0 /\ vs >= 0 }
+   ensures { result = gcd us vs }
    diverges
 
- = let u = ref u0 in let v = ref v0 in
+ = let u = ref us in let v = ref vs in
    while !v <> 0 do
     invariant { true }
 

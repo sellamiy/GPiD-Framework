@@ -1,6 +1,6 @@
 (size auto)
 
-(declare u0 v0 u v tmp as vars)
+(declare us vs u v tmp as vars)
 (reference u v)
 
 (lambda eq (l r) (= l r))
