@@ -2,7 +2,7 @@
 
 #include <snlog/snlog.hpp>
 #include <lisptp/lisptp.hpp>
-#include <smtlib2tools/smtlib2-fileutils.hpp>
+#include <smtlib2tools/fileutils.hpp>
 
 using namespace smtlib2;
 

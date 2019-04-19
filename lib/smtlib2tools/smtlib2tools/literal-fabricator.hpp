@@ -1,5 +1,5 @@
 /**
- * \file smtlib2tools/smtlit-fabricator.hpp
+ * \file smtlib2tools/literal-fabricator.hpp
  * \brief Smtlib2 literal fabrication.
  * \author Yanis Sellami
  * \date 2019
@@ -7,8 +7,8 @@
 #ifndef LIB_SMTLIB2_CPP_TOOLS__LITERAL_FABRICATOR__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__LITERAL_FABRICATOR__HEADER
 
-#include <smtlib2tools/smtlib2-annotations.hpp>
-#include <smtlib2tools/smtlib2-types.hpp>
+#include <smtlib2tools/annotations.hpp>
+#include <smtlib2tools/types-core.hpp>
 
 namespace smtlib2 {
 

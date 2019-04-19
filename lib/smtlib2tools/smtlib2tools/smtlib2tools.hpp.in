@@ -4,13 +4,14 @@
 #define LIB_SMTLIB2_NAME "Smtlib2 Tools C++ library"
 #cmakedefine LIBSMTLIB2_CPP_VERSION "@LIBSMTLIB2_CPP_VERSION@"
 
-#include <smtlib2tools/smtlib2-annotations.hpp>
-#include <smtlib2tools/smtlib2-functions.hpp>
+#include <smtlib2tools/annotations.hpp>
+#include <smtlib2tools/functions-core.hpp>
 
-#include <smtlib2tools/smtlib2-fileutils.hpp>
+#include <smtlib2tools/fileutils.hpp>
 
-#include <smtlib2tools/smtlit-presets.hpp>
+#include <smtlib2tools/literal-presets.hpp>
 
 #include <smtlib2tools/parser-command.hpp>
+#include <smtlib2tools/parser-tokens.hpp>
 
 #endif

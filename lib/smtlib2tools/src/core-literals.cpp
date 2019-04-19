@@ -1,7 +1,7 @@
 #define LIB_SMTLIB2_UTILS__SMTLIB2_LITERALS_CHECK_CPP
 
 #include <unordered_set>
-#include <smtlib2tools/smtlib2-defs.hpp>
+#include <smtlib2tools/core.hpp>
 
 namespace smtlib2 {
 

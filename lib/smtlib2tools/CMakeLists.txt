@@ -2,7 +2,7 @@
 # Smtlib2 C++ tools library - local library target
 # ==============================================================================
 project(libsmtlib2tools LANGUAGES CXX)
-set(LIBSMTLIB2_CPP_VERSION "0.3.0")
+set(LIBSMTLIB2_CPP_VERSION "0.4.0")
 # ------------------------------------------------------------------------------
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/smtlib2tools/smtlib2tools.hpp.in
   ${LOCAL_LIB_HEADERS_DIR}/smtlib2tools/smtlib2tools.hpp)

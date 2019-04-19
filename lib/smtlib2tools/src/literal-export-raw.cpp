@@ -1,7 +1,7 @@
 #define LIB_SMTLIB2_CPP_TOOLS__EXPORT__RAW__CPP
 
 #include <snlog/snlog.hpp>
-#include <smtlib2tools/smtlit-presets.hpp>
+#include <smtlib2tools/literal-presets.hpp>
 
 using namespace smtlib2;
 

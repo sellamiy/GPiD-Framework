@@ -7,7 +7,7 @@
 #ifndef LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
 #define LIB_SMTLIB2_CPP_TOOLS__SMTLIB2_TOKEN_STRING_PARSERS_HPP
 
-#include <smtlib2tools/smtlib2-defs.hpp>
+#include <smtlib2tools/core.hpp>
 
 namespace smtlib2 {
 

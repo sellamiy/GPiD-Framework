@@ -3,7 +3,7 @@
 #include <fstream>
 #include <stdutils/random.hpp>
 #include <why3cpp/why3cpp.hpp>
-#include <smtlib2tools/smtlit-presets.hpp>
+#include <smtlib2tools/literal-presets.hpp>
 #include <abdulot/core/errors.hpp>
 #include <why3-whyml-source.hpp>
 

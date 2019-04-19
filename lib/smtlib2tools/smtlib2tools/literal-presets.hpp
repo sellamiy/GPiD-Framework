@@ -1,5 +1,5 @@
 /**
- * \file smtlib2tools/smtlit-presets.hpp
+ * \file smtlib2tools/literal-presets.hpp
  * \brief Literal generation presets.
  * \author Yanis Sellami
  * \date 2019
@@ -7,7 +7,7 @@
 #ifndef LIB_SMTLIB2_CPP_TOOLS__LITERALS_GENERATION_PRESETS__HEADER
 #define LIB_SMTLIB2_CPP_TOOLS__LITERALS_GENERATION_PRESETS__HEADER
 
-#include <smtlib2tools/smtlit-generation.hpp>
+#include <smtlib2tools/literal-generation.hpp>
 
 namespace smtlib2 {
 

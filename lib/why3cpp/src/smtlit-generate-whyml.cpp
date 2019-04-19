@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <ugly/ugly.hpp>
-#include <smtlib2tools/smtlib2-functions.hpp>
+#include <smtlib2tools/functions-core.hpp>
 #include <why3cpp/whyml-extractor.hpp>
 #include <why3cpp/whyml-smtlit.hpp>
 

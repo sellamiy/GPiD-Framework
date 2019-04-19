@@ -1,5 +1,5 @@
 /**
- * \file smtlib2tools/smtlit-generation.hpp
+ * \file smtlib2tools/literal-generation.hpp
  * \brief Literal generation core.
  * \author Yanis Sellami
  * \date 2019
@@ -8,7 +8,7 @@
 #define LIB_SMTLIB2_CPP_TOOLS__LITERALS_GENERATION__HEADER
 
 #include <memory>
-#include <smtlib2tools/smtlit-fabricator.hpp>
+#include <smtlib2tools/literal-fabricator.hpp>
 
 namespace smtlib2 {
 

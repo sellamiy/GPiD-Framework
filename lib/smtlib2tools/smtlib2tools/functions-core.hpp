@@ -1,13 +1,13 @@
 /**
- * \file smtlib2tools/smtlib2-functions.hpp
+ * \file smtlib2tools/functions-core.hpp
  * \brief Minimal smtlib2 function definitions.
  * \author Yanis Sellami
  * \date 2019
  */
-#ifndef LIB_SMTLIB2_CPP_TOOLS__FUNCTIONS__HEADER
-#define LIB_SMTLIB2_CPP_TOOLS__FUNCTIONS__HEADER
+#ifndef LIB_SMTLIB2_CPP_TOOLS__FUNCTIONS_CORE__HEADER
+#define LIB_SMTLIB2_CPP_TOOLS__FUNCTIONS_CORE__HEADER
 
-#include <smtlib2tools/smtlib2-types.hpp>
+#include <smtlib2tools/types-core.hpp>
 
 namespace smtlib2 {
 

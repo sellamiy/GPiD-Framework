@@ -3,7 +3,7 @@
 #include <snlog/snlog.hpp>
 #include <smtlib2tools/parser-command.hpp>
 #include <smtlib2tools/parser-tokens.hpp>
-#include <smtlib2tools/smtlit-presets.hpp>
+#include <smtlib2tools/literal-presets.hpp>
 
 using namespace std;
 using namespace smtlib2;

@@ -1,7 +1,7 @@
 #define LIB_SMTLIB2_CPP_TOOLS__CORE__CPP
 
 #include <sstream>
-#include <smtlib2tools/smtlib2-defs.hpp>
+#include <smtlib2tools/core.hpp>
 
 using namespace smtlib2;
 

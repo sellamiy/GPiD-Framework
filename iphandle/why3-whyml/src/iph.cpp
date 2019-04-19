@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <stdutils/random.hpp>
-#include <smtlib2tools/smtlib2-fileutils.hpp>
+#include <smtlib2tools/fileutils.hpp>
 #include <why3cpp/why3cpp.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
 #include <ugly/PineapplePrefix.hpp>

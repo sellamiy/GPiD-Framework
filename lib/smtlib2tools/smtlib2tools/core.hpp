@@ -1,5 +1,5 @@
 /**
- * \file smtlib2tools/smtlib2-defs.hpp
+ * \file smtlib2tools/core.hpp
  * \brief Core smtlib2 definitions.
  * \author Yanis Sellami
  * \date 2019

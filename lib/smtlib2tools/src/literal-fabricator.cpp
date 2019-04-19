@@ -1,7 +1,7 @@
 #define LIB_SMTLIB2_CPP_TOOLS__FABRICATOR__CPP
 
 #include <snlog/snlog.hpp>
-#include <smtlib2tools/smtlit-fabricator.hpp>
+#include <smtlib2tools/literal-fabricator.hpp>
 
 using namespace smtlib2;
 

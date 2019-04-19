@@ -9,7 +9,7 @@
 
 #include <sstream>
 #include <memory>
-#include <smtlib2tools/smtlib2-defs.hpp>
+#include <smtlib2tools/core.hpp>
 
 namespace smtlib2 {
 
