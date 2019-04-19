@@ -18,22 +18,24 @@ class W3WML_Prop_Ctx {
     const size_t propid;
     const std::string solverid;
     const std::string tlim;
-    const bool preorder;
+    const bool pinject;
 
     std::shared_ptr<W3WML_Template> sourceCopy;
 public:
     W3WML_Prop_Ctx(const std::string& pfile, const std::vector<W3WML_Constraint>& literals,
                    const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap,
                    const std::map<std::string, std::string>& translations, size_t propid,
-                   const std::string& solverid, bool preorder, const std::string& tlim,
+                   const std::string& solverid, bool pinject, const std::string& tlim,
                    const std::shared_ptr<W3WML_Template>& source)
         : pfile(pfile), literals(literals), candidate(candidate),
           cmap(cmap), translations(translations), propid(propid),
-          solverid(solverid), tlim(tlim), preorder(preorder), sourceCopy(source) {}
+          solverid(solverid), tlim(tlim), pinject(pinject),
+          sourceCopy(source) {}
     W3WML_Prop_Ctx(const W3WML_Prop_Ctx& o)
         : pfile(o.pfile), literals(o.literals), candidate(o.candidate),
           cmap(o.cmap), translations(o.translations), propid(o.propid),
-          solverid(o.solverid), tlim(o.tlim), preorder(o.preorder), sourceCopy(o.sourceCopy) {}
+          solverid(o.solverid), tlim(o.tlim), pinject(o.pinject),
+          sourceCopy(o.sourceCopy) {}
 
     inline const std::string& getProblemFile() const { return pfile; }
     inline const std::vector<W3WML_Constraint>& getLiterals() const { return literals; }
@@ -43,7 +45,7 @@ public:
     inline constexpr size_t getPropertyIdentifier() const { return propid; }
     inline const std::string& getWhy3Solver() const { return solverid; }
     inline const std::string& getTlim() const { return tlim; }
-    inline constexpr bool performReorder() const { return preorder; }
+    inline constexpr bool performInjections() const { return pinject; }
 
     inline W3WML_Template& accessSourceCopy() { return *sourceCopy; }
 
@@ -100,7 +102,7 @@ public:
     {
         // Set default Why3 solver to CVC4
         setOption(W3WML_ProblemController::w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT);
-        setOption(W3WML_ProblemController::w3opt_vcreorder, false);
+        setOption(W3WML_ProblemController::w3opt_vcinject, true);
         setOption(W3WML_ProblemController::w3opt_tlim, WHY3_DEFAULT_SOLVER_TLIM);
 
         for (const std::pair<std::string, std::string>& hopt : hopts) {

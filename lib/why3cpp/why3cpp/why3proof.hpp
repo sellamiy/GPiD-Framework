@@ -39,13 +39,11 @@ namespace why3cpp {
     };
 
     extern ProofResult prove
-    (const std::string& filename, const std::string& prover, bool vcreorder=false,
-     const size_t tlim=WHY3_DEFAULT_SOLVER_TLIM);
+    (const std::string& filename, const std::string& prover, bool inject, size_t tlim);
 
     static inline ProofResult prove
-    (const std::string& filename, Why3ConfiguredProver prover, bool vcreorder=false,
-     const size_t tlim=WHY3_DEFAULT_SOLVER_TLIM) {
-        return prove(filename, str(prover), vcreorder, tlim);
+    (const std::string& filename, Why3ConfiguredProver prover, bool inject, size_t tlim) {
+        return prove(filename, str(prover), inject, tlim);
     }
 
 }

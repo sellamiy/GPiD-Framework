@@ -15,7 +15,7 @@ static const size_t ILLEGAL_BLOCK_DATA = (size_t)(-1);
 using namespace abdulot;
 
 const std::string W3WML_ProblemController::w3opt_solver = "solver";
-const std::string W3WML_ProblemController::w3opt_vcreorder = "vcreorder";
+const std::string W3WML_ProblemController::w3opt_vcinject = "vcinject";
 const std::string W3WML_ProblemController::w3opt_tlim = "tlim";
 
 const std::string W3WML_ProblemController::w3opt_cmapmode = "cmapmode";
@@ -88,7 +88,7 @@ why3cpp::ProofResult W3WML_ProblemController::getWhy3Proof() {
     why3cpp::ProofResult
         proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE,
                                      getStringOption(w3opt_solver),
-                                     getBoolOption(w3opt_vcreorder),
+                                     getBoolOption(w3opt_vcinject),
                                      tlim_contract(getStringOption(w3opt_tlim)));
     if (!shape.isVCShaped()) {
         shape.detectVCShape(proofResult);

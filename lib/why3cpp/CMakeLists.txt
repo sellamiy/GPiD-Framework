@@ -2,7 +2,7 @@
 # Why3 C++ library - local library target
 # ==============================================================================
 project(libwhy3cpp LANGUAGES CXX)
-set(LIBWHY3CPP_VERSION "0.4.2")
+set(LIBWHY3CPP_VERSION "0.4.3")
 # ------------------------------------------------------------------------------
 find_package(Antlr4 4.7.1 EXACT REQUIRED)
 find_package(Why3 REQUIRED)

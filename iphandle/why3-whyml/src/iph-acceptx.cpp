@@ -56,7 +56,8 @@ bool W3WML_IPH::acceptContextualConstraint(const W3WML_Constraint& cons, W3WML_P
     iphctx.accessSourceCopy().getProperty(property).conj.push_back(cons.str());
     iphctx.accessSourceCopy().save_to(filename, iphctx.getCMap());
     why3cpp::ProofResult proofResult
-        = why3cpp::prove(filename, iphctx.getWhy3Solver(), iphctx.performReorder(),
+        = why3cpp::prove(filename, iphctx.getWhy3Solver(),
+                         iphctx.performInjections(),
                          tlim_contract(iphctx.getTlim()));
     iphctx.accessSourceCopy().getProperty(property).conj.pop_back();
     return isStrengthenable(proofResult);
