@@ -3,16 +3,16 @@
 
 #include <string>
 
-class W3WML_Constraint {
+class Why3_Constraint {
     std::string _d;
 public:
-    W3WML_Constraint() : _d("true") {}
-    W3WML_Constraint(const std::string& d) : _d(d) {}
-    W3WML_Constraint(const W3WML_Constraint& o) : _d(o._d) {}
+    Why3_Constraint() : _d("true") {}
+    Why3_Constraint(const std::string& d) : _d(d) {}
+    Why3_Constraint(const Why3_Constraint& o) : _d(o._d) {}
     inline const std::string str() const { return _d; }
     inline operator const std::string() const { return _d; }
 
-    static inline W3WML_Constraint disjunct(const W3WML_Constraint& l, const W3WML_Constraint& r)
+    static inline Why3_Constraint disjunct(const Why3_Constraint& l, const Why3_Constraint& r)
     { return "(or " + l.str() + r.str() + ")"; }
 };
 

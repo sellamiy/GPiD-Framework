@@ -13,7 +13,7 @@ if (CVC4_FOUND AND Why3_FOUND)
     set(mlwtest_abd "${CMAKE_CURRENT_SOURCE_DIR}/abd/${mlwtest_name}.abd")
     set(mlwtest_out "${CMAKE_BINARY_DIR}/ilinva-test/out/${mlwtest_name}.mlw")
     add_test(NAME "Ilinva:${mlwtest_name}:Generation"
-      COMMAND ilinva-w3wml -i "${mlwtest}" -a "${mlwtest_abd}" -o "${mlwtest_out}" -g ccvc4 --smt-time-limit=2 -s 1 -H "solver:CVC4" -H "vcreorder:false")
+      COMMAND ilinva-why3-wrapped -i "${mlwtest}" -a "${mlwtest_abd}" -o "${mlwtest_out}" -g ccvc4 --smt-time-limit=2 -s 1 -H "solver:CVC4" -H "vcreorder:false")
     add_test(NAME "Ilinva:${mlwtest_name}:Result"
       COMMAND ${WHY3_EXECUTABLE} prove -a split_vc -P CVC4 "${mlwtest_out}")
     set_tests_properties("Ilinva:${mlwtest_name}:Result"

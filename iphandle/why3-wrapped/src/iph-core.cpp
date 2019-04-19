@@ -3,28 +3,25 @@
 #include <fstream>
 #include <stdutils/random.hpp>
 #include <smtlib2tools/fileutils.hpp>
-#include <why3cpp/why3cpp.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
 #include <ugly/PineapplePrefix.hpp>
-#include <why3-whyml-iph.hpp>
-
-#define WARN_ONCE_D(lvar, wdata) if (!(lvar)) { snlog::l_warn() << "@" << __FILE__ << ":l" << __LINE__ << wdata << snlog::l_end; lvar = true; }
+#include <why3-wrapped-iph.hpp>
 
 using namespace abdulot;
 
-const W3WML_Constraint W3WML_IPH::C_False = W3WML_Constraint("false");
+const Why3_Constraint Why3_IPH::C_False = Why3_Constraint("false");
 
-W3WML_Prop_Ctx W3WML_IPH::generateStrengheningContext
+Why3_Prop_Ctx Why3_IPH::generateStrengheningContext
 (PropIdentifierT id, const std::string& overrider, bool shuffle) {
     const std::string filename = problem.generateAbductionProblem(id);
     generateSourceLiterals(id, overrider, shuffle);
-    return W3WML_Prop_Ctx
+    return Why3_Prop_Ctx
         (filename, literals,
          problem.getCandidateConjunction(id),
          cmap, translations, problem.getInternalPropertyIdentitifer(id),
-         problem.getStringOption(W3WML_ProblemController::w3opt_solver),
-         problem.getBoolOption(W3WML_ProblemController::w3opt_vcinject),
-         problem.getStringOption(W3WML_ProblemController::w3opt_tlim),
+         problem.getStringOption(Why3_ProblemController::w3opt_solver),
+         problem.getBoolOption(Why3_ProblemController::w3opt_vcinject),
+         problem.getStringOption(Why3_ProblemController::w3opt_tlim),
          problem.getSourceCopy());
 }
 
@@ -44,7 +41,7 @@ struct W_AbdStorerHandler : public GenericHandler {
     }
 };
 
-void W3WML_IPH::loadOverridingAbducibles(const std::string& overrider, bool shuffle) {
+void Why3_IPH::loadOverridingAbducibles(const std::string& overrider, bool shuffle) {
     std::set<std::string> refs;
     W_AbdStorerHandler hdler(overrides[overrider], refs, cmap);
     loadAbduceData(overrider, hdler);
@@ -74,7 +71,7 @@ protected:
    all the elements of the visited tree are declared symbols */
 using SymbolChecker = LitSanatizer_X101;
 
-template<> const std::string W3WML_IPH::sanitizeLiteral<SymbolChecker>
+template<> const std::string Why3_IPH::sanitizeLiteral<SymbolChecker>
 (const std::string& lit, PropIdentifierT, const SymbolChecker& schecker) {
     if (schecker.visit(lisptp::parse(lit)))
         return lit;
@@ -90,7 +87,7 @@ static void generateTranslationMap
     //     snlog::l_notif() << tm.first << " ---> " << tm.second << snlog::l_end;
 }
 
-void W3WML_IPH::generateSourceLiterals
+void Why3_IPH::generateSourceLiterals
 (PropIdentifierT id, const std::string& overrider, bool shuffle) {
     const std::string& pfile = problem.getBlockFile(id);
     smtlib2::smtfile_decls sdecls = smtlib2::extract_declarations(pfile);
@@ -103,7 +100,7 @@ void W3WML_IPH::generateSourceLiterals
         for (const std::string& lit : plits.getLiterals()) {
             const std::string slit = sanitizeLiteral(lit, id, schecker);
             if (slit.length() > 0)
-                literals.push_back(W3WML_Constraint(slit));
+                literals.push_back(Why3_Constraint(slit));
         }
         cmap.addRefs(plits.getReferences());
     } else {
@@ -113,39 +110,11 @@ void W3WML_IPH::generateSourceLiterals
         for (const std::string& lit : overrides[overrider]) {
             const std::string slit = sanitizeLiteral(lit, id, schecker);
             if (slit.length() > 0)
-                literals.push_back(W3WML_Constraint(slit));
+                literals.push_back(Why3_Constraint(slit));
         }
     }
     if (literals.empty()) {
         snlog::l_fatal() << "Abducible literal generation for block " << id
                          << " did not generate any literal!" << snlog::l_end;
     }
-}
-
-const W3WML_Constraint W3WML_Prop_Ctx::getCandidateConstraint() {
-    std::stringstream ss;
-    if (candidate.size() > 0) {
-        if (candidate.size() > 1)
-            ss << "(and ";
-        for (auto& part : candidate)
-            ss << part;
-        if (candidate.size() > 1)
-            ss << ")";
-    } else {
-        ss << "true";
-    }
-    return W3WML_Constraint(ss.str());
-}
-
-const std::vector<W3WML_Constraint> W3WML_Prop_Ctx::getCandidateConstraintDSplit() {
-    std::vector<W3WML_Constraint> res;
-    for (auto& part : candidate) {
-        auto ftree = lisptp::parse(part);
-        if (ftree->isCall() && (ftree->getValue() == "or" || ftree->getValue() == "OR"))
-            for (auto leaf : ftree->getLeaves())
-                res.push_back(leaf->str());
-        else
-            res.push_back(part);
-    }
-    return res;
 }

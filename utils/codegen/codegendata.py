@@ -45,7 +45,7 @@ class InterfaceData(ConfigLoadableData):
 
     def _prepare_data(self):
         self.name = self.data['name']
-        self.name = self.name.replace('-', '_tm_')
+        self.name = self.name.replace('-', '_')
 
         self.mainheader = self.data['mainheader']
         self.classname = self.data['classname']
@@ -73,7 +73,7 @@ class IPHData(ConfigLoadableData):
 
     def _prepare_data(self):
         self.name = self.data['name']
-        self.name = self.name.replace('-', '_tm_')
+        self.name = self.name.replace('-', '_')
 
         self.mainheader = self.data['mainheader']
         self.converters = self.data['converters']

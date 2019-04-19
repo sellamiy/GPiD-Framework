@@ -3,9 +3,9 @@
 
 #include <why3cpp/why3proof.hpp>
 #include <why3cpp/why3utils.hpp>
-#include "why3-whyml-constraint.hpp"
+#include "why3-constraint-wrapper.hpp"
 
-class W3WML_Template {
+class Why3_Template {
 public:
     struct Element {
         enum class ElemType { Raw, Property };
@@ -32,8 +32,8 @@ private:
     std::map<size_t, ElementPtr> elements;
     std::set<size_t> prop_ids;
 public:
-    W3WML_Template(const std::string& filename);
-    W3WML_Template(const W3WML_Template& source);
+    Why3_Template(const std::string& filename);
+    Why3_Template(const Why3_Template& source);
 
     inline const std::map<size_t, ElementPtr>& getElements() const { return elements; }
     inline const std::set<size_t>& getPropertyIds() const { return prop_ids; }
@@ -49,35 +49,25 @@ public:
     void save_to(const std::string& filename, const why3cpp::Why3ConvertMap& cmap) const;
 };
 
-inline std::ostream& operator<<(std::ostream& out, const W3WML_Template::RawElement& e) {
+inline std::ostream& operator<<(std::ostream& out, const Why3_Template::RawElement& e) {
     return out << e.data;
 }
 
 std::ostream& write
-(std::ostream& out, const W3WML_Template::PropertyElement& e, const why3cpp::Why3ConvertMap& cmap);
+(std::ostream& out, const Why3_Template::PropertyElement& e, const why3cpp::Why3ConvertMap& cmap);
 
 inline std::ostream& write
-(std::ostream& out, const W3WML_Template::ElementPtr e, const why3cpp::Why3ConvertMap& cmap) {
-    if (e->type == W3WML_Template::Element::ElemType::Raw)
-        return out << *std::dynamic_pointer_cast<W3WML_Template::RawElement>(e);
+(std::ostream& out, const Why3_Template::ElementPtr e, const why3cpp::Why3ConvertMap& cmap) {
+    if (e->type == Why3_Template::Element::ElemType::Raw)
+        return out << *std::dynamic_pointer_cast<Why3_Template::RawElement>(e);
     else
-        return write(out, *std::dynamic_pointer_cast<W3WML_Template::PropertyElement>(e), cmap);
+        return write(out, *std::dynamic_pointer_cast<Why3_Template::PropertyElement>(e), cmap);
 }
 
 inline std::ostream& write
-(std::ostream& out, const W3WML_Template& t, const why3cpp::Why3ConvertMap& cmap) {
+(std::ostream& out, const Why3_Template& t, const why3cpp::Why3ConvertMap& cmap) {
     for (auto e : t.getElements()) write(out, e.second, cmap);
     return out;
 }
-
-class W3WML_LSet {
-    std::vector<std::string> literals;
-    std::set<std::string> references;
-public:
-    W3WML_LSet
-    (const std::string& filename, const why3cpp::Why3ConvertMap& cmap, bool overriden, bool shuffle);
-    inline const std::vector<std::string>& getLiterals() const { return literals; }
-    inline const std::set<std::string>& getReferences() const { return references; }
-};
 
 #endif

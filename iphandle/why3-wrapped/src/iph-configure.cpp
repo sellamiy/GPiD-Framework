@@ -1,12 +1,12 @@
 #define WHY3_WHYML_IPH_FOR_GPID__IPH_CONFIGURE_OPTIONS__CPP
 
 #include <cmath>
-#include <why3-whyml-iph.hpp>
+#include <why3-wrapped-iph.hpp>
 
 using namespace abdulot;
 
-void W3WML_IPH::configure(abdulot::ilinva::IlinvaOptions& opts) {
-    const std::string& opt_tlim = W3WML_ProblemController::w3opt_tlim;
+void Why3_IPH::configure(abdulot::ilinva::IlinvaOptions& opts) {
+    const std::string& opt_tlim = Why3_ProblemController::w3opt_tlim;
     if (stdutils::ninmap(opts.handler_options, opt_tlim)) {
         if (opts.smt_time_limit > 0) {
             opts.handler_options[opt_tlim] = std::to_string(opts.smt_time_limit);

@@ -2,21 +2,22 @@
 
 #include <fstream>
 #include <stdutils/random.hpp>
-#include <why3cpp/why3cpp.hpp>
 #include <smtlib2tools/literal-presets.hpp>
+#include <why3cpp/whyml-smtlit.hpp>
 #include <abdulot/core/errors.hpp>
-#include <why3-whyml-source.hpp>
+#include <why3-content-wrapper.hpp>
+#include <why3-lset-wrapper.hpp>
 
-void W3WML_Template::save_to(const std::string& filename, const why3cpp::Why3ConvertMap& cmap) const {
+void Why3_Template::save_to(const std::string& filename, const why3cpp::Why3ConvertMap& cmap) const {
     std::ofstream ofs(filename);
     if (!ofs.is_open())
-        throw abdulot::InternalError("W3WML_Template could not open tempfile");
+        throw abdulot::InternalError("Why3_Template could not open tempfile");
     write(ofs, *this, cmap);
     ofs.close();
 }
 
 std::ostream& write
-(std::ostream& out, const W3WML_Template::PropertyElement& e, const why3cpp::Why3ConvertMap& cmap) {
+(std::ostream& out, const Why3_Template::PropertyElement& e, const why3cpp::Why3ConvertMap& cmap) {
     out << e.type << " {";
     if (e.conj.empty()) {
         out << " true ";
@@ -31,13 +32,13 @@ std::ostream& write
     return out << "}";
 }
 
-struct W3WML_LSet_LRec {
+struct Why3_LSet_LRec {
     std::vector<std::string>& llist;
-    W3WML_LSet_LRec(std::vector<std::string>& llist) : llist(llist) {}
+    Why3_LSet_LRec(std::vector<std::string>& llist) : llist(llist) {}
     inline void handle(const std::string lit) { llist.push_back(lit); }
 };
 
-W3WML_LSet::W3WML_LSet
+Why3_LSet::Why3_LSet
 (const std::string& filename, const why3cpp::Why3ConvertMap& cmap, bool overriden, bool shuffle) {
     if (overriden)
         // We do not need to generate abduction literals if we load them
@@ -49,7 +50,7 @@ W3WML_LSet::W3WML_LSet
             literals.push_back(why3cpp::SmtBackwardConvert(smtlib2::ident(lit), cmap));
         references = gset.get_annotated(why3cpp::annot_whyml_ref);
     } catch (abdulot::CoreError& e) {
-        snlog::l_error() << "W3WML Mlw literals recovery failed: " << e.what() << snlog::l_end;
+        snlog::l_error() << "Why3 Mlw literals recovery failed: " << e.what() << snlog::l_end;
     }
     if (shuffle)
         stdutils::shuffle(literals);

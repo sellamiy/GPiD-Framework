@@ -1,6 +1,6 @@
 #define WHY3_WHYML_IPH_FOR_GPID__IPH_ACCEPT_CONTEXTUAL__CPP
 
-#include <why3-whyml-iph.hpp>
+#include <why3-wrapped-iph.hpp>
 
 using namespace abdulot;
 
@@ -50,7 +50,7 @@ static inline size_t tlim_contract(const std::string& tlim) {
     }
 }
 
-bool W3WML_IPH::acceptContextualConstraint(const W3WML_Constraint& cons, W3WML_Prop_Ctx& iphctx) {
+bool Why3_IPH::acceptContextualConstraint(const Why3_Constraint& cons, Why3_Prop_Ctx& iphctx) {
     size_t property = iphctx.getPropertyIdentifier();
     const std::string filename = newFilename();
     iphctx.accessSourceCopy().getProperty(property).conj.push_back(cons.str());

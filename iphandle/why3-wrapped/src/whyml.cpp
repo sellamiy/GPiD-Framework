@@ -2,9 +2,9 @@
 
 #include <fstream>
 #include <abdulot/core/errors.hpp>
-#include <why3-whyml-source.hpp>
+#include <why3-content-wrapper.hpp>
 
-W3WML_Template::W3WML_Template(const std::string& filename) {
+Why3_Template::Why3_Template(const std::string& filename) {
     std::ifstream ifs(filename);
     std::string line;
     std::stringstream buf;
@@ -30,7 +30,7 @@ W3WML_Template::W3WML_Template(const std::string& filename) {
     ifs.close();
 }
 
-W3WML_Template::W3WML_Template(const W3WML_Template& source) : prop_ids(source.prop_ids) {
+Why3_Template::Why3_Template(const Why3_Template& source) : prop_ids(source.prop_ids) {
     /* This perform content copy of current property strengthenings, not linked to the original */
     for (const auto& element : source.elements) {
         if (stdutils::inset(prop_ids, element.first)) {

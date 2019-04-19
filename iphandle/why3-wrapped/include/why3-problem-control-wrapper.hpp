@@ -3,10 +3,8 @@
 
 #include <stack>
 #include <abdulot/ilinva/iph-core.hpp>
-#include "why3-whyml-source.hpp"
+#include "why3-shape-detection.hpp"
 
-// Maps @block ---> < why3vc-identifier, why3property-identifier >
-using block_t = std::pair<size_t, size_t>;
 using blockmap_t = std::map<size_t, block_t>;
 
 static inline size_t vc_ident(const blockmap_t& bm, size_t id) { return bm.at(id).first; }
@@ -17,26 +15,7 @@ using blockcache_t = std::vector<std::set<block_t>>;
 using stringoptionmap_t = std::map<std::string, std::string>;
 using booloptionmap_t = std::map<std::string, bool>;
 
-class W3WML_ShapeDetector {
-    std::map<size_t, std::string> properties_shape;
-    std::map<size_t, std::string> vc_shape;
-    std::map<size_t, size_t> maxp_shape;
-public:
-    W3WML_ShapeDetector(const W3WML_Template& sourcedata) {
-        for (size_t pid : sourcedata.getPropertyIds())
-            properties_shape[pid] = sourcedata.getProperty(pid).type;
-    }
-
-    bool canGenerateBlock(const why3cpp::ProofResult& pr, const std::set<block_t>& cached) const;
-
-    block_t generateBlock(const why3cpp::ProofResult& pr, const std::set<block_t>& cached) const;
-
-    inline bool isVCShaped() const { return vc_shape.size() > 0; }
-
-    void detectVCShape(const why3cpp::ProofResult& pr);
-};
-
-class W3WML_ProblemController {
+class Why3_ProblemController {
 public:
     using blockid_t = size_t;
 
@@ -46,8 +25,8 @@ public:
 
     static const std::string w3opt_cmapmode;
 private:
-    W3WML_Template sourcedata;
-    W3WML_ShapeDetector shape;
+    Why3_Template sourcedata;
+    Why3_ShapeDetector shape;
 
     why3cpp::Why3ConvertMap& cmap;
 
@@ -86,14 +65,14 @@ private:
 
     why3cpp::ProofResult getWhy3Proof();
 public:
-    W3WML_ProblemController
+    Why3_ProblemController
     (const std::string& filename, why3cpp::Why3ConvertMap& cmap, stringoptionmap_t& sopts, booloptionmap_t& bopts)
         : sourcedata(filename), shape(sourcedata), cmap(cmap),
           sopts(sopts), bopts(bopts)
     {}
 
-    inline std::shared_ptr<W3WML_Template> getSourceCopy() const {
-        return std::shared_ptr<W3WML_Template>(new W3WML_Template(sourcedata));
+    inline std::shared_ptr<Why3_Template> getSourceCopy() const {
+        return std::shared_ptr<Why3_Template>(new Why3_Template(sourcedata));
     }
 
     inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
@@ -123,7 +102,7 @@ public:
         return prop_ident(blockmap, id);
     }
 
-    inline void strengthen(blockid_t id, W3WML_Constraint cons) {
+    inline void strengthen(blockid_t id, Why3_Constraint cons) {
         pushcache();
         auto property = prop_ident(blockmap, id);
         sourcedata.getProperty(property).conj.push_back(cons.str());
