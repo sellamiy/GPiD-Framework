@@ -10,7 +10,7 @@ module Oopsla44
   i := 0;
 
   while !i <= k do
-   invariant { true }
+   invariant { flag -> !j = !i }
    i := !i + 1;
    j := !j + !n;
   done;

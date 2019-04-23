@@ -12,7 +12,7 @@ module BinaryMultiplication
     let y = ref b in
     let z = ref 0 in
     while !y <> 0 do
-      invariant { true }
+      invariant { a * b = !z + !x * !y }
       if mod !y 2 = 1 then z := !z + !x;
       x := 2 * !x;
       y := div !y 2

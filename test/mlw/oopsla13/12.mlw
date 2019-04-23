@@ -11,7 +11,7 @@ module Oopsla12
    let x = ref 1 in let y = ref 0 in
 
    while unknown1() do
-    invariant { true } 
+    invariant { (flag -> !t = 2 * !s) /\ !a = !b }
     a := !a + 1;
     b := !b + 1;
     s := !s + !a;
@@ -24,7 +24,7 @@ module Oopsla12
    end;
 
    while !y <= !x do
-    invariant { true }
+    invariant { !x <= 3 /\ !y <= 4 }
     if unknown2() then y := !y + 1 else y := !y + 2
    done;
 

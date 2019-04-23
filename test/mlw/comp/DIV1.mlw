@@ -1,0 +1,24 @@
+module DIV1
+
+ use int.Int
+ use ref.Ref
+ use int.EuclideanDivision
+ use int.Power
+ 
+ val unknown (unit) : bool
+ 
+ let main (n: int) (a: int) : unit
+  requires { n > 0 /\ a > n }
+  diverges
+  
+ = let i = ref a in let r = ref n in
+  while unknown() do
+   invariant { !i >= !r }
+   r := div !i n;
+   i := !i * !r + 1;
+  done;
+  
+  assert { !i >= !r };
+  
+ 
+end

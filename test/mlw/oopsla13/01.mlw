@@ -9,7 +9,7 @@ module Oopsla01
  = let x = ref 1 in
    let y = ref 1 in
    while unknown() do
-    invariant { true }
+    invariant { !y >= 1 /\ !x >= 1 }
     let t1 = x in
     let t2 = y in
     x := !t1 + !t2;

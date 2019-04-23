@@ -4,14 +4,14 @@ module Oopsla20
 
  val unknown (unit) : bool
 
- let main (x0: int) (y0: int) (k: int) (i: int) (n: int) : unit
-  requires { (x0 + y0) = k }
+ let main (x_s: int) (y_s: int) (k: int) (i: int) (n: int) : unit
+  requires { (x_s + y_s) = k }
   diverges
  = let m = ref 0 in let j = ref 0 in
-   let x = ref x0 in let y = ref y0 in
+   let x = ref x_s in let y = ref y_s in
 
    while !j < n do
-    invariant { true }
+    invariant { !x + !y = k /\ !m >= 0 /\ !j >= 0 /\ (n > 0 -> !m < n) }
 
     if !j = i then begin
      x := !x + 1;

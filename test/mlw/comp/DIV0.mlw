@@ -9,8 +9,8 @@ module DIV0
   diverges
   
  = let n = ref a in let x = ref 0 in
-   while !n > d do
-    invariant { true }
+   while !n >= d do
+    invariant { a = d * !x + !n /\ !n >= 0 }
     n := !n - d;
     x := !x + 1;
    done;

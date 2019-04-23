@@ -10,10 +10,10 @@ module Oopsla25
  = let x = ref 0 in let y = ref 0 in let i = ref 0 in let j = ref 0 in
 
    while unknown1() do
-    invariant { true }
+    invariant { !i >= !j /\ !x = !y }
 
     while unknown2() do
-     invariant { true }
+     invariant { !i >= !j /\ !x = !y}
      if !x = !y then
       i := !i + 1
      else

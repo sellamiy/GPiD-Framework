@@ -11,7 +11,7 @@ module Oopsla07
  = let i = ref 0 in let a = ref 0 in let b = ref 0 in
 
    while !i < n do
-    invariant { true }
+    invariant { !a + !b = 3 * !i /\ !i <= n }
     if unknown() then begin
      a := !a + 1; b := !b + 2;
     end else begin

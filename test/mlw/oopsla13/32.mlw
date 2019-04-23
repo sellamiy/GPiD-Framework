@@ -1,16 +1,17 @@
 module Oopsla32
  use int.Int
  use ref.Ref
+ use int.EuclideanDivision
 
- let foo (b0 : bool) (j0 : int) () : unit
+ let foo (b_s : bool) (j_s : int) () : unit
  diverges
- = let i = ref j0 in
-   let j = ref j0 in
-   let b = ref b0 in
+ = let i = ref j_s in
+   let j = ref j_s in
+   let b = ref b_s in
    let n = ref 0 in
 
    while !n <= 199 do
-       invariant { true }
+       invariant { (!b = b_s <-> !i = !j) /\ ((!b /\ !b <> b_s) <-> !i + 1 = !j) /\ ((not !b /\ !b <> b_s) <-> !i = !j + 1) /\ 0 <= !n <= 200 /\ (mod !n 2 = 0 <-> !b = b_s) }
        if !b then i := !i + 1 else j := !j + 1;
        if !b then b := false else b := true;
        n := !n + 1

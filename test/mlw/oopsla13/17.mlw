@@ -7,10 +7,10 @@ module Oopsla17
  = let k = ref 1 in let i = ref 1 in let j = ref 0 in
 
    while !i < n do
-    invariant { true }
+    invariant { !k >= !i /\ !k > 0 }
     j := 0;
     while !j < !i do
-     invariant { true }
+     invariant {( !j > 0 -> !k > !i )/\ !k > 0 }
      k := !k + !i - !j;
      j := !j + 1
     done;

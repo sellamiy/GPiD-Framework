@@ -23,7 +23,7 @@ module Loop11
    let result = 2.0 * (1.0 / (1.0 - x)) in
    
    while !temp <> 0 do
-   invariant { true }
+   invariant { result >= !exp /\ !count >= 1.0 /\ -1.0 <= !term <= 1.0 }
     term := !term * (x / !count);
     exp := !exp + !term;
     count := !count + 1.0;

@@ -9,7 +9,7 @@ module Oopsla19
   diverges
  = let x = ref 0 in let y = ref m in
    while !x < n do
-    invariant { true }
+    invariant { (!x >= m -> !y = !x) /\ !x <= n /\ (!x <= m -> !y = m) }
     x := !x + 1;
     if !x > m then y := !y + 1
    done;

@@ -1,0 +1,32 @@
+module A3
+
+ use int.Int
+ use array.Array
+ use array.Init
+ use ref.Ref
+ 
+ val zeroi (a: int) : int ensures { result = 0 }
+ 
+ let main (a: array int) (b: array int) (l: int) : int
+   requires { a.length > l /\ l >= 0 /\ b.length > l }
+   ensures { true }
+   diverges
+ = let c = ref 0 in let r = ref 0 in let p = ref 0 in
+ 
+   while !c < l do
+    invariant { !c >= 0 /\ !c <= l }
+    p := a[!c];
+    c := !c + 1;
+   done;
+   
+   if a[!c] > b[!c] then r := a[!c] else r := b[!c];
+   
+   while !c < b.length do
+    invariant { true }
+    r := !r + !p;
+    c := !c + 1;
+   done;
+   
+   !r
+
+end

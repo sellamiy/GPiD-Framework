@@ -11,7 +11,7 @@ module Oopsla15
    let k = ref (unknown2(!n)) in
 
   while !j < !n do
-   invariant { true }
+   invariant { !k >= !n - !j /\ !k >= 0 }
    j := !j + 1;
    k := !k - 1;
   done;

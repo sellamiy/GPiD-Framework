@@ -12,7 +12,7 @@ module EuclideanAlgorithmIterative
 
  = let u = ref us in let v = ref vs in
    while !v <> 0 do
-    invariant { true }
+    invariant { gcd !u !v = gcd us vs /\ !u >= 0 /\ !v >= 0 }
 
     let tmp = !v in
      v := !u % !v;

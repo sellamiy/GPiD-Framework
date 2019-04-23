@@ -17,7 +17,7 @@ module List4
    let t = ref 0 in
  
    while !p < length l do
-    invariant { true }
+    invariant { ((!p >= i \/ !p >= j) -> nth i !dec = nth j l) /\ !p = length !dec }
     (* Probably fails *)
     if !p = i then
       dec := !dec ++ Cons (nth j l) Nil

@@ -11,7 +11,7 @@ module Oopsla08
  = let x = ref 0 in let y = ref 0 in
 
    while unknown1() do
-    invariant { true }
+    invariant { ((((!y + 1) >= !x))) /\ ((((!x + 1) >= 1))) }
 
     if unknown2() then begin
      x := !x + 1;

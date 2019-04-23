@@ -8,9 +8,12 @@ module List2
  use list.NthNoOpt
  use list.Append
  
+ axiom non_nil:
+   forall l: list 'a. l <> Nil -> exists x: 'a, t: list 'a. l = Cons x t
+ 
  let main (l: list int) (i: int) : unit
   diverges
-  requires { i < length l /\ length l > 0 /\ i >= 0 }
+  requires { i < length l /\ l <> Nil /\ i >= 0 }
   
  = let p = ref 0 in let ghost dec = ref l in
    (* Fails ; May be wrong *)

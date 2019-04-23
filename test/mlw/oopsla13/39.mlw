@@ -15,7 +15,7 @@ module Oopsla39
    let glob3_dc = ref 0 in
 
    while ((not (!glob3_pathend_off + !glob3_dc >= !glob3_pathlim_off)) || not unknown()) do
-    invariant { true }
+    invariant { 0 <= !glob3_dc /\ !glob3_dc <= maxpathlen }
     glob3_dc := !glob3_dc + 1;
     assert { 0 <= !glob3_dc };
     assert { !glob3_dc < maxpathlen + 1 }

@@ -12,16 +12,16 @@ module Oopsla26
  = let w = ref 1 in let z = ref 0 in let x = ref 0 in let y = ref 0 in
 
    while unknown1() do
-    invariant { true }
+    invariant { !x = !y /\ mod !w 2 = 1 /\ mod !z 2 = 0 }
 
     while unknown2() do
-     invariant { true }
+     invariant { !x = !y }
       if mod !w 2 = 1 then x := !x + 1;
       if mod !z 2 = 0 then y := !y + 1;
     done;
 
     while unknown3() do
-     invariant { true }
+     invariant { mod !w 2 = 1 /\ mod !z 2 = 0 }
       z := !x + !y;
       w := !z + 1;
     done

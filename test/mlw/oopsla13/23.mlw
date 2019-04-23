@@ -7,7 +7,7 @@ module Oopsla23
  = let sum = ref 0 in
 
   for i = 0 to n - 1 do
-   invariant { true }
+   invariant { !sum >= 0 }
    sum := !sum + i
   done;
 

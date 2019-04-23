@@ -10,7 +10,7 @@ module Oopsla37
    let x = ref 0 in
 
    while !x < n do
-         invariant { true }
+         invariant { !m >= 0 /\ !x >= 0 /\ (n > 0 -> !m < n) }
          if unknown() then m := !x;
          x := !x + 1;
    done;

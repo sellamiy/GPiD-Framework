@@ -24,7 +24,7 @@ module Oopsla09
    i := 0;
 
    while unknownb() do
-    invariant { true }
+    invariant { !k = !i }
     t := !i;
     i := !i + 1;
     k := !k + 1;
@@ -32,7 +32,7 @@ module Oopsla09
 
    n := !i;
    while !j < !n do
-    invariant { true }
+    invariant { !k + !j = !n }
     assert { !k >= 0 };
     k := !k - 1;
     i := !i - 1;

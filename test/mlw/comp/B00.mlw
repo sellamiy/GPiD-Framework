@@ -9,7 +9,7 @@ module B00
    diverges
   = let x = ref n in let y = ref m in
    while !x > !y do
-    invariant { true }
+    invariant { !x <> !y }
     x := div !x !y;
     if !x <> 0 then
       x := (div !y !x);

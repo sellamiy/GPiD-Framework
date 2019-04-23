@@ -15,7 +15,7 @@ module Sum
   = let i = ref 1 in
     let s = ref 0 in
     while !i <= n do
-      invariant { true }
+      invariant { !s = sum a 1 !i /\ !i > 0 /\ !i <= n + 1 }
       s := !s + a[!i];
       i := !i + 1
     done;

@@ -7,7 +7,7 @@ module Oopsla16
  = let x = ref i in let y = ref j in
 
    while !x <> 0 do
-    invariant { true }
+    invariant { i = j -> !x = !y }
     x := !x - 1;
     y := !y - 1;
    done;

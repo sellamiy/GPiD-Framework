@@ -12,7 +12,7 @@ module Oopsla29
  let x = ref 3 in let y = ref 3 in
 
  while unknown1() do
-  invariant { true }
+  invariant { !a + !c = !b + !d }
 
   x := !a + !c;
   y := !b + !d;
@@ -25,7 +25,7 @@ module Oopsla29
   end;
 
   while unknown2() do
-   invariant { true }
+   invariant { !a + !c = !b + !d }
 
    c := !c - 1;
    b := !b - 1;

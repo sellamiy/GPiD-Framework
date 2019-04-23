@@ -13,7 +13,7 @@ module Oopsla21
    let k = ref 0 in
 
    while !i < n do
-         invariant { true }
+         invariant { (!k = 0 \/ !k > n) /\ (!k = 0 -> !i < n) }
          i := !i + 1;
          if unknown() then v := 0 else v := 1;
          if !v = 0 then k := !k + 4000 else k := !k + 2000;

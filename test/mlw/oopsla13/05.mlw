@@ -9,7 +9,7 @@ module Oopsla05
  = let x = ref 0 in let y = ref 0 in let j = ref 0 in let i = ref 0 in
 
    while unknown() do
-    invariant { true }
+    invariant { !j >= !i /\ !y >= !x }
     x := !x + 1;
     y := !y + 1;
     i := !i + !x;

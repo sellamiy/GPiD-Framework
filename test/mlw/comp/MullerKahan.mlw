@@ -10,7 +10,7 @@ module MullerKahan
    let ghost x2 = ref zeroF in
    
  for i = 0 to 99 do
- invariant { true }
+ invariant { !x0 .>= (of_int RNE 99) }
   x2 := (of_int RNE 111) .- ((of_int RNE 1130) .- (of_int RNE 3000) ./ !x0) ./ !x1;
   x0 := !x1;
   x1 := !x2;

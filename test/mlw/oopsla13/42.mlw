@@ -11,7 +11,7 @@ module Oopsla42
   if flag then a := 0;
 
   while unknown() do
-   invariant { true }
+   invariant { flag <-> mod !a 2 = 0 /\ false }
    if flag then begin
     a := !x + !y;
     x := !x + 1;

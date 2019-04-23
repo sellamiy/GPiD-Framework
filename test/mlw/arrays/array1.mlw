@@ -1,0 +1,24 @@
+module A1
+
+ use int.Int
+ use array.Array
+ use array.Init
+ use ref.Ref
+ 
+ val zeroi (a: int) : int ensures { result = 0 }
+ 
+ let main (a: array int) (loc: int) : int
+   requires { a.length > loc /\ loc >= 0 }
+   ensures { result = a[loc] }
+   diverges
+ = let c = ref 0 in let r = ref a[!c] in
+ 
+   while !c < loc do
+    invariant { !r = a[!c] /\ !c >= 0 /\ !c <= loc }
+    c := !c + 1;
+    r := a[!c];
+   done;
+   
+   !r
+
+end

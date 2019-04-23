@@ -13,7 +13,7 @@ module Oopsla02
    z := !i - !j;
 
    while unknown() do
-    invariant { true }
+    invariant { !x = !y /\ mod !z 2 = 1 /\ mod !w 2 = 0 }
     z := !z + !x + !y + !w;
     y := !y + 1;
     if mod !z 2 = 1 then x := !x + 1;

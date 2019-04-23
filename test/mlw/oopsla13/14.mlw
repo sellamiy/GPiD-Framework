@@ -5,12 +5,13 @@ module Oopsla14
  val unknown (unit) : bool
 
  let main (m: int) : unit
+  diverges
   requires { m > 0 }
  = let a = ref 0 in
    let j = ref 1 in
 
    while !j <= m do
-    invariant { true }
+    invariant { !a <= m /\ !a < !j /\ !a >= -m /\ !a > - !j }
     if unknown() then a := !a + 1 else a := !a - 1;
     j := !j + 1
    done;

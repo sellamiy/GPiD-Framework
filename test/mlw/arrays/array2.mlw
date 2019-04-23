@@ -1,0 +1,23 @@
+module A2
+
+ use int.Int
+ use array.Array
+ use array.Init
+ use ref.Ref
+ 
+ val zeroi (a: int) : int ensures { result = 0 }
+ 
+ let main (a: array int) (loc: int) : int
+   diverges
+ = let c = ref 0 in let r = ref 0 in
+ 
+   while !c < a.length do
+    invariant { !c >= 0 /\ (!r <> 0 -> a[!r] = loc)  }
+    if a[!c] = loc then r := !c;
+    c := !c + 1;
+   done;
+   
+   if !r <> 0 then assert { a[!r] = loc };
+   !r
+
+end

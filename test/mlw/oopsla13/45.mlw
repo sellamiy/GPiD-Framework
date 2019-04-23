@@ -11,7 +11,7 @@ module Oopsla45
  = let x = ref 0 in let y = ref 0 in let j = ref 0 in let i = ref 0 in
 
    while unknown1() do
-    invariant { true }
+    invariant { !x = !y /\ !j >= !i }
     x := !x + 1;
     y := !y + 1;
     i := !i + !x;
@@ -24,9 +24,9 @@ module Oopsla45
    let w = ref 1 in let z = ref 0 in
 
    while unknown2() do
-    invariant { true }
+    invariant { !x = !y /\ mod !z 2 = 0 /\ mod !w 2 = 1 }
     while unknown3() do
-     invariant { true }
+     invariant { !x = !y /\ mod !z 2 = 0 /\ mod !w 2 = 1 }
      if mod !w 2 = 1 then x := !x + 1;
      if mod !z 2 = 0 then y := !y + 1;
      z := !x + !y;

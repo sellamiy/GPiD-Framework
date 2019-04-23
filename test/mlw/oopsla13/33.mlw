@@ -10,10 +10,10 @@ module Oopsla33
  = let z = ref k in let x = ref 0 in let y = ref 0 in
 
  while unknown1() do
-  invariant { true }
+  invariant { !x = !y /\ !z = k + !y }
   let c = ref 0 in
    while unknown2() do
-    invariant { true }
+    invariant { !x = !y /\ !z = k + !y - !c }
 
     if !z = k + !y - !c then begin
 
@@ -31,7 +31,7 @@ module Oopsla33
 
    done;
    while unknown3() do
-    invariant { true }
+    invariant { !x = !y }
 
     x := !x - 1;
     y := !y - 1;

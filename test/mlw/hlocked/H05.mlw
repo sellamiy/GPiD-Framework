@@ -16,7 +16,7 @@ module H05
     z := !x;
     while !z <> 0 do
       (* Solution: 0 <= !z /\ !y * fact !z = fact !x *)
-      invariant { true }
+      invariant { 0 <= !z /\ !y * fact !z = fact !x }
       y := !y * !z;
       z := !z - 1
     done

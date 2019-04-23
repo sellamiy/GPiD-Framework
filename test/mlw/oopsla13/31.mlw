@@ -10,11 +10,11 @@ module Oopsla31
  = let i = ref 0 in let j = ref 0 in
 
   while !i < n do
-   invariant { true }
+   invariant { !i >= 0 }
 
    j := !i;
    while !j < m do
-    invariant { true }
+    invariant { !j >= 0 }
 
     if unknown() then begin
 

@@ -6,7 +6,7 @@ module Oopsla18
   let j = ref 0 in let b = ref 0 in
 
   while !b <= 99 do
-   invariant { true }
+   invariant { (flag -> !j = !b) /\ !b <= 100 }
    if flag then j := !j + 1;
    b := !b + 1
   done;

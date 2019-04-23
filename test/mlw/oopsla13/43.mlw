@@ -12,7 +12,7 @@ module Oopsla43
    if x = !y then return;
 
    while unknown() do
-     invariant { true }
+     invariant { !y >= !t }
      if x > 0 then y := !y + x
    done;
 

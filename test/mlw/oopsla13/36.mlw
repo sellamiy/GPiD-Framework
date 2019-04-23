@@ -17,12 +17,12 @@ module Oopsla36
   let w = ref 0 in
 
   while unknown1() do
-    invariant { true }
+    invariant { !w >= !z }
     let i = ref !z in
     let j = ref !w in
     let k = ref 0 in
     while !i < !j do
-      invariant { true }
+      invariant { !k >= 0 }
       k := !k + 1;
       i := !i + 1;
     done;
@@ -37,7 +37,7 @@ module Oopsla36
     end;
 
     while unknown2() do
-      invariant { true } 
+      invariant { !x + !y >= !z /\ mod !x 2 = 0 } 
       if mod !x 2 = 0 then
       begin
         x := !x + 2;
@@ -56,7 +56,7 @@ module Oopsla36
   let c = ref 0 in 
   let d = ref 0 in
   while unknown3() do
-    invariant { true }
+    invariant { !a = !b /\ !c = !d }
     c := !c + 1;
     d := !d + 1;
     if flag then
@@ -70,6 +70,6 @@ module Oopsla36
       b := !b + !d;
     end
   done;
-  assert { !w >= !z /\ !a - ! b = 0 }
+  assert { !w >= !z /\ !a - !b = 0 }
 
 end
