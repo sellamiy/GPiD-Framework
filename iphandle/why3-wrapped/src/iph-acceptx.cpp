@@ -27,6 +27,7 @@ static inline bool isStrengthenableExplanation(const std::string& expl) {
         || expl == "expl:variant decrease" // TODO: Check relevancy
         || expl == "expl:type invariant" // TODO: Check relevancy
         || expl == "expl:termination" // TODO: Check relevancy
+        || expl == "" // TODO: Hack for undefined goals
         ;
 }
 
