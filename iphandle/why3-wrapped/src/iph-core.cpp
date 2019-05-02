@@ -21,6 +21,7 @@ Why3_Prop_Ctx Why3_IPH::generateStrengheningContext
          cmap, translations, problem.getInternalPropertyIdentitifer(id),
          problem.getStringOption(Why3_ProblemController::w3opt_solver),
          problem.getBoolOption(Why3_ProblemController::w3opt_vcinject),
+         problem.getBoolOption(Why3_ProblemController::w3opt_fwdemptexpl),
          problem.getStringOption(Why3_ProblemController::w3opt_tlim),
          problem.getSourceCopy());
 }
@@ -114,7 +115,7 @@ void Why3_IPH::generateSourceLiterals
         }
     }
     if (literals.empty()) {
-        snlog::l_fatal() << "Abducible literal generation for block " << id
-                         << " did not generate any literal!" << snlog::l_end;
+        snlog::l_warn() << "Abducible literal generation for block " << id
+                        << " did not generate any literal!" << snlog::l_end;
     }
 }

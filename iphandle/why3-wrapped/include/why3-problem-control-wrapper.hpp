@@ -23,6 +23,7 @@ public:
     static const std::string w3opt_vcinject;
     static const std::string w3opt_tlim;
 
+    static const std::string w3opt_fwdemptexpl;
     static const std::string w3opt_cmapmode;
 private:
     Why3_Template sourcedata;

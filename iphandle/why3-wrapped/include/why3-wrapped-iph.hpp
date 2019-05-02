@@ -9,6 +9,7 @@
 #define WHY3_SOLVER_OPTION_DEFAULT "CVC4"
 
 #define WHY3_CMAP_MODE_DEFAULT "auto"
+#define WHY3_DEFAULT_EMPTY_EXPL_FWD_MODE false
 
 struct Why3_Opthelpers {
     static inline bool is_str_true(const std::string& s) {
@@ -61,6 +62,8 @@ public:
         setOption(Why3_ProblemController::w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT);
         setOption(Why3_ProblemController::w3opt_vcinject, true);
         setOption(Why3_ProblemController::w3opt_tlim, WHY3_DEFAULT_SOLVER_TLIM);
+
+        setOption(Why3_ProblemController::w3opt_fwdemptexpl, WHY3_DEFAULT_EMPTY_EXPL_FWD_MODE);
 
         for (const std::pair<std::string, std::string>& hopt : hopts) {
             if (Why3_Opthelpers::is_str_true(hopt.second))

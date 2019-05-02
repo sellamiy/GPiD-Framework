@@ -16,22 +16,23 @@ class Why3_Prop_Ctx {
     const std::string solverid;
     const std::string tlim;
     const bool pinject;
+    const bool fwdemptexpl;
 
     std::shared_ptr<Why3_Template> sourceCopy;
 public:
     Why3_Prop_Ctx(const std::string& pfile, const std::vector<Why3_Constraint>& literals,
-                   const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap,
-                   const std::map<std::string, std::string>& translations, size_t propid,
-                   const std::string& solverid, bool pinject, const std::string& tlim,
-                   const std::shared_ptr<Why3_Template>& source)
+                  const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap,
+                  const std::map<std::string, std::string>& translations, size_t propid,
+                  const std::string& solverid, bool pinject, bool fwdemptexpl, const std::string& tlim,
+                  const std::shared_ptr<Why3_Template>& source)
         : pfile(pfile), literals(literals), candidate(candidate),
           cmap(cmap), translations(translations), propid(propid),
-          solverid(solverid), tlim(tlim), pinject(pinject),
+          solverid(solverid), tlim(tlim), pinject(pinject), fwdemptexpl(fwdemptexpl),
           sourceCopy(source) {}
     Why3_Prop_Ctx(const Why3_Prop_Ctx& o)
         : pfile(o.pfile), literals(o.literals), candidate(o.candidate),
           cmap(o.cmap), translations(o.translations), propid(o.propid),
-          solverid(o.solverid), tlim(o.tlim), pinject(o.pinject),
+          solverid(o.solverid), tlim(o.tlim), pinject(o.pinject), fwdemptexpl(o.fwdemptexpl),
           sourceCopy(o.sourceCopy) {}
 
     inline const std::string& getProblemFile() const { return pfile; }
@@ -42,6 +43,7 @@ public:
     inline constexpr size_t getPropertyIdentifier() const { return propid; }
     inline const std::string& getWhy3Solver() const { return solverid; }
     inline const std::string& getTlim() const { return tlim; }
+    inline constexpr bool getForwardEmptyExplOpt() const { return fwdemptexpl; }
     inline constexpr bool performInjections() const { return pinject; }
 
     inline Why3_Template& accessSourceCopy() { return *sourceCopy; }

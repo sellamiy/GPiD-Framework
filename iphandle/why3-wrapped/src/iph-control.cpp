@@ -15,6 +15,7 @@ const std::string Why3_ProblemController::w3opt_solver = "solver";
 const std::string Why3_ProblemController::w3opt_vcinject = "vcinject";
 const std::string Why3_ProblemController::w3opt_tlim = "tlim";
 
+const std::string Why3_ProblemController::w3opt_fwdemptexpl = "fwdemptexpl";
 const std::string Why3_ProblemController::w3opt_cmapmode = "cmapmode";
 
 static inline size_t tlim_contract(const std::string& tlim) {
@@ -40,7 +41,7 @@ why3cpp::ProofResult Why3_ProblemController::getWhy3Proof() {
     return proofResult;
 }
 
-static inline bool isStrengthenableExplanation(const std::string& expl) {
+static inline bool isStrengthenableExplanation(const std::string& expl, bool forwardEmpty=false) {
     return expl == "expl:postcondition"
         || expl == "expl:exceptional postcondition"
         || expl == "expl:assertion"
@@ -54,15 +55,15 @@ static inline bool isStrengthenableExplanation(const std::string& expl) {
         || expl == "expl:variant decrease" // TODO: Check relevancy
         || expl == "expl:type invariant" // TODO: Check relevancy
         || expl == "expl:termination" // TODO: Check relevancy
-        || expl == "" // TODO: Hack for undefined goals
+        || (forwardEmpty && expl == "")
         ;
 }
 
-static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
+static bool isStrengthenable(const why3cpp::ProofResult& proofResult, bool forwardEmpty=false) {
     // TODO: Update this method to switch it with a better one
     for (auto expl : proofResult.getExplanations())
         if (!why3cpp::proved(expl.second))
-            if (!isStrengthenableExplanation(why3cpp::expl(expl.second)))
+            if (!isStrengthenableExplanation(why3cpp::expl(expl.second), forwardEmpty))
                 return false;
     return true;
 }
@@ -70,7 +71,8 @@ static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
 ilinva::IphState Why3_ProblemController::proofCheck() {
     if (!prcached)
         getWhy3Proof();
-    return ilinva::IphState(getCachedPr().isComplete(), isStrengthenable(getCachedPr()));
+    return ilinva::IphState(getCachedPr().isComplete(),
+                            isStrengthenable(getCachedPr(), getBoolOption(w3opt_fwdemptexpl)));
 }
 
 bool Why3_ProblemController::hasNextUnprovenBlock(size_t id) {

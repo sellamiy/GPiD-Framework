@@ -13,7 +13,7 @@ static inline const std::string newFilename() {
 }
 
 /* TODO: This is a hardcoded copy of iph-control.cpp; Remove copy */
-static inline bool isStrengthenableExplanation(const std::string& expl) {
+static inline bool isStrengthenableExplanation(const std::string& expl, bool forwardEmpty=false) {
     return expl == "expl:postcondition"
         || expl == "expl:exceptional postcondition"
         || expl == "expl:assertion"
@@ -27,16 +27,16 @@ static inline bool isStrengthenableExplanation(const std::string& expl) {
         || expl == "expl:variant decrease" // TODO: Check relevancy
         || expl == "expl:type invariant" // TODO: Check relevancy
         || expl == "expl:termination" // TODO: Check relevancy
-        || expl == "" // TODO: Hack for undefined goals
+        || (forwardEmpty && expl == "")
         ;
 }
 
 /* TODO: This is a hardcoded copy of iph-control.cpp; Remove copy */
-static bool isStrengthenable(const why3cpp::ProofResult& proofResult) {
+static bool isStrengthenable(const why3cpp::ProofResult& proofResult, bool forwardEmpty=false) {
     // TODO: Update this method to switch it with a better one
     for (auto expl : proofResult.getExplanations())
         if (!why3cpp::proved(expl.second))
-            if (!isStrengthenableExplanation(why3cpp::expl(expl.second)))
+            if (!isStrengthenableExplanation(why3cpp::expl(expl.second), forwardEmpty))
                 return false;
     return true;
 }
@@ -61,5 +61,5 @@ bool Why3_IPH::acceptContextualConstraint(const Why3_Constraint& cons, Why3_Prop
                          iphctx.performInjections(),
                          tlim_contract(iphctx.getTlim()));
     iphctx.accessSourceCopy().getProperty(property).conj.pop_back();
-    return isStrengthenable(proofResult);
+    return isStrengthenable(proofResult, iphctx.getForwardEmptyExplOpt());
 }
