@@ -85,10 +85,10 @@ namespace ilinva {
 
     template<typename EngineT>
     void IlinvaAlgorithm<EngineT>::backtrack(bool force) {
-        // snlog::l_fatal() << "Backtrac level " << level_stack.size() << snlog::l_end;
+        if (level_stack.empty())
+            return;
         StrengthenerId strengthener = level_stack.top().second;
         while(force || !pengine.hasMoreStrengthenings(strengthener)) {
-            // snlog::l_info() << "Inme " << snlog::l_end;
             PropId prop = level_stack.top().first;
             pengine.release(prop);
             if (force) {
