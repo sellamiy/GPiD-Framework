@@ -18,6 +18,14 @@ const std::string Why3_ProblemController::w3opt_tlim = "tlim";
 const std::string Why3_ProblemController::w3opt_fwdemptexpl = "fwdemptexpl";
 const std::string Why3_ProblemController::w3opt_cmapmode = "cmapmode";
 
+const std::vector<std::string> Why3_ProblemController::w3opt_optlist = {
+    Why3_ProblemController::w3opt_solver,
+    Why3_ProblemController::w3opt_vcinject,
+    Why3_ProblemController::w3opt_tlim,
+    Why3_ProblemController::w3opt_fwdemptexpl,
+    Why3_ProblemController::w3opt_cmapmode
+};
+
 static inline size_t tlim_contract(const std::string& tlim) {
     size_t loc = tlim.find('.');
     if (loc == std::string::npos) {

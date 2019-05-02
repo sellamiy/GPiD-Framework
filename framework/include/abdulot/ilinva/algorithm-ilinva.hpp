@@ -69,6 +69,8 @@ namespace ilinva {
     void IlinvaAlgorithm<EngineT>::printInfos() {
         snlog::l_message() << "Abdulot framework problem strengthener "
                            << project_version << snlog::l_end;
+        snlog::l_message() << "Problem handler: " << snlog::l_end;
+        ProblemHandlerT::printInfos();
     }
 
     template<typename EngineT>

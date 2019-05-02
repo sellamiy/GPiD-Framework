@@ -25,6 +25,8 @@ public:
 
     static const std::string w3opt_fwdemptexpl;
     static const std::string w3opt_cmapmode;
+
+    static const std::vector<std::string> w3opt_optlist;
 private:
     Why3_Template sourcedata;
     Why3_ShapeDetector shape;

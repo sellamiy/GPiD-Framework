@@ -51,6 +51,18 @@ public:
 
     static bool acceptContextualConstraint(const Why3_Constraint& constraint, Why3_Prop_Ctx& iphctx);
 
+    static const std::vector<std::string>& getOptionsList() {
+        return Why3_ProblemController::w3opt_optlist;
+    }
+
+    static void printInfos() {
+        snlog::l_message() << "Why3 (via WhyML) Interface code handler" << snlog::l_end;
+        auto& logger = snlog::l_message() << "Interface options:";
+        for (const auto& optname : getOptionsList())
+            logger << "\n    * " << optname;
+        logger << snlog::l_end;
+    }
+
     Why3_IPH(const std::string& filename, bool overriden, bool shuffle,
               const std::map<std::string, std::string>& hopts)
         : cmap(stdutils::inmap(hopts, Why3_ProblemController::w3opt_cmapmode) ?
