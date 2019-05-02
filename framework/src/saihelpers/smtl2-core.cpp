@@ -75,6 +75,7 @@ static inline std::string ess_get_result
 static inline SolverTestStatus ess_analyze
 (SMTl2SolverInterface::ContextManagerT&, const std::string result) {
     if (result.find("unknown") != std::string::npos) return SolverTestStatus::UNKNOWN;
+    if (result.find("timeout") != std::string::npos) return SolverTestStatus::UNKNOWN;
     if (result.find("unsat")   != std::string::npos) return SolverTestStatus::UNSAT;
     if (result.find("sat")     != std::string::npos) return SolverTestStatus::SAT;
     snlog::l_warn()
