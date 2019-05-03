@@ -9,6 +9,7 @@
 #include <why3cpp/whyml-extractor.hpp>
 
 #include <why3cpp/why3proof.hpp>
+#include <why3cpp/why3shape.hpp>
 #include <why3cpp/why3utils.hpp>
 #include <why3cpp/whyml-smtlit.hpp>
 

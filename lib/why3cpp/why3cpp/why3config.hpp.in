@@ -8,6 +8,10 @@
 
 #define WHY3_DEFAULT_SOLVER_TLIM 5
 
+#define WHY3CPP_SHAPE_ANCHOR_DATA "WHY3 SHAPE DETECTOR ANCHORING STRING"
+
+#define WHY3_SHAPE_DRIVER_LOC "shapedetection.drv"
+
 #include <why3cpp/why3provers.hpp>
 
 #endif
