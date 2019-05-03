@@ -22,14 +22,6 @@ namespace why3cpp {
         return ProofElemStatus::Unknown;
     }
 
-    static inline void update_explanation(const std::string& line, std::string& expl) {
-        size_t ipos = line.find("[@expl");
-        if (ipos != std::string::npos) {
-            size_t kpos = line.find("]", ipos);
-            expl = line.substr(ipos + 2, kpos - ipos - 2);
-        }
-    }
-
 }
 
 using namespace why3cpp;
@@ -37,11 +29,8 @@ using namespace why3cpp;
 void SplitProofParser::parse() {
     std::istringstream stream = std::istringstream(*data);
     std::string line;
-    std::string expl;
     uint32_t index = 0;
     while (getline(stream, line))
         if (is_anchor(line, anchor))
-            proof.push_back(SplitProofResult(index++, expl, extract_status(line)));
-        else
-            update_explanation(line, expl);
+            proof.push_back(SplitProofResult(index++, extract_status(line)));
 }

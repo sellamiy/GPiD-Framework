@@ -8,20 +8,19 @@
 
 namespace why3cpp {
 
-    using vcdata_t = std::pair<bool, std::string>;
+    using vcdata_t = bool;
 
-    static inline constexpr bool proved(const vcdata_t& vcd) { return vcd.first; }
-    static inline const std::string expl(const vcdata_t& vcd) { return vcd.second; }
+    static inline constexpr bool proved(const vcdata_t& vcd) { return vcd; }
 
     class ProofResult {
         using strptr = std::shared_ptr<std::string>;
         using index_t = uint32_t;
         bool proven;
         std::map<index_t, strptr> smtfiles;
-        std::map<index_t, vcdata_t> explanations;
+        std::map<index_t, vcdata_t> results;
     public:
-        ProofResult(bool proven, std::map<index_t, strptr>& smtfiles, std::map<index_t, vcdata_t>& expls)
-            : proven(proven), smtfiles(smtfiles), explanations(expls) {}
+        ProofResult(bool proven, std::map<index_t, strptr>& smtfiles, std::map<index_t, vcdata_t>& results)
+            : proven(proven), smtfiles(smtfiles), results(results) {}
 
         inline constexpr bool isComplete() const { return proven; }
 
@@ -29,11 +28,9 @@ namespace why3cpp {
             return *(smtfiles.at(vc));
         }
 
-        inline bool isProved(index_t vc) const { return proved(explanations.at(vc)); }
+        inline bool isProved(index_t vc) const { return proved(results.at(vc)); }
 
-        inline const std::map<index_t, vcdata_t>& getExplanations() const {
-            return explanations;
-        }
+        inline const std::map<index_t, vcdata_t>& getResults() const { return results; }
 
         // TODO: Add an iterator on unprovens
     };

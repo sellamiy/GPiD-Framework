@@ -13,10 +13,9 @@ namespace why3cpp {
     enum class ProofElemStatus { Valid, Invalid, Unknown };
     struct SplitProofResult {
         const uint32_t index;
-        const std::string expl;
         const ProofElemStatus status;
-        SplitProofResult(uint32_t index, const std::string expl, ProofElemStatus status)
-            : index(index), expl(expl), status(status) {}
+        SplitProofResult(uint32_t index, ProofElemStatus status)
+            : index(index), status(status) {}
         inline constexpr bool isValid() const
         { return status == ProofElemStatus::Valid; }
         inline constexpr bool isInvalid() const

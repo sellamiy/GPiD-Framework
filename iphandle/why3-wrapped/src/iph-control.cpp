@@ -42,9 +42,6 @@ why3cpp::ProofResult Why3_ProblemController::getWhy3Proof() {
                                      getStringOption(w3opt_solver),
                                      getBoolOption(w3opt_vcinject),
                                      tlim_contract(getStringOption(w3opt_tlim)));
-    if (!shape.isVCShaped()) {
-        shape.detectVCShape(proofResult);
-    }
     cachepr(proofResult);
     return proofResult;
 }
@@ -67,11 +64,12 @@ static inline bool isStrengthenableExplanation(const std::string& expl, bool for
         ;
 }
 
-static bool isStrengthenable(const why3cpp::ProofResult& proofResult, bool forwardEmpty=false) {
+static bool isStrengthenable
+(const why3cpp::ProofResult& proofResult, const why3cpp::ProblemShape& pshape, bool forwardEmpty=false) {
     // TODO: Update this method to switch it with a better one
-    for (auto expl : proofResult.getExplanations())
-        if (!why3cpp::proved(expl.second))
-            if (!isStrengthenableExplanation(why3cpp::expl(expl.second), forwardEmpty))
+    for (auto res : proofResult.getResults())
+        if (!why3cpp::proved(res.second))
+            if (!isStrengthenableExplanation(pshape.at(res.first).expl, forwardEmpty))
                 return false;
     return true;
 }
@@ -80,21 +78,21 @@ ilinva::IphState Why3_ProblemController::proofCheck() {
     if (!prcached)
         getWhy3Proof();
     return ilinva::IphState(getCachedPr().isComplete(),
-                            isStrengthenable(getCachedPr(), getBoolOption(w3opt_fwdemptexpl)));
+                            isStrengthenable(getCachedPr(), explshape, getBoolOption(w3opt_fwdemptexpl)));
 }
 
 bool Why3_ProblemController::hasNextUnprovenBlock(size_t id) {
     blockcache.resize(id + 1);
     if (!prcached)
         getWhy3Proof();
-    return shape.canGenerateBlock(getCachedPr(), blockcache.at(id));
+    return blockgen.canGenerateBlock(getCachedPr(), blockcache.at(id));
 }
 
 size_t Why3_ProblemController::selectUnprovenBlock(size_t id) {
     blockcache.resize(id + 1);
     if (!prcached)
         getWhy3Proof();
-    block_t bdata = shape.generateBlock(getCachedPr(), blockcache.at(id));
+    block_t bdata = blockgen.generateBlock(getCachedPr(), blockcache.at(id));
     if (bdata.first == ILLEGAL_BLOCK_DATA || bdata.second == ILLEGAL_BLOCK_DATA)
         snlog::l_internal() << "Generating incorrect proof block" << snlog::l_end;
     blockcache.at(id).insert(bdata);

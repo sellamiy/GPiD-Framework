@@ -16,7 +16,7 @@ Why3_Prop_Ctx Why3_IPH::generateStrengheningContext
     const std::string filename = problem.generateAbductionProblem(id);
     generateSourceLiterals(id, overrider, shuffle);
     return Why3_Prop_Ctx
-        (filename, literals,
+        (filename, problem.getProblemShape(), literals,
          problem.getCandidateConjunction(id),
          cmap, translations, problem.getInternalPropertyIdentitifer(id),
          problem.getStringOption(Why3_ProblemController::w3opt_solver),

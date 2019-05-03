@@ -2,8 +2,9 @@
 #define WHY3_WHYML_IPH_FOR_GPID__PROBLEM_CONTROLLER__HPP
 
 #include <stack>
+#include <why3cpp/why3shape.hpp>
 #include <abdulot/ilinva/iph-core.hpp>
-#include "why3-shape-detection.hpp"
+#include "why3-block-generation.hpp"
 
 using blockmap_t = std::map<size_t, block_t>;
 
@@ -29,7 +30,8 @@ public:
     static const std::vector<std::string> w3opt_optlist;
 private:
     Why3_Template sourcedata;
-    Why3_ShapeDetector shape;
+    why3cpp::ProblemShape explshape;
+    Why3_BlockGenerator blockgen;
 
     why3cpp::Why3ConvertMap& cmap;
 
@@ -70,13 +72,16 @@ private:
 public:
     Why3_ProblemController
     (const std::string& filename, why3cpp::Why3ConvertMap& cmap, stringoptionmap_t& sopts, booloptionmap_t& bopts)
-        : sourcedata(filename), shape(sourcedata), cmap(cmap),
+        : sourcedata(filename), explshape(why3cpp::detect_shape(filename)),
+          blockgen(explshape, sourcedata), cmap(cmap),
           sopts(sopts), bopts(bopts)
     {}
 
     inline std::shared_ptr<Why3_Template> getSourceCopy() const {
         return std::shared_ptr<Why3_Template>(new Why3_Template(sourcedata));
     }
+
+    inline const why3cpp::ProblemShape& getProblemShape() const { return explshape; }
 
     inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
 

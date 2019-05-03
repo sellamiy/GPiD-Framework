@@ -33,7 +33,7 @@ namespace why3cpp {
     static const std::string gen_proof_command
     (const std::string& filename, const std::string& prover, const size_t tlim) {
         std::stringstream cmd;
-        cmd << WHY3_EXECUTABLE << " prove -a split_vc --debug print_attributes --debug transform "
+        cmd << WHY3_EXECUTABLE << " prove -a split_vc "
             << "--timelimit " << tlim << " "
             << "-P " << prover << " " << filename
             << " 2>&1";
@@ -54,13 +54,13 @@ namespace why3cpp {
         parser.parse();
         if (parser.isValid()) {
             for (const SplitProofResult& r : parser.results()) {
-                res[r.index] = vcdata_t(r.isValid(), r.expl);
+                res[r.index] = vcdata_t(r.isValid());
                 proofcomplete = proofcomplete && r.isValid();
             }
         } else {
             proofcomplete = false;
             snlog::l_internal() << "Cannot detect why3 results on empty data" << snlog::l_end;
-            res[-1] = vcdata_t(false, "nexpl:error");
+            res[-1] = vcdata_t(false);
         }
         return proofcomplete;
     }

@@ -32,11 +32,12 @@ static inline bool isStrengthenableExplanation(const std::string& expl, bool for
 }
 
 /* TODO: This is a hardcoded copy of iph-control.cpp; Remove copy */
-static bool isStrengthenable(const why3cpp::ProofResult& proofResult, bool forwardEmpty=false) {
+static bool isStrengthenable
+(const why3cpp::ProofResult& proofResult, const why3cpp::ProblemShape& pshape, bool forwardEmpty=false) {
     // TODO: Update this method to switch it with a better one
-    for (auto expl : proofResult.getExplanations())
-        if (!why3cpp::proved(expl.second))
-            if (!isStrengthenableExplanation(why3cpp::expl(expl.second), forwardEmpty))
+    for (auto res : proofResult.getResults())
+        if (!why3cpp::proved(res.second))
+            if (!isStrengthenableExplanation(pshape.at(res.first).expl, forwardEmpty))
                 return false;
     return true;
 }
@@ -61,5 +62,5 @@ bool Why3_IPH::acceptContextualConstraint(const Why3_Constraint& cons, Why3_Prop
                          iphctx.performInjections(),
                          tlim_contract(iphctx.getTlim()));
     iphctx.accessSourceCopy().getProperty(property).conj.pop_back();
-    return isStrengthenable(proofResult, iphctx.getForwardEmptyExplOpt());
+    return isStrengthenable(proofResult, iphctx.getProblemShape(), iphctx.getForwardEmptyExplOpt());
 }

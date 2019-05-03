@@ -1,12 +1,14 @@
 #ifndef WHY3_WHYML_IPH_FOR_GPID__CONTEXT__HPP
 #define WHY3_WHYML_IPH_FOR_GPID__CONTEXT__HPP
 
+#include <why3cpp/why3shape.hpp>
 #include <abdulot/ilinva/options.hpp>
 #include "why3-constraint-wrapper.hpp"
 #include "why3-content-wrapper.hpp"
 
 class Why3_Prop_Ctx {
     const std::string pfile;
+    const why3cpp::ProblemShape& pshape;
     const std::vector<Why3_Constraint>& literals;
     const std::vector<std::string>& candidate;
     const why3cpp::Why3ConvertMap& cmap;
@@ -20,22 +22,24 @@ class Why3_Prop_Ctx {
 
     std::shared_ptr<Why3_Template> sourceCopy;
 public:
-    Why3_Prop_Ctx(const std::string& pfile, const std::vector<Why3_Constraint>& literals,
+    Why3_Prop_Ctx(const std::string& pfile, const why3cpp::ProblemShape& pshape,
+                  const std::vector<Why3_Constraint>& literals,
                   const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap,
                   const std::map<std::string, std::string>& translations, size_t propid,
                   const std::string& solverid, bool pinject, bool fwdemptexpl, const std::string& tlim,
                   const std::shared_ptr<Why3_Template>& source)
-        : pfile(pfile), literals(literals), candidate(candidate),
+        : pfile(pfile), pshape(pshape), literals(literals), candidate(candidate),
           cmap(cmap), translations(translations), propid(propid),
           solverid(solverid), tlim(tlim), pinject(pinject), fwdemptexpl(fwdemptexpl),
           sourceCopy(source) {}
     Why3_Prop_Ctx(const Why3_Prop_Ctx& o)
-        : pfile(o.pfile), literals(o.literals), candidate(o.candidate),
+        : pfile(o.pfile), pshape(o.pshape), literals(o.literals), candidate(o.candidate),
           cmap(o.cmap), translations(o.translations), propid(o.propid),
           solverid(o.solverid), tlim(o.tlim), pinject(o.pinject), fwdemptexpl(o.fwdemptexpl),
           sourceCopy(o.sourceCopy) {}
 
     inline const std::string& getProblemFile() const { return pfile; }
+    inline const why3cpp::ProblemShape& getProblemShape() const { return pshape; }
     inline const std::vector<Why3_Constraint>& getLiterals() const { return literals; }
     inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
     inline const std::vector<std::string>& getCandidate() const { return candidate; }
