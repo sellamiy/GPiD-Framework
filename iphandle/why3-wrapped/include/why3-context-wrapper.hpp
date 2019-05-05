@@ -13,6 +13,7 @@ class Why3_Prop_Ctx {
     const std::vector<std::string>& candidate;
     const why3cpp::Why3ConvertMap& cmap;
     const std::map<std::string, std::string>& translations;
+    const bool dtforward;
 
     const size_t propid;
     const std::string solverid;
@@ -25,16 +26,16 @@ public:
     Why3_Prop_Ctx(const std::string& pfile, const why3cpp::ProblemShape& pshape,
                   const std::vector<Why3_Constraint>& literals,
                   const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap,
-                  const std::map<std::string, std::string>& translations, size_t propid,
+                  const std::map<std::string, std::string>& translations, bool dtforward, size_t propid,
                   const std::string& solverid, bool pinject, bool fwdemptexpl, const std::string& tlim,
                   const std::shared_ptr<Why3_Template>& source)
         : pfile(pfile), pshape(pshape), literals(literals), candidate(candidate),
-          cmap(cmap), translations(translations), propid(propid),
+          cmap(cmap), translations(translations), dtforward(dtforward), propid(propid),
           solverid(solverid), tlim(tlim), pinject(pinject), fwdemptexpl(fwdemptexpl),
           sourceCopy(source) {}
     Why3_Prop_Ctx(const Why3_Prop_Ctx& o)
         : pfile(o.pfile), pshape(o.pshape), literals(o.literals), candidate(o.candidate),
-          cmap(o.cmap), translations(o.translations), propid(o.propid),
+          cmap(o.cmap), translations(o.translations), dtforward(o.dtforward), propid(o.propid),
           solverid(o.solverid), tlim(o.tlim), pinject(o.pinject), fwdemptexpl(o.fwdemptexpl),
           sourceCopy(o.sourceCopy) {}
 
@@ -44,6 +45,7 @@ public:
     inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
     inline const std::vector<std::string>& getCandidate() const { return candidate; }
     inline const std::map<std::string, std::string>& getTranslationMap() const { return translations; }
+    inline constexpr bool performFullTranslationForwarding() const { return dtforward; }
     inline constexpr size_t getPropertyIdentifier() const { return propid; }
     inline const std::string& getWhy3Solver() const { return solverid; }
     inline const std::string& getTlim() const { return tlim; }

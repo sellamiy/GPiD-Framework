@@ -114,6 +114,7 @@ namespace saihelpers {
 
         uint64_t level = 0;
         std::map<uint64_t, std::vector<std::shared_ptr<std::string>>> assertions;
+        std::map<uint64_t, std::vector<std::shared_ptr<std::string>>> goals;
 
         ModelT model;
     public:
@@ -139,7 +140,10 @@ namespace saihelpers {
          const ObjectMapper<LiteralT>& mapper, bool negate=false);
 
         inline void push() { ++level; }
-        inline void pop() { assertions[level--].clear(); }
+        inline void pop() {
+            goals[level].clear();
+            assertions[level--].clear();
+        }
 
         SolverTestStatus check();
 
@@ -147,7 +151,17 @@ namespace saihelpers {
     };
 
     inline void SMTl2SolverInterface::addConstraint(SMTl2SolverConstraint& cons) {
-        assertions[level].push_back(cons.data);
+        if (siopts.fullfwdTranslation) {
+            if (goals[level].empty()) {
+                goals[level].push_back(cons.data);
+            } else {
+                assertions[level].push_back(goals[level].back());
+                goals[level].pop_back();
+                goals[level].push_back(cons.data);
+            }
+        } else {
+            assertions[level].push_back(cons.data);
+        }
     }
 
     inline void SMTl2SolverInterface::addLiteral(LiteralT& lit, bool negate) {
@@ -159,10 +173,21 @@ namespace saihelpers {
         } else {
             auto translator = lisptp::LispTreeTranslator(siopts.translationMap);
             auto translation = translator.translate(lisptp::parse(lit.str()));
-            if (negate)
-                assertions[level].push_back(ctx.memory.alloc("(not " + translation->str(false) + ")"));
-            else
-                assertions[level].push_back(ctx.memory.alloc(translation->str(false)));
+            if (siopts.fullfwdTranslation) {
+                // TODO: Here should still be translated special functions (like list hd, length for why3)
+                if (negate) {
+                    assertions[level].push_back(ctx.memory.alloc("(not " + lit.str() + ")"));
+                    goals[level].push_back(ctx.memory.alloc("(not " + translation->str(false) + ")"));
+                } else {
+                    assertions[level].push_back(ctx.memory.alloc(lit.str()));
+                    goals[level].push_back(ctx.memory.alloc(translation->str(false)));
+                }
+            } else {
+                if (negate)
+                    assertions[level].push_back(ctx.memory.alloc("(not " + translation->str(false) + ")"));
+                else
+                    assertions[level].push_back(ctx.memory.alloc(translation->str(false)));
+            }
         }
     }
 

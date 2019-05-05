@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstring>
 #include <array>
+#include <stdutils/collections.hpp>
 #include <abdulot/saihelpers/smtlib2.hpp>
 
 using namespace abdulot;
@@ -21,11 +22,29 @@ static inline void wsl2s_x_context
 }
 
 static inline void wsl2s_x_assertions
-(std::ostream& target, AssertionsT& assertions, uint64_t depth_limit) {
+(std::ostream& target, AssertionsT& assertions, AssertionsT& goals, uint64_t depth_limit) {
+    // Writing assertions
     for (uint64_t lvl = 0; lvl <= depth_limit; ++lvl) {
         for (std::shared_ptr<std::string> ptr : assertions[lvl]) {
             target << "(assert " << *ptr << ")" << std::endl;
         }
+    }
+    // Writing goals
+    bool goals_inited = false;
+    for (uint64_t lvl = 0; lvl <= depth_limit; ++lvl) {
+        for (std::shared_ptr<std::string> ptr : goals[lvl]) {
+            if (!goals_inited) {
+                target << "(assert (not (and ";
+                goals_inited = true;
+                // TODO: Initial goal negation should NOT happen here
+                target << "(not " << *ptr << ")";
+            } else {
+                target << *ptr;
+            }
+        }
+    }
+    if (goals_inited) {
+        target << ")))" << std::endl;
     }
 }
 
@@ -34,12 +53,12 @@ static inline void wsl2s_x_query(std::ostream& target) {
 }
 
 static inline void write_smtlib2_script
-(SMTl2SolverInterface::ContextManagerT& ctx, AssertionsT& assertions,
+(SMTl2SolverInterface::ContextManagerT& ctx, AssertionsT& assertions, AssertionsT& goals,
  uint64_t depth_limit, const std::string script_file) {
     std::ofstream target;
     target.open(script_file);
     wsl2s_x_context(target, ctx);
-    wsl2s_x_assertions(target, assertions, depth_limit);
+    wsl2s_x_assertions(target, assertions, goals, depth_limit);
     wsl2s_x_query(target);
     target.close();
     /*
@@ -112,10 +131,11 @@ static inline const std::string patch_solver_exec
 }
 
 SolverTestStatus SMTl2SolverInterface::check() {
-    write_smtlib2_script(ctx, assertions, level, script_file);
+    write_smtlib2_script(ctx, assertions, goals, level, script_file);
     const std::string patched_solver_exec = patch_solver_exec(solver_exec, siopts, tdata);
     SolverTestStatus res = execute_solver_script(ctx, patched_solver_exec, script_file);
-    smtlib2_check_cleanup(script_file);
+    // snlog::l_notifg() << script_file << snlog::l_end;
+    // smtlib2_check_cleanup(script_file);
     return res;
 }
 

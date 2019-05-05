@@ -5,7 +5,7 @@
 #include <smtlib2tools/fileutils.hpp>
 #include <why3cpp/why3utils.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
-#include <ugly/PineapplePrefix.hpp>
+#include <ugly/SqueezePrefix.hpp>
 #include <why3-context-wrapper.hpp>
 
 using namespace abdulot;

@@ -224,6 +224,7 @@ namespace ilinva {
         abductionOpts.smt_time_limit = dopts.smt_tlim;
         abductionOpts.small_smt_time_limit = dopts.sml_smt_tlim;
         abductionOpts.translation_map = iphctx.getTranslationMap();
+        abductionOpts.full_forward_translation = iphctx.performFullTranslationForwarding();
         generator =
             ImplicateGeneratorPtr(new ImplicateGenerator(_problemBuilder, *abdGenerator, forwarder,
                                                          abductionCoreOpts, abductionOpts, extChecker));

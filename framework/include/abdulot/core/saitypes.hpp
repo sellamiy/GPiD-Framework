@@ -59,19 +59,26 @@ namespace abdulot {
         const double smallLocalTimeout;
 
         const std::map<std::string, std::string> translationMap;
+        const bool fullfwdTranslation;
 
-        SolverInterfaceOptions(const std::map<std::string, std::string>& translationMap={})
-            : localTimeout(0), smallLocalTimeout(0), translationMap(translationMap)
+        SolverInterfaceOptions
+        (const std::map<std::string, std::string>& translationMap={}, bool fullfwdTranslation=false)
+            : localTimeout(0), smallLocalTimeout(0), translationMap(translationMap),
+              fullfwdTranslation(fullfwdTranslation)
         {}
 
         SolverInterfaceOptions
-        (uint64_t localTimeout, const std::map<std::string, std::string>& translationMap={})
-            : localTimeout(localTimeout), smallLocalTimeout(0), translationMap(translationMap)
+        (uint64_t localTimeout, const std::map<std::string, std::string>& translationMap={},
+         bool fullfwdTranslation=false)
+            : localTimeout(localTimeout), smallLocalTimeout(0), translationMap(translationMap),
+              fullfwdTranslation(fullfwdTranslation)
         {}
 
         SolverInterfaceOptions
-        (double smallLocalTimeout, const std::map<std::string, std::string>& translationMap={})
-            : localTimeout(0), smallLocalTimeout(smallLocalTimeout), translationMap(translationMap)
+        (double smallLocalTimeout, const std::map<std::string, std::string>& translationMap={},
+         bool fullfwdTranslation=false)
+            : localTimeout(0), smallLocalTimeout(smallLocalTimeout), translationMap(translationMap),
+              fullfwdTranslation(fullfwdTranslation)
         {}
     };
 

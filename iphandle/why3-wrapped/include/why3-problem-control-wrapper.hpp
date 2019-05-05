@@ -4,6 +4,7 @@
 #include <stack>
 #include <why3cpp/why3shape.hpp>
 #include <abdulot/ilinva/iph-core.hpp>
+#include "why3-expl-utils.hpp"
 #include "why3-block-generation.hpp"
 
 using blockmap_t = std::map<size_t, block_t>;
@@ -108,6 +109,11 @@ public:
 
     inline size_t getInternalPropertyIdentitifer(blockid_t id) const {
         return prop_ident(blockmap, id);
+    }
+
+    inline bool requiresForwarding(blockid_t id) const {
+        auto vc = vc_ident(blockmap, id);
+        return isForwardingExplanation(explshape.at(vc).expl);
     }
 
     inline void strengthen(blockid_t id, Why3_Constraint cons) {

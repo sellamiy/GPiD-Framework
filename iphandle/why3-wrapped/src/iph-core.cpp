@@ -4,7 +4,7 @@
 #include <stdutils/random.hpp>
 #include <smtlib2tools/fileutils.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
-#include <ugly/PineapplePrefix.hpp>
+#include <ugly/SqueezePrefix.hpp>
 #include <why3-wrapped-iph.hpp>
 
 using namespace abdulot;
@@ -18,7 +18,8 @@ Why3_Prop_Ctx Why3_IPH::generateStrengheningContext
     return Why3_Prop_Ctx
         (filename, problem.getProblemShape(), literals,
          problem.getCandidateConjunction(id),
-         cmap, translations, problem.getInternalPropertyIdentitifer(id),
+         cmap, translations, problem.requiresForwarding(id),
+         problem.getInternalPropertyIdentitifer(id),
          problem.getStringOption(Why3_ProblemController::w3opt_solver),
          problem.getBoolOption(Why3_ProblemController::w3opt_vcinject),
          problem.getBoolOption(Why3_ProblemController::w3opt_fwdemptexpl),
@@ -83,7 +84,7 @@ template<> const std::string Why3_IPH::sanitizeLiteral<SymbolChecker>
 static void generateTranslationMap
 (const smtlib2::smtfile_decls& sdecls, std::map<std::string, std::string>& translations) {
     translations.clear();
-    ugly::pineapple_squeeze_autostore(sdecls.get_set(), translations);
+    ugly::squeeze_autostore(sdecls.get_set(), translations);
     // for (const auto& tm : translations)
     //     snlog::l_notif() << tm.first << " ---> " << tm.second << snlog::l_end;
 }
