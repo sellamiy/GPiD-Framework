@@ -20,6 +20,7 @@ class Why3_Prop_Ctx {
     const std::string tlim;
     const bool pinject;
     const bool fwdemptexpl;
+    const bool fwdinitexpl;
 
     std::shared_ptr<Why3_Template> sourceCopy;
 public:
@@ -27,17 +28,17 @@ public:
                   const std::vector<Why3_Constraint>& literals,
                   const std::vector<std::string>& candidate, const why3cpp::Why3ConvertMap& cmap,
                   const std::map<std::string, std::string>& translations, bool dtforward, size_t propid,
-                  const std::string& solverid, bool pinject, bool fwdemptexpl, const std::string& tlim,
-                  const std::shared_ptr<Why3_Template>& source)
+                  const std::string& solverid, bool pinject, bool fwdemptexpl, bool fwdinitexpl,
+                  const std::string& tlim, const std::shared_ptr<Why3_Template>& source)
         : pfile(pfile), pshape(pshape), literals(literals), candidate(candidate),
           cmap(cmap), translations(translations), dtforward(dtforward), propid(propid),
           solverid(solverid), tlim(tlim), pinject(pinject), fwdemptexpl(fwdemptexpl),
-          sourceCopy(source) {}
+          fwdinitexpl(fwdinitexpl), sourceCopy(source) {}
     Why3_Prop_Ctx(const Why3_Prop_Ctx& o)
         : pfile(o.pfile), pshape(o.pshape), literals(o.literals), candidate(o.candidate),
           cmap(o.cmap), translations(o.translations), dtforward(o.dtforward), propid(o.propid),
           solverid(o.solverid), tlim(o.tlim), pinject(o.pinject), fwdemptexpl(o.fwdemptexpl),
-          sourceCopy(o.sourceCopy) {}
+          fwdinitexpl(o.fwdinitexpl), sourceCopy(o.sourceCopy) {}
 
     inline const std::string& getProblemFile() const { return pfile; }
     inline const why3cpp::ProblemShape& getProblemShape() const { return pshape; }
@@ -50,6 +51,7 @@ public:
     inline const std::string& getWhy3Solver() const { return solverid; }
     inline const std::string& getTlim() const { return tlim; }
     inline constexpr bool getForwardEmptyExplOpt() const { return fwdemptexpl; }
+    inline constexpr bool getForwardInitExplOpt() const { return fwdinitexpl; }
     inline constexpr bool performInjections() const { return pinject; }
 
     inline Why3_Template& accessSourceCopy() { return *sourceCopy; }

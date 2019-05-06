@@ -23,6 +23,7 @@ Why3_Prop_Ctx Why3_IPH::generateStrengheningContext
          problem.getStringOption(Why3_ProblemController::w3opt_solver),
          problem.getBoolOption(Why3_ProblemController::w3opt_vcinject),
          problem.getBoolOption(Why3_ProblemController::w3opt_fwdemptexpl),
+         problem.getBoolOption(Why3_ProblemController::w3opt_fwdinitexpl),
          problem.getStringOption(Why3_ProblemController::w3opt_tlim),
          problem.getSourceCopy());
 }

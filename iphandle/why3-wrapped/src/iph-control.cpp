@@ -16,6 +16,7 @@ const std::string Why3_ProblemController::w3opt_vcinject = "vcinject";
 const std::string Why3_ProblemController::w3opt_tlim = "tlim";
 
 const std::string Why3_ProblemController::w3opt_fwdemptexpl = "fwdemptexpl";
+const std::string Why3_ProblemController::w3opt_fwdinitexpl = "fwdinitexpl";
 const std::string Why3_ProblemController::w3opt_cmapmode = "cmapmode";
 
 const std::vector<std::string> Why3_ProblemController::w3opt_optlist = {
@@ -23,6 +24,7 @@ const std::vector<std::string> Why3_ProblemController::w3opt_optlist = {
     Why3_ProblemController::w3opt_vcinject,
     Why3_ProblemController::w3opt_tlim,
     Why3_ProblemController::w3opt_fwdemptexpl,
+    Why3_ProblemController::w3opt_fwdinitexpl,
     Why3_ProblemController::w3opt_cmapmode
 };
 
@@ -47,11 +49,11 @@ why3cpp::ProofResult Why3_ProblemController::getWhy3Proof() {
 }
 
 static bool isStrengthenable
-(const why3cpp::ProofResult& proofResult, const why3cpp::ProblemShape& pshape, bool forwardEmpty=false) {
+(const why3cpp::ProofResult& proofResult, const why3cpp::ProblemShape& pshape, bool forwardEmpty=false, bool forwardInit=false) {
     // TODO: Update this method to switch it with a better one
     for (auto res : proofResult.getResults())
         if (!why3cpp::proved(res.second))
-            if (!isStrengthenableExplanation(pshape.at(res.first).expl, forwardEmpty))
+            if (!isStrengthenableExplanation(pshape.at(res.first).expl, forwardEmpty, forwardInit))
                 return false;
     return true;
 }
@@ -60,7 +62,7 @@ ilinva::IphState Why3_ProblemController::proofCheck() {
     if (!prcached)
         getWhy3Proof();
     return ilinva::IphState(getCachedPr().isComplete(),
-                            isStrengthenable(getCachedPr(), explshape, getBoolOption(w3opt_fwdemptexpl)));
+                            isStrengthenable(getCachedPr(), explshape, getBoolOption(w3opt_fwdemptexpl), getBoolOption(w3opt_fwdinitexpl)));
 }
 
 bool Why3_ProblemController::hasNextUnprovenBlock(size_t id) {

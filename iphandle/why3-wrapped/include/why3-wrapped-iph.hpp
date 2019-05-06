@@ -5,6 +5,7 @@
 #include "why3-problem-control-wrapper.hpp"
 #include "why3-context-wrapper.hpp"
 #include "why3-lset-wrapper.hpp"
+#include "why3-shape-utils.hpp"
 
 #define WHY3_SOLVER_OPTION_DEFAULT "CVC4"
 
@@ -76,6 +77,8 @@ public:
         setOption(Why3_ProblemController::w3opt_tlim, WHY3_DEFAULT_SOLVER_TLIM);
 
         setOption(Why3_ProblemController::w3opt_fwdemptexpl, WHY3_DEFAULT_EMPTY_EXPL_FWD_MODE);
+        setOption(Why3_ProblemController::w3opt_fwdinitexpl,
+                  mayRequireInitStrengthening(problem.getProblemShape()));
 
         for (const std::pair<std::string, std::string>& hopt : hopts) {
             if (Why3_Opthelpers::is_str_true(hopt.second))
