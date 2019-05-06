@@ -22,6 +22,7 @@ Why3_BlockGenerator::Why3_BlockGenerator
     std::map<size_t, std::string>::iterator it = properties_shape.begin();
     bool before_start = true;
     for (const auto& vcd : vc_shape) {
+        /*
         if (is_property_bypasser_expl(vcd.second.expl)) {
             if (before_start) {
                 before_start = false;
@@ -34,6 +35,7 @@ Why3_BlockGenerator::Why3_BlockGenerator
                 }
             }
         }
+        */
         // TODO: Warning this is broken in many cases
         maxp_shape[vcd.first] = it->first;
     }
