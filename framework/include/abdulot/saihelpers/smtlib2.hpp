@@ -174,12 +174,12 @@ namespace saihelpers {
             auto translator = lisptp::LispTreeTranslator(siopts.translationMap);
             auto translation = translator.translate(lisptp::parse(lit.str()));
             if (siopts.fullfwdTranslation) {
-                // TODO: Here should still be translated special functions (like list hd, length for why3)
+                auto mtranslation = translator.translate(lisptp::parse(lit.str()), true);
                 if (negate) {
-                    assertions[level].push_back(ctx.memory.alloc("(not " + lit.str() + ")"));
+                    assertions[level].push_back(ctx.memory.alloc("(not " + mtranslation->str(false) + ")"));
                     goals[level].push_back(ctx.memory.alloc("(not " + translation->str(false) + ")"));
                 } else {
-                    assertions[level].push_back(ctx.memory.alloc(lit.str()));
+                    assertions[level].push_back(ctx.memory.alloc(mtranslation->str(false)));
                     goals[level].push_back(ctx.memory.alloc(translation->str(false)));
                 }
             } else {

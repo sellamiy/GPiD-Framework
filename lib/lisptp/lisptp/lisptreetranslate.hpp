@@ -18,10 +18,10 @@ namespace lisptp {
         const translation_map_t& tmap;
     public:
         LispTreeTranslator(const translation_map_t& tmap) : tmap(tmap) {}
-        inline LispTreeNodePtr translate(LispTreeNodePtr node) const;
+        inline LispTreeNodePtr translate(LispTreeNodePtr node, bool oponly=false) const;
     };
 
-    inline LispTreeNodePtr LispTreeTranslator::translate(LispTreeNodePtr node) const {
+    inline LispTreeNodePtr LispTreeTranslator::translate(LispTreeNodePtr node, bool oponly) const {
         if (node->isCall()) {
             std::vector<LispTreeNodePtr> lvs;
             for (auto leaf : node->getLeaves())
@@ -31,7 +31,7 @@ namespace lisptp {
             else
                 return alloc_ltn_ptr(node->getValue(), true, lvs);
         } else {
-            if (tmap.count(node->getValue()) > 0)
+            if (!oponly && tmap.count(node->getValue()) > 0)
                 return alloc_ltn_ptr(tmap.at(node->getValue()), false, node->getLeaves());
             else
                 return node;
