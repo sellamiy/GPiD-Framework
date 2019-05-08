@@ -18,7 +18,8 @@ static const injection_table_set WHY3_INJECTION_TABLES_SCORE
 ({
     { { "length", { "length1" } },
       { "hd", { "hd1" } },
-      { "tl", { "tl1" } }
+      { "tl", { "tl1" } },
+      { "nth", { "nth1" } }
     }
  });
 
@@ -27,6 +28,7 @@ static const injection_data_table_t WHY3_SMTL2_INJECTION_CLASSIC_DATA
     { "length1", "" },
     { "hd1", "" },
     { "tl1", "" },
+    { "nth1", "" },
  });
 
 static const injection_data_table_t WHY3_SMTL2_INJECTION_ALTERGO_DATA
@@ -34,6 +36,7 @@ static const injection_data_table_t WHY3_SMTL2_INJECTION_ALTERGO_DATA
     { "length1", "(declare-fun length1 (uni) Int) (assert (forall ((a uni)) (= (length1 a) (length int a))))" },
     { "hd1", "(declare-fun hd1 (uni) Int) (assert (forall ((l uni)) (= (hd1 l) (tb2t (hd int l)))))" },
     { "tl1", "" },
+    { "nth1", "(declare-fun nth1 (Int uni) Int) (assert (forall ((i Int) (l uni)) (= (nth1 i l) (tb2t (nth int i l)))))" },
  });
 
 extern bool why3cpp::vcinjectable
