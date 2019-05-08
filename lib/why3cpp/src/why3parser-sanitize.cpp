@@ -32,13 +32,15 @@ namespace why3cpp {
 
     class DeclInjector : public smtlib2::SMTl2CommandHandler {
         std::stringstream ss;
+        const VCInjectionMode mode;
         const std::set<std::string>& injectables;
         const std::set<std::string>& decls;
 
         bool forward(const std::string& cmd, const std::string& data);
         bool inject(const std::string& cmd, const std::string& data);
     public:
-        DeclInjector(const std::set<std::string>& injectables, const std::set<std::string>& decls);
+        DeclInjector(const VCInjectionMode mode,
+                     const std::set<std::string>& injectables, const std::set<std::string>& decls);
 
         inline strptr getInjectedScript() const { return strptr(new std::string(ss.str())); }
     };
@@ -114,8 +116,9 @@ Sanitizer::Sanitizer() {
                                                   std::placeholders::_1, std::placeholders::_2);
 }
 
-DeclInjector::DeclInjector(const std::set<std::string>& injectables, const std::set<std::string>& decls)
-    : injectables(injectables), decls(decls) {
+DeclInjector::DeclInjector
+(const VCInjectionMode mode, const std::set<std::string>& injectables, const std::set<std::string>& decls)
+    : mode(mode), injectables(injectables), decls(decls) {
     handlers["assert"]                = std::bind(&DeclInjector::forward, this,
                                                   std::placeholders::_1, std::placeholders::_2);
     handlers["declare-const"]         = std::bind(&DeclInjector::inject, this,
@@ -190,11 +193,15 @@ bool Sanitizer::setlogic(const std::string&, const std::string&) {
     ss << "(set-logic ALL)" << '\n' ; return true;
 }
 
+static inline constexpr bool is_whitespace(char c) {
+    return c == ' ' || c == '\n' || c == '\t';
+}
+
 const std::string extract_declname(const std::string& data) {
     size_t dpos = 0;
-    while (data.at(dpos++) == ' ');
+    while (is_whitespace(data.at(dpos++)));
     size_t npos = --dpos;
-    while (data.at(npos++) != ' ');
+    while (!is_whitespace(data.at(npos++)));
     return data.substr(dpos, npos-1-dpos);
 }
 
@@ -212,7 +219,7 @@ bool DeclInjector::inject(const std::string& cmd, const std::string& data) {
     ss << smtlib2::SMTl2CommandWrapper(cmd, data) << '\n';
     const std::string declname = extract_declname(data);
     if (stdutils::inset(injectables, declname)) {
-        vcinject(ss, declname, decls);
+        vcinject(ss, mode, declname, decls);
     }
     return true;
 }
@@ -231,14 +238,14 @@ why3cpp::build_injectables(const std::set<std::string>& fundecls) {
     return injectables;
 }
 
-extern strptr why3cpp::vc_sanitization(strptr data, bool inject) {
+extern strptr why3cpp::vc_sanitization(strptr data, bool inject, VCInjectionMode injectmode) {
     Sanitizer sanitizer;
     smtlib2::SMTl2CommandParser cparser(data);
     cparser.parse(sanitizer);
     std::set<std::string> injectables = build_injectables(sanitizer.getFunDecls());
     if (!inject || injectables.empty())
         return sanitizer.getSanitizedScript();
-    DeclInjector seringe(injectables, sanitizer.getFunDecls());
+    DeclInjector seringe(injectmode, injectables, sanitizer.getFunDecls());
     smtlib2::SMTl2CommandParser iparser(sanitizer.getSanitizedScript());
     iparser.parse(seringe);
     return seringe.getInjectedScript();

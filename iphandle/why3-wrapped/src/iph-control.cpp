@@ -37,12 +37,19 @@ static inline size_t tlim_contract(const std::string& tlim) {
     }
 }
 
+static inline why3cpp::VCInjectionMode deduce_inject_mode(const std::string& why3solv) {
+    return why3solv == "Alt-Ergo" ?
+        why3cpp::VCInjectionMode::AltErgo :
+        why3cpp::VCInjectionMode::Classic;
+}
+
 why3cpp::ProofResult Why3_ProblemController::getWhy3Proof() {
     sourcedata.save_to(WHYML_TEMPORARY_SOURCEFILE, cmap);
     why3cpp::ProofResult
         proofResult = why3cpp::prove(WHYML_TEMPORARY_SOURCEFILE,
                                      getStringOption(w3opt_solver),
                                      getBoolOption(w3opt_vcinject),
+                                     deduce_inject_mode(getStringOption(w3opt_solver)),
                                      tlim_contract(getStringOption(w3opt_tlim)));
     cachepr(proofResult);
     return proofResult;

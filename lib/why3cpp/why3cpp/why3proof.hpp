@@ -5,6 +5,7 @@
 #include <memory>
 #include <stdutils/collections.hpp>
 #include <why3cpp/why3config.hpp>
+#include <why3cpp/why3vcinject.hpp>
 
 namespace why3cpp {
 
@@ -36,11 +37,13 @@ namespace why3cpp {
     };
 
     extern ProofResult prove
-    (const std::string& filename, const std::string& prover, bool inject, size_t tlim);
+    (const std::string& filename, const std::string& prover,
+     bool inject, VCInjectionMode injectmode, size_t tlim);
 
     static inline ProofResult prove
-    (const std::string& filename, Why3ConfiguredProver prover, bool inject, size_t tlim) {
-        return prove(filename, str(prover), inject, tlim);
+    (const std::string& filename, Why3ConfiguredProver prover,
+     bool inject, VCInjectionMode injectmode, size_t tlim) {
+        return prove(filename, str(prover), inject, injectmode, tlim);
     }
 
 }

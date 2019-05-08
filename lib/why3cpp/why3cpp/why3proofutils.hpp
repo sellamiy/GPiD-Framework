@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <why3cpp/why3config.hpp>
+#include <why3cpp/why3vcinject.hpp>
 
 namespace why3cpp {
 
@@ -46,7 +47,7 @@ namespace why3cpp {
         const strptr getVC(uint32_t idx) const { return vcs.at(idx); }
     };
 
-    extern strptr vc_sanitization(strptr data, bool inject);
+    extern strptr vc_sanitization(strptr data, bool inject, VCInjectionMode injectmode);
 
 }
 

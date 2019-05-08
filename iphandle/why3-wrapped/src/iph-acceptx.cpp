@@ -33,6 +33,13 @@ static inline size_t tlim_contract(const std::string& tlim) {
     }
 }
 
+/* TODO: This is a hardcoded copy of iph-control.cpp; Remove copy */
+static inline why3cpp::VCInjectionMode deduce_inject_mode(const std::string& why3solv) {
+    return why3solv == "Alt-Ergo" ?
+        why3cpp::VCInjectionMode::AltErgo :
+        why3cpp::VCInjectionMode::Classic;
+}
+
 bool Why3_IPH::acceptContextualConstraint(const Why3_Constraint& cons, Why3_Prop_Ctx& iphctx) {
     size_t property = iphctx.getPropertyIdentifier();
     const std::string filename = newFilename();
@@ -40,7 +47,7 @@ bool Why3_IPH::acceptContextualConstraint(const Why3_Constraint& cons, Why3_Prop
     iphctx.accessSourceCopy().save_to(filename, iphctx.getCMap());
     why3cpp::ProofResult proofResult
         = why3cpp::prove(filename, iphctx.getWhy3Solver(),
-                         iphctx.performInjections(),
+                         iphctx.performInjections(), deduce_inject_mode(iphctx.getWhy3Solver()),
                          tlim_contract(iphctx.getTlim()));
     iphctx.accessSourceCopy().getProperty(property).conj.pop_back();
     return isStrengthenable(proofResult, iphctx.getProblemShape(), iphctx.getForwardEmptyExplOpt(), iphctx.getForwardInitExplOpt());

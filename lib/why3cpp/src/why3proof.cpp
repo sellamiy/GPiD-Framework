@@ -77,12 +77,13 @@ namespace why3cpp {
     }
 
     extern ProofResult prove
-    (const std::string& filename, const std::string& prover, bool inject, size_t tlim) {
+    (const std::string& filename, const std::string& prover,
+     bool inject, VCInjectionMode injectmode, size_t tlim) {
         vcset_t extractall;
         const bool dres = detect_unverified(filename, prover, extractall, tlim);
         std::map<uint32_t, strptr> vcs = extract_vc(filename, prover, extractall);
         for (auto it = vcs.begin(); it != vcs.end(); ++it) {
-            it->second = vc_sanitization(it->second, inject);
+            it->second = vc_sanitization(it->second, inject, injectmode);
         }
         ProofResult res(dres, vcs, extractall);
         return res;

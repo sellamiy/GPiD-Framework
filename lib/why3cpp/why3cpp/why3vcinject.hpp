@@ -7,9 +7,11 @@
 
 namespace why3cpp {
 
+    enum class VCInjectionMode { Classic, AltErgo };
+
     extern bool vcinjectable(const std::string& source_decl, const std::set<std::string>& decls);
 
-    extern void vcinject(std::stringstream& ss,
+    extern void vcinject(std::stringstream& ss, const VCInjectionMode mode,
                          const std::string& source_decl, const std::set<std::string>& decls);
 
 }
