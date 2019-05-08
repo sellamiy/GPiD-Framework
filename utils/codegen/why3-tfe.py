@@ -33,16 +33,24 @@ class Why3DataRecov:
         self.version = out.split(' ')[3]
 
     def _load_provers(self):
-        self.provers = []
+        self.provers = set()
         lines = self._exec(['--list-provers']).split('\n')
         for l in lines:
             if not l.startswith('  ') or l.startswith('   '):
                 # TODO: Use safer check
                 continue
-            self.provers.append(l.strip().split(' ')[0])
+            prover_name = l.strip().split(' ')[0]
+            self.provers.add(prover_name)
         if not self.provers:
             pp_warning('Empty why3 prover list')
             pp_warning('Please check your why3 configuration')
+        else:
+            self._update_provers()
+
+    def _update_provers(self):
+        # Hack config rules
+        if 'Z3' in self.provers:
+            self.provers.add('z3')
 
     def _load_drivers(self):
         self.drivers = {
@@ -63,7 +71,8 @@ class Why3DataRecov:
             'Princess' : 'princess',
             'Beagle' : 'beagle',
             'veriT' : 'verit',
-            'Z3' : 'z3',
+            'Z3' : 'z3_440',
+            'z3' : 'z3_440',
             'Zenon' : 'zenon',
             'Zenon Modulo' : 'zenon_modulo',
             'iProver' : 'iprover',
