@@ -32,7 +32,7 @@ static const injection_data_table_t WHY3_SMTL2_INJECTION_CLASSIC_DATA
 static const injection_data_table_t WHY3_SMTL2_INJECTION_ALTERGO_DATA
 ({
     { "length1", "(declare-fun length1 (uni) Int) (assert (forall ((a uni)) (= (length1 a) (length int a))))" },
-    { "hd1", "(declare-fun hd1 (uni) Int) (assert (forall ((l uni)) (= (hd1 l) ((tb2t (hd int l))))))" },
+    { "hd1", "(declare-fun hd1 (uni) Int) (assert (forall ((l uni)) (= (hd1 l) (tb2t (hd int l)))))" },
     { "tl1", "" },
  });
 
