@@ -12,6 +12,8 @@
 #define WHY3_CMAP_MODE_DEFAULT "auto"
 #define WHY3_DEFAULT_EMPTY_EXPL_FWD_MODE false
 
+#define WHY3_DEFAULT_CONFIG_FILE ""
+
 struct Why3_Opthelpers {
     static inline bool is_str_true(const std::string& s) {
         return s == "true" || s == "TRUE" || s == "True";
@@ -72,13 +74,15 @@ public:
           plits(filename, cmap, overriden, shuffle)
     {
         // Set default Why3 solver to CVC4
-        setOption(Why3_ProblemController::w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT);
+        setOption_mcrstr(Why3_ProblemController::w3opt_solver, WHY3_SOLVER_OPTION_DEFAULT);
         setOption(Why3_ProblemController::w3opt_vcinject, true);
-        setOption(Why3_ProblemController::w3opt_tlim, WHY3_DEFAULT_SOLVER_TLIM);
+        setOption_mcrstr(Why3_ProblemController::w3opt_tlim, std::to_string(WHY3_DEFAULT_SOLVER_TLIM));
 
         setOption(Why3_ProblemController::w3opt_fwdemptexpl, WHY3_DEFAULT_EMPTY_EXPL_FWD_MODE);
         setOption(Why3_ProblemController::w3opt_fwdinitexpl,
                   mayRequireInitStrengthening(problem.getProblemShape()));
+
+        setOption_mcrstr(Why3_ProblemController::w3opt_configfile, WHY3_DEFAULT_CONFIG_FILE);
 
         for (const std::pair<std::string, std::string>& hopt : hopts) {
             if (Why3_Opthelpers::is_str_true(hopt.second))
@@ -91,6 +95,10 @@ public:
     }
 
     inline void setOption(const std::string& optname, const std::string& optvalue) {
+        local_opts[optname] = optvalue;
+    }
+
+    inline void setOption_mcrstr(const std::string& optname, const std::string& optvalue) {
         local_opts[optname] = optvalue;
     }
 

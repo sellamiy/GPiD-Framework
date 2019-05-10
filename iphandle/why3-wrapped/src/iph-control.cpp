@@ -19,13 +19,16 @@ const std::string Why3_ProblemController::w3opt_fwdemptexpl = "fwdemptexpl";
 const std::string Why3_ProblemController::w3opt_fwdinitexpl = "fwdinitexpl";
 const std::string Why3_ProblemController::w3opt_cmapmode = "cmapmode";
 
+const std::string Why3_ProblemController::w3opt_configfile = "configfile";
+
 const std::vector<std::string> Why3_ProblemController::w3opt_optlist = {
     Why3_ProblemController::w3opt_solver,
     Why3_ProblemController::w3opt_vcinject,
     Why3_ProblemController::w3opt_tlim,
     Why3_ProblemController::w3opt_fwdemptexpl,
     Why3_ProblemController::w3opt_fwdinitexpl,
-    Why3_ProblemController::w3opt_cmapmode
+    Why3_ProblemController::w3opt_cmapmode,
+    Why3_ProblemController::w3opt_configfile
 };
 
 static inline size_t tlim_contract(const std::string& tlim) {
@@ -50,7 +53,8 @@ why3cpp::ProofResult Why3_ProblemController::getWhy3Proof() {
                                      getStringOption(w3opt_solver),
                                      getBoolOption(w3opt_vcinject),
                                      deduce_inject_mode(getStringOption(w3opt_solver)),
-                                     tlim_contract(getStringOption(w3opt_tlim)));
+                                     tlim_contract(getStringOption(w3opt_tlim)),
+                                     getStringOption(w3opt_configfile));
     cachepr(proofResult);
     return proofResult;
 }

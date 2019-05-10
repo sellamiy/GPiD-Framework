@@ -38,12 +38,12 @@ namespace why3cpp {
 
     extern ProofResult prove
     (const std::string& filename, const std::string& prover,
-     bool inject, VCInjectionMode injectmode, size_t tlim);
+     bool inject, VCInjectionMode injectmode, size_t tlim, const std::string& config);
 
     static inline ProofResult prove
     (const std::string& filename, Why3ConfiguredProver prover,
-     bool inject, VCInjectionMode injectmode, size_t tlim) {
-        return prove(filename, str(prover), inject, injectmode, tlim);
+     bool inject, VCInjectionMode injectmode, size_t tlim, const std::string& config) {
+        return prove(filename, str(prover), inject, injectmode, tlim, config);
     }
 
 }

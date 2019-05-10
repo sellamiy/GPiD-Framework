@@ -48,7 +48,7 @@ bool Why3_IPH::acceptContextualConstraint(const Why3_Constraint& cons, Why3_Prop
     why3cpp::ProofResult proofResult
         = why3cpp::prove(filename, iphctx.getWhy3Solver(),
                          iphctx.performInjections(), deduce_inject_mode(iphctx.getWhy3Solver()),
-                         tlim_contract(iphctx.getTlim()));
+                         tlim_contract(iphctx.getTlim()), iphctx.getWhy3ConfigFile());
     iphctx.accessSourceCopy().getProperty(property).conj.pop_back();
     return isStrengthenable(proofResult, iphctx.getProblemShape(), iphctx.getForwardEmptyExplOpt(), iphctx.getForwardInitExplOpt());
 }

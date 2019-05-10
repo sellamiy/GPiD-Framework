@@ -31,25 +31,29 @@ namespace why3cpp {
     }
 
     static const std::string gen_proof_command
-    (const std::string& filename, const std::string& prover, const size_t tlim) {
+    (const std::string& filename, const std::string& prover, const size_t tlim, const std::string& config) {
         std::stringstream cmd;
-        cmd << WHY3_EXECUTABLE << " prove -a split_vc "
-            << "--timelimit " << tlim << " "
+        cmd << WHY3_EXECUTABLE << " prove -a split_vc ";
+        if (config != "" ) cmd << "-C " << config << " ";
+        cmd << "--timelimit " << tlim << " "
             << "-P " << prover << " " << filename
             << " 2>&1";
         return cmd.str();
     }
 
     static const std::string gen_extraction_command
-    (const std::string& filename, const std::string& driver) {
+    (const std::string& filename, const std::string& driver, const std::string& config) {
         std::stringstream cmd;
-        cmd << WHY3_EXECUTABLE << " prove -a split_vc -D " << driver << " " << filename;
+        cmd << WHY3_EXECUTABLE << " prove -a split_vc ";
+        if (config != "" ) cmd << "-C " << config << " ";
+        cmd << "-D " << driver << " " << filename;
         return cmd.str();
     }
 
     static bool detect_unverified
-    (const std::string& filename, const std::string& prover, vcset_t& res, const size_t tlim) {
-        SplitProofParser parser(filename, execute(gen_proof_command(filename, prover, tlim)));
+    (const std::string& filename, const std::string& prover, vcset_t& res,
+     const size_t tlim, const std::string& config) {
+        SplitProofParser parser(filename, execute(gen_proof_command(filename, prover, tlim, config)));
         bool proofcomplete = true;
         parser.parse();
         if (parser.isValid()) {
@@ -66,9 +70,10 @@ namespace why3cpp {
     }
 
     static std::map<uint32_t, strptr> extract_vc
-    (const std::string& filename, const std::string& prover, const vcset_t& locations) {
+    (const std::string& filename, const std::string& prover,
+     const vcset_t& locations, const std::string& config) {
         std::map<uint32_t, strptr> res;
-        SplitProofVCParser parser(execute(gen_extraction_command(filename, driver(prover))));
+        SplitProofVCParser parser(execute(gen_extraction_command(filename, driver(prover), config)));
         parser.parse();
         for (const auto& vc : locations) {
             res[vc.first] = parser.getVC(vc.first);
@@ -78,11 +83,11 @@ namespace why3cpp {
 
     extern ProofResult prove
     (const std::string& filename, const std::string& prover,
-     bool inject, VCInjectionMode injectmode, size_t tlim) {
+     bool inject, VCInjectionMode injectmode, size_t tlim, const std::string& config) {
         vcset_t extractall;
         if (tlim == 0) tlim = 1; // TODO: This is a beurk Hack to prevent unwanted small 0 smtlim
-        const bool dres = detect_unverified(filename, prover, extractall, tlim);
-        std::map<uint32_t, strptr> vcs = extract_vc(filename, prover, extractall);
+        const bool dres = detect_unverified(filename, prover, extractall, tlim, config);
+        std::map<uint32_t, strptr> vcs = extract_vc(filename, prover, extractall, config);
         for (auto it = vcs.begin(); it != vcs.end(); ++it) {
             it->second = vc_sanitization(it->second, inject, injectmode);
         }
