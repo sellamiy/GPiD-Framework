@@ -3,6 +3,7 @@
 #include <array>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include <snlog/snlog.hpp>
 #include <why3cpp/why3shape.hpp>
 
