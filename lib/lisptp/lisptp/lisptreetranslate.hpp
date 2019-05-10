@@ -8,6 +8,7 @@
 #define LIB_LISP_TREE_PARSER__LISP_TREE_TRANSLATE_HEADER
 
 #include <map>
+#include <snlog/snlog.hpp>
 #include <lisptp/lisptree.hpp>
 
 namespace lisptp {
@@ -25,16 +26,17 @@ namespace lisptp {
         if (node->isCall()) {
             std::vector<LispTreeNodePtr> lvs;
             for (auto leaf : node->getLeaves())
-                lvs.push_back(translate(leaf));
+                lvs.push_back(translate(leaf, oponly));
             if (tmap.count(node->getValue()) > 0)
                 return alloc_ltn_ptr(tmap.at(node->getValue()), true, lvs);
             else
                 return alloc_ltn_ptr(node->getValue(), true, lvs);
         } else {
-            if (!oponly && tmap.count(node->getValue()) > 0)
+            if (!oponly && tmap.count(node->getValue()) > 0) {
                 return alloc_ltn_ptr(tmap.at(node->getValue()), false, node->getLeaves());
-            else
+            } else {
                 return node;
+            }
         }
     }
 

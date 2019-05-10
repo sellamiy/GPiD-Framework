@@ -62,9 +62,9 @@ static inline void write_smtlib2_script
     wsl2s_x_query(target);
     target.close();
     /*
-    auto& dl = snlog::l_internal();
+    auto& dl = snlog::l_notifg();
     wsl2s_x_context(dl, ctx);
-    wsl2s_x_assertions(dl, assertions, depth_limit);
+    wsl2s_x_assertions(dl, assertions, goals, depth_limit);
     wsl2s_x_query(dl);
     dl << snlog::l_end;
     */
