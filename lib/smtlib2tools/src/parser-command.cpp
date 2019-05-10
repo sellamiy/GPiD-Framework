@@ -27,7 +27,7 @@ bool Smt2CommandParserHandler::_visit(const LispTreeNode& node) {
         } else {
             std::vector<std::string> lvstr(node.getLeaves().size());
             for (auto leaf: node.getLeaves())
-                lvstr.push_back(leaf->str());
+                lvstr.push_back(leaf->str(false));
             bool _hdt = handler.handle(node.getValue(), stdutils::join(" ", lvstr));
             status = status && _hdt;
         }
