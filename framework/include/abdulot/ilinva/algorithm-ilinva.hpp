@@ -88,18 +88,21 @@ namespace ilinva {
         if (level_stack.empty())
             return;
         StrengthenerId strengthener = level_stack.top().second;
-        while(force || !pengine.hasMoreStrengthenings(strengthener)) {
+        if (force) {
             PropId prop = level_stack.top().first;
             pengine.release(prop);
+        }
+        while(!pengine.hasMoreStrengthenings(strengthener)) {
+            PropId prop = level_stack.top().first;
+            // pengine.release(prop);
+            /*
             if (force) {
                 force = false;
                 if (pengine.hasMoreStrengthenings(strengthener)) {
                     break;
                 }
-                /* Hack: If forced, we should not change the strengthener immediately,
-                   Actually, we should if it is due to the depth limitation,
-                   but this is a TODO for now */
             }
+            */
             level_stack.pop();
             /* Check for other strengthenable props */
             if (!pengine.canGenerateVC(level_stack.size())) {
