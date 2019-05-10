@@ -118,21 +118,26 @@ static inline void smtlib2_check_cleanup (const std::string script_file) {
 
 static inline const std::string patch_solver_exec
 (const std::string& solver_exec, const SolverInterfaceOptions& siopts,
- const SMTl2SolverInterface::TimeoutData& tdata) {
+ const SMTl2SolverInterface::TimeoutData& tdata, bool allow_float_to) {
     if (siopts.localTimeout != 0) {
         const uint64_t factorized_tlim = tdata.factor * siopts.localTimeout;
         return solver_exec + " " + tdata.cliopt + std::to_string(factorized_tlim);
     }
     if (siopts.smallLocalTimeout != 0) {
-        const uint64_t factorized_tlim = static_cast<uint64_t>(tdata.factor * siopts.smallLocalTimeout);
-        return solver_exec + " " + tdata.cliopt + std::to_string(factorized_tlim);
+        if (allow_float_to) {
+            const double factorized_tlim = tdata.factor * siopts.smallLocalTimeout;
+            return solver_exec + " " + tdata.cliopt + std::to_string(factorized_tlim);
+        } else {
+            const uint64_t factorized_tlim = static_cast<uint64_t>(tdata.factor * siopts.smallLocalTimeout);
+            return solver_exec + " " + tdata.cliopt + std::to_string(factorized_tlim);
+        }
     }
     return solver_exec;
 }
 
 SolverTestStatus SMTl2SolverInterface::check() {
     write_smtlib2_script(ctx, assertions, goals, level, script_file);
-    const std::string patched_solver_exec = patch_solver_exec(solver_exec, siopts, tdata);
+    const std::string patched_solver_exec = patch_solver_exec(solver_exec, siopts, tdata, allow_float_to);
     SolverTestStatus res = execute_solver_script(ctx, patched_solver_exec, script_file);
     // snlog::l_notifg() << script_file << snlog::l_end;
     // smtlib2_check_cleanup(script_file);

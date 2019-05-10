@@ -11,7 +11,7 @@ struct AltErgoPSmt2Interface : public abdulot::saihelpers::SMTl2SolverInterface 
     AltErgoPSmt2Interface(abdulot::saihelpers::SMTl2SolverManager& manager,
                           const abdulot::SolverInterfaceOptions& siopts)
         : SMTl2SolverInterface(AltErgo_EXECUTABLE, manager, siopts,
-                               AltErgo_TIMEOUT_CLIOPT, AltErgo_TIMEOUT_FACTOR) {}
+                               AltErgo_TIMEOUT_CLIOPT, AltErgo_TIMEOUT_FACTOR, true) {}
 };
 
 #endif

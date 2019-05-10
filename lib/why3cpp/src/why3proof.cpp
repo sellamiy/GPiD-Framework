@@ -80,6 +80,7 @@ namespace why3cpp {
     (const std::string& filename, const std::string& prover,
      bool inject, VCInjectionMode injectmode, size_t tlim) {
         vcset_t extractall;
+        if (tlim == 0) tlim = 1; // TODO: This is a beurk Hack to prevent unwanted small 0 smtlim
         const bool dres = detect_unverified(filename, prover, extractall, tlim);
         std::map<uint32_t, strptr> vcs = extract_vc(filename, prover, extractall);
         for (auto it = vcs.begin(); it != vcs.end(); ++it) {
