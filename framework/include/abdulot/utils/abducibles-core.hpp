@@ -12,6 +12,8 @@
 
 namespace abdulot {
 
+    using annotation_list_t = std::vector<std::pair<std::string, std::string>>;
+
     class AbducibleParserVisitor {
         bool valid = true;
         bool handled = false;
@@ -29,6 +31,7 @@ namespace abdulot {
 
         std::vector<std::string> decls;
         std::map<std::string, std::set<size_t>> annots;
+        annotation_list_t defined_annots;
 
         class Lextender {
             std::map<size_t, size_t> wires;
@@ -71,6 +74,7 @@ namespace abdulot {
         void handle_lambda(const lisptp::LispTreeNode& node);
         void handle_apply(const lisptp::LispTreeNode& node);
         void handle_copy(const lisptp::LispTreeNode& node);
+        void handle_annotate(const lisptp::LispTreeNode& node);
     public:
         /** Handler constructor */
         AbducibleParserVisitor() {}
@@ -84,6 +88,8 @@ namespace abdulot {
         const std::string& nextAbducible();
         const std::string& nextReference();
 
+        inline const annotation_list_t& getAnnotationList() const { return defined_annots; }
+
         inline constexpr bool isValid() const { return valid; }
         inline constexpr bool isComplete() const { return handled; }
     };
@@ -91,6 +97,7 @@ namespace abdulot {
     /** \brief Parser for abducible files. */
     class AbducibleParser {
         std::shared_ptr<lisptp::LispTreeNode> pdata;
+        annotation_list_t adata;
         AbducibleParserVisitor pvisitor;
     public:
         /** Create an abducible file parser. */
@@ -102,6 +109,8 @@ namespace abdulot {
         /** Parse the next abducible literal in the file. */
         const std::string& nextAbducible();
         const std::string& nextReference();
+
+        const annotation_list_t& getAnnotations();
 
         /** Check if the parser is in a consistent state. */
         inline constexpr bool isValid() const { return pvisitor.isValid(); }

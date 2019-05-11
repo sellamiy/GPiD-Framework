@@ -30,10 +30,10 @@ static inline const std::string floatize(const std::string& s) {
     return (s == "=" || s == "<>") ? s : s + ".";
 }
 
-static inline bool detected_float(const std::string& data) {
+static inline bool detected_float(const std::string& data, const Why3ConvertMap& cmap) {
     return data.find("from_int") != std::string::npos
-        || data.find(".") != std::string::npos;
-    // TODO: Add correct handle for variables
+        || data.find(".") != std::string::npos
+        || cmap.containsVarType(data, "float");
 }
 
 std::string Why3Smtl2CV::handle_call(const std::string& op, const std::vector<std::string>& lvs) const {
@@ -50,7 +50,7 @@ std::string Why3Smtl2CV::handle_call(const std::string& op, const std::vector<st
         return parenthize(ops + " " + lvs.front());
     if (is_infix(ops)) {
         for (const std::string& p : lvs)
-            if (detected_float(p))
+            if (detected_float(p, cmap))
                 return parenthize(stdutils::join(space(floatize(ops)), lvs));
         return parenthize(stdutils::join(space(ops), lvs));
     }

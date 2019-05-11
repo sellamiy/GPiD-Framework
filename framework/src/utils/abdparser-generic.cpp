@@ -26,6 +26,7 @@ const std::string abdkw_as = "as";
 const std::string abdkw_auto = "auto";
 const std::string abdkw_over = "over";
 const std::string abdkw_copy = "copy";
+const std::string abdkw_annotate = "annotate";
 
 const std::string abdkw_symmetric = "symmetric";
 const std::string abdkw_nonself = "nonself";
@@ -148,6 +149,8 @@ void AbducibleParserVisitor::handle(const lisptp::LispTreeNode& node) {
             handle_apply(node);
         if (nvalue == abdkw_copy)
             handle_copy(node);
+        if (nvalue == abdkw_annotate)
+            handle_annotate(node);
     } else {
         // We do not need to handle terms
     }
@@ -223,6 +226,21 @@ void AbducibleParserVisitor::handle_copy(const lisptp::LispTreeNode& node) {
             a_phase = true;
         } else {
             sources.insert(leaf->getValue());
+        }
+    }
+}
+
+void AbducibleParserVisitor::handle_annotate(const lisptp::LispTreeNode& node) {
+    _ensure(node.getLeaves().size() >= 2, "annotation decls takes at least 2 parameters <annotation> <var1> <var2> ...");
+    bool first = true;
+    std::string annot;
+    for (auto leaf : node.getLeaves()) {
+        _ensure(!leaf->isCall(), "annotations must be non calls");
+        if (first) {
+            first = false;
+            annot = leaf->getValue();
+        } else {
+            defined_annots.push_back(std::pair<std::string, std::string>(leaf->getValue(), annot));
         }
     }
 }
@@ -359,4 +377,10 @@ const std::string& AbducibleParser::nextReference() {
     if (!pvisitor.isComplete())
         pvisitor.handle(*pdata);
     return pvisitor.nextReference();
+}
+
+const annotation_list_t& AbducibleParser::getAnnotations() {
+    if (!pvisitor.isComplete())
+        pvisitor.handle(*pdata);
+    return pvisitor.getAnnotationList();
 }

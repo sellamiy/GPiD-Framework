@@ -8,6 +8,7 @@ using namespace abdulot;
 
 extern const std::string abdulot::abducibles_memory_id = "Abducibles";
 extern const std::string abdulot::references_memory_id = "References";
+extern const std::string abdulot::annotations_memory_id = "Annotations";
 
 extern uint32_t abdulot::getAbducibleCount(std::string filename) {
     AbducibleParser parser(filename);
@@ -53,8 +54,19 @@ extern void abdulot::loadReferences(std::string filename, ReferenceHandler& hand
     }
 }
 
+extern void abdulot::loadAnnotations(std::string filename, AnnotationHandler& handler) {
+    AbducibleParser parser(filename);
+    if (!parser.isValid()) {
+        throw ParseError("Error loading from @file:" + filename);
+    }
+    for (const auto& pair : parser.getAnnotations()) {
+        handler.handleAnnotation(pair.first, pair.second);
+    }
+}
+
 extern void abdulot::loadAbduceData(std::string filename, GenericHandler& handler) {
     // TODO: Do this in a smart way
     loadAbducibles(filename, handler);
     loadReferences(filename, handler);
+    loadAnnotations(filename, handler);
 }

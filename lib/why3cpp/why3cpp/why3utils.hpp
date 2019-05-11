@@ -18,6 +18,8 @@ namespace why3cpp {
         transfermap_t transfermap;
         std::map<std::pair<std::string, size_t>, std::string> transfer_cache;
 
+        std::map<std::string, std::set<std::string>> annot_map;
+
         size_t localid;
     public:
         Why3ConvertMap() {}
@@ -35,6 +37,24 @@ namespace why3cpp {
 
         inline void addRefs(const std::set<std::string>& _refs) {
             for (auto& r : _refs) refs.insert(r);
+        }
+
+        inline void addAnnots(const std::map<std::string, std::set<std::string>>& annots) {
+            for (const auto& pair : annots) {
+                for (const auto& r : pair.second) {
+                    annot_map[pair.first].insert(r);
+                }
+            }
+        }
+
+        inline bool containsVarType(const std::string& data, const std::string& annot) const {
+            if (stdutils::ninmap(annot_map, annot))
+                return false;
+            for (const std::string& r : annot_map.at(annot)) {
+                if (data.find(r) != std::string::npos)
+                    return true;
+            }
+            return false;
         }
 
         inline bool isref(const std::string& t) const { return refs.count(t) > 0; }

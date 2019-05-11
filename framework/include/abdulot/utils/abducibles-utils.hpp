@@ -36,18 +36,28 @@ namespace abdulot {
         { handleReference(*abd); }
     };
 
-    struct GenericHandler : public AbducibleHandler, ReferenceHandler {};
+    struct AnnotationHandler {
+        virtual void handleAnnotation(const std::string& abd, const std::string& annot) = 0;
+        inline void handleAnnotation(const std::shared_ptr<std::string>& abd,
+                                     const std::shared_ptr<std::string>& annot)
+        { handleAnnotation(*abd, *annot); }
+    };
+
+    struct GenericHandler : public AbducibleHandler, ReferenceHandler, AnnotationHandler {};
 
     /** Load abducible literals from a file. */
     extern void loadAbducibles(std::string filename, AbducibleHandler& handler);
 
     extern void loadReferences(std::string filename, ReferenceHandler& handler);
 
+    extern void loadAnnotations(std::string filename, AnnotationHandler& handler);
+
     extern void loadAbduceData(std::string filename, GenericHandler& handler);
 
     /** Name id for storing/accessing abducible literals in memory. */
     extern const std::string abducibles_memory_id;
     extern const std::string references_memory_id;
+    extern const std::string annotations_memory_id;
 
 }
 

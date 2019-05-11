@@ -32,10 +32,12 @@ Why3_Prop_Ctx Why3_IPH::generateStrengheningContext
 struct W_AbdStorerHandler : public GenericHandler {
     std::vector<std::string>& storage;
     std::set<std::string>& refs;
+    std::map<std::string, std::set<std::string>>& annots;
     const why3cpp::Why3ConvertMap& cmap;
     W_AbdStorerHandler(std::vector<std::string>& storage, std::set<std::string>& refs,
+                       std::map<std::string, std::set<std::string>>& annots,
                        const why3cpp::Why3ConvertMap& cmap)
-        : storage(storage), refs(refs), cmap(cmap) {}
+        : storage(storage), refs(refs), annots(annots), cmap(cmap) {}
     virtual void allocate(const std::string, size_t) override {}
     virtual void handleAbducible(const std::string& abd) override {
         storage.push_back(why3cpp::SmtBackwardConvert(abd, cmap));
@@ -43,13 +45,18 @@ struct W_AbdStorerHandler : public GenericHandler {
     virtual void handleReference(const std::string& ref) override {
         refs.insert(ref);
     }
+    virtual void handleAnnotation(const std::string& ref, const std::string& annot) override {
+        annots[annot].insert(ref);
+    }
 };
 
 void Why3_IPH::loadOverridingAbducibles(const std::string& overrider, bool shuffle) {
     std::set<std::string> refs;
-    W_AbdStorerHandler hdler(overrides[overrider], refs, cmap);
+    std::map<std::string, std::set<std::string>> annots;
+    W_AbdStorerHandler hdler(overrides[overrider], refs, annots, cmap);
     loadAbduceData(overrider, hdler);
     cmap.addRefs(refs);
+    cmap.addAnnots(annots);
     if (shuffle)
         stdutils::shuffle(hdler.storage);
 }
