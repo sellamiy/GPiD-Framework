@@ -27,3 +27,4 @@
 
 (extend bf)
 
+(annotate goal y = fact x)
