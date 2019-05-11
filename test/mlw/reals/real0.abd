@@ -1,7 +1,8 @@
 (size auto)
 
-(declare tick time i (from_int i) as var)
-(declare 1.0 10 as const)
+(declare tick time (from_int i) as real)
+(declare i 1 10 as int)
+(declare 1.0 as real)
 
 (annotate float tick time)
 
@@ -20,11 +21,14 @@
 (lambda iplus (l r) (+ l r))
 (lambda imult (l r) (* l r))
 
-(apply imult (over var var) var)
-(copy const as var)
+(apply imult (over real real) real)
 
-(apply eq (over var var) bf symmetric)
-(apply le (over var var) bf nonself)
-(apply lt (over var var) bf nonself)
+(apply eq (over int int) bf symmetric)
+(apply le (over int int) bf nonself)
+(apply lt (over int int) bf nonself)
+
+(apply eq (over real real) bf symmetric)
+(apply le (over real real) bf nonself)
+(apply lt (over real real) bf nonself)
 
 (extend bf)
