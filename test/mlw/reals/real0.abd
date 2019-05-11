@@ -2,7 +2,7 @@
 
 (declare tick time (from_int i) as real)
 (declare i 1 10 as int)
-(declare 1.0 as real)
+(declare 1.0 0.1 as real)
 
 (annotate float tick time)
 

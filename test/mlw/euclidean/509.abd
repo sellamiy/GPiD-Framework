@@ -1,6 +1,8 @@
 (size auto)
 
 (declare us vs u v tmp as vars)
+(declare us u as gcdleft)
+(declare vs v as gcdright)
 (reference u v)
 
 (lambda eq (l r) (= l r))
@@ -15,7 +17,7 @@
 
 (lambda gcd (a b) (gcd a b))
 
-(apply gcd (over vars vars) vars symmetric)
+(apply gcd (over gcdleft gcdright) vars)
 
 (declare 0 as vars)
 
@@ -24,3 +26,4 @@
 
 (extend bf)
 
+(annotate goal = gcd us vs)

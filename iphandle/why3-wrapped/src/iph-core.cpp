@@ -1,6 +1,7 @@
 #define WHY3_WHYML_IPH_FOR_GPID__IPH__CPP
 
 #include <fstream>
+#include <algorithm>
 #include <stdutils/random.hpp>
 #include <smtlib2tools/fileutils.hpp>
 #include <abdulot/utils/abducibles-utils.hpp>
@@ -50,6 +51,37 @@ struct W_AbdStorerHandler : public GenericHandler {
     }
 };
 
+struct GoalOrderer {
+    const std::set<std::string>& goals;
+    std::map<std::string, size_t> cache;
+    GoalOrderer(const std::set<std::string>& goals) : goals(goals) {}
+
+    inline size_t count_goals(const std::string& s) {
+        size_t count = 0;
+        for (const std::string& goal : goals)
+            if (s.find(goal) != std::string::npos)
+                ++count;
+        return count;
+    }
+
+    inline bool operator()(const std::string& s, const std::string& r) {
+        if (!stdutils::inmap(cache, s))
+            cache[s] = count_goals(s);
+        if (!stdutils::inmap(cache, r))
+            cache[r] = count_goals(r);
+        return cache.at(s) < cache.at(r);
+    }
+
+};
+
+static void reorderAbducibles(std::vector<std::string>& abds, const std::set<std::string>& goals) {
+    GoalOrderer gorder(goals);
+    std::sort(abds.begin(), abds.end(), gorder);
+    for (const auto& abd : abds) {
+        snlog::l_notif() << abd << snlog::l_end;
+    }
+}
+
 void Why3_IPH::loadOverridingAbducibles(const std::string& overrider, bool shuffle) {
     std::set<std::string> refs;
     std::map<std::string, std::set<std::string>> annots;
@@ -59,6 +91,8 @@ void Why3_IPH::loadOverridingAbducibles(const std::string& overrider, bool shuff
     cmap.addAnnots(annots);
     if (shuffle)
         stdutils::shuffle(hdler.storage);
+    else if (stdutils::inmap<std::string>(annots, "goal"))
+        reorderAbducibles(hdler.storage, annots.at("goal"));
 }
 
 struct LitSanatizer_X101 : public lisptp::LispTreeVisitor<bool> {
