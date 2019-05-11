@@ -33,7 +33,7 @@ static inline const std::string floatize(const std::string& s) {
 static inline bool detected_float(const std::string& data, const Why3ConvertMap& cmap) {
     return data.find("from_int") != std::string::npos
         || data.find(".") != std::string::npos
-        || cmap.containsVarType(data, "float");
+        || cmap.containsVarType(data, "real");
 }
 
 std::string Why3Smtl2CV::handle_call(const std::string& op, const std::vector<std::string>& lvs) const {

@@ -4,7 +4,7 @@
 (declare i as int)
 (declare 0 10 as int)
 
-(annotate float tick time)
+(annotate real tick time)
 
 (reference time i)
 
