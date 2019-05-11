@@ -5,6 +5,7 @@
 (declare 0 as const)
 
 (annotate real mem res)
+(goal res = from_int dem *. mem)
 
 (reference res i)
 
