@@ -4,6 +4,8 @@
 (declare mg mem res (from_int j) (from_int i) (from_int dem) as real)
 (declare 0 as const)
 
+(annotate real mem res mg)
+
 (reference res i j mg)
 
 (lambda power (n m) (power n m))

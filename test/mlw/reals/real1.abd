@@ -3,6 +3,8 @@
 (declare tick time i (from_int i) as var)
 (declare 0 10 as const)
 
+(annotate float tick time)
+
 (reference time i)
 
 (lambda power (n m) (power n m))
