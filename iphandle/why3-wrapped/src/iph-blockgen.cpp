@@ -8,9 +8,11 @@ static const size_t ILLEGAL_BLOCK_DATA = (size_t)(-1);
 
 using namespace abdulot;
 
+/*
 static inline bool is_property_bypasser_expl(const std::string& expl) {
     return expl == "expl:loop invariant init";
 }
+*/
 
 Why3_BlockGenerator::Why3_BlockGenerator
 (const why3cpp::ProblemShape& vc_shape, const Why3_Template& sourcedata)
@@ -20,7 +22,7 @@ Why3_BlockGenerator::Why3_BlockGenerator
         properties_shape[pid] = sourcedata.getProperty(pid).type;
     // TODO: Use additional information not yet existing in ProblemShape for this
     std::map<size_t, std::string>::iterator it = properties_shape.begin();
-    bool before_start = true;
+    // bool before_start = true;
     for (const auto& vcd : vc_shape) {
         /*
         if (is_property_bypasser_expl(vcd.second.expl)) {

@@ -93,7 +93,7 @@ namespace ilinva {
             pengine.release(prop);
         }
         while(!pengine.hasMoreStrengthenings(strengthener)) {
-            PropId prop = level_stack.top().first;
+            // PropId prop = level_stack.top().first;
             // pengine.release(prop);
             /*
             if (force) {

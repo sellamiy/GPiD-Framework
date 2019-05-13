@@ -140,7 +140,7 @@ SolverTestStatus SMTl2SolverInterface::check() {
     const std::string patched_solver_exec = patch_solver_exec(solver_exec, siopts, tdata, allow_float_to);
     SolverTestStatus res = execute_solver_script(ctx, patched_solver_exec, script_file);
     // snlog::l_notifg() << script_file << snlog::l_end;
-    // smtlib2_check_cleanup(script_file);
+    smtlib2_check_cleanup(script_file);
     return res;
 }
 
