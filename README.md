@@ -1,20 +1,33 @@
-# GPiD Framework and tools #
+# Abdulot Framework and tools #
 
 Generic framework for implicate generation modulo theories.
 
-Description up to date for version 0.6.2.
+Description up to date for version 0.7.10.
 
 # Content #
 
-## GPiD Framework ##
+## Abdulot Framework ##
 
-The GPiD framework is a generic library one can use to solve abduction
+The Abdulot framework is a generic library one can use to solve abduction
 problems modulo theories.
+
+## GPiD ##
+
+GPiD is an (prime) implicate generator modulo theories
+
+## Ilinva ##
+
+Ilinva is a loop-invariant generator using abduction and GPiD as its main abduction engine.
 
 ## Available Solver Interfaces ##
 
 Some sample code binding usual SMT Solvers or SAT Solvers to it are
 also provided. They assume that those solvers are available on the system.
+
+## Program prover Interfaces ##
+
+Sample code binding program provers to Ilinva.
+They assume that the program provers are available on the system.
 
 ## Utilities ##
 
@@ -45,6 +58,7 @@ built:
 - CVC4 with its API and parsing library if building the CVC4
 interface.
 - Z3 (version 4.6.0 or 4.7.1) if building the Z3 interface.
+- Why3 (min. version 1.0.0) for the generation of loop invariant with Ilinva
 
 ## Tests ##
 
@@ -57,6 +71,7 @@ The following dependencies are recovered and patched automatically by
 the build tool chain:
 
 - MiniSat (SAT Solver), patched for building its interface.
+- Antlr4 and its C++ API, for some reasons.
 - The CxxOpts library for parsing options in sample executables.
 - Google Tests for unit tests.
 
@@ -65,10 +80,11 @@ the build tool chain:
  - ```framework``` : Core code of the implicate generator.
  - ```lib``` : Additional libraries required by the implicate generator.
  - ```solvers``` : Interfaces generator for various SMT-solvers.
+ - ```ìphandle````: Interfaces generator for program provers.
  - ```test``` : Tests.
  - ```utils```, ```cmake``` : Various utilities for building and using the implicate
  generator.
- - ```exec``` : Code for generating the executables.
+ - ```tools``` : Code for generating the executables.
 
 # Configuration, build and usage #
 
@@ -98,18 +114,18 @@ The CMake configuration accepts the following specific options:
 
 ## Build ##
 
-The project builds a library (gpid-core) containing the minimal
+The project builds a library (abdulot) containing the minimal
 framework to generate implicates modulo theories using [1].
 It also builds utilities for generating abducible literals and
 implicate generators for the provided solver interfaces.
 
-## Usage ##
+## GPiD Usage ##
 
 Executables are built in the ```bin``` subdirectory.
 For generating implicates using [1], run the following:
-```gpid-impgen -i <file> -g <interface> [-a <abd-generator> | -l <abd-file>]```
+```gpid -i <file> -g <interface> [-a <abd-generator> | -l <abd-file>]```
 or 
-```gpid-impgen-<interface> -i <file> [-a <abd-generator> | -l <abd-file>]```.
+```gpid-<interface> -i <file> [-a <abd-generator> | -l <abd-file>]```.
 Run ```gpid-impgen -h``` for the complete list of options.
 
 If you wish to write your own solver interface, you can take a look at
@@ -117,6 +133,10 @@ the examples provided in the ```solvers``` subdirectory as well as the
 documentation (built using Doxygen) of the ```Tisi``` solver, which
 provides informations on all the elements that are required for such
 an interface.
+
+## Ilinva Usage ##
+
+```ilinva-<interface> -i <program-file> -a <abducibles-file> -g <gpid-smt-solver> -H "solver:<program-prover-solver>" [-s <maximal-gpid-depth>] [-d <maximal-ilinva-depth>] [-c]```
 
 ## Windows ##
 
