@@ -1,8 +1,0 @@
-(size 6)
-
-(abduce (= a b))
-(abduce (distinct a b))
-(abduce (<= a b))
-(abduce (>= a b))
-(abduce (< a b))
-(abduce (> a b))
