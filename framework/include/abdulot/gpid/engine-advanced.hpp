@@ -37,7 +37,7 @@ namespace gpid {
         inline void removeLiterals(uint32_t lkey);
 
         /** \return The current number of literals in the conjunction. */
-        inline constexpr size_t size() const { return _array.get_activated_size(); }
+        inline size_t size() const { return _array.get_activated_size(); }
 
         /** Iterator on the literal references of the conjunction. */
         typedef typename starray::SequentialActivableArray::iterator iterator;

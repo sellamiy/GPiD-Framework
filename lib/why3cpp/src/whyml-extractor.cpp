@@ -26,7 +26,7 @@ namespace why3cpp {
             Extractor(const std::string& filename);
             ~Extractor();
 
-            inline constexpr bool isValid() const { return valid; }
+            inline bool isValid() const { return valid; }
             inline bool hasExtract() const { return extracted; }
 
             void extract();

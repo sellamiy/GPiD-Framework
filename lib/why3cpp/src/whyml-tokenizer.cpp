@@ -20,7 +20,7 @@ namespace why3cpp {
             TokenizerAnt(const std::string& filename);
             ~TokenizerAnt();
 
-            inline constexpr bool isValid() const { return valid; }
+            inline bool isValid() const { return valid; }
 
             void tokenize(std::ostream& output);
         };

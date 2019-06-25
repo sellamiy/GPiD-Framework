@@ -49,13 +49,13 @@ public:
     inline const why3cpp::Why3ConvertMap& getCMap() const { return cmap; }
     inline const std::vector<std::string>& getCandidate() const { return candidate; }
     inline const std::map<std::string, std::string>& getTranslationMap() const { return translations; }
-    inline constexpr bool performFullTranslationForwarding() const { return dtforward; }
-    inline constexpr size_t getPropertyIdentifier() const { return propid; }
+    inline bool performFullTranslationForwarding() const { return dtforward; }
+    inline size_t getPropertyIdentifier() const { return propid; }
     inline const std::string& getWhy3Solver() const { return solverid; }
     inline const std::string& getTlim() const { return tlim; }
-    inline constexpr bool getForwardEmptyExplOpt() const { return fwdemptexpl; }
-    inline constexpr bool getForwardInitExplOpt() const { return fwdinitexpl; }
-    inline constexpr bool performInjections() const { return pinject; }
+    inline bool getForwardEmptyExplOpt() const { return fwdemptexpl; }
+    inline bool getForwardInitExplOpt() const { return fwdinitexpl; }
+    inline bool performInjections() const { return pinject; }
     inline const std::string& getWhy3ConfigFile() const { return why3cfg; }
 
     inline Why3_Template& accessSourceCopy() { return *sourceCopy; }

@@ -31,7 +31,7 @@ namespace lisptp {
         LispTreeNode(const LispTreeNode& o)
             : value(o.value), callstate(o.callstate), leaves(o.leaves) {}
 
-        inline constexpr bool isCall() const { return callstate; }
+        inline bool isCall() const { return callstate; }
         inline const std::string& getValue() const { return value; }
         inline const std::vector<LispTreeNodePtr>& getLeaves() const { return leaves; }
 

@@ -60,7 +60,7 @@ namespace why3cpp {
         inline bool isref(const std::string& t) const { return refs.count(t) > 0; }
 
         inline void setLocalId(const size_t& s) { localid = s; }
-        inline constexpr size_t getLocalId() const { return localid; }
+        inline size_t getLocalId() const { return localid; }
 
         inline bool emptySymbolMap() const { return smap_table.empty(); }
 

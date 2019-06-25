@@ -53,7 +53,7 @@ namespace abdulot {
                 : name(o.name), pcount(o.pcount), extender(o.extender) {}
 
             inline const std::string& get_name() const { return name; }
-            inline constexpr size_t get_pcount() const { return pcount; }
+            inline size_t get_pcount() const { return pcount; }
 
             const std::set<std::string> apply
             (const std::vector<std::set<size_t>>& params,
@@ -90,8 +90,8 @@ namespace abdulot {
 
         inline const annotation_list_t& getAnnotationList() const { return defined_annots; }
 
-        inline constexpr bool isValid() const { return valid; }
-        inline constexpr bool isComplete() const { return handled; }
+        inline bool isValid() const { return valid; }
+        inline bool isComplete() const { return handled; }
     };
 
     /** \brief Parser for abducible files. */
@@ -113,7 +113,7 @@ namespace abdulot {
         const annotation_list_t& getAnnotations();
 
         /** Check if the parser is in a consistent state. */
-        inline constexpr bool isValid() const { return pvisitor.isValid(); }
+        inline bool isValid() const { return pvisitor.isValid(); }
     };
 
 }

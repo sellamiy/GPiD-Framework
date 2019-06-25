@@ -17,11 +17,11 @@ namespace why3cpp {
         const ProofElemStatus status;
         SplitProofResult(uint32_t index, ProofElemStatus status)
             : index(index), status(status) {}
-        inline constexpr bool isValid() const
+        inline bool isValid() const
         { return status == ProofElemStatus::Valid; }
-        inline constexpr bool isInvalid() const
+        inline bool isInvalid() const
         { return status == ProofElemStatus::Invalid; }
-        inline constexpr bool isUnknown() const
+        inline bool isUnknown() const
         { return status == ProofElemStatus::Unknown; }
     };
 
@@ -35,7 +35,7 @@ namespace why3cpp {
             : anchor(anchor), data(data), valid(*data != "") {}
         void parse();
         const std::vector<SplitProofResult>& results() const { return proof; }
-        inline constexpr bool isValid() const { return valid; }
+        inline bool isValid() const { return valid; }
     };
 
     class SplitProofVCParser {

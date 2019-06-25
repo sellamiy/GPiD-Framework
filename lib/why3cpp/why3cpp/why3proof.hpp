@@ -23,7 +23,7 @@ namespace why3cpp {
         ProofResult(bool proven, std::map<index_t, strptr>& smtfiles, std::map<index_t, vcdata_t>& results)
             : proven(proven), smtfiles(smtfiles), results(results) {}
 
-        inline constexpr bool isComplete() const { return proven; }
+        inline bool isComplete() const { return proven; }
 
         inline const std::string& getSmtFile(index_t vc) const {
             return *(smtfiles.at(vc));

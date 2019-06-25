@@ -7,7 +7,7 @@ class ErrorListener : public antlr4::BaseErrorListener {
 public:
     ErrorListener(const string& source) : source(source), used(false) {}
 
-    inline constexpr bool hasDetectedErrors() const { return used; }
+    inline bool hasDetectedErrors() const { return used; }
 
     virtual void syntaxError(antlr4::Recognizer *, antlr4::Token *tk,
                              size_t line, size_t charPositionInLine,

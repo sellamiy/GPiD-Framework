@@ -23,7 +23,7 @@ namespace why3cpp {
             Annotator(const std::string& filename);
             ~Annotator();
 
-            inline constexpr bool isValid() const { return valid; }
+            inline bool isValid() const { return valid; }
 
             void annotate(std::ostream& output);
         };

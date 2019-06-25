@@ -72,17 +72,17 @@ namespace starray {
         /** \brief Deactivate an element of the array. */
         void deactivate(uint32_t i);
 
-        inline constexpr bool is_active(uint32_t i) const
+        inline bool is_active(uint32_t i) const
         { return tab[i].status == aa_elt_st::ACTIVE; }
-        inline constexpr bool is_paused(uint32_t i) const
+        inline bool is_paused(uint32_t i) const
         { return tab[i].status == aa_elt_st::PAUSED; }
-        inline constexpr bool is_inactive(uint32_t i) const
+        inline bool is_inactive(uint32_t i) const
         { return tab[i].status == aa_elt_st::INACTIVE; }
 
         /** \brief Get the number of active elements in the array. */
-        inline constexpr uint32_t get_activated_size() const { return active_size; }
+        inline uint32_t get_activated_size() const { return active_size; }
         /** \brief Get the maximal number of elements in the array. */
-        inline constexpr uint32_t get_maximal_size()   const { return total_size ; }
+        inline uint32_t get_maximal_size()   const { return total_size ; }
 
         /**
          * \brief Get the first downward non inactive element.
@@ -113,7 +113,7 @@ namespace starray {
         /** \brief Set the value of an element in the array. */
         inline void set(uint32_t i, uint32_t v) { tab[i].value = v; }
         /** \brief Get the value of an element in the array. */
-        inline constexpr uint32_t get(uint32_t i) const { return tab[i].value; }
+        inline uint32_t get(uint32_t i) const { return tab[i].value; }
     };
 
     template<typename Type> inline SequentialActivableArray::SeqAAIterator<Type>&

@@ -35,7 +35,7 @@ namespace abdulot {
         using counter_t = uint64_t;
 
         /** Algorithm completion checker **/
-        inline constexpr bool complete() const { return _execution_complete; }
+        inline bool complete() const { return _execution_complete; }
 
         /** Main wrapper method for executing the algorithm. */
         void execute(bool in_thread=false);

@@ -47,8 +47,8 @@ namespace smtlib2 {
 
         void parse(const SMTl2CommandHandler& handler);
 
-        inline constexpr bool isComplete() const { return complete; }
-        inline constexpr bool isValid() const { return valid; }
+        inline bool isComplete() const { return complete; }
+        inline bool isValid() const { return valid; }
     };
 
 }

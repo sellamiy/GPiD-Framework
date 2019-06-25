@@ -40,7 +40,7 @@ namespace smtlib2 {
 
         inline const SMTlib2TokenResult& first() const { return content.front(); }
         inline const SMTlib2TokenResult& last() const { return content.back(); }
-        inline constexpr size_t size() const { return content.size(); }
+        inline size_t size() const { return content.size(); }
 
         SMTlib2TokenList(const std::vector<SMTlib2TokenResult>& tkl)
             : content(tkl), start(tkl.front().start), end(tkl.back().end) {}
