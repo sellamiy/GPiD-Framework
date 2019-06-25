@@ -51,7 +51,7 @@ function(add_split_exec interface name source) # ARGN: Dependencies
   install(TARGETS ${SEXEC_EXECUTABLE_NAME} RUNTIME DESTINATION bin)
 endfunction()
 # ==============================================================================
-# ImpGen - an implicate generator
+# GPiD - an implicate generator
 # ==============================================================================
 register_executable(gpid "gpid/src/gpid.cpp")
 add_dependencies(gpid identifiers-multi gpid-generators-multi)
@@ -63,7 +63,7 @@ else()
 endif()
 install(TARGETS gpid RUNTIME DESTINATION bin)
 # ==============================================================================
-# Split-ImpGen - single implicate generators linked to specific solver
+# Split-GPiD - single implicate generators linked to specific solver
 # ==============================================================================
 foreach(interface ${SOLVER_TARGETS})
   add_split_exec(${interface} "gpid" "gpid/src/gpid.cpp" identifiers-multi gpid-generators-multi)
@@ -71,32 +71,35 @@ endforeach()
 # ==============================================================================
 # Ilinvas - a loop invariant generator
 # ==============================================================================
-foreach(iph ${IPH_TARGETS})
-  set(execname ilinva-${iph})
-  set(IPH_DEF_MACRO ILINVA_CODE_HANDLER_${iph})
-  string(REGEX REPLACE - _ IPH_DEF_MACRO ${IPH_DEF_MACRO})
-  set(IPH_SOLVER_MACROS)
-  foreach(interface ${SOLVER_TARGETS})
-    set(SOLVER_MACRO SOLVER_INTERFACE_${interface})
-    string(REGEX REPLACE - _ SOLVER_MACRO ${SOLVER_MACRO})
-    list(APPEND IPH_SOLVER_MACROS ${SOLVER_MACRO})
+if(BUILD_ILINVA)
+  foreach(iph ${IPH_TARGETS})
+    set(execname ilinva-${iph})
+    set(IPH_DEF_MACRO ILINVA_CODE_HANDLER_${iph})
+    string(REGEX REPLACE - _ IPH_DEF_MACRO ${IPH_DEF_MACRO})
+    set(IPH_SOLVER_MACROS)
+    foreach(interface ${SOLVER_TARGETS})
+      set(SOLVER_MACRO SOLVER_INTERFACE_${interface})
+      string(REGEX REPLACE - _ SOLVER_MACRO ${SOLVER_MACRO})
+      list(APPEND IPH_SOLVER_MACROS ${SOLVER_MACRO})
+    endforeach()
+    register_executable(${execname} "ilinva/src/ilinva.cpp")
+    add_dependencies(${execname} identifiers-multi ilinva-generators-multi)
+    target_include_directories(${execname} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
+    target_compile_definitions(${execname} PRIVATE ${IPH_DEF_MACRO})
+    target_compile_definitions(${execname} PRIVATE ${IPH_SOLVER_MACROS})
+    if(STATIC_EXECUTABLES)
+      target_link_libraries(${execname}
+        ${iph}-static
+        ${SOLVER_STATIC_TARGETS}
+        ${CORE_STATIC_LINK_LIBRARIES})
+    else()
+      target_link_libraries(${execname}
+        ${iph}-shared
+        ${SOLVER_SHARED_TARGETS}
+        ${CORE_SHARED_LINK_LIBRARIES})
+    endif()
+    install(TARGETS ${execname} RUNTIME DESTINATION bin)
+    # TODO: Maybe: Split executable solver targets for ilinva
   endforeach()
-  register_executable(${execname} "ilinva/src/ilinva.cpp")
-  add_dependencies(${execname} identifiers-multi ilinva-generators-multi)
-  target_include_directories(${execname} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
-  target_compile_definitions(${execname} PRIVATE ${IPH_DEF_MACRO})
-  target_compile_definitions(${execname} PRIVATE ${IPH_SOLVER_MACROS})
-  if(STATIC_EXECUTABLES)
-    target_link_libraries(${execname}
-      ${iph}-static
-      ${SOLVER_STATIC_TARGETS}
-      ${CORE_STATIC_LINK_LIBRARIES})
-  else()
-    target_link_libraries(${execname}
-      ${iph}-shared
-      ${SOLVER_SHARED_TARGETS}
-      ${CORE_SHARED_LINK_LIBRARIES})
-  endif()
-  install(TARGETS ${execname} RUNTIME DESTINATION bin)
-  # TODO: Maybe: Split executable solver targets for ilinva
-endforeach()
+endif()
+# ==============================================================================

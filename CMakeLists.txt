@@ -84,9 +84,15 @@ endfunction()
 # Targets
 # ==============================================================================
 add_subdirectory(lib)
+
 add_subdirectory(framework)
+
 add_subdirectory(solvers)
-add_subdirectory(iphandle)
+
+if(BUILD_ILINVA)
+  add_subdirectory(iphandle)
+endif()
+
 add_subdirectory(tools)
 
 if(BUILD_TESTS)
