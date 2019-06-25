@@ -87,7 +87,9 @@ add_subdirectory(lib)
 
 add_subdirectory(framework)
 
-add_subdirectory(solvers)
+if(BUILD_GPID OR BUILD_ILINVA)
+  add_subdirectory(solvers)
+endif()
 
 if(BUILD_ILINVA)
   add_subdirectory(iphandle)

@@ -53,21 +53,25 @@ endfunction()
 # ==============================================================================
 # GPiD - an implicate generator
 # ==============================================================================
-register_executable(gpid "gpid/src/gpid.cpp")
-add_dependencies(gpid identifiers-multi gpid-generators-multi)
-target_include_directories(gpid PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
-if(STATIC_EXECUTABLES)
-  target_link_libraries(gpid ${SOLVER_STATIC_TARGETS} ${CORE_STATIC_LINK_LIBRARIES})
-else()
-  target_link_libraries(gpid ${SOLVER_SHARED_TARGETS} ${CORE_SHARED_LINK_LIBRARIES})
+if(BUILD_GPID)
+  register_executable(gpid "gpid/src/gpid.cpp")
+  add_dependencies(gpid identifiers-multi gpid-generators-multi)
+  target_include_directories(gpid PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
+  if(STATIC_EXECUTABLES)
+    target_link_libraries(gpid ${SOLVER_STATIC_TARGETS} ${CORE_STATIC_LINK_LIBRARIES})
+  else()
+    target_link_libraries(gpid ${SOLVER_SHARED_TARGETS} ${CORE_SHARED_LINK_LIBRARIES})
+  endif()
+  install(TARGETS gpid RUNTIME DESTINATION bin)
 endif()
-install(TARGETS gpid RUNTIME DESTINATION bin)
 # ==============================================================================
 # Split-GPiD - single implicate generators linked to specific solver
 # ==============================================================================
-foreach(interface ${SOLVER_TARGETS})
-  add_split_exec(${interface} "gpid" "gpid/src/gpid.cpp" identifiers-multi gpid-generators-multi)
-endforeach()
+if(BUILD_GPID)
+  foreach(interface ${SOLVER_TARGETS})
+    add_split_exec(${interface} "gpid" "gpid/src/gpid.cpp" identifiers-multi gpid-generators-multi)
+  endforeach()
+endif()
 # ==============================================================================
 # Ilinvas - a loop invariant generator
 # ==============================================================================

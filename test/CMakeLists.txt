@@ -41,14 +41,18 @@ if(BUILD_TESTS)
 
   # == Unit Targets ==
   add_subdirectory(unit)
-  # == Dimacs Targets ==
-  add_subdirectory(dimacs)
   # == Parsers Targets ==
   add_subdirectory(parsers)
-  # == Gpid Result Testing Targets ==
-  add_subdirectory(gpid)
-  # == Ilinva Result Testing Targets ==
-  add_subdirectory(ilinva)
+  if (BUILD_GPID)
+    # == Dimacs Targets ==
+    add_subdirectory(dimacs)
+    # == Gpid Result Testing Targets ==
+    add_subdirectory(gpid)
+  endif()
+  if (BUILD_ILINVA)
+    # == Ilinva Result Testing Targets ==
+    add_subdirectory(ilinva)
+  endif()
 
   # ===== Coverage =====
   if (COVERAGE_TOOLS)
