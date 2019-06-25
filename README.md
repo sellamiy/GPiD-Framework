@@ -13,11 +13,14 @@ problems modulo theories.
 
 ## GPiD ##
 
-GPiD is an (prime) implicate generator modulo theories
+GPiD is a (prime) implicate generator modulo theories. See [1] for
+more details.
 
 ## Ilinva ##
 
-Ilinva is a loop-invariant generator using abduction and GPiD as its main abduction engine.
+Ilinva is a loop-invariant generator using abduction and GPiD as its
+main abduction engine.
+See [2] for more details.
 
 ## Available Solver Interfaces ##
 
@@ -31,8 +34,8 @@ They assume that the program provers are available on the system.
 
 ## Utilities ##
 
-The framework provides sample executables for performing
-abduction using [1] with the previously introduced solver interfaces.
+The framework provides sample executables for GPiD and Ilinva, built
+using the interfaces available.
 
 It also provide an utility to automatically generate abducible literals files. 
 
@@ -58,7 +61,8 @@ built:
 - CVC4 with its API and parsing library if building the CVC4
 interface.
 - Z3 (version 4.6.0 or 4.7.1) if building the Z3 interface.
-- Why3 (min. version 1.0.0) for the generation of loop invariant with Ilinva
+- Alt-Ergo (min. version 2.2.0) if building the Alt-Ergo interface.
+- Why3 (min. version 1.0.0) for the generation of loop invariants with Ilinva
 
 ## Tests ##
 
@@ -80,7 +84,7 @@ the build tool chain:
  - ```framework``` : Core code of the implicate generator.
  - ```lib``` : Additional libraries required by the implicate generator.
  - ```solvers``` : Interfaces generator for various SMT-solvers.
- - ```ìphandle````: Interfaces generator for program provers.
+ - ```iphandle```: Interfaces generator for program provers.
  - ```test``` : Tests.
  - ```utils```, ```cmake``` : Various utilities for building and using the implicate
  generator.
@@ -91,11 +95,16 @@ the build tool chain:
 ## Configuration ##
 
 The project is built via CMake.
-On Unix-like systems, run ```mkdir build && cd build && cmake ..```
+On Unix-like systems, run ```mkdir build && cd build && cmake .. && make```
 The CMake configuration accepts the following specific options:
 
-- ```-DSKIP_SOLVER_INTERFACE``` : A list of solvers not to generate targets
- for. 
+- ```-DBUILD_GPID``` : If deactivated, does not build the GPiD
+  utilities and tools. (Default ON)
+- ```-DBUILD_ILINVA``` : If deactivated, does not build the Why3
+  utilities nor the Ilinva tool. (Default ON)
+- ```-DSKIP_SOLVER_INTERFACE``` : A list of solver interfaces not to generate targets
+ for. The interfaces available are cvc4, cvc4-smtlib, z3, z3-smtlib,
+ minisatp, alt-ergo-smtlib and tisi.
 - ```-DGPID_INSTRUMENTATION``` : Instrument the framework to extract
  more data from executions at the cost of efficency.  (Default OFF)
 - ```-DBUILD_DOC``` : Generate rules for creating a doxygen documentation.  (Default ON)
@@ -147,7 +156,7 @@ Last version compiled on windows: 0.6.2.
 
 ## Framework ##
 
-The GPiD framework is <complete>.
+The GPiD framework is distributed under a BSD license.
 
 ## Executables ##
 
@@ -155,6 +164,19 @@ Impgen executables include code from their related solver interfaces and
 are thus also subjet to the license of those.
 Please check the corresponding lincences for details.
 
+# Benchmarks #
+
+Sample additional benchmarks are provided in ```test/benchmarks```.
+```smt``` tests contains benchmarks used in [1] to evaluate the GPiD
+implicate generator, ```mlw``` tests contains WhyML benchmarks used in
+[2] to evaluate Ilinva.
+
 # References #
 
-[1] M. Echenim, N. Peltier, and Y. Sellami. A generic framework for implicate generation modulo theories. In Automated Reasoning, International Joint Conference, IJCAR 2018, Proceedings, 2018.
+[1] M. Echenim, N. Peltier, and Y. Sellami.
+A generic framework for implicate generation modulo theories.
+In Automated Reasoning, International Joint Conference, IJCAR 2018, Proceedings, 2018.
+
+[2] M. Echenim, N. Peltier, and Y. Sellami.
+Ilinva: Using Abduction to Generate Loop Invariants.
+In Frontiers of Combining Systems, FroCoS 2019, Proceedings, 2019.
