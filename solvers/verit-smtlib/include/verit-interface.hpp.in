@@ -1,0 +1,17 @@
+#ifndef VERIT_CLI_INTERFACE_FOR_GPID__HPP
+#define VERIT_CLI_INTERFACE_FOR_GPID__HPP
+
+#include <abdulot/saihelpers/smtlib2.hpp>
+
+#cmakedefine VERIT_EXECUTABLE "@VERIT_EXECUTABLE@"
+#define VERIT_TIMEOUT_CLIOPT "--max-time="
+#define VERIT_TIMEOUT_FACTOR 1
+
+struct VeriTCLIInterface : public abdulot::saihelpers::SMTl2SolverInterface {
+    VeriTCLIInterface(abdulot::saihelpers::SMTl2SolverManager& manager,
+                          const abdulot::SolverInterfaceOptions& siopts)
+        : SMTl2SolverInterface(VERIT_EXECUTABLE, manager, siopts,
+                               VERIT_TIMEOUT_CLIOPT, VERIT_TIMEOUT_FACTOR, false) {}
+};
+
+#endif
