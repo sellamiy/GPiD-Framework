@@ -9,5 +9,5 @@ CVC4InterfaceAPI::CVC4InterfaceAPI(CVC4::ExprManager& ctx, const SolverInterface
 {
     solver.setOption("incremental", true);
     solver.setOption("produce-models", true);
-    solver.setLogic("QF_ALL_SUPPORTED");
+    solver.setLogic("ALL_SUPPORTED");
 }
