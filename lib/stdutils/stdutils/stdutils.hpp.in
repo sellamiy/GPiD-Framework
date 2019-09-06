@@ -6,5 +6,6 @@
 #include <stdutils/infoline-bsr.hpp>
 #include <stdutils/concurrent-containers.hpp>
 #include <stdutils/strings.hpp>
+#include <stdutils/identifiers.hpp>
 
 #endif
