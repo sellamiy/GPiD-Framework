@@ -1,0 +1,9 @@
+#ifndef LIB_MINPART__HEADER
+#define LIB_MINPART__HEADER
+
+#define LIBMINPART_NAME "Minimal partition generalization C++ library"
+#cmakedefine LIBMINPART_VERSION "@LIBMINPART_VERSION@"
+
+#include <minpart/minpart-algorithm.hpp>
+
+#endif

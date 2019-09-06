@@ -8,6 +8,7 @@ add_subdirectory(lcdot)
 add_subdirectory(lisptp)
 add_subdirectory(starray)
 add_subdirectory(smtlib2tools)
+add_subdirectory(minpart)
 add_subdirectory(cxxopts)
 # ------------------------------------------------------------------------------
 if (BUILD_ILINVA)
