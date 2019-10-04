@@ -17,11 +17,12 @@ namespace minpart {
         const size_t p_blocksize;
         const size_t p_depth;
         const bool offset;
+        const bool random;
         PartitionGeneratorOptions
-        (size_t c_blocksize, size_t c_depth, size_t p_blocksize, size_t p_depth, bool offset=true)
+        (size_t c_blocksize, size_t c_depth, size_t p_blocksize, size_t p_depth, bool offset=true, bool random=false)
             : c_blocksize(c_blocksize), c_depth(c_depth),
               p_blocksize(p_blocksize), p_depth(p_depth),
-              offset(offset)
+              offset(offset), random(random)
         {}
     };
 

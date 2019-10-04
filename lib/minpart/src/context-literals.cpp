@@ -8,7 +8,8 @@ using namespace minpart::literals;
 
 const PartitionGeneratorOptions LiteralProblemContext::generate_partition_options() const {
         PartitionGeneratorOptions
-            result(opts.c_blocksize, opts.c_depth, opts.p_blocksize, opts.p_depth);
+            result(opts.c_blocksize, opts.c_depth, opts.p_blocksize, opts.p_depth,
+                   true, opts.random);
         return result;
 }
 

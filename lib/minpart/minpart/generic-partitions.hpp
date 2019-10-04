@@ -29,6 +29,8 @@ namespace minpart {
         bool use_offset = false;
         size_t block_offset = 0;
 
+        std::vector<size_t> switchtable;
+
         const PartitionGeneratorOptions opts;
 
         template<class Context> void
@@ -36,7 +38,7 @@ namespace minpart {
         template<class Context> void
         compute_partition(gsetid set, gsetid support, GSetEngine<Context>& engine);
 
-        void reinitialize();
+        void reinitialize(size_t max_size);
         void offset_blocks();
 
         template<class Context> bool
@@ -104,6 +106,7 @@ namespace minpart {
     template<class Context>
     void GenericPartitionGenerator::generalize_block_location
     (size_t pos, const GSetEngine<Context>& engine) {
+        if (opts.random) pos = switchtable.at(pos);
         if (engine.is_generalizable_element(blocks[current_block], pos)) {
             engine.generalize_in_place(blocks.at(current_block), pos);
         }
@@ -112,6 +115,7 @@ namespace minpart {
     template<class Context>
     void GenericPartitionGenerator::generalize_partition_location
     (size_t pos, const GSetEngine<Context>& engine) {
+        if (opts.random) pos = switchtable.at(pos);
         if (engine.is_generalizable_element(partition[current_partition], pos)) {
             engine.generalize_in_place(partition[current_partition], pos);
         }
@@ -120,7 +124,7 @@ namespace minpart {
     template<class Context>
     gpartition& GenericPartitionGenerator::generate_blocks
     (gsetid set, gsetid support, GSetEngine<Context>& engine) {
-        reinitialize();
+        reinitialize(engine.get_max_size());
         compute_blocks(set, support, engine);
 
         if (use_offset) {

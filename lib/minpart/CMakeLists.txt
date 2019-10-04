@@ -28,8 +28,8 @@ set_target_properties(minpart-shared PROPERTIES
   VERSION ${LIBMINPART_VERSION}
   CLEAN_DIRECT_OUTPUT 1)
 # ------------------------------------------------------------------------------
-register_executable(minpart-lmmfp "bin/minpart-lmmfp.cpp")
-target_link_libraries(minpart-lmmfp minpart-static cxxopts)
+register_executable(minpart-lits "bin/minpart-lits.cpp")
+target_link_libraries(minpart-lits minpart-static cxxopts)
 # ------------------------------------------------------------------------------
 install(TARGETS minpart-static minpart-shared
   ARCHIVE DESTINATION lib
@@ -37,4 +37,4 @@ install(TARGETS minpart-static minpart-shared
 install(FILES ${LIBMINPART_HEADERS}
   ${LOCAL_LIB_HEADERS_DIR}/minpart/minpart.hpp
   DESTINATION include/minpart)
-install(TARGETS minpart-lmmfp RUNTIME DESTINATION bin)
+install(TARGETS minpart-lits RUNTIME DESTINATION bin)

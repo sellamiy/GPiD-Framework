@@ -22,6 +22,8 @@ namespace literals {
         size_t max_depth = 10;
         size_t min_depth = 0;
 
+        bool random = false;
+
         std::vector<uint32_t> problem;
     };
 

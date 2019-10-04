@@ -45,6 +45,8 @@ static inline OParseResult parse_opts(ExecOpts& opts, int& argc, char**& argv) {
              cxxopts::value<size_t>(opts.local.max_depth))
             ("n,deterministic", "Do not randomize inputs",
              cxxopts::value<bool>(opts.deterministic))
+            ("r,random-partitions", "Randomize partitions",
+             cxxopts::value<bool>(opts.local.random))
             ;
 
         cxxopts::ParseResult results = parser.parse(argc, argv);
