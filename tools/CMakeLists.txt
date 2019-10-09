@@ -107,3 +107,29 @@ if(BUILD_ILINVA)
   endforeach()
 endif()
 # ==============================================================================
+# MinPart-SL - SL model minimizer
+# ==============================================================================
+if(BUILD_MINPART_SL)
+  find_package(CVC4)
+  if (NOT CVC4_FOUND)
+    message(ERROR "CVC4 not found --- cannot build minpart-sl")
+  else()
+    file(GLOB MINPART_SL_HEADERS "minpart-sl/lib/*.cpp")
+    add_library(minpart-slcvc-context STATIC ${MINPART_SL_HEADERS})
+    target_include_directories(minpart-slcvc-context
+      PUBLIC ${CVC4_INCLUDE_DIR} "minpart-sl/lib")
+    set_target_properties(minpart-slcvc-context PROPERTIES
+      OUTPUT_NAME minpart-slcvc-context
+      CLEAN_DIRECT_OUTPUT 1)
+    target_link_libraries(minpart-slcvc-context minpart-static ${CVC4_LIBRARIES} cxxopts)
+
+    register_executable(minpart-sl "minpart-sl/src/minpart-sl.cpp")
+    target_link_libraries(minpart-sl minpart-slcvc-context)
+
+    install(TARGETS minpart-slcvc-context minpart-sl
+      ARCHIVE DESTINATION lib
+      LIBRARY DESTINATION lib
+      RUNTIME DESTINATION bin)
+  endif()
+endif()
+# ==============================================================================
