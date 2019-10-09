@@ -8,6 +8,7 @@
 #include <ctime>
 #include <vector>
 #include <iostream>
+#include <memory>
 #include <stdutils/identifiers.hpp>
 
 #ifndef LIB_MINPART_GENERALIZATION_SETS__HEADER
