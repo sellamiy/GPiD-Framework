@@ -39,9 +39,9 @@ static inline OParseResult parse_opts(ExecOpts& opts, int& argc, char**& argv) {
              cxxopts::value<size_t>(opts.local.p_depth))
             ("s,size", "Size of the hypotheses",
              cxxopts::value<size_t>(opts.size))
-            ("m", "minimal generation depth",
+            ("m,minimal-depth", "minimal generation depth",
              cxxopts::value<size_t>(opts.local.min_depth))
-            ("M", "maximal generation depth",
+            ("M,maximal-depth", "maximal generation depth",
              cxxopts::value<size_t>(opts.local.max_depth))
             ("n,deterministic", "Do not randomize inputs",
              cxxopts::value<bool>(opts.deterministic))
