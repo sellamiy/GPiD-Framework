@@ -407,6 +407,7 @@ SLProblemContext::SLProblemContext(const Options& opts)
         snlog::l_notif() << "Implicant size: " << hyp_size << snlog::l_end;
     }
 
+    smt.reset();
     smt.setOption("incremental", false); // Cannot be used with SL for now
     smt.setOption("produce-models", true);
     smt.setLogic("QF_ALL_SUPPORTED");
