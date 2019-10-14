@@ -73,7 +73,8 @@ class SLProblemVisitor {
     }
 
     inline void handle_assert(const lisptp::LispTreeNode& node) {
-        asserts.push_back(build_expr(node));
+        _ensure(node.getLeaves().size() == 1, "assertions must have 1 param only");
+        asserts.push_back(build_expr(*(node.getLeaves().at(1))));
     }
 
     Expr build_expr(const lisptp::LispTreeNode& node) {
