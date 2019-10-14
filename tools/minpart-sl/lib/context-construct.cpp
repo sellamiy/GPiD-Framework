@@ -348,6 +348,7 @@ SLProblemContext::SLProblemContext(const Options& opts)
         /* Load File */
 
         // Start by loading problem file
+        snlog::l_message() << "Loading " << opts.input_file << snlog::l_end;
         std::shared_ptr<lisptp::LispTreeNode> pdata = lisptp::parse_file(opts.input_file);
         SLProblemVisitor pvisitor(em);
         pvisitor.handle(*pdata);
@@ -355,9 +356,12 @@ SLProblemContext::SLProblemContext(const Options& opts)
         const std::map<std::string, Type>& typeMap = pvisitor.get_sort_map();
         const std::map<std::string, Expr>& exprMap = pvisitor.get_const_map();
 
+        snlog::l_message() << "Recovering input formula..." << snlog::l_end;
         lcl_formula = pvisitor.get_formula();
+        snlog::l_notif() << "Input formula is: " << lcl_formula.toString() << snlog::l_end;
 
         // Recovering and parsing model
+        snlog::l_message() << "Recovering initial model..." << snlog::l_end;
         smt.reset();
         smt.setOption("incremental", false);
         smt.setOption("produce-models", true);
@@ -371,7 +375,9 @@ SLProblemContext::SLProblemContext(const Options& opts)
         std::stringstream sstream;
         smt.getProof().toStream(sstream);
         std::string model(sstream.str());
+        snlog::l_notif() << "Model is: " << model << snlog::l_end;
 
+        snlog::l_message() << "Extracting implicant from model..." << snlog::l_end;
         SLModelVisitor mvisitor(typeMap, exprMap);
         pdata = lisptp::parse(model);
         mvisitor.extract_implicant(*pdata);
@@ -398,7 +404,7 @@ SLProblemContext::SLProblemContext(const Options& opts)
         }
 
         hyp_size = model_matchTable.size();
-        
+        snlog::l_notif() << "Implicant size: " << hyp_size << snlog::l_end;
     }
 
     smt.setOption("incremental", false); // Cannot be used with SL for now
