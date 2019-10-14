@@ -28,6 +28,7 @@ static const std::string SL_SP_AND_KW   = "and";
 static const std::string SL_SP_OR_KW    = "or";
 static const std::string SL_SP_NOT_KW   = "not";
 static const std::string SL_SP_EQ_KW    = "=";
+static const std::string SL_SP_NEQ_KW   = "distinct";
 static const std::string SL_SP_PTO_KW   = "pto";
 static const std::string SL_SP_EMP_KW   = "emp";
 static const std::string SL_SP_SEP_KW   = "sep";
@@ -116,6 +117,10 @@ class SLProblemVisitor {
             } else if (node.getValue() == SL_SP_EQ_KW) {
                 _ensure(node.getLeaves().size() == 2, "eq calls exactly 2 params");
                 return em.mkExpr(kind::EQUAL, build_expr(*(node.getLeaves().at(0))),
+                                 build_expr(*(node.getLeaves().at(1))));
+            } else if (node.getValue() == SL_SP_NEQ_KW) {
+                _ensure(node.getLeaves().size() == 2, "neq calls exactly 2 params");
+                return em.mkExpr(kind::DISTINCT, build_expr(*(node.getLeaves().at(0))),
                                  build_expr(*(node.getLeaves().at(1))));
             } else if (node.getValue() == SL_SP_PTO_KW) {
                 _ensure(node.getLeaves().size() == 2, "pto and calls exactly 2 params");
