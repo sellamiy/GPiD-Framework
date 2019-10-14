@@ -215,24 +215,27 @@ SLProblemContext::SLProblemContext(const Options& opts)
             ptt = split(line, " ");
             switch (toMmslType(ptt[0])) {
             case internal__mmslType::__MMSL_PTO:
-                new (&(model_matchTable[i])) CVC4_ExprDual(exprMap[ptt[1]], exprMap[ptt[2]],
-                                                           CVC4_ExprDualSign::CVC4_DS_UNDEF);
+                model_matchTable[i] = std::shared_ptr<CVC4_ExprDual>
+                    (new CVC4_ExprDual(exprMap[ptt[1]], exprMap[ptt[2]],
+                                       CVC4_ExprDualSign::CVC4_DS_UNDEF));
                 break;
             case internal__mmslType::__MMSL_EQ:
                 if (curr == internal__mmseType::__MMSE_PTO) {
                     separator_0 = i;
                     curr = internal__mmseType::__MMSE_EQS;
                 }
-                new (&(model_matchTable[i])) CVC4_ExprDual(exprMap[ptt[1]], exprMap[ptt[2]],
-                                                           CVC4_ExprDualSign::CVC4_DS_EQ);
+                model_matchTable[i] = std::shared_ptr<CVC4_ExprDual>
+                    (new CVC4_ExprDual(exprMap[ptt[1]], exprMap[ptt[2]],
+                                       CVC4_ExprDualSign::CVC4_DS_EQ));
                 break;
             case internal__mmslType::__MMSL_NEQ:
                 if (curr == internal__mmseType::__MMSE_PTO) {
                     separator_0 = i;
                     curr = internal__mmseType::__MMSE_EQS;
                 }
-                new (&(model_matchTable[i])) CVC4_ExprDual(exprMap[ptt[1]], exprMap[ptt[2]],
-                                                           CVC4_ExprDualSign::CVC4_DS_NEQ);
+                model_matchTable[i] = std::shared_ptr<CVC4_ExprDual>
+                    (new CVC4_ExprDual(exprMap[ptt[1]], exprMap[ptt[2]],
+                                       CVC4_ExprDualSign::CVC4_DS_NEQ));
                 break;
             case internal__mmslType::__MMSL_FEMP:
                 if (curr != internal__mmseType::__MMSE_FEMP) {
@@ -242,8 +245,9 @@ SLProblemContext::SLProblemContext(const Options& opts)
                     }
                     curr = internal__mmseType::__MMSE_FEMP;
                 }
-                new (&(model_matchTable[i])) CVC4_ExprDual(exprMap[ptt[1]], exprMap[ptt[2]],
-                                                           CVC4_ExprDualSign::CVC4_DS_UNDEF);
+                model_matchTable[i] = std::shared_ptr<CVC4_ExprDual>
+                    (new CVC4_ExprDual(exprMap[ptt[1]], exprMap[ptt[2]],
+                                       CVC4_ExprDualSign::CVC4_DS_UNDEF));
                 break;
             default:
                 snlog::l_error() << "Illegal mm subelement in file: " << ptt[0] << snlog::l_end;
