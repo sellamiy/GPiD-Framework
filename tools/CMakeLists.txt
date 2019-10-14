@@ -121,7 +121,7 @@ if(BUILD_MINPART_SL)
     set_target_properties(minpart-slcvc-context PROPERTIES
       OUTPUT_NAME minpart-slcvc-context
       CLEAN_DIRECT_OUTPUT 1)
-    target_link_libraries(minpart-slcvc-context minpart-static ${CVC4_LIBRARIES} cxxopts)
+    target_link_libraries(minpart-slcvc-context minpart-static lisptp-static ${CVC4_LIBRARIES} cxxopts)
 
     register_executable(minpart-sl "minpart-sl/src/minpart-sl.cpp")
     target_link_libraries(minpart-sl minpart-slcvc-context)
