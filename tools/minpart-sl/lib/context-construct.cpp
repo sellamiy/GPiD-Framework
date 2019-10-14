@@ -162,7 +162,11 @@ public:
     inline const std::map<std::string, Type>& get_sort_map() const { return sort_map; }
     inline const std::map<std::string, Expr>& get_const_map() const { return const_map; }
     inline const std::vector<Expr>& get_asserts() const { return asserts; }
-    inline Expr get_formula() { return em.mkExpr(kind::AND, asserts); }
+    inline Expr get_formula() {
+        return asserts.size() == 0 ? em.mkConst(true)
+            : asserts.size() == 1 ? asserts.at(0)
+            : em.mkExpr(kind::AND, asserts);
+    }
 
     void handle(const lisptp::LispTreeNode& node) {
         if (node.isCall()) {
