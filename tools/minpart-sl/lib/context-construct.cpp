@@ -376,8 +376,10 @@ SLProblemContext::SLProblemContext(const Options& opts)
         if (qres != Result::SAT) {
             snlog::l_warn() << "Input formula not found satisfiable" << snlog::l_end;
         }
+        GetModelCommand model_getter;
+        model_getter.invoke(&smt);
         std::stringstream sstream;
-        smt.getProof().toStream(sstream);
+        model_getter.printResult(sstream);
         std::string model(sstream.str());
         snlog::l_notif() << "Model is: " << model << snlog::l_end;
 
