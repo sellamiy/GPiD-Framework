@@ -37,12 +37,10 @@ class RandomSHeap:
         return pair
 
     def _random_msign(self):
-        msign = int(100*self.msign)
-        return random.choices((True, False), [ msign, 1-msign ])
+        return random.random() <= self.msign
 
     def _random_esign(self):
-        esign = int(100*self.esign)
-        return random.choices((True, False), [ esign, 1-esign ])
+        return random.random() <= self.esign
 
     def export(self, target_file):
         target = open(target_file, 'w')
