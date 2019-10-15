@@ -410,12 +410,12 @@ SLProblemContext::SLProblemContext(const Options& opts)
 
         snlog::l_message() << "Recovering input formula..." << snlog::l_end;
         lcl_formula = pvisitor.get_formula();
-        snlog::l_notif() << "Input formula is: " << lcl_formula.toString() << snlog::l_end;
+        snlog::l_message() << "Input formula is: " << lcl_formula.toString() << snlog::l_end;
 
         // Recovering and parsing model
         snlog::l_message() << "Recovering initial model..." << snlog::l_end;
         std::string model = ugly_internal__get_model(opts.input_file);
-        snlog::l_notif() << "Model is: " << model << snlog::l_end;
+        snlog::l_message() << "Model is: " << model << snlog::l_end;
 
         snlog::l_message() << "Extracting implicant from model..." << snlog::l_end;
         SLModelVisitor mvisitor(typeMap, exprMap);
@@ -444,7 +444,7 @@ SLProblemContext::SLProblemContext(const Options& opts)
         }
 
         hyp_size = model_matchTable.size();
-        snlog::l_notif() << "Implicant size: " << hyp_size << snlog::l_end;
+        snlog::l_info() << "Implicant size: " << hyp_size << snlog::l_end;
     }
 
     smt.reset();
