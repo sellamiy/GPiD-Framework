@@ -2,3 +2,4 @@
 # GPiD Utilities
 # ==============================================================================
 add_subdirectory(converters)
+add_subdirectory(slfgen)
