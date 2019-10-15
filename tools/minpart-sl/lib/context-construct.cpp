@@ -59,7 +59,7 @@ class SLProblemVisitor {
     }
 
     void handle_sort_decl(const lisptp::LispTreeNode& node) {
-        _ensure(node.getLeaves().size() == 1, "sort decl takes 1 parameters <name>");
+        _ensure(node.getLeaves().size() == 2, "sort decl takes 2 parameters <name> <type>");
         auto sname_node = node.getLeaves().at(0);
         _ensure(!sname_node->isCall(), "sort name must be non-call");
         const std::string sname = sname_node->getValue();
