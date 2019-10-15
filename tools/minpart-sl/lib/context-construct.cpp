@@ -435,7 +435,7 @@ SLProblemContext::SLProblemContext(const Options& opts)
             snlog::l_message() << "Hacking empty heap mismatch..." << snlog::l_end;
             if (exprMap.size() > 0) {
                 auto empx = std::shared_ptr<CVC4_ExprDual>
-                    (new CVC4_ExprDual(exprMap.at(0), exprMap.at(0),
+                    (new CVC4_ExprDual(exprMap.begin()->second, exprMap.begin()->second,
                                        CVC4_ExprDualSign::CVC4_DS_UNDEF));
                 model_matchTable.push_back(empx);
             } else {
