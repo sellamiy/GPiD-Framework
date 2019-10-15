@@ -40,7 +40,7 @@ namespace minpart {
         uint64_t check_counter = 0;
     public:
         GSetEngine(Context& ctx)
-            : ctx(ctx), maxsize(ctx.get_hypotheses_size())
+            : ctx(ctx), maxsize(ctx.get_hypotheses_size()), idbox(0)
         { }
 
         inline Context& get_context() const { return ctx; }
