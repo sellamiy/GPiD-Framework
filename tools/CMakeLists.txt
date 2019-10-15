@@ -115,9 +115,11 @@ if(BUILD_MINPART_SL)
     message(ERROR "CVC4 not found --- cannot build minpart-sl")
   else()
     file(GLOB MINPART_SL_HEADERS "minpart-sl/lib/*.cpp")
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/minpart-sl/lib/solver-config.hpp.in"
+      "${LOCAL_EXEC_INCLUDE_DIR}/minpart-sl/lib/solver-config.hpp")
     add_library(minpart-slcvc-context STATIC ${MINPART_SL_HEADERS})
     target_include_directories(minpart-slcvc-context
-      PUBLIC ${CVC4_INCLUDE_DIR} "minpart-sl/lib")
+      PUBLIC ${CVC4_INCLUDE_DIR} "minpart-sl/lib" "${LOCAL_EXEC_INCLUDE_DIR}/minpart-sl/lib")
     set_target_properties(minpart-slcvc-context PROPERTIES
       OUTPUT_NAME minpart-slcvc-context
       CLEAN_DIRECT_OUTPUT 1)

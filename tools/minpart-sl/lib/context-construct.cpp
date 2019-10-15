@@ -1,11 +1,15 @@
 #include <iostream>
 #include <sstream>
 #include <stack>
+#include <cstdio>
+#include <cstring>
+#include <array>
 #include <snlog/snlog.hpp>
 #include <stdutils/strings.hpp>
 #include <stdutils/collections.hpp>
 #include <lisptp/lisptp.hpp>
 #include <context.hpp>
+#include <solver-config.hpp>
 
 #define CONTEXT_SL_CONSTRUCT_SRC
 
@@ -340,6 +344,45 @@ public:
 
 };
 
+#define BUFFER_SIZE 128
+
+static std::string ugly_internal__get_model(const std::string& ifile) {
+    std::ifstream source;
+    std::ofstream target;
+    source.open(ifile);
+    target.open(CVC4_SCRIPT_FILE);
+    /* Scripting header */
+    target << "(set-logic QF_ALL_SUPPORTED)" << '\n'
+           << "(set-option :produce-models true)" << '\n'
+           << "(set-option :incremental false)" << '\n';
+    /* Scripting context */
+    std::stringstream ifcontent;
+    std::string ifline;
+    while (std::getline(source, ifline, '.'))
+        target << ifline << '\n';
+    source.close();
+    /* Scripting commands */
+    target << "(check-sat)" << '\n'
+           << "(get-model) " << '\n';
+    target.close();
+    /* Executing script */
+    std::array<char, BUFFER_SIZE> buffer;
+    std::stringstream result;
+    std::string command = CVC4_EXECUTABLE " " CVC4_SCRIPT_FILE;
+    std::shared_ptr<FILE> pipe(popen(command.c_str(), "r"), pclose);
+    if (!pipe) {
+        snlog::l_error() << "Solver execution failure (popen)" << snlog::l_end;
+        return "unknown";
+    }
+    while (!feof(pipe.get())) {
+        if (fgets(buffer.data(), 128, pipe.get()) != nullptr) {
+            result << buffer.data();
+        }
+    }
+    // TODO: delete CVC4_SCRIPT_FILE
+    return result.str();
+}
+
 SLProblemContext::SLProblemContext(const Options& opts)
     : opts(opts), em(opts.em), smt(&em), formula(lcl_formula)
 {
@@ -366,21 +409,7 @@ SLProblemContext::SLProblemContext(const Options& opts)
 
         // Recovering and parsing model
         snlog::l_message() << "Recovering initial model..." << snlog::l_end;
-        smt.reset();
-        smt.setOption("incremental", false);
-        smt.setOption("produce-models", true);
-        smt.setLogic("QF_ALL_SUPPORTED");
-
-        smt.assertFormula(lcl_formula);
-        Result qres = smt.checkSat();
-        if (qres != Result::SAT) {
-            snlog::l_warn() << "Input formula not found satisfiable" << snlog::l_end;
-        }
-        GetModelCommand model_getter;
-        model_getter.invoke(&smt);
-        std::stringstream sstream;
-        model_getter.printResult(sstream);
-        std::string model(sstream.str());
+        std::string model = ugly_internal__get_model(opts.input_file);
         snlog::l_notif() << "Model is: " << model << snlog::l_end;
 
         snlog::l_message() << "Extracting implicant from model..." << snlog::l_end;
