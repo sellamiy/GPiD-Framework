@@ -13,7 +13,6 @@ namespace stdutils {
     class id_box {
         V curr;
     public:
-        id_box() {}
         id_box(const V& init) : curr(init) {}
         const V next() { return curr++; }
     };
