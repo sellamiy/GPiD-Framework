@@ -10,7 +10,7 @@ void shared_execute_main(const typename Context::Options& opts) {
     Context local(opts);
     PartitionGenerator generator(local.generate_partition_options());
     minpart::GSetEngine<Context> engine(local);
-    stdutils::id_box<size_t> idbox;
+    stdutils::id_box<size_t> idbox(0);
 
     snlog::l_notif() << "Minimizing..." << snlog::l_end;
     minpart::gsetid
