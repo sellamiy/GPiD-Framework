@@ -54,6 +54,11 @@ if(BUILD_TESTS)
     add_subdirectory(ilinva)
   endif()
 
+  # ===== Multiexp =====
+  if (BUILD_EXPERIMENTS)
+    add_subdirectory(minpart)
+  endif()
+
   # ===== Coverage =====
   if (COVERAGE_TOOLS)
     setup_target_for_coverage(NAME coverage EXECUTABLE ctest)
