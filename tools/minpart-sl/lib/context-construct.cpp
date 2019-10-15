@@ -303,6 +303,11 @@ class SLModelVisitor {
                                    const_map.at(rrep),
                                    CVC4_ExprDualSign::CVC4_DS_UNDEF));
             pto_modellers.push_back(ptox);
+        } else if (node.getValue() == "sep") {
+            snlog::l_message() << " ---> splitting separated mappings..." << snlog::l_end;
+            for (auto leaf : node.getLeaves()) {
+                handle_heap_line(*leaf);
+            }
         } else {
             snlog::l_message() << "Non pto heap model line @" << node.getValue()
                                << " ---> skipping." << snlog::l_end;
