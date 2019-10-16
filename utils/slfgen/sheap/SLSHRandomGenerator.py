@@ -24,8 +24,9 @@ class SLForm:
 # --------------------------------------
 class RandomSFormula:
 
-    def __init__(self, vcount):
+    def __init__(self, vcount, pursuance):
         self.vcount = vcount
+        self.purs = pursuance
         self.types = { 'rshloc' : '0' }
         self.vars = { 'rshvar_{}'.format(i) : random.choice(list(self.types))
                       for i in range(vcount) }
@@ -38,7 +39,10 @@ class RandomSFormula:
         return pair
 
     def _random_sl(self):
-        choice = random.choice(['phi', 'pto', 'bot', 'imp', 'emp', 'sep'])
+        if random.random() > self.purs:
+            choice = random.choice(['emp', 'pto', 'bot'])
+        else:
+            choice = random.choice(['phi', 'imp', 'sep'])
         if choice == 'phi':
             return self._random_phi()
         if choice == 'pto':
@@ -54,7 +58,7 @@ class RandomSFormula:
             return SLForm('sep', (self._random_sl(), self._random_sl()))
 
     def _random_phi(self):
-        if random.random() < 0.5:
+        if random.random() > self.purs:
             return SLForm('true', [])
         return SLForm('and', (SLForm('=' if random.random() < 0.5 else 'distinct', self._random_vpair()), self._random_phi()))
 
@@ -70,7 +74,7 @@ class RandomSFormula:
         target.close()
 # --------------------------------------
 def main(args):
-    sheap = RandomSFormula(args.vars)
+    sheap = RandomSFormula(args.vars, args.pursuance)
     sheap.export(args.output)
 # --------------------------------------
 if __name__ == '__main__':
@@ -78,6 +82,9 @@ if __name__ == '__main__':
     ap = ArgumentParser(description='GPiD Framework Random SHeap SL formula generator')
 
     ap.add_argument('-v', '--vars', type=int, required=True,
+                    help='Number of SL variables')
+
+    ap.add_argument('-p', '--pursuance', type=float, default=0.5,
                     help='Number of SL variables')
 
     ap.add_argument('-o', '--output', type=str, default='out.partial.smt2',
