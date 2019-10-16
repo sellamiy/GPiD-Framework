@@ -75,6 +75,9 @@ class RandomSFormula:
 # --------------------------------------
 def main(args):
     sheap = RandomSFormula(args.vars, args.pursuance)
+    if (args.wand):
+        sheap2 = RandomSFormula(args.vars, args.pursuance)
+        sheap.form = SLForm('wand', (sheap.form, sheap2.form))
     sheap.export(args.output)
 # --------------------------------------
 if __name__ == '__main__':
@@ -86,6 +89,9 @@ if __name__ == '__main__':
 
     ap.add_argument('-p', '--pursuance', type=float, default=0.5,
                     help='Number of SL variables')
+
+    ap.add_argument('-w', '--wand', action='store_true',
+                    help='Wandify two formulas')
 
     ap.add_argument('-o', '--output', type=str, default='out.partial.smt2',
                     help='output file')
