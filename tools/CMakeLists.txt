@@ -27,6 +27,13 @@ generate_iph_multi_file(
   TARGET "${LOCAL_EXEC_INCLUDE_DIR}/ilinva/generators.hpp"
   TEMPLATE "${EXEC_CORE_DIR}/ilinva/templates/ilinva-generators.hpp"
   IPHANDLERS ${IPH_TARGETS})
+# ------------------------------------------------------------------------------
+include(FrameworkMinpartContextRegistration)
+# ------------------------------------------------------------------------------
+generate_mpcontext_multi_file(
+  TARGET "${LOCAL_EXEC_INCLUDE_DIR}/minpart/contexts.hpp"
+  TEMPLATE "${EXEC_CORE_DIR}/minpart/templates/minpart-contexts.hpp"
+  MPCONTEXT ${MPCONTEXT_TARGETS})
 # ==============================================================================
 set(CORE_STATIC_LINK_LIBRARIES abdulot-static cxxopts Threads::Threads)
 set(CORE_SHARED_LINK_LIBRARIES abdulot-shared cxxopts Threads::Threads)
@@ -109,29 +116,25 @@ endif()
 # ==============================================================================
 # MinPart-SL - SL model minimizer
 # ==============================================================================
-if(BUILD_MINPART_SL)
-  find_package(CVC4)
-  if (NOT CVC4_FOUND)
-    message(ERROR "CVC4 not found --- cannot build minpart-sl")
-  else()
-    file(GLOB MINPART_SL_HEADERS "minpart-sl/lib/*.cpp")
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/minpart-sl/lib/solver-config.hpp.in"
-      "${LOCAL_EXEC_INCLUDE_DIR}/minpart-sl/lib/solver-config.hpp")
-    add_library(minpart-slcvc-context STATIC ${MINPART_SL_HEADERS})
-    target_include_directories(minpart-slcvc-context
-      PUBLIC ${CVC4_INCLUDE_DIR} "minpart-sl/lib" "${LOCAL_EXEC_INCLUDE_DIR}/minpart-sl/lib")
-    set_target_properties(minpart-slcvc-context PROPERTIES
-      OUTPUT_NAME minpart-slcvc-context
-      CLEAN_DIRECT_OUTPUT 1)
-    target_link_libraries(minpart-slcvc-context minpart-static lisptp-static ${CVC4_LIBRARIES} cxxopts)
-
-    register_executable(minpart-sl "minpart-sl/src/minpart-sl.cpp")
-    target_link_libraries(minpart-sl minpart-slcvc-context)
-
-    install(TARGETS minpart-slcvc-context minpart-sl
-      ARCHIVE DESTINATION lib
-      LIBRARY DESTINATION lib
-      RUNTIME DESTINATION bin)
-  endif()
+if(BUILD_MINPART)
+  foreach(mpcontext ${MPCONTEXT_TARGETS})
+    set(execname minpart-${mpcontext})
+    set(MPCONTEXT_DEF_MACRO MINPART_CONTEXT_${mpcontext})
+    string(REGEX REPLACE - _ MPCONTEXT_DEF_MACRO ${MPCONTEXT_DEF_MACRO})
+    register_executable(${execname} "minpart/src/minpart.cpp")
+    add_dependencies(${execname} minpart-contexts-multi)
+    target_include_directories(${execname} PRIVATE ${LOCAL_EXEC_INCLUDE_DIR})
+    target_compile_definitions(${execname} PRIVATE ${MPCONTEXT_DEF_MACRO})
+    if(STATIC_EXECUTABLES)
+      target_link_libraries(${execname}
+        ${mpcontext}-static
+        minpart-static cxxopts)
+    else()
+      target_link_libraries(${execname}
+        ${mpcontext}-shared
+        minpart-shared cxxopts)
+    endif()
+    install(TARGETS ${execname} RUNTIME DESTINATION bin)
+  endforeach()
 endif()
 # ==============================================================================

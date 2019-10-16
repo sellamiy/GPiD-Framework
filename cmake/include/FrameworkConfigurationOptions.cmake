@@ -13,7 +13,7 @@ option(STATIC_EXECUTABLES "Build executables using static librairies" ON)
 option(BUILD_GLOBAL_WRAPPER "Build a global executable wrapping them all" ON)
 option(BUILD_GPID "Build the prime implicate generator GPiD" ON)
 option(BUILD_ILINVA "Build the loop invariant generator Ilinva" ON)
-option(BUILD_MINPART_SL "Build the SL minpart model minimizer" ON)
+option(BUILD_MINPART "Build the minpart model minimizers" ON)
 option(BUILD_EXPERIMENTS "Build test experiments for some results generation" ON)
 # ==============================================================================
 # Additional cosystems

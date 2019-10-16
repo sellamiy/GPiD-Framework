@@ -53,6 +53,10 @@ set(LOCAL_IPH_CONFIGS "${CMAKE_BINARY_DIR}/local/iphandle/configs")
 set(LOCAL_IPH_INCLUDE "${CMAKE_BINARY_DIR}/local/iphandle/include")
 set(LOCAL_IPH_SOURCES "${CMAKE_BINARY_DIR}/local/iphandle/src")
 
+set(LOCAL_MPCONTEXT_CONFIGS "${CMAKE_BINARY_DIR}/local/minpart-context/configs")
+set(LOCAL_MPCONTEXT_INCLUDE "${CMAKE_BINARY_DIR}/local/minpart-context/include")
+set(LOCAL_MPCONTEXT_SOURCES "${CMAKE_BINARY_DIR}/local/minpart-context/src")
+
 set(LOCAL_FRAMEWORK_HEADERS_DIR "${CMAKE_BINARY_DIR}/local/framework/include")
 set(LOCAL_FRAMEWORK_SOURCES_DIR "${CMAKE_BINARY_DIR}/local/framework/cxx")
 
@@ -93,6 +97,10 @@ endif()
 
 if(BUILD_ILINVA)
   add_subdirectory(iphandle)
+endif()
+
+if(BUILD_MINPART)
+  add_subdirectory(mpcontext)
 endif()
 
 add_subdirectory(tools)

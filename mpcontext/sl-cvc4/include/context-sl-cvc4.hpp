@@ -7,8 +7,8 @@
 #include <cvc4/cvc4.h>
 #include <minpart/partitions.hpp>
 
-#ifndef MINPART_CONTEXT_SL__HEADER
-#define MINPART_CONTEXT_SL__HEADER
+#ifndef MINPART_CONTEXT_SL_CVC4__HEADER
+#define MINPART_CONTEXT_SL_CVC4__HEADER
 
 namespace minpart {
 namespace slcvc {
@@ -74,6 +74,14 @@ namespace slcvc {
         { }
     };
 
+    struct SLExecOpts {
+        CVC4::ExprManager em;
+        slcvc::SLProblemOptions local;
+        bool deterministic;
+
+        SLExecOpts() : local(em), deterministic(false) {}
+    };
+
     class SLProblemContext {
     public:
         using Options = SLProblemOptions;
@@ -120,6 +128,7 @@ namespace slcvc {
         void print_problem() const;
         void print(uint32_t element, size_t loc);
     };
+
 
 }    
 }

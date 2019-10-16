@@ -8,8 +8,8 @@
 #include <stdutils/strings.hpp>
 #include <stdutils/collections.hpp>
 #include <lisptp/lisptp.hpp>
-#include <context.hpp>
-#include <solver-config.hpp>
+#include <context-sl-cvc4.hpp>
+#include <cvc4-config.hpp>
 
 #define CONTEXT_SL_CONSTRUCT_SRC
 

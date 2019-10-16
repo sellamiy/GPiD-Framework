@@ -1,6 +1,6 @@
 #include <iostream>
 #include <snlog/snlog.hpp>
-#include <context.hpp>
+#include <context-sl-cvc4.hpp>
 
 #define CONTEXT_SL_SRC
 

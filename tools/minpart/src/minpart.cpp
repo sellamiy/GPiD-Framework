@@ -1,24 +1,17 @@
-#define MINPART_SL_MMFP_EXECUTABLE_CPP
+#define MINPART_MMFP_EXECUTABLE_CPP
 
 #include <ctime>
 
 #include <cxxopts.hpp>
-#include <bin/shared.hpp>
-#include <context.hpp>
 #include <minpart/generic-partitions.hpp>
+#include <minpart-exec/shared-exec.hpp>
+#include "minpart/contexts.hpp"
 
 using namespace std;
 using namespace snlog;
 using namespace minpart;
 
 // c-bsize c-depth p-bsize p-depth size maxd mind
-
-struct ExecOpts {
-    slcvc::SLProblemOptions local;
-    bool deterministic;
-
-    ExecOpts(CVC4::ExprManager& em) : local(em), deterministic(false) {}
-};
 
 enum class OParseResult { Complete, ToForward, Failed };
 
@@ -66,27 +59,11 @@ static inline OParseResult parse_opts(ExecOpts& opts, int& argc, char**& argv) {
     }
 }
 
-static int handle_fwd(ExecOpts& opts) {
-    if (!opts.deterministic) {
-        srand (time(NULL));
-    }
-
-    l_notif() << "------------------------------" << l_end;
-    l_notif() << "Loading Solver..." << l_end;
-    l_notif() << "------------------------------" << l_end;
-    l_notif() << "------------------------------" << l_end;
-
-    shared_execute_main<slcvc::SLProblemContext, GenericPartitionGenerator>(opts.local);
-
-    return EXIT_SUCCESS;
-}
-
 int main(int argc, char** argv) {
 
     try {
         // Handle Options
-        CVC4::ExprManager em;
-        ExecOpts opts(em);
+        ExecOpts opts;
         OParseResult opr = parse_opts(opts, argc, argv);
         if (opr == OParseResult::Complete) return EXIT_SUCCESS;
         if (opr == OParseResult::Failed) return EXIT_FAILURE;

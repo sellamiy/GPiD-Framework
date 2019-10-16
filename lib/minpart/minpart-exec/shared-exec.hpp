@@ -1,3 +1,4 @@
+#ifndef MINPART_BINTOOLS_SHARED_CODE_CPP
 #define MINPART_BINTOOLS_SHARED_CODE_CPP
 
 #include <snlog/snlog.hpp>
@@ -43,3 +44,4 @@ void shared_execute_main(const typename Context::Options& opts) {
     snlog::l_notif() << "Complete." << snlog::l_end;
 }
 
+#endif

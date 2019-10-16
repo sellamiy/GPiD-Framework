@@ -3,7 +3,7 @@
 #include <ctime>
 
 #include <cxxopts.hpp>
-#include "shared.hpp"
+#include <minpart-exec/shared-exec.hpp>
 #include <minpart-contexts/literals.hpp>
 #include <minpart/generic-partitions.hpp>
 

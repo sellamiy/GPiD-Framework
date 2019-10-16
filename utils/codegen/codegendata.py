@@ -89,3 +89,27 @@ class MultiIPHData:
     def __init__(self, iph_list):
         self.code_handlers = [ IPHData(iph) for iph in iph_list ] if iph_list else []
 # --------------------------------------
+class MPContextData(ConfigLoadableData):
+
+    def __init__(self, ifilename):
+        super().__init__(ifilename)
+        self.name = None
+        self.mainheader = None
+        self.classname = None
+        self.optclassname = None
+
+        self._prepare_data()
+
+    def _prepare_data(self):
+        self.name = self.data['name']
+        self.name = self.name.replace('-', '_')
+
+        self.mainheader = self.data['mainheader']
+        self.classname = self.data['classname']
+        self.optclassname = self.data['optclassname']
+# --------------------------------------
+class MultiMPContextData:
+
+    def __init__(self, mpctx_list):
+        self.mpcontexts = [ MPContextData(mpctx) for mpctx in mpctx_list ] if mpctx_list else []
+# --------------------------------------

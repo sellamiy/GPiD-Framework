@@ -9,6 +9,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/minpart/minpart.hpp.in
 
 file(GLOB LIBMINPART_HEADERS "minpart/*.hpp")
 file(GLOB LIBMINPART_EXAMPLES_HEADERS "minpart-contexts/*.hpp")
+file(GLOB LIBMINPART_EXEC_HEADERS "minpart-exec/*.hpp")
 file(GLOB LIBMINPART_SOURCES "src/*.cpp")
 # ------------------------------------------------------------------------------
 add_library(minpart-static STATIC ${LIBMINPART_SOURCES})
@@ -34,7 +35,7 @@ target_link_libraries(minpart-lits minpart-static cxxopts)
 install(TARGETS minpart-static minpart-shared
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib)
-install(FILES ${LIBMINPART_HEADERS}
+install(FILES ${LIBMINPART_HEADERS} ${LIBMINPART_EXAMPLES_HEADERS} ${LIBMINPART_EXEC_HEADERS}
   ${LOCAL_LIB_HEADERS_DIR}/minpart/minpart.hpp
   DESTINATION include/minpart)
 install(TARGETS minpart-lits RUNTIME DESTINATION bin)
