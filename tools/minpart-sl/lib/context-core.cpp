@@ -10,11 +10,11 @@ using namespace minpart::slcvc;
 
 bool SLProblemContext::is_empty_element(uint32_t element, size_t index) const {
     if (index < separator_0) {
-        return element > 2; // level 0 == pto, level 1 == not emp, level 2 == true
+        return element > 1; // level 0 == pto, level 1 == not emp, level 2 == true
     } else if (index < separator_1) {
         return element > 0; // level 0 == eq or diseq
     } else {
-        return element > 1; // level 0 == emp, level 1 == true
+        return element > 0; // level 0 == emp, level 1 == true
     }
 }
 
