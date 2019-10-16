@@ -4,31 +4,32 @@
 # --------------------------------------
 import random
 # --------------------------------------
-class RandomSHeap:
+class SLForm:
 
-    def __init__(self, vcount, mcount, ecount, mconnect=0.5, msign=0.5, esign=0.5):
+    def __init__(self, op, params):
+        self.op = op
+        self.params = params
+
+    def export(self, stream):
+        if len(self.params) == 0:
+            stream.write(' {}'.format(self.op))
+        else:
+            stream.write('({}'.format(self.op))
+            for param in self.params:
+                if isinstance(param, str):
+                    stream.write(' {}'.format(param))
+                else:
+                    param.export(stream)
+            stream.write(')')
+# --------------------------------------
+class RandomSFormula:
+
+    def __init__(self, vcount):
         self.vcount = vcount
-        self.mcount = mcount
-        self.ecount = ecount
-        self.mconnect = mconnect
-        self.msign = msign
-        self.esign = esign
-
         self.types = { 'rshloc' : '0' }
         self.vars = { 'rshvar_{}'.format(i) : random.choice(list(self.types))
                       for i in range(vcount) }
-
-        self.mappings = []
-        cmapping = [ self._random_vpair() ]
-        for i in range(mcount - 1):
-            if (random.random() < mconnect):
-                cmapping.append(self._random_vpair())
-            else:
-                self.mappings.append((self._random_msign(), cmapping))
-                cmapping = [ self._random_vpair() ]
-        self.mappings.append((self._random_msign(), cmapping))
-
-        self.equalities = [ (self._random_esign(), self._random_vpair()) for i in range(ecount) ]
+        self.form = self._random_sl()
 
     def _random_vpair(self):
         pair = (random.choice(list(self.vars)), random.choice(list(self.vars)))
@@ -36,11 +37,26 @@ class RandomSHeap:
             pair = (random.choice(list(self.vars)), random.choice(list(self.vars)))
         return pair
 
-    def _random_msign(self):
-        return random.random() <= self.msign
+    def _random_sl(self):
+        choice = random.choice(['phi', 'pto', 'bot', 'imp', 'emp', 'sep'])
+        if choice == 'phi':
+            return self._random_phi()
+        if choice == 'pto':
+            return SLForm('pto', self._random_vpair())
+        if choice == 'bot':
+            return SLForm('false', [])
+        if choice == 'imp':
+            return SLForm('or', (SLForm('not', (self._random_sl(),)), self._random_sl()))
+        if choice == 'emp':
+            vrep = list(self.vars)[0]
+            return SLForm('emp', (vrep, vrep))
+        if choice == 'sep':
+            return SLForm('sep', (self._random_sl(), self._random_sl()))
 
-    def _random_esign(self):
-        return random.random() <= self.esign
+    def _random_phi(self):
+        if random.random() < 0.5:
+            return SLForm('true', [])
+        return SLForm('and', (SLForm('=' if random.random() < 0.5 else 'distinct', self._random_vpair()), self._random_phi()))
 
     def export(self, target_file):
         target = open(target_file, 'w')
@@ -48,31 +64,13 @@ class RandomSHeap:
             target.write('(declare-sort {} {})\n'.format(type, self.types[type]))
         for var in self.vars:
             target.write('(declare-const {} {})\n'.format(var, self.vars[var]))
-        for mapping in self.mappings:
-            # TODO: Or mappings
-            target.write('(assert ')
-            if not mapping[0]:
-                target.write('(not ')
-            if len(mapping[1]) == 1:
-                target.write('(pto {} {})'.format(mapping[1][0][0], mapping[1][0][1]))
-            else:
-                target.write('(sep ')
-                for mpto in mapping[1]:
-                    target.write('(pto {} {})'.format(mpto[0], mpto[1]))
-                target.write(')')
-            if not mapping[0]:
-                target.write(')')
-            target.write(')\n')
-        for equality in self.equalities:
-            # TODO: Or equalities
-            target.write('(assert ')
-            target.write('({} '.format('=' if equality[0] else 'distinct'))
-            target.write('{} {}'.format(equality[1][0], equality[1][1]))
-            target.write('))\n')
+        target.write('(assert ')
+        self.form.export(target)
+        target.write(')\n')
         target.close()
 # --------------------------------------
 def main(args):
-    sheap = RandomSHeap(args.vars, args.mappings, args.equalities, args.mappings_connectivity)
+    sheap = RandomSFormula(args.vars)
     sheap.export(args.output)
 # --------------------------------------
 if __name__ == '__main__':
@@ -81,15 +79,6 @@ if __name__ == '__main__':
 
     ap.add_argument('-v', '--vars', type=int, required=True,
                     help='Number of SL variables')
-
-    ap.add_argument('-m', '--mappings', type=int, required=True,
-                    help='Number of SL mappings')
-
-    ap.add_argument('-c', '--mappings-connectivity', type=float, default=0.5,
-                    help='Number of SL mappings')
-
-    ap.add_argument('-e', '--equalities', type=int, required=True,
-                    help='Number of SL equalities')
 
     ap.add_argument('-o', '--output', type=str, default='out.partial.smt2',
                     help='output file')
