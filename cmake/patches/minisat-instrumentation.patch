@@ -2,21 +2,24 @@ diff --git a/minisat/simp/SimpSolver.h b/minisat/simp/SimpSolver.h
 index 224e45a..b9a1594 100644
 --- a/minisat/simp/SimpSolver.h
 +++ b/minisat/simp/SimpSolver.h
-@@ -24,6 +24,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
+@@ -24,6 +24,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
  #include "minisat/mtl/Queue.h"
  #include "minisat/core/Solver.h"
  
 +class MinisatInterface;
++namespace minpart { namespace prop { class PropProblemContext; } }
  
  namespace Minisat {
  
-@@ -168,6 +168,9 @@ class SimpSolver : public Solver {
+@@ -168,6 +168,11 @@ class SimpSolver : public Solver {
      bool          strengthenClause         (CRef cr, Lit l);
      bool          implied                  (const vec<Lit>& c);
      void          relocAll                 (ClauseAllocator& to);
 +
 +    // GPiD unsafe clauses cleaner check
 +    friend MinisatInterface;
++    // Minpart model checkers instrumentation
++    friend minpart::prop::PropProblemContext;
  };
  
  

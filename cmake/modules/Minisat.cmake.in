@@ -9,7 +9,7 @@ ExternalProject_Add(minisat-solver
   SOURCE_DIR        "${CMAKE_BINARY_DIR}/minisat-src"
   BINARY_DIR        "${CMAKE_BINARY_DIR}/minisat-build"
   CMAKE_ARGS        -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} -Wno-dev
-  PATCH_COMMAND     git reset --hard HEAD COMMAND git apply "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-c++11.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-dimacs-warning.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-osx.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-unsafe-internal-accessor.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-zlib.patch"
+  PATCH_COMMAND     git reset --hard HEAD COMMAND git apply "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-c++11.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-dimacs-warning.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-osx.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-instrumentation.patch" "${CMAKE_SOURCE_DIR}/cmake/patches/minisat-zlib.patch"
   BUILD_COMMAND     ""
   INSTALL_COMMAND   ""
   TEST_COMMAND      ""
