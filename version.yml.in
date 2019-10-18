@@ -12,5 +12,5 @@ LocalGetter:
   timestamp: "@PROJECT_CFG_TIMESTAMP@"
   instrumentation: "@INSTRUMENTATION@"
   major: 0
-  minor: 7
-  patch: 10
+  minor: 8
+  patch: 0
