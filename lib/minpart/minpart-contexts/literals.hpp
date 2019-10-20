@@ -48,7 +48,7 @@ namespace literals {
         }
 
         inline bool is_generalizable_element(uint32_t element, size_t) const {
-            return element < opts.max_depth;
+            return element <= opts.max_depth;
         }
 
         bool is_valid_hypothesis(const std::vector<uint32_t>& hyp) const;
