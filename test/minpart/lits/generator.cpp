@@ -12,14 +12,14 @@ using namespace minpart;
 
 // c-bsize c-depth p-bsize p-depth size maxd mind
 
-#define MAX_SIZE     10
-#define SIZE_STEP    1
-#define MAX_MDEPTH   10
-#define MDEPTH_STEP  1
-#define MNDEPTH_STEP 1
+#define MAX_SIZE     1000
+#define SIZE_STEP    10
+#define MAX_MDEPTH   50
+#define MDEPTH_STEP  5
+#define MNDEPTH_STEP 1000
 #define MAX_PSIZE    10
 #define PSIZE_STEP   1
-#define COUNTER_C    10
+#define COUNTER_C    100
 
 template <class Context, class PartitionGenerator>
 uint64_t shared_execute_main(const typename Context::Options& opts) {
@@ -52,6 +52,7 @@ static int solve() {
             for (size_t mindepth = 0; mindepth < maxdepth; mindepth += MNDEPTH_STEP) {
                 for (size_t partsize = 2; partsize < MAX_PSIZE; partsize += PSIZE_STEP) {
                     for (size_t count = 0; count < COUNTER_C; ++count) {
+                        local.max_depth = maxdepth;
                         local.c_blocksize = partsize;
                         local.p_blocksize = partsize;
                         local.problem = random_vector(size, maxdepth, mindepth);
