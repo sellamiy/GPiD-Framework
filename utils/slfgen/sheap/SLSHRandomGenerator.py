@@ -40,9 +40,9 @@ class RandomSFormula:
 
     def _random_sl(self):
         if random.random() > self.purs:
-            choice = random.choice(['emp', 'pto', 'bot'])
+            choice = random.choices(['emp', 'pto', 'bot'], [0.1, 0.8, 0.1])[0]
         else:
-            choice = random.choice(['phi', 'imp', 'sep', 'and'])
+            choice = random.choices(['phi', 'imp', 'sep', 'and'], [0.25, 0.1, 0.25, 0.4])[0]
         if choice == 'phi':
             return self._random_phi()
         if choice == 'pto':
