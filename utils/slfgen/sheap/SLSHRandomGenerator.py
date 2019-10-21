@@ -42,7 +42,7 @@ class RandomSFormula:
         if random.random() > self.purs:
             choice = random.choice(['emp', 'pto', 'bot'])
         else:
-            choice = random.choice(['phi', 'imp', 'sep'])
+            choice = random.choice(['phi', 'imp', 'sep', 'and'])
         if choice == 'phi':
             return self._random_phi()
         if choice == 'pto':
@@ -56,6 +56,8 @@ class RandomSFormula:
             return SLForm('emp', (vrep, vrep))
         if choice == 'sep':
             return SLForm('sep', (self._random_sl(), self._random_sl()))
+        if choice == 'and':
+            return SLForm('and', (self._random_sl(), self._random_sl()))
 
     def _random_phi(self):
         if random.random() > self.purs:
