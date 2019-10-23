@@ -33,6 +33,31 @@ class MinpartResult:
         if idx == 'Satisfiability tests':
             return self.oraclecalls
 # --------------------------------------
+class MinpartSLResult:
+
+    def __init__(self, strline):
+        strline = strline.replace('\x1b[0m', '')
+        while strline != strline.replace('  ', ' '):
+            strline = strline.replace('  ', ' ')
+        data = strline.split(' ')
+        self.vars = int(data[0])
+        self.prob = float(data[1])
+        self.calls = int(data[2])
+# --------------------------------------
+def make_sl_graph(results):
+    plt.figure(figsize=(10,4))
+    plt.grid(True)
+    xlines = list(set([r.prob for r in results]))
+    ylines = []
+    for x in xlines:
+        ylines.append([r.calls for r in results if r.prob == x])
+    plt.boxplot(ylines, labels=[str(x) for x in xlines], showmeans=False, sym='.')
+    plt.ylabel('Satisfiability tests')
+    plt.xlabel('Depth probability')
+    # plt.xlim((0.4,0.7))
+    # plt.xticks(range(0.4, 0.7, 0.01), (str(i) for i in range(0.4, 0.7, 0.01)))
+    plt.ylim((0,225))
+# --------------------------------------
 def make_graph(results, xdata, ydata, tfun=None):
     #plt.figure(figsize=(10,5))
     plt.grid(True)
@@ -53,8 +78,9 @@ def make_graph(results, xdata, ydata, tfun=None):
 # --------------------------------------
 def main(args):
     stream = open(args.input)
-    results = [ MinpartResult(line) for line in stream ]
-    results = [ r for r in results if r.ok ]
+    #results = [ MinpartResult(line) for line in stream ]
+    #results = [ r for r in results if r.ok ]
+    results = [ MinpartSLResult(line) for line in stream ]
     stream.close()
 
     #stream = open(args.inputb)
@@ -73,12 +99,15 @@ def main(args):
     #plt.yscale('log')
     #plt.ylim((100,100000))
     
-    tfun = None
+    #tfun = None
     #tfun = lambda x : x*(1+10/2)
     #tfun = lambda x : 100*(1+x/2)
     #tfun = lambda x : 100*(1+5/2)
-    make_graph(results, 'Partition size', 'Satisfiability tests', tfun)
+    #make_graph(results, 'Partition size', 'Satisfiability tests', tfun)
     #plt.show()
+
+    make_sl_graph(results)
+
     plt.savefig(args.output)
 # --------------------------------------
 if __name__ == '__main__':
@@ -87,7 +116,7 @@ if __name__ == '__main__':
 
     ap.add_argument('-i', '--input', type=str, required=True,
                     help='Results input file')
-    ap.add_argument('-b', '--inputb', type=str, required=True,
+    ap.add_argument('-b', '--inputb', type=str,
                     help='Results input file')
 
     ap.add_argument('-o', '--output', type=str, default='out.partial.smt2',
