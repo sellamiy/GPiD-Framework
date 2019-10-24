@@ -47,16 +47,16 @@ class MinpartSLResult:
 def make_sl_graph(results):
     plt.figure(figsize=(10,4))
     plt.grid(True)
-    xlines = list(set([r.prob for r in results]))
+    xlines = list(set([r.vars for r in results]))
     ylines = []
     for x in xlines:
-        ylines.append([r.calls for r in results if r.prob == x])
+        ylines.append([r.calls for r in results if r.vars == x])
     plt.boxplot(ylines, labels=[str(x) for x in xlines], showmeans=False, sym='.')
     plt.ylabel('Satisfiability tests')
-    plt.xlabel('Depth probability')
+    plt.xlabel('Number of variables')
     # plt.xlim((0.4,0.7))
     # plt.xticks(range(0.4, 0.7, 0.01), (str(i) for i in range(0.4, 0.7, 0.01)))
-    plt.ylim((0,225))
+    # plt.ylim((0,225))
 # --------------------------------------
 def make_graph(results, xdata, ydata, tfun=None):
     #plt.figure(figsize=(10,5))
