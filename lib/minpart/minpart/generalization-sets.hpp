@@ -5,8 +5,10 @@
  * \date 2019
  */
 #include <map>
+#include <random>
 #include <ctime>
 #include <vector>
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 #include <stdutils/identifiers.hpp>
@@ -20,6 +22,18 @@ namespace minpart {
         std::vector<uint32_t> target(size);
         for (size_t i = 0; i < size; ++i) {
             target[i] = (rand() % (maxd - mind)) + mind;
+        }
+        return target;
+    }
+
+    inline const std::vector<uint32_t> random_vector
+    (size_t size, std::initializer_list<double> distrib) {
+        std::vector<uint32_t> target(size);
+        std::random_device _rd;
+        std::mt19937 _gen(_rd());
+        std::discrete_distribution<> _dist(distrib);
+        for (size_t i = 0; i < size; ++i) {
+            target[i] = _dist(_gen);
         }
         return target;
     }

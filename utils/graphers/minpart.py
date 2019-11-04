@@ -78,9 +78,9 @@ def make_graph(results, xdata, ydata, tfun=None):
 # --------------------------------------
 def main(args):
     stream = open(args.input)
-    #results = [ MinpartResult(line) for line in stream ]
-    #results = [ r for r in results if r.ok ]
-    results = [ MinpartSLResult(line) for line in stream ]
+    results = [ MinpartResult(line) for line in stream ]
+    results = [ r for r in results if r.ok ]
+    #results = [ MinpartSLResult(line) for line in stream ]
     stream.close()
 
     #stream = open(args.inputb)
@@ -99,14 +99,18 @@ def main(args):
     #plt.yscale('log')
     #plt.ylim((100,100000))
     
-    #tfun = None
+    tfun = None
     #tfun = lambda x : x*(1+10/2)
-    #tfun = lambda x : 100*(1+x/2)
+    tfun = lambda x : 100*(1+(x-1)/2)
     #tfun = lambda x : 100*(1+5/2)
-    #make_graph(results, 'Partition size', 'Satisfiability tests', tfun)
+    tfun = lambda x : 100*(1 + sum((i*(i+1)/(x*(x+1)/2) for i in range(x))))
+    tfun = lambda x : 100*(1 + sum((i*(2*i+1)/(0.25*(x+1)**2) for i in range(x))))
+    t = [1,5,20,25,30,30,30,30,30,30,30]
+    tfun = lambda x : 100*(1 + sum(i*(t[i]/(sum(t[:x]))) for i in range(x)))
+    make_graph(results, 'Maximal depth', 'Satisfiability tests', tfun)
     #plt.show()
 
-    make_sl_graph(results)
+    #make_sl_graph(results)
 
     plt.savefig(args.output)
 # --------------------------------------

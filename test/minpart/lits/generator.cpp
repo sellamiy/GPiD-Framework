@@ -15,7 +15,7 @@ using namespace minpart;
 #define MAX_SIZE     1000
 #define SIZE_STEP    5000
 #define MAX_MDEPTH   11
-#define MDEPTH_STEP  5000
+#define MDEPTH_STEP  1
 #define MNDEPTH_STEP 1000
 #define MAX_PSIZE    10
 #define PSIZE_STEP   1000
@@ -47,21 +47,48 @@ static int solve() {
 
     literals::LiteralProblemOptions local; //local.{c_blocksize,c_depth,p_blocksize,p_depth}
 
-    for (size_t size = 50; size < MAX_SIZE; size += SIZE_STEP) {
-        for (size_t maxdepth = 10; maxdepth < MAX_MDEPTH; maxdepth += MDEPTH_STEP) {
+    for (size_t size = 100; size < MAX_SIZE; size += SIZE_STEP) {
+        for (size_t maxdepth = 1; maxdepth < MAX_MDEPTH; maxdepth += MDEPTH_STEP) {
             for (size_t mindepth = 0; mindepth < maxdepth; mindepth += MNDEPTH_STEP) {
                 for (size_t partsize = 2; partsize < MAX_PSIZE; partsize += PSIZE_STEP) {
                     for (size_t count = 0; count < COUNTER_C; ++count) {
-                        local.max_depth = maxdepth;
+                        local.max_depth = maxdepth - 1;
                         local.c_blocksize = partsize;
                         local.p_blocksize = partsize;
                         // local.random = true;
-                        local.problem = random_vector(size, maxdepth, mindepth);
-                        std::cerr << "> " << size
-                                  << ' ' << maxdepth
-                                  << ' ' << mindepth
-                                  << ' ' << partsize
-                                  << '\n';
+                        //local.problem = random_vector(size, maxdepth, mindepth);
+                        switch (maxdepth) {
+                        case 1:
+                            local.problem = random_vector(size, {1,5});
+                            break;
+                        case 2:
+                            local.problem = random_vector(size, {1,5,20});
+                            break;
+                        case 3:
+                            local.problem = random_vector(size, {1,5,20,25});
+                            break;
+                        case 4:
+                            local.problem = random_vector(size, {1,5,20,25,30});
+                            break;
+                        case 5:
+                            local.problem = random_vector(size, {1,5,20,25,30,30});
+                            break;
+                        case 6:
+                            local.problem = random_vector(size, {1,5,20,25,30,30,30});
+                            break;
+                        case 7:
+                            local.problem = random_vector(size, {1,5,20,25,30,30,30,30});
+                            break;
+                        case 8:
+                            local.problem = random_vector(size, {1,5,20,25,30,30,30,30,30});
+                            break;
+                        case 9:
+                            local.problem = random_vector(size, {1,5,20,25,30,30,30,30,30,30});
+                            break;
+                        case 10:
+                            local.problem = random_vector(size, {1,5,20,25,30,30,30,30,30,30,30});
+                            break;
+                        }
                         uint64_t res =
                             shared_execute_main<literals::LiteralProblemContext,
                                                 GenericPartitionGenerator>(local);
