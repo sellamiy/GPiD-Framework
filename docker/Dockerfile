@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:18.04
 
 # Setting required build packages
 RUN apt-get update && \
